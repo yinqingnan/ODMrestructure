@@ -1,28 +1,24 @@
 <template>
+  <!-- 菜单备份 -->
   <div>
     <el-scrollbar class="Column">
       <div>
         <div v-for="item in menudata" :key="item.key" class="Menu">
-          <h2 class="Title">
+          <h2>
             {{ item.title }}
           </h2>
           <template>
             <a-menu
-              :openKeys="openKeys"
               :defaultSelectedKeys="defaultSelectedKeys"
+              :openKeys="openKeys"
               mode="inline"
               theme="light"
-              @click="select($event)"
+              @click="select"
               @openChange="onOpenChange"
             >
               <template v-for="el in item.children">
                 <!-- 没有子级的 -->
-                <a-menu-item
-                  v-if="!el.children.length"
-                  :key="el.key"
-                  @click="btn($event)"
-                  ref="list"
-                >
+                <a-menu-item v-if="!el.children.length" :key="el.key">
                   <!-- <router-link
                     :to="{
                       path: el.path
@@ -39,11 +35,7 @@
                   </span>
 
                   <template v-for="items in el.children">
-                    <a-menu-item
-                      :key="items.key"
-                      ref="list"
-                      @click="btn($event)"
-                    >
+                    <a-menu-item :key="items.key">
                       <!-- <router-link
                         :to="{
                           path: items.path
@@ -81,26 +73,15 @@ export default class LeftMenu extends Vue {
 
   private defaultSelectedKeys = [];
   private openKeys = [];
-  // private theme = "light";
-  private theme = "dark";
+  private theme = "light";
   private mounted() {
     console.log(this.menudata);
   }
-  public select({ item, key }: any) {
-    // console.log(item);
-    // console.log(key);
-    this.defaultSelectedKeys = [key];
-  }
-  public btn(e: any): void {
-    const el = this.$refs.list;
-    el.map((item: any) => {
-      item.$el.style.borderLeft = "0px solid transparent";
-    });
-
-    setTimeout(() => {
-      e.item.$el.style.borderLeft = "3px solid #fff";
-    }, 20);
-    // e.item.$el.style.borderLeft = "3px solid red ";
+  public select({ item, key }) {
+    console.log(item);
+    console.log(key);
+    this.defaultSelectedKeys = [];
+    // this.openKeys = [];
   }
   public onOpenChange(openKeys: never[]): void {
     console.log(openKeys);
@@ -119,21 +100,19 @@ export default class LeftMenu extends Vue {
   overflow-x: hidden;
 }
 .el-scrollbar__wrap {
-  width: 266px;
+  // display: none;
   overflow-x: hidden;
 }
 .ant-menu-vertical .ant-menu-item::after,
 .ant-menu-vertical-left .ant-menu-item::after,
 .ant-menu-vertical-right .ant-menu-item::after,
 .ant-menu-inline .ant-menu-item::after {
-  border-left: 3px solid transparent;
-  border-left: 0;
-  border-color: #fff;
-  left: 0;
+  // border-left: 3px solid red;
   border-right: 0;
 }
-
 .ant-menu-ant-menu-item .ant-menu-item-selected-selected {
+  // border-left: 4px solid #fff !important;
+  border-left: 4px solid red !important;
   background: rgba(0, 0, 0, 0.2) !important;
 }
 .ant-menu-item {
@@ -143,32 +122,17 @@ export default class LeftMenu extends Vue {
 }
 .Menu {
   background: rgba(0, 0, 0, 0.1);
-  margin: 16px;
-  border-radius: 10px;
 }
 
 .ant-menu-submenu-title {
   margin: 0 !important;
   color: #fff;
+  background: rgba(0, 0, 0, 0.1);
 }
 .ant-menu-item-selected {
-  background: rgba(0, 0, 0, 0) !important;
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 .ant-menu {
-  background: rgba(0, 0, 0, 0) !important;
-}
-.Title {
-  font-size: 14px;
-  text-align: left;
-  height: 50px;
-  line-height: 50px;
-  width: 100%;
-  padding-left: 20px;
-  color: #fff;
-}
-.ant-menu-inline,
-.ant-menu-vertical,
-.ant-menu-vertical-left {
-  border-right: 0;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 </style>
