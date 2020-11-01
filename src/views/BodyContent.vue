@@ -8,6 +8,7 @@
 </template>
 
 <script lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Component, Prop, Vue } from "vue-property-decorator";
 import LeftMenu from "@/Layout/LeftMenu.vue";
 import RightContent from "@/Layout/RightContent.vue";
@@ -397,13 +398,29 @@ export default class BodyContent extends Vue {
       ]
     }
   ];
+  $api: any;
   mounted() {
-    console.log(this.data);
     this.menudata = this.data;
+    // // get参数规格   （参数，是否效验token，请求地址，请求名称）
+    // this.$api.getData({}, true, "name").then(
+    //   (result: any) => {
+    //     console.log(result);
+    //   },
+    //   (error: any) => {
+    //     console.log(error);
+    //   }
+    // );
+    this.$api.postData({}, true, "postname").then(
+      (result: any) => {
+        console.log(result);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
 }
 </script>
-
 <style lang="less" scope>
 .layout {
   display: flex;

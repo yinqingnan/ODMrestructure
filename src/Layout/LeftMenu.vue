@@ -84,22 +84,24 @@ export default class LeftMenu extends Vue {
   // private theme = "light";
   private theme = "dark";
   private mounted() {
-    console.log(this.menudata);
+    // console.log(this.menudata);
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public select({ item, key }: any) {
     // console.log(item);
     // console.log(key);
-    this.defaultSelectedKeys = [key];
+    // this.defaultSelectedKeys = [key];
   }
   public btn(e: any): void {
     const el = this.$refs.list;
+
     el.map((item: any) => {
       item.$el.style.borderLeft = "0px solid transparent";
     });
 
     setTimeout(() => {
       e.item.$el.style.borderLeft = "3px solid #fff";
-    }, 20);
+    }, 10);
     // e.item.$el.style.borderLeft = "3px solid red ";
   }
   public onOpenChange(openKeys: never[]): void {

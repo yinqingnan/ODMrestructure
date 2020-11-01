@@ -1,1 +1,1 @@
-declare module 'mockjs';
+declare module "webpack-merge"
