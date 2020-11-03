@@ -74,6 +74,38 @@ export default class BodyContent extends Vue {
             permission: null
           },
           children: []
+        },
+        {
+          key: "3",
+          path: "/audiodata",
+          name: "form",
+          redirect: null,
+          component: "",
+          hidden: false,
+          meta: {
+            key: "3",
+            title: "摄录统计",
+            icon: "",
+            keepAlive: false,
+            permission: null
+          },
+          children: []
+        },
+        {
+          key: "4",
+          path: "/audiodata",
+          name: "form",
+          redirect: null,
+          component: "",
+          hidden: false,
+          meta: {
+            key: "4",
+            title: "关联统计",
+            icon: "",
+            keepAlive: false,
+            permission: null
+          },
+          children: []
         }
       ]
     },
@@ -351,16 +383,9 @@ export default class BodyContent extends Vue {
       ]
     }
   ];
-
-  public Login = new this.$api.configInterface.Login();
-
   mounted() {
     this.menudata = this.data;
     // 实例化类
-
-    // this.Login.postData({}, true, "postname").then((res: object) => {
-    //   console.log(res);
-    // });
   }
 }
 </script>
