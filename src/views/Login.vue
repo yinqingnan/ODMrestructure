@@ -13,6 +13,7 @@
           <a-form :form="form" @submit="handleSubmit">
             <a-form-item>
               <a-input
+                :maxLength="LimitInputlength"
                 v-decorator="[
                   'username',
                   {
@@ -25,6 +26,7 @@
             </a-form-item>
             <a-form-item>
               <a-input-password
+                :maxLength="LimitInputlength"
                 v-decorator="[
                   'password',
                   {
@@ -60,6 +62,7 @@
 <script lang="ts">
 import { message } from "ant-design-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { LimitInputlength } from "../InterfaceVariable/variable";
 @Component
 export default class Login extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,7 +73,7 @@ export default class Login extends Vue {
   private created() {
     this.form = this.$form.createForm(this);
   }
-
+  private LimitInputlength = LimitInputlength;
   private mounted() {
     this.getCookie();
   }
@@ -85,6 +88,10 @@ export default class Login extends Vue {
           this.setCookie(values.username, values.password, 7);
           this.login(values);
         } else {
+          this.form.setFieldsValue({
+            password: "",
+            username: ""
+          });
           this.clearCookie();
         }
       }
@@ -101,6 +108,11 @@ export default class Login extends Vue {
         this.$router.push({ name: "Index" });
       } else {
         message.error(res.msg);
+        this.clearCookie();
+        this.form.setFieldsValue({
+          password: "",
+          username: ""
+        });
       }
     });
   };

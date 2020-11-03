@@ -182,7 +182,46 @@ export default class LeftMenu extends Vue {
 .ant-menu-vertical-left {
   border-right: 0;
 }
-.ant-menu-item > a {
+.Column .ant-menu-submenu-title {
+  span {
+    font-size: 12px;
+  }
+}
+.Column .ant-menu-item > a {
   color: #fff;
+  span {
+    font-size: 12px;
+  }
+}
+.Column
+  .ant-menu-submenu-vertical
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::before,
+.ant-menu-submenu-vertical-left
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::before,
+.ant-menu-submenu-vertical-right
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::before,
+.ant-menu-submenu-inline
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::before,
+.ant-menu-submenu-vertical
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::after,
+.ant-menu-submenu-vertical-left
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::after,
+.ant-menu-submenu-vertical-right
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::after,
+.ant-menu-submenu-inline
+  > .ant-menu-submenu-title
+  .ant-menu-submenu-arrow::after {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.65),
+    rgba(255, 255, 255, 0.1)
+  );
 }
 </style>
