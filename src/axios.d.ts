@@ -1,7 +1,7 @@
-import {HttpService} from './service/http';
+// import {HttpService} from './service/http';
     
-declare module 'vue/types/vue' {
-    interface Vue {
-        $httpService: HttpService;
-    }
-}
+// declare module 'vue/types/vue' {
+//     interface Vue {
+//         $api: HttpService;
+//     }
+// }

@@ -1,23 +1,34 @@
+import { Login } from "@/api/module/login";
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
-    path: '/',
-    redirect: '/home',
+    path: "/",
+    redirect: "/home"
   },
   {
-    path: '/home',
-    name: 'Home',
+    path: "/login",
+    name: "Login",
+    component: () =>
+      import("@/views/Login.vue")
+  },
+  
+  {
+    path: "/home",
+    name: "Home",
     redirect: "/index",
+    meta: { requiresAuth: true },
     component: () =>
       import("@/views/Home.vue"),
-    children: [{
-      path: '/index',
-      name: 'Index',
+    children: [
+      {
+      path: "/index",
+      name: "Index",
       component: () =>
         import("@/views/BodyContent.vue")
-    }]
+      },
+    ]
   }
 ];
 const router = new VueRouter({

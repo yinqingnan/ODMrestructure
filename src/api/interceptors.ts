@@ -1,6 +1,7 @@
-import axios from 'axios';
-import { message } from 'ant-design-vue'; 
-const http = "https://easy-mock.com/mock/5f9c133f0bf9ee03009406f7"
+import axios from "axios";
+import { message } from "ant-design-vue"; 
+// const http:string = "https://easy-mock.com/mock/5f9c133f0bf9ee03009406f7"
+const http = "http://192.168.10.75:9100/"
 export class Interceptors {
   public instance: any;
   constructor() {
@@ -27,7 +28,7 @@ export class Interceptors {
         // 但是即使token存在，也有可能token是过期的，所以在每次的请求头中携带token
         // 后台根据携带的token判断用户的登录情况，并返回给我们对应的状态码
         if (config.headers.isJwt) {
-          const token = localStorage.getItem('id_token');
+          const token = localStorage.getItem('token');
           if (token) {
             config.headers.Authorization = 'Bearer ' + token;
           }

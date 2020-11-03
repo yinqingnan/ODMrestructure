@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="layout">
-      <LeftMenu :menudata="menudata" />
-      <RightContent />
+      <LeftMenu :menudata="menudata" class="hidden-sm-and-down" />
+      <RightContent class="right" />
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@ import RightContent from "@/Layout/RightContent.vue";
   }
 })
 export default class BodyContent extends Vue {
+  [x: string]: any;
   private menudata: any = [];
   private num = 10;
   private data = [
@@ -55,22 +56,6 @@ export default class BodyContent extends Vue {
                 permission: null
               },
               children: null
-            },
-            {
-              key: "22",
-              path: "/coercivemeasures",
-              name: "vue",
-              redirect: null,
-              component: "",
-              hidden: true,
-              meta: {
-                key: "22",
-                title: "强制措施",
-                icon: "",
-                keepAlive: false,
-                permission: null
-              },
-              children: null
             }
           ]
         },
@@ -84,38 +69,6 @@ export default class BodyContent extends Vue {
           meta: {
             key: "2",
             title: "执法档案",
-            icon: "",
-            keepAlive: false,
-            permission: null
-          },
-          children: []
-        },
-        {
-          key: "3",
-          path: "/audiodata",
-          name: "form",
-          redirect: null,
-          component: "",
-          hidden: false,
-          meta: {
-            key: "3",
-            title: "摄录统计",
-            icon: "",
-            keepAlive: false,
-            permission: null
-          },
-          children: []
-        },
-        {
-          key: "4",
-          path: "/audiodata",
-          name: "form",
-          redirect: null,
-          component: "",
-          hidden: false,
-          meta: {
-            key: "4",
-            title: "关联统计",
             icon: "",
             keepAlive: false,
             permission: null
@@ -398,26 +351,16 @@ export default class BodyContent extends Vue {
       ]
     }
   ];
-  $api: any;
+
+  public Login = new this.$api.configInterface.Login();
+
   mounted() {
     this.menudata = this.data;
-    // // get参数规格   （参数，是否效验token，请求地址，请求名称）
-    // this.$api.getData({}, true, "name").then(
-    //   (result: any) => {
-    //     console.log(result);
-    //   },
-    //   (error: any) => {
-    //     console.log(error);
-    //   }
-    // );
-    this.$api.postData({}, true, "postname").then(
-      (result: any) => {
-        console.log(result);
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
+    // 实例化类
+
+    // this.Login.postData({}, true, "postname").then((res: object) => {
+    //   console.log(res);
+    // });
   }
 }
 </script>
@@ -425,5 +368,9 @@ export default class BodyContent extends Vue {
 .layout {
   display: flex;
   height: ~"calc(100vh - 74px)";
+}
+.right {
+  width: 100%;
+  background: #fbfafc;
 }
 </style>
