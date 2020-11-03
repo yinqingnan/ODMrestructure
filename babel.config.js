@@ -8,6 +8,13 @@ module.exports = {
         libraryDirectory: "es",
         style: "css"
       }
+    ],
+    [
+      "component",
+      {
+        libraryName: "element-ui",
+        styleLibraryName: "theme-chalk"
+      }
     ]
   ]
 };
