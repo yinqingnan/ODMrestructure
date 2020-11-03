@@ -63,6 +63,7 @@
 import { message } from "ant-design-vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { LimitInputlength } from "../InterfaceVariable/variable";
+
 @Component
 export default class Login extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -29,7 +29,12 @@ const routes: Array<RouteConfig> = [
         import("@/views/BodyContent.vue")
       },
     ]
-  }
+  },
+  {
+    path: "/test",
+    name: "TEST",
+    component:()=>import("@/components/HelloWorld.vue")
+  },
 ];
 const router = new VueRouter({
   mode: "history",

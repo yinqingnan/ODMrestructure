@@ -1,0 +1,1 @@
+export const ADDNUM = "add"; //示例
