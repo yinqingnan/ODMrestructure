@@ -28,17 +28,22 @@ const routes: Array<RouteConfig> = [
       import("@/views/Home.vue"),
     children: [
       {
-      path: "/index",
-      name: "Index",
-      component: () =>
-        import("@/views/BodyContent.vue")
+        path: "/index",
+        name: "Index",
+        component: () =>
+          import("@/views/BodyContent.vue")
       },
     ]
   },
   {
     path: "/test",
     name: "TEST",
-    component:()=>import("@/components/HelloWorld.vue")
+    component: () => import("@/components/HelloWorld.vue")
+  },
+  {
+    path: "/pAuthorize",
+    name: "pAuthorize",
+    component: () => import("@/views/PAuthorize.vue")
   },
 ];
 const router = new VueRouter({

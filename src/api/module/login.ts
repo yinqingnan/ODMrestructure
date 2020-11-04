@@ -11,8 +11,8 @@ export class Login {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  public getData(params: object, jwt: boolean,flag: string,) {
-    const url = "";
+  public getData(params: object, jwt: boolean, flag: string) {
+    const url = "/api/uauth/my/date";
     const body = {
       data: params,
       tag: flag,
@@ -30,7 +30,34 @@ export class Login {
       });
     });
   }
-
+  // 查验权限
+  public getjurisdiction(params: object, jwt: boolean, flag: string) {
+    const url = "/api/uauth/my/date";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any; }) => {
+        reject(err.message);
+      });
+    });
+  }
+  //获取登陆界面title
+  public gettitle(params: object, jwt: boolean, flag: string) {
+    const url = "/api/pconfig/system/setting/getPlatformName";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any; }) => {
+        reject(err.message);
+      });
+    });
+  }
 
   /**
   * post请求
@@ -38,7 +65,7 @@ export class Login {
   * @param jwt   是否token校验
   * @param flag          标记
   */
-  public login(params: object, jwt: boolean,flag: string) {
+  public login(params: object, jwt: boolean, flag: string) {
     const url = "/api/uauth/login";
     const body = params
     return new Promise((resolve, reject) => {
@@ -51,7 +78,49 @@ export class Login {
       });
     });
   }
+  // 退出登录
+  public outuser(params: object, jwt: boolean, flag: string) {
+    const url = "/api/uauth/logout";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any; }) => {
+        reject(err.message);
+      });
+    });
+  }
 
+  // 获取当前用户基础信息
+  public usermsg(params: object, jwt: boolean, flag: string) {
+    const url = "/api/uauth/my/info";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any; }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // 修改密码
+  public editpsd(params: object, jwt: boolean, flag: string) {
+    const url = "/api/uauth/my/passwd";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any; }) => {
+        reject(err.message);
+      });
+    });
+  }
   /**
  * @param res
  * @param resolve
@@ -59,7 +128,7 @@ export class Login {
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void; }) {
     // 在此处判断res.status状态然后返回值
     // if (res.code === 0) {
-      resolve(res);
+    resolve(res);
     // } else {
     //   this.errorHandle(res);
     // }

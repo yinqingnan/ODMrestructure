@@ -6,13 +6,14 @@
       <div class="loginbox">
         <div class="loginbox_header">
           <img src="../assets/image/logon_logo.png" alt="" />
-          <h2>可视化只会调度与数据化管理平台</h2>
+          <h2>{{ Title }}</h2>
         </div>
         <div class="loginbox_body">
           <h2>账号密码登陆</h2>
           <a-form :form="form" @submit="handleSubmit">
             <a-form-item>
               <a-input
+                autocomplete="off"
                 :maxLength="LimitInputlength"
                 v-decorator="[
                   'username',
@@ -27,6 +28,7 @@
             <a-form-item>
               <a-input-password
                 :maxLength="LimitInputlength"
+                autocomplete="off"
                 v-decorator="[
                   'password',
                   {
@@ -71,11 +73,15 @@ export default class Login extends Vue {
   public form!: any;
   private checkNick = false;
   public Login = new this.$api.configInterface.Login();
+  private Title = "";
+
   private created() {
     this.form = this.$form.createForm(this);
   }
   private LimitInputlength = LimitInputlength;
   private mounted() {
+    this.gettitle();
+    this.jurisdiction();
     this.getCookie();
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +90,6 @@ export default class Login extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
-        console.info(this.checkNick, values);
         if (this.checkNick) {
           this.setCookie(values.username, values.password, 7);
           this.login(values);
@@ -117,6 +122,18 @@ export default class Login extends Vue {
       }
     });
   };
+  private jurisdiction = () => {
+    this.Login.getjurisdiction({}, false).then((res: any) => {
+      if (res.code == 1003) {
+        this.$router.push({ name: "pAuthorize" });
+      }
+    });
+  };
+  private gettitle() {
+    this.Login.gettitle({}, false).then((res: any) => {
+      this.Title = res.data;
+    });
+  }
   //设置cookie
   private setCookie(cName: string, cPwd: string, exdays: number) {
     const exdate = new Date(); //获取时间
@@ -134,14 +151,12 @@ export default class Login extends Vue {
       const arr = document.cookie.split(";");
       for (let i = 0; i < arr.length; i++) {
         const arr2 = arr[i].split("=");
-        console.log(arr2);
         if (arr2[0] === "userName") {
           this.form.setFieldsValue({
             username: arr2[1]
           });
         }
         if (arr2[0] === " userPwd") {
-          console.log(123123);
           this.form.setFieldsValue({
             password: arr2[1]
           });
@@ -178,8 +193,8 @@ export default class Login extends Vue {
   line-height: 40px;
   width: 100%;
   text-align: center;
-  display: inline-block;
   margin: 25px 0 35px 0;
+  margin-left: 54px;
   > img {
     vertical-align: top;
   }

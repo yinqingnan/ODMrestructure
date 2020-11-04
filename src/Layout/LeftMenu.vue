@@ -121,7 +121,7 @@ export default class LeftMenu extends Vue {
   overflow-x: hidden;
 }
 .el-scrollbar__wrap {
-  width: 266px;
+  width: 270px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -156,6 +156,7 @@ export default class LeftMenu extends Vue {
 .ant-menu-submenu-title {
   margin: 0 !important;
   color: #fff;
+  text-align: center;
 }
 .ant-menu-item-selected {
   background: rgba(0, 0, 0, 0) !important;
@@ -169,10 +170,10 @@ export default class LeftMenu extends Vue {
   height: 40px;
   line-height: 40px;
   width: 100%;
-  padding-left: 20px;
+  padding-left: 10px;
   color: #fff;
   > span {
-    padding: 6px 10px;
+    padding: 4px 10px;
     background: rgba(0, 0, 0, 0.1);
     border-radius: 17px;
   }
@@ -189,6 +190,7 @@ export default class LeftMenu extends Vue {
 }
 .Column .ant-menu-item > a {
   color: #fff;
+  text-align: center;
   span {
     font-size: 12px;
   }

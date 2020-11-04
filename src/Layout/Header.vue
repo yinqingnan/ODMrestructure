@@ -23,23 +23,158 @@
             <!-- <a class="ant-dropdown-link" @click="e => e.preventDefault()">
               Admin <a-icon type="down" />
             </a> -->
-            <span>Admin <a-icon type="down"/></span>
+            <span>{{ username }} <a-icon type="down"/></span>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a href="javascript:;">修改密码</a>
+                <a href="javascript:;" @click="modify">修改密码</a>
               </a-menu-item>
               <a-menu-item>
-                <a href="javascript:;">安全退出</a>
+                <a href="javascript:;" @click="outuser">安全退出</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
         </div>
       </div>
     </div>
+    <a-modal
+      v-model="visible"
+      title="修改密码"
+      ok-text="确认"
+      cancel-text="取消"
+      @ok="hideModal"
+    >
+      <a-form
+        :form="form"
+        :label-col="{ span: 5 }"
+        :wrapper-col="{ span: 16 }"
+        @submit="handleSubmit"
+      >
+        <a-form-item label="用户名">
+          <a-input
+            :disabled="true"
+            v-decorator="[
+              'user',
+              {
+                rules: [{ required: true, message: 'Please input your note!' }]
+              }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="原密码">
+          <a-input-password
+            :maxLength="LimitInputlength"
+            v-decorator="[
+              'oldPassword',
+              {
+                rules: [{ required: true, message: 'Please input your note!' }]
+              }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="新密码">
+          <a-input-password
+            :maxLength="LimitInputlength"
+            v-decorator="[
+              'newPassword',
+              {
+                rules: [{ required: true, message: 'Please input your note!' }]
+              }
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="重复新密码">
+          <a-input-password
+            :maxLength="LimitInputlength"
+            v-decorator="[
+              'newRePassword',
+              {
+                rules: [{ required: true, message: 'Please input your note!' }]
+              }
+            ]"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
-<script lang="ts"></script>
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import { LimitInputlength } from "../InterfaceVariable/variable";
+
+@Component
+export default class Header extends Vue {
+  [x: string]: any;
+  public Login = new this.$api.configInterface.Login();
+  private visible = false;
+  private username = "";
+  public form!: any;
+  private LimitInputlength = LimitInputlength;
+  private created() {
+    this.form = this.$form.createForm(this);
+  }
+  private mounted() {
+    this.getusermsg();
+  }
+  private modify() {
+    this.visible = true;
+    this.Login.usermsg({}, true).then((res: any) => {
+      this.form.setFieldsValue({
+        user: res.data.name
+      });
+    });
+  }
+  private outuser() {
+    this.Login.outuser({}, false).then((res: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that = this;
+      this.$confirm({
+        title: "确认是否退出?",
+        okText: "确认",
+        cancelText: "取消",
+        onOk() {
+          that.$router.push({ name: "Login" });
+          localStorage.removeItem("token");
+        },
+        class: "test"
+      });
+    });
+  }
+  private handleSubmit() {
+    // e.preventDefault();
+    this.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        console.log(values);
+        if (
+          values.oldPassword === values.newPassword ||
+          values.oldPassword === values.newRePassword
+        ) {
+          this.$message.error("旧密码与新密码相同");
+        } else if (values.newPassword != values.newRePassword) {
+          this.$message.error("两次输入密码不一致");
+        } else if (values.newPassword === values.newRePassword) {
+          this.$message.success("修改成功");
+          console.log(Vue);
+        }
+      }
+    });
+  }
+  private hideModal() {
+    this.handleSubmit();
+    // this.visible = false;
+  }
+  private getusermsg() {
+    this.Login.usermsg({}, true).then((res: any) => {
+      this.username = res.data.name;
+    });
+  }
+  private editpsd(value: object) {
+    this.Login.editpsd(value, true).then((res: any) => {
+      console.log(res);
+    });
+  }
+}
+</script>
 
 <style lang="less" scope>
 .header {
@@ -75,7 +210,7 @@ img {
   overflow: hidden;
   border: 2px solid #fff;
   margin-left: 46px;
-  margin-right: 36px;
+  margin-right: 26px;
   cursor: pointer;
   > img {
     width: 100%;
@@ -102,5 +237,8 @@ img {
 .ant-badge-dot {
   width: 8px;
   height: 8px;
+}
+.ant-form-item {
+  margin-bottom: 12px;
 }
 </style>
