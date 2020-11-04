@@ -39,12 +39,14 @@ export class Announcement {
   * @param flag          标记
   */
   public getNotices(params: object, jwt: boolean, flag: string) {
-    const url = "/api/pconfig/system/notice/getNotices";
+    const url = "/api/pconfig/system/notice/list";
     const body = params
     return new Promise((resolve, reject) => {
-      this.axios.post(url, body, {
+      this.axios.get(url, {
+        params: body,
         headers: { isJwt: jwt },
       }).then((res: any) => {
+        // console.log(res)
         this.resultHandle(res, resolve);
       }).catch((err: { message: any; }) => {
         reject(err.message);

@@ -85,7 +85,7 @@ export default class Login extends Vue {
     this.getCookie();
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private handleSubmit(e: Record<string, any>) {
+  private handleSubmit(e: any): void {
     e.preventDefault();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.form.validateFields((err: any, values: any) => {
@@ -94,11 +94,12 @@ export default class Login extends Vue {
           this.setCookie(values.username, values.password, 7);
           this.login(values);
         } else {
-          this.form.setFieldsValue({
-            password: "",
-            username: ""
-          });
+          // this.form.setFieldsValue({
+          //   password: "",
+          //   username: ""
+          // });
           this.clearCookie();
+          this.login(values);
         }
       }
     });

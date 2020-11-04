@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal} from "ant-design-vue";
-import { Scrollbar,Row,Col } from 'element-ui'
+import { Scrollbar, Row, Col } from 'element-ui'
 import { HttpService } from './api/http';
 import 'element-ui/lib/theme-chalk/display.css';
 import confirm from "ant-design-vue/es/modal/confirm";

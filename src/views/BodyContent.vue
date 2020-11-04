@@ -19,7 +19,6 @@ import RightContent from "@/Layout/RightContent.vue";
   }
 })
 export default class BodyContent extends Vue {
-  [x: string]: any;
   private menudata: any = [];
   private num = 10;
   private data = [
