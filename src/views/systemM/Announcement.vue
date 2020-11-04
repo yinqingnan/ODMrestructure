@@ -20,21 +20,25 @@
                     v-decorator="[
                       'select',
                       {
+                        initialValue: 'all',
                         rules: []
                       }
                     ]"
                     placeholder="请选择"
                   >
-                    <a-select-option value="china">
-                      China
+                    <a-select-option value="all">
+                      全部
                     </a-select-option>
-                    <a-select-option value="usa">
-                      U.S.A
+                    <a-select-option value="0">
+                      未截止
+                    </a-select-option>
+                    <a-select-option value="1">
+                      已截止
                     </a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item class="btnBox">
-                  <a-button html-type="submit" class="reset">
+                  <a-button class="reset">
                     重置
                   </a-button>
                   <a-button html-type="submit" class="upData">
@@ -49,6 +53,13 @@
           <a-button class="upData">添加</a-button>
         </div>
       </div>
+      <div class="content">
+        <a-table :columns="columns" :data-source="tabData" bordered>
+          <template slot="operation" slot-scope="text">
+            {{ text }}
+          </template>
+        </a-table>
+      </div>
     </div>
   </div>
 </template>
@@ -59,14 +70,84 @@ import { Component, Vue } from "vue-property-decorator";
 @Component({
   components: {}
 })
-
 export default class RightContent extends Vue {
-  private form: unknown;
+  [x: string]: any;
+  public getData = new this.$api.configInterface.Announcement();
+  private form: any;
+  public tabData = [];
+  private columns = [
+    {
+      title: "序号",
+      dataIndex: "index",
+      className: "pd10"
+    },
+    {
+      title: "公告标题",
+      dataIndex: "title",
+      className: "pd10"
+    },
+    {
+      title: "公告类型",
+      dataIndex: "type",
+      className: "pd10"
+    },
+    {
+      title: "创建时间",
+      dataIndex: "createTime",
+      className: "pd10"
+    },
+    {
+      title: "发送时间",
+      dataIndex: "sendTime",
+      className: "pd10"
+    },
+    {
+      title: "截止时间",
+      dataIndex: "endTime",
+      className: "pd10"
+    },
+    {
+      title: "发布民警姓名",
+      dataIndex: "sendUserName",
+      className: "pd10"
+    },
+    {
+      title: "发布民警警号",
+      dataIndex: "sendUserCode",
+      className: "pd10"
+    },
+    {
+      title: "接收部门",
+      dataIndex: "acceptDeptNames",
+      className: "pd10"
+    },
+    {
+      title: "公告内容",
+      dataIndex: "content",
+      className: "pd10"
+    },
+    {
+      title: "操作",
+      key: "operation",
+      scopedSlots: { customRender: "operation" },
+      className: "pd10"
+    }
+  ];
   beforeCreate() {
     this.form = this.$form.createForm(this);
   }
-  private handleSubmit(e: unknown): void {
-    console.log(e);
+  created() {
+    this.getData.getNotices({}, true).then((res: any) => {
+      console.log(res);
+    });
+  }
+  private handleSubmit(e: any): void {
+    e.preventDefault();
+    this.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        console.log(values);
+      }
+    });
   }
 }
 </script>
@@ -122,5 +203,11 @@ export default class RightContent extends Vue {
 .upData:hover {
   background: #0DB8DF;
   color: #ffffff;
+}
+.content {
+  margin: 15px 25px 0;
+}
+#Announcement .ant-table-thead .pd10 {
+  padding: 8px 16px;
 }
 </style>
