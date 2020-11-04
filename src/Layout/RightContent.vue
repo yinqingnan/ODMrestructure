@@ -71,9 +71,9 @@ export default class RightContent extends Vue {
   }
   private onEdit(e: any): void {
     const len: number = this.tagList.length;
-    let flag: number;
+    let flag = 0;
     if (len == 1) {
-      return false;
+      return;
     }
     this.tagList.forEach((e2, i) => {
       if (e2.key == e) {
