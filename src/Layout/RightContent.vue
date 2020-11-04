@@ -3,8 +3,18 @@
     <button @click="add">添加</button>
     <div class="Multitab">
       <div class="tag">
-        <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" @change="tabChange">
-          <a-tab-pane v-for="item in tagList" :key="item.key" :tab="item.title"></a-tab-pane>
+        <a-tabs
+          v-model="activeKey"
+          hide-add
+          type="editable-card"
+          @edit="onEdit"
+          @change="tabChange"
+        >
+          <a-tab-pane
+            v-for="item in tagList"
+            :key="item.key"
+            :tab="item.title"
+          ></a-tab-pane>
         </a-tabs>
       </div>
     </div>
@@ -29,8 +39,8 @@
 </template>
 
 <script lang="ts">
-import { PropType } from "vue";
-import { Component, Prop, Vue } from "vue-property-decorator";
+// import { PropType } from "vue";
+import { Component, Vue } from "vue-property-decorator";
 @Component({
   components: {}
 })
@@ -66,10 +76,9 @@ export default class RightContent extends Vue {
       path: "/index/jycx2",
       name: "jycx2"
     };
-    // 
     this.tagList.push(obj);
   }
-  private onEdit(e: any): void {
+  private onEdit(e: unknown): void {
     const len: number = this.tagList.length;
     let flag = 0;
     if (len == 1) {
@@ -82,7 +91,7 @@ export default class RightContent extends Vue {
     });
     this.tagList.splice(flag, 1);
   }
-  private tabChange(e: any): void {
+  private tabChange(e: unknown): void {
     console.log(e);
   }
 }
