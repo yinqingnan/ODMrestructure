@@ -50,15 +50,7 @@
         @submit="handleSubmit"
       >
         <a-form-item label="用户名">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'user',
-              {
-                rules: [{ required: true, message: 'Please input your note!' }]
-              }
-            ]"
-          />
+          <a-input :disabled="true" v-decorator="['username']" />
         </a-form-item>
         <a-form-item label="原密码">
           <a-input-password
@@ -118,9 +110,12 @@ export default class Header extends Vue {
   }
   private modify() {
     this.visible = true;
+
     this.Login.usermsg({}, true).then((res: any) => {
-      this.form.setFieldsValue({
-        user: res.data.name
+      this.$nextTick(() => {
+        this.form.setFieldsValue({
+          username: this.username
+        });
       });
     });
   }
@@ -144,7 +139,6 @@ export default class Header extends Vue {
     // e.preventDefault();
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
-        console.log(values);
         if (
           values.oldPassword === values.newPassword ||
           values.oldPassword === values.newRePassword
@@ -153,11 +147,32 @@ export default class Header extends Vue {
         } else if (values.newPassword != values.newRePassword) {
           this.$message.error("两次输入密码不一致");
         } else if (values.newPassword === values.newRePassword) {
-          this.$message.success("修改成功");
-          console.log(Vue);
+          // this.$message.success("修改成功");
+          this.Login.editpsd(values, true).then((res: any) => {
+            if (res.code == 1) {
+              this.$message.error(res.msg);
+            } else {
+              this.$message.success(res.msg);
+              this.visible = false;
+              this.$router.push({ name: "Login" });
+              localStorage.removeItem("token");
+              //清除cookie
+              this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+            }
+          });
         }
       }
     });
+  }
+  //设置cookie
+  private setCookie(cName: string, cPwd: string, exdays: number) {
+    const exdate = new Date(); //获取时间
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //字符串拼接cookie
+    window.document.cookie =
+      "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString();
+    window.document.cookie =
+      "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString();
   }
   private hideModal() {
     this.handleSubmit();
@@ -166,11 +181,6 @@ export default class Header extends Vue {
   private getusermsg() {
     this.Login.usermsg({}, true).then((res: any) => {
       this.username = res.data.name;
-    });
-  }
-  private editpsd(value: object) {
-    this.Login.editpsd(value, true).then((res: any) => {
-      console.log(res);
     });
   }
 }

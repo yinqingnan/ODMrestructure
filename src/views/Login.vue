@@ -94,10 +94,7 @@ export default class Login extends Vue {
           this.setCookie(values.username, values.password, 7);
           this.login(values);
         } else {
-          this.form.setFieldsValue({
-            password: "",
-            username: ""
-          });
+          this.login(values);
           this.clearCookie();
         }
       }
@@ -108,7 +105,6 @@ export default class Login extends Vue {
   }
   private login = (data: object) => {
     this.Login.login(data, false).then((res: any) => {
-      console.log(res);
       if (res.code == 0) {
         localStorage.setItem("token", res.data.accessToken);
         this.$router.push({ name: "Index" });

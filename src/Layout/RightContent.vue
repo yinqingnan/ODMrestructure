@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="Multitab"></div>
-    <h2>右侧</h2>
-    <a-button @click="btn(12)">asdasd</a-button>
+    <!-- <h2>右侧</h2>
+    <a-button @click="btn(12)">asdasd</a-button> -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
-import { message } from "ant-design-vue";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 
 @Component({
   components: {}
@@ -26,4 +26,9 @@ export default class RightContent extends Vue {
 }
 </script>
 
-<style lang="less" scope></style>
+<style lang="less" scope>
+.Multitab {
+  height: 45px;
+  background: #f5f5f5;
+}
+</style>
