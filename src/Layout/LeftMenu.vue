@@ -8,28 +8,29 @@
           mode="inline"
           style="width: 256px;padding-right: 18px;padding-left: 16px;"
           :theme="theme"
-          @click="select"
+          @click="menuClick"
           @openChange="onOpenChange"
         >
           <template v-for="item in list">
             <a-menu-item
+              @click="titleClick(item)"
               v-if="!item.children"
               :key="item.key"
               class="menulist"
               ref="menulist"
             >
-              <!-- <router-link
+              <router-link
                 :to="{
-                  path: '/home' + item.path,
+                  path: '/index' + item.path,
                   params: { title: item.title }
                 }"
-              > -->
-              <!-- 图标 -->
-              <!-- <a-icon :type="item.meta.icon" /> -->
-              <span>{{ item.meta.title }}</span>
-              <!-- </router-link> -->
+              >
+                <!-- 图标 -->
+                <a-icon :type="item.meta.icon" />
+                <span>{{ item.meta.title }}</span>
+              </router-link>
             </a-menu-item>
-            <subMenu v-else :key="item.key" :menu-info="item" />
+            <sub-menu v-else :key="item.key" :menu-info="item" />
           </template>
         </a-menu>
       </div>
@@ -40,6 +41,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import subMenu from "./SiderMenu/index.vue";
+import { namespace } from "vuex-class";
+const Tabs = namespace("Tabs");
 @Component({
   components: {
     subMenu
@@ -52,51 +55,36 @@ export default class LeftMenu extends Vue {
     default: []
   })
   private data!: any[];
-
+  @Tabs.Mutation("menuadd")
+  menuadd!: (val: any) => {};
   private list = this.data;
   private current = ["mail"];
   private openKeys: any = [""];
   private defaultSelectedKeys: any = ["1"];
-  // private openKeys = [];
-  // private theme = "light";
   private theme = "dark";
   private rootSubmenuKeys = ["sub1", "sub2", "sub4"];
   private mounted() {
-    console.log(this.data);
+    // console.log(this.data);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public select(key: any) {
-    console.log(key);
-    if (key.key == 1) {
-      this.openKeys = [""];
+  public menuClick({ item, key, keyPath }: any): void {
+    if (key === "1") {
+      this.openKeys = ["0"];
     }
-    // this.defaultSelectedKeys = [key];
   }
   public onOpenChange(openKeys: Array<string>[]): void {
-    console.log(openKeys);
     if (openKeys.length !== 0) {
       this.openKeys = [openKeys[1]];
-      // console.log(this.openKeys);
       // localStorage.setItem("openKeys", this.openKeys);
     } else {
       this.openKeys = [""];
     }
   }
-  public btn(e: any): void {
-    // const el = this.$refs.list;
-    // el.map((item: any) => {
-    //   item.$el.style.borderLeft = "0px solid transparent";
-    // });
-    // setTimeout(() => {
-    //   e.item.$el.style.borderLeft = "3px solid #fff";
-    // }, 10);
-    // e.item.$el.style.borderLeft = "3px solid red ";
-  }
-  private handleClick(e: any) {
+  private handleClick(e: any): void {
     console.log("click", e);
   }
-  private titleClick(e: any) {
-    console.log("titleClick", e);
+  private titleClick(data: any): void {
+    // console.log(data);
+    this.menuadd(data);
   }
 }
 </script>
@@ -158,7 +146,7 @@ export default class LeftMenu extends Vue {
 }
 .Column .ant-menu-item > a {
   color: #fff;
-  text-align: center;
+  // text-align: center;
   span {
     font-size: 12px;
   }

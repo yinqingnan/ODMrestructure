@@ -278,7 +278,7 @@ export default class RightContent extends Vue {
     };
     this.getList(val);
   }
-  private getList(val: any){
+  private getList(val: any) {
     this.getData.getNotices(val, true).then((res: any) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       this.tabData = res.data;
@@ -317,7 +317,7 @@ export default class RightContent extends Vue {
     this.visible = true;
   }
   private handleOk(e: any): void {
-    console.log(e)
+    console.log(e);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private rowClassName(record: any, index: number): string {
@@ -350,7 +350,7 @@ export default class RightContent extends Vue {
   width: 58px;
   height: 30px;
   border: 1px solid #ccc;
-  color: #9EA7B3;
+  color: #9ea7b3;
 }
 .header {
   width: calc(100% - 50px);
@@ -378,7 +378,7 @@ export default class RightContent extends Vue {
 }
 .upData,
 .upData:hover {
-  background: #0DB8DF;
+  background: #0db8df;
   color: #ffffff;
 }
 .content {

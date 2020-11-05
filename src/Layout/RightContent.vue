@@ -1,10 +1,10 @@
 <template>
   <div>
-    <button @click="add">添加</button>
-    <div class="Multitab">
+    <!-- <button @click="add">添加</button> -->
+    <div class="Multitab" ref="Multitab">
       <div class="tag">
         <a-tabs
-          v-model="activeKey"
+          v-model="activeKeys"
           hide-add
           type="editable-card"
           @edit="onEdit"
@@ -12,58 +12,51 @@
         >
           <a-tab-pane
             v-for="item in tagList"
-            :key="item.key"
-            :tab="item.title"
+            :key="item.meta.key"
+            :tab="item.meta.title"
           ></a-tab-pane>
         </a-tabs>
       </div>
     </div>
-
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
-// import { PropType } from "vue";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { namespace } from "vuex-class";
+const Tabs = namespace("Tabs");
 @Component({
   components: {}
 })
-// interface MyD {
-//   key: string;
-//   title: string;
-//   path: string;
-//   name: string;
-// }
 export default class RightContent extends Vue {
-  private name = "张三";
-  private age = "20";
-  private activeKey = "1";
-  public tagList = [
-    {
-      key: "1",
-      title: "简易程序",
-      path: "/index/jycx",
-      name: "jycx"
+  @Tabs.State(state => state.activeKey)
+  activeKey!: string;
+  @Tabs.State(state => state.tagList)
+  tagList: any;
+  @Tabs.Mutation("dlttbs")
+  dlttbs!: (val: any) => {};
+  private activeKeys = "";
+  private onEdit(e: string): void {
+    const len: number = this.tagList.length;
+    let flag = 0;
+    if (len == 1) {
+      this.$message.warning("保留最后一个标签");
+      return;
     }
-  ];
-
-  private mounted() {
-    // console.log(this.name + this.age);
-  }
-  private btn(id: string): void {
-    console.log(typeof id);
-  }
-  private add(): void {
+    this.tagList.forEach((e2, i) => {
+      if (e2.key == e) {
+        flag = i;
+      }
+    });
     const obj = {
-      key: "2",
-      title: "简易程序2",
-      path: "/index/jycx2",
-      name: "jycx2"
+      e,
+      flag
     };
-    this.tagList.push(obj);
+    this.dlttbs(obj);
+    // this.tagList.splice(flag, 1);
   }
-  private onEdit(e: unknown): void {
+  private tabChange(e: string): void {
     const len: number = this.tagList.length;
     let flag = 0;
     if (len == 1) {
@@ -74,27 +67,36 @@ export default class RightContent extends Vue {
         flag = i;
       }
     });
-    this.tagList.splice(flag, 1);
+    console.log(this.tagList[flag].name == "home");
+    if (this.tagList[flag].name == "home") {
+      this.$router.push({ path: "/index/home" });
+    } else {
+      this.$router.push({ name: this.tagList[flag].name });
+    }
   }
-  private tabChange(e: unknown): void {
-    console.log(e);
+  $refs!: { quickEntry: HTMLFormElement };
+  private mounted() {
+    this.activeKeys = this.activeKey;
+    this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px";
   }
+  @Watch("activeKey")
+  getPiedata(newval: string) {
+    this.activeKeys = newval;
+  }
+  // @Watch("tagList")
+  // getdata(newval: string) {
+  //   this.tagList = newval;
+  // }
 }
 </script>
 
 <style lang="less" scope>
-<<<<<<< HEAD
-.Multitab {
-  height: 45px;
-  background: #f5f5f5;
-=======
 .el-row {
   margin-left: 0px !important;
   margin-right: 0px !important;
 }
 .Multitab {
   height: 34px;
-  width: 100%;
   background: #f6f5f8;
 }
 .el-col {
@@ -112,6 +114,8 @@ export default class RightContent extends Vue {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
->>>>>>> cf61126aa26820c392352184c57d04c791be1b9a
+}
+.tag {
+  width: 100%;
 }
 </style>

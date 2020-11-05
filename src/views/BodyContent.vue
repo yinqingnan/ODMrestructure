@@ -8,10 +8,11 @@
 </template>
 
 <script lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
+import { namespace } from "vuex-class";
 import LeftMenu from "@/Layout/LeftMenu.vue";
 import RightContent from "@/Layout/RightContent.vue";
+const Tabs = namespace("Tabs");
 @Component({
   components: {
     LeftMenu,
@@ -19,6 +20,8 @@ import RightContent from "@/Layout/RightContent.vue";
   }
 })
 export default class BodyContent extends Vue {
+  @Tabs.Mutation("addtbs")
+  addtabs!: (val: any) => {};
   private menudata: any = [];
   private num = 10;
   private data = [
@@ -749,7 +752,16 @@ export default class BodyContent extends Vue {
   ];
   mounted() {
     this.menudata = this.data;
-    // 实例化类
+    this.addtabs(this.data[0]);
+    // window.onbeforeunload = function(e) {
+    //   console.log(e);
+    //   e = e || window.event;
+    //   if (e) {
+    //     e.returnValue = "关闭提示";
+    //   }
+    //   return "关闭提示";
+    // };
+    // localStorage.setItem("Tabslist", JSON.stringify(this.data[0]));
   }
 }
 </script>
