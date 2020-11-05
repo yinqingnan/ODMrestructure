@@ -18,7 +18,7 @@
         </a-tabs>
       </div>
     </div>
-    <router-view />
+    <router-view class="view" />
   </div>
 </template>
 
@@ -117,5 +117,9 @@ export default class RightContent extends Vue {
 }
 .tag {
   width: 100%;
+}
+.view {
+  height: ~"calc(100vh - 115px)";
+  margin-top: 7px;
 }
 </style>
