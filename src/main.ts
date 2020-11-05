@@ -2,8 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { Button, Layout, Menu ,Icon ,Badge,Dropdown,Form,Checkbox,Input,Modal,} from "ant-design-vue";
-import { Scrollbar,Row,Col } from 'element-ui'
+import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal} from "ant-design-vue";
+import { Scrollbar, Row, Col } from 'element-ui'
 import { HttpService } from './api/http';
 import 'element-ui/lib/theme-chalk/display.css';
 import confirm from "ant-design-vue/es/modal/confirm";
@@ -11,7 +11,7 @@ import { message } from "ant-design-vue";
 
 
 Vue.use(Scrollbar).use(Row).use(Col)   //elementUI
-Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Modal); //antdesign
+Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Tabs).use(Select).use(Table).use(Modal); //antdesign
 Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
 Vue.prototype.$confirm = confirm;  // 挂载服务
