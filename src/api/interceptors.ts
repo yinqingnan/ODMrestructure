@@ -33,7 +33,7 @@ export class Interceptors {
       },
       (error: any) => {
         console.log(error);
-      },
+      }
     );
     // 响应拦截器
     this.instance.interceptors.response.use(

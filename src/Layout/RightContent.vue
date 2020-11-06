@@ -14,7 +14,7 @@
             v-for="item in tagList"
             :key="item.meta.key"
             :tab="item.meta.title"
-          ></a-tab-pane>
+          />
         </a-tabs>
       </div>
     </div>
@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 const Tabs = namespace("Tabs");
 @Component({
-  components: {}
+      components: {}
 })
 export default class RightContent extends Vue {
   // @Prop({
@@ -43,53 +43,53 @@ export default class RightContent extends Vue {
   dlttbs!: (val: any) => {};
   private activeKeys = "";
   created() {
-    // console.log(this.obj);
+        // console.log(this.obj);
   }
   private onEdit(e: string): void {
-    const len: number = this.tagList.length;
-    let flag = 0;
-    if (len == 1) {
-      this.$message.warning("保留最后一个标签");
-      return;
-    }
-    this.tagList.forEach((e2, i) => {
-      if (e2.key == e) {
-        flag = i;
-      }
-    });
-    const obj = {
-      e,
-      flag
-    };
-    this.dlttbs(obj);
-    // this.tagList.splice(flag, 1);
+        const len: number = this.tagList.length;
+        let flag = 0;
+        if (len == 1) {
+              this.$message.warning("保留最后一个标签");
+              return;
+        }
+        this.tagList.forEach((e2, i) => {
+              if (e2.key == e) {
+                    flag = i;
+              }
+        });
+        const obj = {
+              e,
+              flag
+        };
+        this.dlttbs(obj);
+        // this.tagList.splice(flag, 1);
   }
   private tabChange(e: string): void {
-    const len: number = this.tagList.length;
-    let flag = 0;
-    if (len == 1) {
-      return;
-    }
-    this.tagList.forEach((e2, i) => {
-      if (e2.key == e) {
-        flag = i;
-      }
-    });
-    console.log(this.tagList[flag].name == "home");
-    if (this.tagList[flag].name == "home") {
-      this.$router.push({ path: "/index/home" });
-    } else {
-      this.$router.push({ name: this.tagList[flag].name });
-    }
+        const len: number = this.tagList.length;
+        let flag = 0;
+        if (len == 1) {
+              return;
+        }
+        this.tagList.forEach((e2, i) => {
+              if (e2.key == e) {
+                    flag = i;
+              }
+        });
+        console.log(this.tagList[flag].name == "home");
+        if (this.tagList[flag].name == "home") {
+              this.$router.push({ path: "/index/home" });
+        } else {
+              this.$router.push({ name: this.tagList[flag].name });
+        }
   }
   $refs!: { quickEntry: HTMLFormElement };
   private mounted() {
-    this.activeKeys = this.activeKey;
-    this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px";
+        this.activeKeys = this.activeKey;
+        this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px";
   }
   @Watch("activeKey")
   getPiedata(newval: string) {
-    this.activeKeys = newval;
+        this.activeKeys = newval;
   }
   // @Watch("tagList")
   // getdata(newval: string) {

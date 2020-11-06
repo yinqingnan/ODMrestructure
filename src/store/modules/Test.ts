@@ -1,7 +1,7 @@
 // 引入types
 import { ADDNUM } from "../types";
 interface State {
-  num: number;
+  num: number
 }
 const state: State = {
   num: 1
