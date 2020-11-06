@@ -14,12 +14,6 @@ const routes: Array<RouteConfig> = [
       import("@/views/Login.vue")
   },
   {
-    path: "/Announcement",
-    name: "Announcement",
-    component: () =>
-      import("@/views/systemM/Authorization.vue")
-  },
-  {
     path: "/home",
     name: "Home",
     redirect: "/index/home",
