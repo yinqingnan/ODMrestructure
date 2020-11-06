@@ -1,14 +1,12 @@
 <template>
-  <div id="Dictionary">
+  <div id="HighConfig">
     <div class="box">
       <!-- 头部 -->
       <div class="header">
         <div class="select">
           岗位字典项
         </div>
-        <div class="btnList">
-          <a-button class="upData" @click="add">添加字典项</a-button>
-        </div>
+        <div class="btnList"></div>
       </div>
       <!-- 内容 -->
       <div class="content">
@@ -28,14 +26,6 @@
           <template slot="operation" slot-scope="text, record">
             <div class="linkBox">
               <a-button type="link" block @click="edit(record)">编辑</a-button>
-              <a-popconfirm
-                title="确定删除？"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="remove(record.id)"
-              >
-                <a-button type="link" block>删除</a-button>
-              </a-popconfirm>
             </div>
           </template>
         </a-table>
@@ -43,7 +33,7 @@
       <!-- 弹窗 -->
       <a-modal
         v-model="visible"
-        :title="myTitle"
+        title="编辑"
         @ok="handleOk"
         width="635px"
         wrapClassName="myAM"
@@ -52,67 +42,48 @@
         @cancel="back"
       >
         <a-form
-          :form="form2"
+          :form="form"
           layout="inline"
           :label-col="{ span: 4 }"
           :wrapper-col="{ span: 20 }"
         >
           <a-row :gutter="24">
             <a-col :span="24">
-              <a-form-item label="字典类型" style="width:100%">
+              <a-form-item label="配置值" style="width:100%">
                 <a-input
                   v-decorator="[
-                    'parentKey',
+                    'code',
                     {
-                      rules: [{ required: true, message: '请输入字典类型' }],
-                      initialValue: 'position'
+                      rules: [{ required: true, message: '请输入配置值' }]
                     }
                   ]"
-                  disabled
-                  placeholder="请输入公告标题"
+                  placeholder="请输入配置值"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="字典值" style="width:100%">
-                <a-input
-                  style="width:288px"
-                  v-decorator="[
-                    'dictKey',
-                    {
-                      rules: [{ required: true, message: '请输入字典值' }]
-                    }
-                  ]"
-                  placeholder="点击右方按钮生成"
-                />
-                <a-button type="primary" style="margin-left:10px;" @click="getK"
-                  >自动生成
-                </a-button>
-              </a-form-item>
-            </a-col>
-            <a-col :span="24">
-              <a-form-item label="字典名称" style="width:100%">
+              <a-form-item label="配置内容" style="width:100%">
                 <a-input
                   v-decorator="[
-                    'name',
+                    'value',
                     {
-                      rules: [{ required: true, message: '请输入字典值' }]
+                      rules: [{ required: true, message: '请输入配置内容' }]
                     }
                   ]"
-                  placeholder="请输入字典名称，用于实际显示"
+                  placeholder="请输入配置内容"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="公告内容" style="width:100%">
+              <a-form-item label="配置说明" style="width:100%">
                 <a-textarea
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: true, message: '公告内容不能为空' }]
+                      rules: [{ required: true, message: '请输入配置说明' }]
                     }
                   ]"
-                  placeholder="请输入公告内容"
+                  placeholder="请输入配置说明"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
               </a-form-item>
@@ -137,17 +108,14 @@ interface MyD {
 })
 export default class RightContent extends Vue {
   [x: string]: any;
-  public getData = new this.$api.configInterface.Dictionary();
+  public getData = new this.$api.configInterface.HighConfig();
   private form: any;
   public tabData = [];
-  public isShow = true;
-  public seachKey = "all";
-  private form2: any;
   public visible = false;
-  public myTitle = "添加公告";
   public saveData = {};
+  public savaID: string;
   public pagination = {
-    pageSize: 10, // 默认每页显示数量
+    pageSize: 1000, // 默认每页显示数量
     current: 1, //显示当前页数
     total: 0,
     showSizeChanger: false, // 显示可改变每页数量
@@ -161,60 +129,45 @@ export default class RightContent extends Vue {
     {
       title: "序号",
       className: "pd10",
-      width: 70,
+      width: 65,
       dataIndex: "index",
       fixed: "left",
       scopedSlots: { customRender: "index" }
     },
     {
-      title: "字典名",
+      title: "配置值",
+      dataIndex: "code",
+      className: "pd10",
+      width: 350
+    },
+    {
+      title: "配置内容",
       dataIndex: "value",
       className: "pd10",
-      width: 380
+      width: 350
     },
     {
-      title: "字典值",
-      dataIndex: "dictKey",
-      className: "pd10",
-      width: 380
-    },
-    {
-      title: "字典描述",
+      title: "配置说明",
       dataIndex: "remark",
       className: "pd10",
-      width: 380
-    },
-    {
-      title: "创建时间",
-      dataIndex: "createTime",
-      className: "pd10",
-      width: 210
-    },
-    {
-      title: "创建人",
-      dataIndex: "createUserName",
-      className: "pd10",
-      width: 175
+      width: 820
     },
     {
       title: "操作",
       key: "operation",
       scopedSlots: { customRender: "operation" },
       className: "pd10",
-      width: 180,
+      width: 200,
       fixed: "right"
     }
   ];
   beforeCreate() {
     this.form = this.$form.createForm(this);
-    this.form2 = this.$form.createForm(this);
   }
   created() {
     const val = {
       page: this.pagination.current,
       limit: this.pagination.pageSize,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      parentKey_equal: "position"
     };
     this.getList(val);
   }
@@ -225,16 +178,6 @@ export default class RightContent extends Vue {
       this.pagination.total = res.pages * 1;
     });
   }
-  private getK() {
-    const val = {
-      parentKey: "position"
-    };
-    this.getData.getKey(val, true).then((res: any) => {
-      this.form2.setFieldsValue({
-        dictKey: res.data
-      });
-    });
-  }
   private healthyTableChange(pagination: {
     pageSize: number;
     current: number;
@@ -243,40 +186,19 @@ export default class RightContent extends Vue {
     this.pagination.current = pagination.current;
     const obj = {
       page: this.pagination.current,
-      limit: this.pagination.pageSize,
-      status: this.seachKey
+      limit: this.pagination.pageSize
     };
     this.getList(obj);
   }
-  private add(): void {
-    this.visible = true;
-    this.myTitle = "添加公告";
-  }
-  private remove(val: string): void {
-    const DT = [val];
-    this.getData.removeItem(DT, true).then((res: any) => {
-      if (res.code == 0) {
-        const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          parentKey_equal: "position"
-        };
-        this.getList(val);
-      }
-    });
-    console.log(val);
-  }
   private edit(val: any): void {
     this.visible = true;
-    this.myTitle = "编辑";
+    this.savaID = val.id;
     // const that = this;
     this.$nextTick(() => {
-      this.form2.setFieldsValue({
-        dictKey: val.dictKey,
-        parentKey: val.parentKey,
-        remark: val.remark,
-        name: val.value
+      this.form.setFieldsValue({
+        code: val.code,
+        value: val.value,
+        remark: val.remark
       });
     });
   }
@@ -284,34 +206,30 @@ export default class RightContent extends Vue {
     return index % 2 === 0 ? "bgF5" : "";
   }
   private back(): void {
-    this.form2.resetFields();
+    this.form.resetFields();
   }
   private handleOk(e: any): void {
     e.preventDefault();
-    this.form2.validateFields((err: any, values: any) => {
+    this.form.validateFields((err: any, values: any) => {
       if (!err) {
         const val = {
-          dictKey: values.dictKey,
-          id: "",
-          parentKey: values.parentKey,
+          code: values.code,
+          value: values.value,
           remark: values.remark,
-          value: values.name
+          id: this.savaID
         };
-        this.getData.saveVal(val, true).then((res: any) => {
+        this.getData.upData(val, true).then((res: any) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          if (res.code == 0){
+          if (res.code == 0) {
             this.visible = !this.visible;
-            this.form2.resetFields();
+            this.form.resetFields();
             const val = {
               page: this.pagination.current,
-              limit: this.pagination.pageSize,
-              // eslint-disable-next-line @typescript-eslint/camelcase
-              parentKey_equal: "position"
+              limit: this.pagination.pageSize
             };
             this.getList(val);
           }
         });
-        console.log(values);
       }
     });
   }
@@ -319,7 +237,7 @@ export default class RightContent extends Vue {
 </script>
 
 <style lang="less" scope>
-#Dictionary {
+#HighConfig {
   width: calc(100% - 250px);
   height: calc(100% -115px);
   display: flex;
@@ -327,15 +245,15 @@ export default class RightContent extends Vue {
   justify-content: center;
   background: #f5f5f5;
 }
-#Dictionary .ant-table-tbody > tr > td {
+#HighConfig .ant-table-tbody > tr > td {
   padding: 8px 16px;
 }
-#Dictionary .box {
+#HighConfig .box {
   width: calc(100% - 42px);
   height: calc(100% - 32px);
   background: #ffffff;
 }
-#Dictionary .ant-dropdown-link {
+#HighConfig .ant-dropdown-link {
   display: block;
   text-align: center;
   line-height: 30px;
@@ -376,7 +294,7 @@ export default class RightContent extends Vue {
 .content {
   margin: 15px 25px 0;
 }
-#Dictionary .ant-table-thead .pd10 {
+#HighConfig .ant-table-thead .pd10 {
   padding: 8px 16px;
 }
 .bgF5 {

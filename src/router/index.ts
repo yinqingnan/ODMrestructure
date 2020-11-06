@@ -17,7 +17,7 @@ const routes: Array<RouteConfig> = [
     path: "/Announcement",
     name: "Announcement",
     component: () =>
-      import("@/views/systemM/Dictionary.vue")
+      import("@/views/systemM/Authorization.vue")
   },
   {
     path: "/home",
@@ -155,6 +155,31 @@ const routes: Array<RouteConfig> = [
             path: "right",
             name: "right",
             component: () => import('@/views/Organization/Right.vue')
+          },
+          {
+            path: "Announcement",
+            name: "Announcement",
+            component: () => import('@/views/systemM/Announcement.vue')
+          },
+          {
+            path: "Authorization",
+            name: "Authorization",
+            component: () => import('@/views/systemM/Authorization.vue')
+          },
+          {
+            path: "Dictionary",
+            name: "Dictionary",
+            component: () => import('@/views/systemM/Dictionary.vue')
+          },
+          {
+            path: "HighConfig",
+            name: "HighConfig",
+            component: () => import('@/views/systemM/HighConfig.vue')
+          },
+          {
+            path: "Setting",
+            name: "Setting",
+            component: () => import('@/views/systemM/Setting.vue')
           }
         ]
       },

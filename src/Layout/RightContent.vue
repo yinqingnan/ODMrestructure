@@ -23,13 +23,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 const Tabs = namespace("Tabs");
 @Component({
   components: {}
 })
 export default class RightContent extends Vue {
+  @Prop({
+    type: Object
+  })
+  public myWH!: {};
+  public obj = this.myWH;
   @Tabs.State(state => state.activeKey)
   activeKey!: string;
   @Tabs.State(state => state.tagList)
@@ -37,6 +42,9 @@ export default class RightContent extends Vue {
   @Tabs.Mutation("dlttbs")
   dlttbs!: (val: any) => {};
   private activeKeys = "";
+  created(){
+    console.log(this.obj);
+  }
   private onEdit(e: string): void {
     const len: number = this.tagList.length;
     let flag = 0;
@@ -78,6 +86,7 @@ export default class RightContent extends Vue {
   private mounted() {
     this.activeKeys = this.activeKey;
     this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px";
+    
   }
   @Watch("activeKey")
   getPiedata(newval: string) {

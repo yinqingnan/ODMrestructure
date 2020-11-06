@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 <template>
   <div>
     <div class="layout">
       <LeftMenu :data="data" class="hidden-sm-and-down" />
-      <RightContent class="right" />
+      <RightContent class="right" :myWH="myWH" />
     </div>
   </div>
 </template>
@@ -24,6 +25,10 @@ export default class BodyContent extends Vue {
   addtabs!: (val: any) => {};
   private menudata: any = [];
   private num = 10;
+  public myWH = {
+    width: 1,
+    height: 1
+  };
   private data = [
     {
       key: "1",
@@ -658,8 +663,8 @@ export default class BodyContent extends Vue {
       children: [
         {
           key: "34",
-          path: "/notice",
-          name: "notice",
+          path: "/Announcement",
+          name: "Announcement",
           redirect: null,
           component: "system/notice.html",
           hidden: false,
@@ -680,8 +685,8 @@ export default class BodyContent extends Vue {
         },
         {
           key: "35",
-          path: "/dict",
-          name: "dict",
+          path: "/Dictionary",
+          name: "Dictionary",
           redirect: null,
           component: "base/dict.html",
           hidden: false,
@@ -701,8 +706,8 @@ export default class BodyContent extends Vue {
         },
         {
           key: "36",
-          path: "/setting",
-          name: "setting",
+          path: "/Setting",
+          name: "Setting",
           redirect: null,
           component: "system/setting.html",
           hidden: false,
@@ -717,8 +722,8 @@ export default class BodyContent extends Vue {
         },
         {
           key: "37",
-          path: "/highConfig",
-          name: "highConfig",
+          path: "/HighConfig",
+          name: "HighConfig",
           redirect: null,
           component: "system/highConfig.html",
           hidden: false,
@@ -733,8 +738,8 @@ export default class BodyContent extends Vue {
         },
         {
           key: "38",
-          path: "/authInfo",
-          name: "authInfo",
+          path: "/Authorization",
+          name: "Authorization",
           redirect: null,
           component: "base/authInfo.html",
           hidden: false,
@@ -763,6 +768,7 @@ export default class BodyContent extends Vue {
     // };
     // localStorage.setItem("Tabslist", JSON.stringify(this.data[0]));
   }
+
 }
 </script>
 <style lang="less" scope>
