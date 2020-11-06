@@ -768,12 +768,12 @@ export default class BodyContent extends Vue {
     // };
     // localStorage.setItem("Tabslist", JSON.stringify(this.data[0]));
   }
-
 }
 </script>
 <style lang="less" scope>
 .layout {
   display: flex;
+  overflow: hidden;
   height: ~"calc(100vh - 74px)";
 }
 .right {

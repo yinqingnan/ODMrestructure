@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header">
+    <div class="headers">
       <div class="header_left">
         <img src="../assets/image/logo.png" alt="" />
       </div>
@@ -190,7 +190,7 @@ export default class Header extends Vue {
 </script>
 
 <style lang="less" scope>
-.header {
+.headers {
   height: 74px;
   // background: #2c4369;
   background-image: url("../assets/image/header.png");
