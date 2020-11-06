@@ -21,6 +21,7 @@ const camel2Dash = require("camel-2-dash");
 // };
 
 module.exports = {
+  runtimeCompiler: true,
   css: {
     loaderOptions: {
       less: {

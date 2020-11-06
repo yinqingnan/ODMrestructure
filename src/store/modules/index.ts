@@ -1,3 +1,3 @@
 import Test from "./Test";
-
-export { Test};
+import Tabs from './tabs'
+export { Test,Tabs};

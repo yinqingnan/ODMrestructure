@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <!-- <h1>{{ msg }}</h1> -->
-    <el-row :gutter="80">
+    <!-- <el-row :gutter="80">
       <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1"
         ><div class="grid-content bg-purple">1111</div></el-col
       >
@@ -14,7 +14,7 @@
       <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1"
         ><div class="grid-content bg-purple-light">444444444</div></el-col
       >
-    </el-row>
+    </el-row> -->
     <a-button @click="btn">调试store模块化</a-button>
     <h2>变化的值： {{ num }}</h2>
   </div>

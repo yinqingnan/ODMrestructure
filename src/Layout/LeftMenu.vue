@@ -2,63 +2,37 @@
   <div>
     <el-scrollbar class="Column">
       <div>
-        <div v-for="item in menudata" :key="item.key" class="Menu">
-          <h2 class="Title">
-            <span>{{ item.title }}</span>
-          </h2>
-          <template>
-            <a-menu
-              :openKeys="openKeys"
-              :defaultSelectedKeys="defaultSelectedKeys"
-              mode="inline"
-              theme="light"
-              @click="select($event)"
-              @openChange="onOpenChange"
+        <a-menu
+          :defaultSelectedKeys="defaultSelectedKeys"
+          :openKeys="openKeys"
+          mode="inline"
+          style="width: 256px;padding-right: 18px;padding-left: 16px;"
+          :theme="theme"
+          @click="menuClick"
+          @openChange="onOpenChange"
+        >
+          <template v-for="item in list">
+            <a-menu-item
+              @click="titleClick(item)"
+              v-if="!item.children"
+              :key="item.key"
+              class="menulist"
+              ref="menulist"
             >
-              <template v-for="el in item.children">
-                <!-- 没有子级的 -->
-                <a-menu-item
-                  v-if="!el.children.length"
-                  :key="el.key"
-                  @click="btn($event)"
-                  ref="list"
-                >
-                  <router-link
-                    :to="{
-                      path: el.path
-                    }"
-                  >
-                    <!-- <a-icon :type="item.meta.icon" /> -->
-                    <span>{{ el.meta.title }}</span>
-                  </router-link>
-                </a-menu-item>
-                <!-- 包含子级的 -->
-                <a-sub-menu v-else :key="el.key">
-                  <span slot="title">
-                    <span>{{ el.meta.title }}</span>
-                  </span>
-
-                  <template v-for="items in el.children">
-                    <a-menu-item
-                      :key="items.key"
-                      ref="list"
-                      @click="btn($event)"
-                    >
-                      <router-link
-                        :to="{
-                          path: items.path
-                        }"
-                      >
-                        <!-- <a-icon :type="item.meta.icon" /> -->
-                        <span>{{ items.meta.title }}</span>
-                      </router-link>
-                    </a-menu-item>
-                  </template>
-                </a-sub-menu>
-              </template>
-            </a-menu>
+              <router-link
+                :to="{
+                  path: '/index' + item.path,
+                  params: { title: item.title }
+                }"
+              >
+                <!-- 图标 -->
+                <a-icon :type="item.meta.icon" />
+                <span>{{ item.meta.title }}</span>
+              </router-link>
+            </a-menu-item>
+            <sub-menu v-else :key="item.key" :menu-info="item" />
           </template>
-        </div>
+        </a-menu>
       </div>
     </el-scrollbar>
   </div>
@@ -67,6 +41,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import subMenu from "./SiderMenu/index.vue";
+import { namespace } from "vuex-class";
+const Tabs = namespace("Tabs");
 @Component({
   components: {
     subMenu
@@ -78,35 +54,37 @@ export default class LeftMenu extends Vue {
     required: true,
     default: []
   })
-  readonly menudata!: unknown[];
-
-  private defaultSelectedKeys = [];
-  private openKeys = [];
-  // private theme = "light";
+  private data!: any[];
+  @Tabs.Mutation("menuadd")
+  menuadd!: (val: any) => {};
+  private list = this.data;
+  private current = ["mail"];
+  private openKeys: any = [""];
+  private defaultSelectedKeys: any = ["1"];
   private theme = "dark";
+  private rootSubmenuKeys = ["sub1", "sub2", "sub4"];
   private mounted() {
-    // console.log(this.menudata);
+    // console.log(this.data);
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public select({ item, key }: any) {
-    // console.log(item);
-    // console.log(key);
-    // this.defaultSelectedKeys = [key];
+  public menuClick({ item, key, keyPath }: any): void {
+    if (key === "1") {
+      this.openKeys = ["0"];
+    }
   }
-  public onOpenChange(openKeys: never[]): void {
-    console.log(openKeys);
-    this.openKeys = openKeys;
+  public onOpenChange(openKeys: Array<string>[]): void {
+    if (openKeys.length !== 0) {
+      this.openKeys = [openKeys[1]];
+      // localStorage.setItem("openKeys", this.openKeys);
+    } else {
+      this.openKeys = [""];
+    }
   }
-  public btn(e: any): void {
-    const el = this.$refs.list;
-    el.map((item: any) => {
-      item.$el.style.borderLeft = "0px solid transparent";
-    });
-
-    setTimeout(() => {
-      e.item.$el.style.borderLeft = "3px solid #fff";
-    }, 10);
-    // e.item.$el.style.borderLeft = "3px solid red ";
+  private handleClick(e: any): void {
+    console.log("click", e);
+  }
+  private titleClick(data: any): void {
+    // console.log(data);
+    this.menuadd(data);
   }
 }
 </script>
@@ -128,17 +106,6 @@ export default class LeftMenu extends Vue {
 .el-scrollbar__wrap::-webkit-scrollbar {
   background: #fbfafc;
 }
-.ant-menu-vertical .ant-menu-item::after,
-.ant-menu-vertical-left .ant-menu-item::after,
-.ant-menu-vertical-right .ant-menu-item::after,
-.ant-menu-inline .ant-menu-item::after {
-  border-left: 3px solid transparent;
-  border-left: 0;
-  border-color: #fff;
-  left: 0;
-  border-right: 0;
-}
-
 .ant-menu-ant-menu-item .ant-menu-item-selected-selected {
   background: rgba(0, 0, 0, 0.2) !important;
 }
@@ -156,7 +123,7 @@ export default class LeftMenu extends Vue {
 .ant-menu-submenu-title {
   margin: 0 !important;
   color: #fff;
-  text-align: center;
+  // text-align: center;
 }
 .ant-menu-item-selected {
   background: rgba(0, 0, 0, 0) !important;
@@ -164,24 +131,13 @@ export default class LeftMenu extends Vue {
 .ant-menu {
   background: rgba(0, 0, 0, 0) !important;
 }
-.Title {
-  font-size: 12px;
-  text-align: left;
-  height: 40px;
-  line-height: 40px;
-  width: 100%;
-  padding-left: 10px;
-  color: #fff;
-  > span {
-    padding: 4px 10px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 17px;
-  }
+.ant-menu-item {
+  padding-left: 0 !important;
 }
-.ant-menu-inline,
-.ant-menu-vertical,
-.ant-menu-vertical-left {
-  border-right: 0;
+
+.ant-menu-item-selected {
+  border-left: 2px solid #fff;
+  background: rgba(0, 0, 0, 0.3) !important;
 }
 .Column .ant-menu-submenu-title {
   span {
@@ -190,40 +146,57 @@ export default class LeftMenu extends Vue {
 }
 .Column .ant-menu-item > a {
   color: #fff;
-  text-align: center;
+  // text-align: center;
   span {
     font-size: 12px;
   }
 }
-.Column
-  .ant-menu-submenu-vertical
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::before,
-.ant-menu-submenu-vertical-left
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::before,
-.ant-menu-submenu-vertical-right
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::before,
-.ant-menu-submenu-inline
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::before,
-.ant-menu-submenu-vertical
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::after,
-.ant-menu-submenu-vertical-left
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::after,
-.ant-menu-submenu-vertical-right
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::after,
-.ant-menu-submenu-inline
-  > .ant-menu-submenu-title
-  .ant-menu-submenu-arrow::after {
-  background-image: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.65),
-    rgba(255, 255, 255, 0.1)
-  );
+.ant-menu-submenu {
+  background: rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  border-radius: 5px !important;
+}
+.ant-menu .ant-menu-inline .ant-menu-root .ant-menu-light {
+  padding-right: 19px !important;
+  padding-left: 16px !important;
+}
+.ant-menu-submenu .ant-menu-submenu-inline {
+  border-radius: 5px !important;
+}
+.ant-menu-submenu-arrow {
+  background: #fff;
+  color: #fff;
+}
+.menulist {
+  background: rgba(0, 0, 0, 0.1) !important;
+  text-indent: 20px;
+}
+.ant-menu-dark .ant-menu-inline.ant-menu-sub {
+  box-shadow: none;
+  text-indent: 20px;
+  padding-left: 10px;
+  border-radius: 5px !important;
+  border-top-left-radius: 2px !important;
+  border-bottom-left-radius: 2px !important;
+  padding-left: 2px;
+}
+.clearborderradius {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+.ant-menu-dark .ant-menu-item:hover,
+.ant-menu-dark .ant-menu-item-active,
+.ant-menu-dark .ant-menu-submenu-active,
+.ant-menu-dark .ant-menu-submenu-open,
+.ant-menu-dark .ant-menu-submenu-selected,
+.ant-menu-dark .menulist,
+.ant-menu-dark .ant-menu-submenu-title:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.menulist:hover {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+.menulist .ant-menu-submenu-selected .ant-menu-item {
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 </style>
