@@ -51,6 +51,7 @@
           </a-dropdown>
         </div>
         <div class="btnList">
+          <a-button class="upData mr10" @click="Export">导出</a-button>
           <a-button class="upData" @click="add">添加</a-button>
         </div>
       </div>
@@ -69,17 +70,33 @@
           <template slot="index" slot-scope="text, record, index">
             {{ (pagination.current - 1) * pagination.pageSize + index + 1 }}
           </template>
-          <template slot="operation" slot-scope="text">
+          <template slot="operation" slot-scope="text, record">
             <div class="linkBox">
-              <a-button type="link" block>编辑</a-button>
-              <a-button type="link" block>删除</a-button>
+              <a-button type="link" block @click="edit(record)">编辑</a-button>
+              <a-popconfirm
+                title="确定删除？"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="remove(record.id)"
+              >
+                <a-button type="link" block>删除</a-button>
+              </a-popconfirm>
             </div>
           </template>
         </a-table>
       </div>
       <!-- 弹出层 -->
-      <a-modal v-model="visible" title="添加公告" @ok="handleOk" width="635px">
-        <a-form :form="form2" @submit="handleSubmit">
+      <a-modal
+        v-model="visible"
+        :title="myTitle"
+        @ok="handleOk"
+        width="635px"
+        wrapClassName="myAM"
+        cancelText="取消"
+        okText="提交"
+        @cancel="back"
+      >
+        <a-form :form="form2" @submit="handleSubmit" layout="inline">
           <a-row :gutter="24">
             <a-col :span="12">
               <a-form-item label="公告标题">
@@ -90,75 +107,127 @@
                       rules: [{ required: true, message: '请输入公告标题' }]
                     }
                   ]"
+                  placeholder="请输入公告标题"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="12">
-              <a-form-item label="公告类型">
-                <a-input
+              <a-form-item
+                style="width:99%"
+                label="公告类型"
+                :label-col="myTab.labelCol"
+                :wrapper-col="myTab.wrapperCol"
+              >
+                <a-select
                   v-decorator="[
                     'type',
                     {
-                      rules: [{ required: true, message: '公告类型不能为空' }]
+                      rules: [{ required: true, message: '公告类型不能为空' }],
+                      initialValue: '1'
                     }
                   ]"
-                />
+                  placeholder="请选择"
+                >
+                  <a-select-option value="1">
+                    通知
+                  </a-select-option>
+                  <a-select-option value="2">
+                    系统升级
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <a-col :span="12">
-              <a-form-item label="发送时间">
-                <a-input
+              <a-form-item label="发送时间" layout="inline">
+                <a-date-picker
+                  style="min-width:175px"
                   v-decorator="[
                     'sendTime',
                     {
-                      rules: [{ required: true, message: '发送时间不能为空' }]
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择发送时间！'
+                        }
+                      ]
                     }
                   ]"
+                  placeholder="请选择"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
                 />
               </a-form-item>
             </a-col>
             <a-col :span="12">
-              <a-form-item label="截止时间">
-                <a-input
+              <a-form-item label="截止时间" layout="inline">
+                <a-date-picker
+                  style="min-width:175px"
                   v-decorator="[
                     'endTime',
                     {
-                      rules: [{ required: true, message: '截止时间不能为空' }]
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择截止时间！'
+                        }
+                      ]
                     }
                   ]"
+                  placeholder="请选择"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="12" v-show="isShow">
               <a-form-item label="接收部门">
-                <a-input
+                <a-tree-select
+                  v-show="isShow"
+                  style="min-width:175px"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="treeData"
+                  placeholder="请选择"
+                  tree-default-expand-all
+                  :replaceFields="{
+                    children: 'children',
+                    title: 'name',
+                    key: 'code',
+                    value: 'value'
+                  }"
                   v-decorator="[
                     'acceptDeptCode',
                     {
-                      rules: [{ required: true, message: '接收部门不能为空' }]
+                      rules: [{ required: isShow, message: '接收部门不能为空' }]
                     }
                   ]"
-                />
+                >
+                </a-tree-select>
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item label="">
-                <a-radio-group v-decorator="['organization']">
-                  <a-radio value="a">
+                <a-checkbox-group
+                  v-decorator="['organization']"
+                  @change="ckChange"
+                >
+                  <a-checkbox value="isALL">
                     全部部门
-                  </a-radio>
-                </a-radio-group>
+                  </a-checkbox>
+                </a-checkbox-group>
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="公告内容">
-                <a-input
+              <a-form-item label="公告内容" style="width:100%">
+                <a-textarea
+                  style="width:482px"
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: true, message: '接收部门不能为空' }]
+                      rules: [{ required: true, message: '公告内容不能为空' }]
                     }
                   ]"
+                  placeholder="请输入公告内容"
+                  :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
               </a-form-item>
             </a-col>
@@ -172,6 +241,8 @@
 <script lang="ts">
 // import { PropType } from "vue";
 import { Component, Vue } from "vue-property-decorator";
+import moment from "moment";
+import { http } from "../../api/interceptors";
 @Component({
   components: {}
 })
@@ -179,10 +250,18 @@ export default class RightContent extends Vue {
   [x: string]: any;
   public getData = new this.$api.configInterface.Announcement();
   public visible = false;
+  public myTab = {
+    labelCol: { span: 7 },
+    wrapperCol: { span: 15 }
+  };
+  public myTitle = "添加公告";
   private form: any;
+  public treeData = [];
   private form2: any;
   public tabData = [];
+  public isShow = true;
   public seachKey = "all";
+  public saveData = {};
   public pagination = {
     pageSize: 10, // 默认每页显示数量
     current: 1, //显示当前页数
@@ -277,6 +356,7 @@ export default class RightContent extends Vue {
       status: this.seachKey
     };
     this.getList(val);
+    this.getSL();
   }
   private getList(val: any) {
     this.getData.getNotices(val, true).then((res: any) => {
@@ -285,6 +365,16 @@ export default class RightContent extends Vue {
       this.pagination.total = res.pages * 1;
     });
   }
+
+  private getSL(): void {
+    const val = {
+      notPlatform: true
+    };
+    this.getData.getSelect(val, true).then((res: any) => {
+      this.treeData = res.data;
+    });
+  }
+
   private handleSubmit(e: any): void {
     e.preventDefault();
     this.form.validateFields((err: any, values: any) => {
@@ -310,14 +400,108 @@ export default class RightContent extends Vue {
       limit: this.pagination.pageSize,
       status: this.seachKey
     };
-    console.log(obj);
     this.getList(obj);
   }
   private add(): void {
     this.visible = true;
+    this.myTitle = "添加公告";
+  }
+  private remove(val: string): void {
+    const DT = [val];
+    this.getData.removeItem(DT, true).then((res: any) => {
+      if (res.code == 0) {
+        const val = {
+          page: this.pagination.current,
+          limit: this.pagination.pageSize,
+          status: this.seachKey
+        };
+        this.getList(val);
+      }
+    });
+    console.log(val);
+  }
+  private edit(val: any): void {
+    console.log(val);
+    this.visible = true;
+    this.myTitle = "编辑";
+    if (val.acceptDeptCode == "ALL") {
+      val.acceptDeptCode = undefined;
+      val.isALL = ["isALL"];
+      this.isShow = false;
+    } else {
+      val.isALL = undefined;
+      this.isShow = true;
+    }
+    // const that = this;
+    this.$nextTick(() => {
+      this.form2.setFieldsValue({
+        title: val.title,
+        type: val.type,
+        sendTime: val.sendTime,
+        endTime: val.endTime,
+        acceptDeptCode: val.acceptDeptCode,
+        organization: val.isALL,
+        remark: val.content
+      });
+    });
   }
   private handleOk(e: any): void {
-    console.log(e);
+    e.preventDefault();
+    this.form2.validateFields((err: any, values: any) => {
+      if (!err) {
+        if (this.isShow == false) {
+          this.saveData = {
+            acceptDeptCode: "ALL",
+            content: values.remark,
+            endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
+            sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
+            title: values.title,
+            type: values.type,
+            id: "",
+            isALL: "on"
+          };
+        } else {
+          this.saveData = {
+            acceptDeptCode: values.acceptDeptCode,
+            content: values.remark,
+            endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
+            sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
+            title: values.title,
+            type: values.type,
+            id: ""
+          };
+        }
+        this.saveVal(this.saveData);
+      }
+    });
+  }
+  private back(): void {
+    this.form2.resetFields();
+  }
+  private ckChange(e: any): void {
+    if (e.length > 0) {
+      this.isShow = false;
+    } else {
+      this.isShow = true;
+    }
+  }
+  private saveVal(val: any) {
+    this.getData.saveVal(val, true).then((res: any) => {
+      if (res.code == 0) {
+        this.visible = !this.visible;
+        this.form2.resetFields();
+        const val = {
+          page: this.pagination.current,
+          limit: this.pagination.pageSize,
+          status: this.seachKey
+        };
+        this.getList(val);
+      }
+    });
+  }
+  private Export(): void {
+    const data = `status=${this.seachKey}`;
+    window.open(http + "api/pconfig/system/notice/export?" + data);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private rowClassName(record: any, index: number): string {
@@ -328,8 +512,8 @@ export default class RightContent extends Vue {
 
 <style lang="less" scope>
 #Announcement {
-  width: 100%;
-  height: 100vh;
+  width: calc(100% - 250px);
+  height: calc(100% -115px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -392,5 +576,18 @@ export default class RightContent extends Vue {
 }
 .linkBox {
   display: flex;
+}
+.myAM .ant-form-inline.ant-form-item {
+  display: flex;
+}
+.myAM .ant-form-inline .ant-form-item {
+  margin-bottom: 0;
+  height: 60px;
+}
+.myAM .ant-modal-body {
+  margin-bottom: 24px;
+}
+.mr10 {
+  margin-right: 10px;
 }
 </style>

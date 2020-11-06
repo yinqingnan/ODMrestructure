@@ -6,7 +6,7 @@ import { message } from 'ant-design-vue';   // 弹吐司
   *@param jwt   是否token校验
   * @param flag          标记
  */
-export class Announcement {
+export class Dictionary {
   public axios: any;
   constructor() {
     this.axios = new Interceptors().getInterceptors()
@@ -38,8 +38,8 @@ export class Announcement {
   * @param jwt   是否token校验
   * @param flag          标记
   */
-  public getNotices(params: object, jwt: boolean, flag: string) {
-    const url = "/api/pconfig/system/notice/list";
+  public getKey(params: object, jwt: boolean, flag: string) {
+    const url = "/api/pconfig/base/dict/getDictKey";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
@@ -54,12 +54,27 @@ export class Announcement {
     });
   }
 
-  public getSelect(params: object, jwt: boolean, flag: string) {
-    const url = "/api/uauth/base/dept/select";
+  public getList(params: object, jwt: boolean, flag: string) {
+    const url = "/api/pconfig/base/dict/list";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any; }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  public removeItem(params: object, jwt: boolean, flag: string) {
+    const url = "/api/pconfig/base/dict/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
@@ -70,7 +85,7 @@ export class Announcement {
   }
 
   public saveVal(params: object, jwt: boolean, flag: string) {
-    const url = "/api/pconfig/system/notice/save";
+    const url = "/api/pconfig/base/dict/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
@@ -83,21 +98,7 @@ export class Announcement {
     });
   }
 
-  public removeItem(params: object, jwt: boolean, flag: string) {
-    const url = "/api/pconfig/system/notice/delete";
-    const body = params
-    return new Promise((resolve, reject) => {
-      this.axios.post(url, body, {
-        headers: { isJwt: jwt },
-      }).then((res: any) => {
-        this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
-        reject(err.message);
-      });
-    });
-  }
 
-  
 
   /**
  * @param res
