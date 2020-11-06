@@ -17,7 +17,7 @@ const routes: Array<RouteConfig> = [
     path: "/Announcement",
     name: "Announcement",
     component: () =>
-      import("@/views/systemM/Announcement.vue")
+      import("@/views/systemM/Dictionary.vue")
   },
   {
     path: "/home",
