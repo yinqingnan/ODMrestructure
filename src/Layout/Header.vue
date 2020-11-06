@@ -181,6 +181,9 @@ export default class Header extends Vue {
   private getusermsg() {
     this.Login.usermsg({}, true).then((res: any) => {
       this.username = res.data.name;
+      // console.log(res.data);
+      localStorage.setItem("username", res.data.name);
+      localStorage.setItem("department", res.data.deptName);
     });
   }
 }

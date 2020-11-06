@@ -78,6 +78,12 @@ export default class RightContent extends Vue {
   private mounted() {
     this.activeKeys = this.activeKey;
     this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px";
+    // const that = this;
+    // window.onresize = function() {
+    //   console.log(that);
+    //   // document.documentElement.clientWidth;
+    //   // document.documentElement.clientHeight;
+    // };
   }
   @Watch("activeKey")
   getPiedata(newval: string) {
@@ -118,8 +124,8 @@ export default class RightContent extends Vue {
 .tag {
   width: 100%;
 }
-.view {
-  height: ~"calc(100vh - 115px)";
-  margin-top: 7px;
-}
+// .view {
+//   height: ~"calc(100vh - 115px)";
+//   margin-top: 7px;
+// }
 </style>
