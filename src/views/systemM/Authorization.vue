@@ -112,6 +112,7 @@ export default class RightContent extends Vue {
       this.pagination.total = res.pages * 1;
     });
   }
+  
   private rowClassName(record: any, index: number): string {
     return index % 2 === 0 ? "bgF5" : "";
   }
