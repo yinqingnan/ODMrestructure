@@ -30,11 +30,11 @@ const Tabs = namespace("Tabs");
   components: {}
 })
 export default class RightContent extends Vue {
-  @Prop({
-    type: Object
-  })
-  public myWH!: {};
-  public obj = this.myWH;
+  // @Prop({
+  //   type: Object
+  // })
+  // public myWH!: {};
+  // public obj = this.myWH;
   @Tabs.State(state => state.activeKey)
   activeKey!: string;
   @Tabs.State(state => state.tagList)
@@ -43,7 +43,7 @@ export default class RightContent extends Vue {
   dlttbs!: (val: any) => {};
   private activeKeys = "";
   created() {
-    console.log(this.obj);
+    // console.log(this.obj);
   }
   private onEdit(e: string): void {
     const len: number = this.tagList.length;

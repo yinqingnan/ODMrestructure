@@ -1,7 +1,7 @@
 /* eslint-disable vue/no-parsing-error */
 <template>
   <div>
-    <div class="layoutcontainer">
+    <div id="AvData" class="layoutcontainer">
       <div class="container">
         <div class="contaninerheader">
           <template>
@@ -13,24 +13,12 @@
                 <a-form
                   autocomplete="off"
                   :form="form"
-                  @submit="handleSubmit"
                   :label-col="{ span: 8 }"
                   :wrapper-col="{ span: 14 }"
+                  @submit="handleSubmit"
                 >
                   <a-form-item label="部门">
                     <a-tree-select
-                      :allowClear="true"
-                      style="width: 100%"
-                      :dropdownMatchSelectWidth="true"
-                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                      :tree-data="departmentData"
-                      :replaceFields="{
-                        id: 'code',
-                        pId: 'parentCode',
-                        value: 'value',
-                        title: 'name'
-                      }"
-                      placeholder="请选择..."
                       v-decorator="[
                         'department',
                         {
@@ -38,22 +26,31 @@
                           rules: []
                         }
                       ]"
+                      :allow-clear="true"
+                      style="width: 100%"
+                      :dropdown-match-select-width="true"
+                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                      :tree-data="departmentData"
+                      :replace-fields="{
+                        id: 'code',
+                        pId: 'parentCode',
+                        value: 'value',
+                        title: 'name'
+                      }"
+                      placeholder="请选择..."
                     />
                   </a-form-item>
                   <a-form-item label="姓名/警号">
                     <a-input
-                      :maxLength="LimitInputlength"
                       v-decorator="['user', { initialValue: '', rules: [] }]"
+                      :max-length="LimitInputlength"
                       placeholder="请输入姓名/警号"
                     >
-                      /></a-input
-                    >
+                      />
+                    </a-input>
                   </a-form-item>
                   <a-form-item label="时间类型">
                     <a-select
-                      :allowClear="true"
-                      style="width: 100%"
-                      placeholder="Please select"
                       v-decorator="[
                         'TimeData',
                         {
@@ -61,6 +58,9 @@
                           rules: []
                         }
                       ]"
+                      :allow-clear="true"
+                      style="width: 100%"
+                      placeholder="Please select"
                     >
                       <a-select-option v-for="d in Timetype" :key="d.value">
                         {{ d.title }}
@@ -69,7 +69,6 @@
                   </a-form-item>
                   <a-form-item label="时间">
                     <a-range-picker
-                      @change="onChange"
                       v-decorator="[
                         'date',
                         {
@@ -77,13 +76,11 @@
                           rules: []
                         }
                       ]"
+                      @change="onChange"
                     />
                   </a-form-item>
                   <a-form-item label="文件类型">
                     <a-select
-                      :allowClear="true"
-                      style="width: 100%"
-                      placeholder="Please select"
                       v-decorator="[
                         'Filetype',
                         {
@@ -91,6 +88,9 @@
                           rules: []
                         }
                       ]"
+                      :allow-clear="true"
+                      style="width: 100%"
+                      placeholder="Please select"
                     >
                       <a-select-option v-for="d in filetype" :key="d.value">
                         {{ d.title }}
@@ -99,9 +99,6 @@
                   </a-form-item>
                   <a-form-item label="重要级别">
                     <a-select
-                      :allowClear="true"
-                      style="width: 100%"
-                      placeholder="Please select"
                       v-decorator="[
                         'levelData',
                         {
@@ -109,6 +106,9 @@
                           rules: []
                         }
                       ]"
+                      :allow-clear="true"
+                      style="width: 100%"
+                      placeholder="Please select"
                     >
                       <a-select-option v-for="d in levelData" :key="d.value">
                         {{ d.title }}
@@ -135,6 +135,7 @@
         <div>
           <a-table
             :loading="loading"
+            row-key="columns"
             :columns="columns"
             :bordered="true"
             :data-source="tabledata"
@@ -142,19 +143,24 @@
               selectedRowKeys: selectedRowKeys,
               onChange: onSelectChange
             }"
-          />
+          >
+            <span slot="action" slot-scope="text, record">
+              <span style="color:#0db8df" @click="tablebtn(text, record)">
+                操作
+              </span>
+            </span>
+          </a-table>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script lang="ts">
-import { LimitInputlength } from "../../InterfaceVariable/variable";
-import { Component, Prop, Vue } from "vue-property-decorator";
-import moment from "moment";
+import { LimitInputlength } from '../../InterfaceVariable/variable';
+import { Component,  Vue } from 'vue-property-decorator';
+import moment from 'moment';
 @Component({
-  components: {}
+      components: {},
 })
 export default class AvData extends Vue {
   [x: string]: any;
@@ -163,104 +169,158 @@ export default class AvData extends Vue {
   private LimitInputlength = LimitInputlength;
   private departmentData = [];
   private Timetype = [
-    { id: 1, value: "1", title: "导入时间" },
-    { id: 2, value: "2", title: "拍摄时间" }
+        { id: 1, value: '1', title: '导入时间' },
+        { id: 2, value: '2', title: '拍摄时间' },
   ];
   private filetype = [
-    { id: 1, value: "1", title: "视频" },
-    { id: 2, value: "2", title: "音频" },
-    { id: 3, value: "3", title: "图片" },
-    { id: 4, value: "4", title: "日志" }
+        { id: 1, value: '1', title: '视频' },
+        { id: 2, value: '2', title: '音频' },
+        { id: 3, value: '3', title: '图片' },
+        { id: 4, value: '4', title: '日志' },
   ];
   private levelData = [
-    { id: 1, value: "1", title: "高" },
-    { id: 2, value: "2", title: "中" },
-    { id: 3, value: "3", title: "低" }
+        { id: 1, value: '1', title: '高' },
+        { id: 2, value: '2', title: '中' },
+        { id: 3, value: '3', title: '低' },
   ];
   private defaultdate = [
-    moment("2015-06-06", "YYYY-MM-DD"),
-    moment("2015-06-06", "YYYY-MM-DD")
+        moment('2015-06-06', 'YYYY-MM-DD'),
+        moment('2015-06-06', 'YYYY-MM-DD'),
   ];
   private selectdata = [];
   private selectedRowKeys = [];
   private loading = false;
   private columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name"
-    },
-    {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-      width: "12%"
-    },
-    {
-      title: "Address",
-      dataIndex: "address",
-      width: "30%",
-      key: "address"
-    }
+        {
+              title: '文件名称',
+              dataIndex: 'fileName',
+              align: 'center',
+              key: 'fileName',
+        },
+        {
+              title: '执勤部门',
+              dataIndex: 'deptCode',
+              align: 'center',
+              key: 'deptCode',
+        },
+        {
+              title: '民警姓名',
+              dataIndex: 'userName',
+              align: 'center',
+              key: 'userName',
+        },
+        {
+              title: '民警警告',
+              dataIndex: 'userCode',
+              align: 'center',
+              key: 'userCode',
+        },
+        {
+              title: '文件类型',
+              dataIndex: 'fileType_Name',
+              align: 'center',
+              key: 'fileType_Name',
+        },
+        {
+              title: '重要级别',
+              dataIndex: 'fileLevel_Name',
+              align: 'center',
+              key: 'fileLevel_Name',
+        },
+        {
+              title: '摄录时间',
+              dataIndex: 'recordDate',
+              align: 'center',
+              key: 'recordDate',
+        },
+        {
+              title: '摄录时长',
+              dataIndex: 'fileDuration_Name',
+              align: 'center',
+              key: 'fileDuration_Name',
+        },
+        {
+              title: '导入时间',
+              dataIndex: 'uploadDate',
+              align: 'center',
+              key: 'uploadDate',
+        },
+        {
+              title: '关联信息',
+              dataIndex: 'relateCase',
+              align: 'center',
+              key: 'relateCase',
+        },
+        {
+              title: '操作',
+              dataIndex: 'action',
+              align: 'center',
+              key: 'action',
+              scopedSlots: { customRender: 'action' },
+        },
   ];
-  private tabledata = [
-    {
-      key: 1,
-      name: "John Brown sr.",
-      age: 60,
-      address: "New York No. 1 Lake Park"
-    },
-    {
-      key: 2,
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park"
-    }
-  ];
+  private tabledata = [];
   private created() {
-    this.form = this.$form.createForm(this);
-    this.getdata();
+        this.form = this.$form.createForm(this);
+        this.getdata();
   }
 
   // private moment: any;
   private handleSubmit(e: any): void {
-    e.preventDefault();
-    this.form.validateFields((err: any, values: any) => {
-      if (!err) {
-        console.log(values);
-      }
-    });
+        e.preventDefault();
+        this.form.validateFields((err: any, values: any) => {
+              if (!err) {
+                    console.log(values);
+              }
+        });
   }
   private onChange(date: any, dateString: any): void {
-    this.selectdata = dateString;
+        this.selectdata = dateString;
   }
   private getdata() {
-    this.DataM.getMenulist({}, true).then((res: any) => {
-      this.departmentData = res.data;
-    });
-    this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
-      this.defaultdate = [
-        moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
-        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD")
-      ];
-    });
-    this.gettabledata();
+        this.DataM.getMenulist({}, true).then((res: any) => {
+              this.departmentData = res.data;
+        });
+        this.DataM.gettimeframe({ type: 'LATELY_MONTH' }, true).then((res: any) => {
+              this.defaultdate = [
+                    moment(res.data.myDate.split('~')[0], 'YYYY-MM-DD HH:mm:ss'),
+                    moment(res.data.myDate.split('~')[1], 'YYYY-MM-DD HH:mm:ss'),
+              ];
+        });
+        const obj = {
+              page: 1,
+              limit: 15,
+              deptCode_equal: '', //部门id
+              userName: '', //警员
+              timeType: 'uploadDate', //时间类型
+              timeRange: '2020-10-06 ~ 2020-11-06',
+              fileType_equal: '',
+              fileLevel_equal: '',
+              uploadDate_gt: '2020-10-06 00:00:00', //必填  时间起
+              uploadDate_lt: '2020-11-06 23:59:59', //必填  时间止
+              recordDate_gt: '',
+        };
+        obj.page=1
+        this.gettabledata(obj);
   }
-  private gettabledata() {
-    this.DataM.gettabledata().then((res: any) => {
-      console.log(res);
-    });
+  private gettabledata(obj: any) {
+        this.DataM.gettabledata(obj, true).then((res: any) => {
+              this.tabledata = res.data;
+        });
   }
   private onSelectChange(selectedRowKeys: any) {
-    this.selectedRowKeys = selectedRowKeys;
+        this.selectedRowKeys = selectedRowKeys;
   }
   private reset() {
-    this.form.resetFields();
-    this.defaultdate = [];
+        this.form.resetFields();
+        this.defaultdate = [];
   }
   private popup(e) {
-    this.getdata();
-    e.preventDefault();
+        this.getdata();
+        e.preventDefault();
+  }
+  private tablebtn(text: any, row: any) {
+        console.log(text, row);
   }
 }
 </script>
@@ -319,9 +379,17 @@ export default class AvData extends Vue {
 .ant-form-item-label > label {
   color: #808994;
 }
-.ant-table-tbody > tr > td {
+#AvData .ant-table-tbody > tr > td {
   padding: 0px;
   height: 36px;
   line-height: 36px;
+}
+#AvData .ant-table-thead {
+  height: 36px;
+  line-height: 36px;
+}
+#AvData .ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  padding: 0px;
 }
 </style>

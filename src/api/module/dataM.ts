@@ -53,13 +53,10 @@ export class DataM {
   // /api/file/filedata/file/list
   public gettabledata(params: object, jwt: boolean, flag: string) {
     const url = "/api/file/filedata/file/list";
-    const body = {
-      data: params,
-      tag: flag,
-    };
+
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
-        params: body,
+        params: params,
         headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
