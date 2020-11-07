@@ -15,7 +15,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/home",
-    name: "Home",
+    name: "Homes",
     redirect: "/index/home",
     meta: { requiresAuth: true },
     component: () =>
@@ -29,7 +29,7 @@ const routes: Array<RouteConfig> = [
         children: [
           {
             path: "home",
-            // name: "Recording",
+            name: "home",
             component: () => import('@/views/Index/Home.vue')
           },
           {
