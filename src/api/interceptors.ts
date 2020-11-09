@@ -2,7 +2,9 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 // const http:string = "https://easy-mock.com/mock/5f9c133f0bf9ee03009406f7"
 // export const http = "http://192.168.10.75:9100/"
-export const http = "http://192.168.10.81:9100/"
+// export const http = "http://192.168.10.81:9100/"
+export const http = "http://192.168.10.75:8100/"
+
 export class Interceptors {
   public instance: any
   constructor() {
@@ -18,7 +20,7 @@ export class Interceptors {
   // 初始化拦截器
   public initInterceptors() {
     // 设置post请求头
-    this.instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    axios.defaults.headers.post['Content-Type'] = 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8';
     /**
      * 请求拦截器
      * 每次请求前，如果存在token则在请求头中携带token

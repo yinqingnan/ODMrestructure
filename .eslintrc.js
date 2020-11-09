@@ -15,7 +15,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off', // allow console during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off', // allow debugger during development
     // 以下为该项目自定义部分
-    'indent': [1, 6], //缩进风格 - 开启缩进6格
+    'indent': [1, 2], //缩进风格 - 开启缩进6格
     'no-spaced-func': 1, //函数调用时 函数名与()之间不能有空格 - 开启
     'no-const-assign': 0, //禁止修改const声明的变量 - 开启
     'space-before-function-paren': [0, 'always'], //函数定义时括号前面要有空格 - 

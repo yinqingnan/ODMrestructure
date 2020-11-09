@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%">
+  <div style="height:100%" id="myRight">
     <!-- <button @click="add">添加</button> -->
     <div class="Multitab" ref="Multitab">
       <div class="tag">
@@ -99,6 +99,9 @@ export default class RightContent extends Vue {
 </script>
 
 <style lang="less" scope>
+#myRight {
+  width: calc(100% - 250px);
+}
 .el-row {
   margin-left: 0px !important;
   margin-right: 0px !important;
