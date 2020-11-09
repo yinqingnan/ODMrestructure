@@ -55,7 +55,7 @@ const mutations = {
       return item.key != val.e
     })
   },
-  [INITTABS](state: any, val1: any, val2: String) {
+  [INITTABS](state: any, val1: any, val2: string) {
     console.log(val1, val2)
   }
 };

@@ -307,7 +307,6 @@ export default class Dept extends Vue {
   private form: any;
   private form2: any;
   beforeCreate() {
-<<<<<<< HEAD
     this.form = this.$form.createForm(this);
     this.form2 = this.$form.createForm(this);
   }
@@ -376,12 +375,6 @@ export default class Dept extends Vue {
         parentCode: val.code,
       });
     })
-=======
-        this.form = this.$form.createForm(this);
-  }
-  private handleSubmit(e: any): void {
-        console.log(e)
->>>>>>> dcbef194f5b4678e31f961cdf526051a7e465f1e
   }
   private Export(e: any): void {
         console.log(e)
@@ -407,7 +400,6 @@ export default class Dept extends Vue {
     // });
   }
   private add(e: any): void {
-<<<<<<< HEAD
     this.visible = true;
     this.myTitle = "添加公告";
   }
@@ -446,15 +438,11 @@ export default class Dept extends Vue {
   }
   private back() {
     this.form2.resetFields();
-=======
-        console.log(e)
->>>>>>> dcbef194f5b4678e31f961cdf526051a7e465f1e
   }
   private healthyTableChange(pagination: {
     pageSize: number
     current: number
   }) {
-<<<<<<< HEAD
     this.pagination.pageSize = pagination.pageSize;
     this.pagination.current = pagination.current;
     // const obj = {
@@ -462,15 +450,6 @@ export default class Dept extends Vue {
     //   limit: this.pagination.pageSize
     // };
     // this.getList(obj);
-=======
-        this.pagination.pageSize = pagination.pageSize;
-        this.pagination.current = pagination.current;
-        const obj = {
-              page: this.pagination.current,
-              limit: this.pagination.pageSize
-        };
-        this.getList(obj);
->>>>>>> dcbef194f5b4678e31f961cdf526051a7e465f1e
   }
   private rowClassName(record: any, index: number): string {
         return index % 2 === 0 ? "bgF5" : "";
