@@ -352,8 +352,8 @@ export default class RightContent extends Vue {
 
 <style lang="less" scope>
 #Setting {
-  width: calc(100% -115px);
-  height: 100%;
+  width: calc(100%);
+  height: calc(100% - 40px);
   display: flex;
   align-items: center;
   justify-content: center;

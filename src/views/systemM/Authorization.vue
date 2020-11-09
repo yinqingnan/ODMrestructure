@@ -112,7 +112,6 @@ export default class RightContent extends Vue {
       this.pagination.total = res.pages * 1;
     });
   }
-  
   private rowClassName(record: any, index: number): string {
     return index % 2 === 0 ? "bgF5" : "";
   }
@@ -122,7 +121,7 @@ export default class RightContent extends Vue {
 <style lang="less" scope>
 #Authorization {
   width: 100%;
-  height: calc(100% -115px);
+  height: calc(100% - 40px);
   display: flex;
   align-items: center;
   justify-content: center;

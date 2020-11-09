@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:100%">
     <!-- <button @click="add">添加</button> -->
     <div class="Multitab" ref="Multitab">
       <div class="tag">
