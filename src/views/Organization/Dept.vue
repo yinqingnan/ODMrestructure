@@ -84,91 +84,91 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
-  components: {}
+      components: {}
 })
 export default class Dept extends Vue {
   public pagination = {
-    pageSize: 1000, // 默认每页显示数量
-    current: 1, //显示当前页数
-    total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页` // 显示总数
+        pageSize: 1000, // 默认每页显示数量
+        current: 1, //显示当前页数
+        total: 0,
+        showSizeChanger: false, // 显示可改变每页数量
+        showQuickJumper: false, //显示跳转到输入的那一页
+        showTotal: (total: number) =>
+              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+                    total / this.pagination.pageSize
+              )} 页` // 显示总数
   };
   public tabData = [];
   public columns = [
-    {
-      title: "序号",
-      className: "pd10",
-      width: 65,
-      dataIndex: "index",
-      fixed: "left",
-      scopedSlots: { customRender: "index" }
-    },
-    {
-      title: "部门名称",
-      dataIndex: "name",
-      className: "pd10"
-    },
-    {
-      title: "部门编号",
-      dataIndex: "code",
-      className: "pd10"
-    },
-    {
-      title: "联系人",
-      dataIndex: "contact",
-      className: "pd10"
-    },
-    {
-      title: "联系电话",
-      dataIndex: "phone",
-      className: "pd10"
-    },
-    {
-      title: "部门描述",
-      dataIndex: "remark",
-      className: "pd10"
-    },
-    {
-      title: "操作",
-      key: "operation",
-      scopedSlots: { customRender: "operation" },
-      className: "pd10",
-      width: 200,
-      fixed: "right"
-    }
+        {
+              title: "序号",
+              className: "pd10",
+              width: 65,
+              dataIndex: "index",
+              fixed: "left",
+              scopedSlots: { customRender: "index" }
+        },
+        {
+              title: "部门名称",
+              dataIndex: "name",
+              className: "pd10"
+        },
+        {
+              title: "部门编号",
+              dataIndex: "code",
+              className: "pd10"
+        },
+        {
+              title: "联系人",
+              dataIndex: "contact",
+              className: "pd10"
+        },
+        {
+              title: "联系电话",
+              dataIndex: "phone",
+              className: "pd10"
+        },
+        {
+              title: "部门描述",
+              dataIndex: "remark",
+              className: "pd10"
+        },
+        {
+              title: "操作",
+              key: "operation",
+              scopedSlots: { customRender: "operation" },
+              className: "pd10",
+              width: 200,
+              fixed: "right"
+        }
   ];
   private form: any;
   beforeCreate() {
-    this.form = this.$form.createForm(this);
+        this.form = this.$form.createForm(this);
   }
   private handleSubmit(e: any): void {
-    console.log(e)
+        console.log(e)
   }
   private Export(e: any): void {
-    console.log(e)
+        console.log(e)
   }
   private add(e: any): void {
-    console.log(e)
+        console.log(e)
   }
   private healthyTableChange(pagination: {
-    pageSize: number;
-    current: number;
+    pageSize: number
+    current: number
   }) {
-    this.pagination.pageSize = pagination.pageSize;
-    this.pagination.current = pagination.current;
-    const obj = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize
-    };
-    this.getList(obj);
+        this.pagination.pageSize = pagination.pageSize;
+        this.pagination.current = pagination.current;
+        const obj = {
+              page: this.pagination.current,
+              limit: this.pagination.pageSize
+        };
+        this.getList(obj);
   }
   private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : "";
+        return index % 2 === 0 ? "bgF5" : "";
   }
 }
 </script>
