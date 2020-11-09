@@ -321,7 +321,7 @@ export default class RightContent extends Vue {
 <style lang="less" scope>
 #Dictionary {
   width: calc(100% - 250px);
-  height: calc(100% -115px);
+  height: calc(100% - 40px);
   display: flex;
   align-items: center;
   justify-content: center;

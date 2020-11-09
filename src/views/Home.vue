@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <Header />
-    <div>
+    <div class="sHome">
       <router-view />
     </div>
   </div>
@@ -16,4 +16,12 @@ export default {
   }
 };
 </script>
-<style lang="less"></style>
+<style lang="less">
+.home {
+  width: 100%;
+  height: 100%;
+}
+.sHome {
+  height: calc(100% - 74px);
+}
+</style>

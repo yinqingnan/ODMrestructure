@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 <template>
-  <div>
+  <div style="height:100%">
     <div class="layout">
       <LeftMenu :data="data" class="hidden-sm-and-down" />
       <RightContent class="right" :myWH="myWH" />
@@ -774,7 +774,8 @@ export default class BodyContent extends Vue {
 .layout {
   display: flex;
   overflow: hidden;
-  height: ~"calc(100vh - 74px)";
+  height: 100%;
+  width: 100%;
 }
 .right {
   width: 100%;
