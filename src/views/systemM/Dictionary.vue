@@ -85,8 +85,7 @@
                   ]"
                   placeholder="点击右方按钮生成"
                 />
-                <a-button type="primary" style="margin-left:10px;" @click="getK"
-                  >自动生成
+                <a-button type="primary" style="margin-left:10px;" @click="getK">自动生成
                 </a-button>
               </a-form-item>
             </a-col>
@@ -128,12 +127,12 @@
 // import { PropType } from "vue";
 import { Component, Vue } from "vue-property-decorator";
 interface MyD {
-  page: number;
-  limit: number;
-  parentKey_equal: string;
+  page: number
+  limit: number
+  parentKey_equal: string
 }
 @Component({
-  components: {}
+      components: {}
 })
 export default class RightContent extends Vue {
   [x: string]: any;
@@ -147,173 +146,173 @@ export default class RightContent extends Vue {
   public myTitle = "添加公告";
   public saveData = {};
   public pagination = {
-    pageSize: 10, // 默认每页显示数量
-    current: 1, //显示当前页数
-    total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页` // 显示总数
+        pageSize: 10, // 默认每页显示数量
+        current: 1, //显示当前页数
+        total: 0,
+        showSizeChanger: false, // 显示可改变每页数量
+        showQuickJumper: false, //显示跳转到输入的那一页
+        showTotal: (total: number) =>
+              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+                    total / this.pagination.pageSize
+              )} 页` // 显示总数
   };
   public columns = [
-    {
-      title: "序号",
-      className: "pd10",
-      width: 70,
-      dataIndex: "index",
-      fixed: "left",
-      scopedSlots: { customRender: "index" }
-    },
-    {
-      title: "字典名",
-      dataIndex: "value",
-      className: "pd10",
-      width: 380
-    },
-    {
-      title: "字典值",
-      dataIndex: "dictKey",
-      className: "pd10",
-      width: 380
-    },
-    {
-      title: "字典描述",
-      dataIndex: "remark",
-      className: "pd10",
-      width: 380
-    },
-    {
-      title: "创建时间",
-      dataIndex: "createTime",
-      className: "pd10",
-      width: 210
-    },
-    {
-      title: "创建人",
-      dataIndex: "createUserName",
-      className: "pd10",
-      width: 175
-    },
-    {
-      title: "操作",
-      key: "operation",
-      scopedSlots: { customRender: "operation" },
-      className: "pd10",
-      width: 180,
-      fixed: "right"
-    }
+        {
+              title: "序号",
+              className: "pd10",
+              width: 70,
+              dataIndex: "index",
+              fixed: "left",
+              scopedSlots: { customRender: "index" }
+        },
+        {
+              title: "字典名",
+              dataIndex: "value",
+              className: "pd10",
+              width: 380
+        },
+        {
+              title: "字典值",
+              dataIndex: "dictKey",
+              className: "pd10",
+              width: 380
+        },
+        {
+              title: "字典描述",
+              dataIndex: "remark",
+              className: "pd10",
+              width: 380
+        },
+        {
+              title: "创建时间",
+              dataIndex: "createTime",
+              className: "pd10",
+              width: 210
+        },
+        {
+              title: "创建人",
+              dataIndex: "createUserName",
+              className: "pd10",
+              width: 175
+        },
+        {
+              title: "操作",
+              key: "operation",
+              scopedSlots: { customRender: "operation" },
+              className: "pd10",
+              width: 180,
+              fixed: "right"
+        }
   ];
   beforeCreate() {
-    this.form = this.$form.createForm(this);
-    this.form2 = this.$form.createForm(this);
+        this.form = this.$form.createForm(this);
+        this.form2 = this.$form.createForm(this);
   }
   created() {
-    const val = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      parentKey_equal: "position"
-    };
-    this.getList(val);
-  }
-  private getList(val: MyD): void {
-    this.getData.getList(val, true).then((res: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this.tabData = res.data;
-      this.pagination.total = res.pages * 1;
-    });
-  }
-  private getK() {
-    const val = {
-      parentKey: "position"
-    };
-    this.getData.getKey(val, true).then((res: any) => {
-      this.form2.setFieldsValue({
-        dictKey: res.data
-      });
-    });
-  }
-  private healthyTableChange(pagination: {
-    pageSize: number;
-    current: number;
-  }) {
-    this.pagination.pageSize = pagination.pageSize;
-    this.pagination.current = pagination.current;
-    const obj = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
-      status: this.seachKey
-    };
-    this.getList(obj);
-  }
-  private add(): void {
-    this.visible = true;
-    this.myTitle = "添加公告";
-  }
-  private remove(val: string): void {
-    const DT = [val];
-    this.getData.removeItem(DT, true).then((res: any) => {
-      if (res.code == 0) {
         const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          parentKey_equal: "position"
-        };
-        this.getList(val);
-      }
-    });
-    console.log(val);
-  }
-  private edit(val: any): void {
-    this.visible = true;
-    this.myTitle = "编辑";
-    // const that = this;
-    this.$nextTick(() => {
-      this.form2.setFieldsValue({
-        dictKey: val.dictKey,
-        parentKey: val.parentKey,
-        remark: val.remark,
-        name: val.value
-      });
-    });
-  }
-  private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : "";
-  }
-  private back(): void {
-    this.form2.resetFields();
-  }
-  private handleOk(e: any): void {
-    e.preventDefault();
-    this.form2.validateFields((err: any, values: any) => {
-      if (!err) {
-        const val = {
-          dictKey: values.dictKey,
-          id: "",
-          parentKey: values.parentKey,
-          remark: values.remark,
-          value: values.name
-        };
-        this.getData.saveVal(val, true).then((res: any) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          if (res.code == 0){
-            this.visible = !this.visible;
-            this.form2.resetFields();
-            const val = {
               page: this.pagination.current,
               limit: this.pagination.pageSize,
               // eslint-disable-next-line @typescript-eslint/camelcase
               parentKey_equal: "position"
-            };
-            this.getList(val);
-          }
+        };
+        this.getList(val);
+  }
+  private getList(val: MyD): void {
+        this.getData.getList(val, true).then((res: any) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              this.tabData = res.data;
+              this.pagination.total = res.pages * 1;
         });
-        console.log(values);
-      }
-    });
+  }
+  private getK() {
+        const val = {
+              parentKey: "position"
+        };
+        this.getData.getKey(val, true).then((res: any) => {
+              this.form2.setFieldsValue({
+                    dictKey: res.data
+              });
+        });
+  }
+  private healthyTableChange(pagination: {
+    pageSize: number
+    current: number
+  }) {
+        this.pagination.pageSize = pagination.pageSize;
+        this.pagination.current = pagination.current;
+        const obj = {
+              page: this.pagination.current,
+              limit: this.pagination.pageSize,
+              status: this.seachKey
+        };
+        this.getList(obj);
+  }
+  private add(): void {
+        this.visible = true;
+        this.myTitle = "添加公告";
+  }
+  private remove(val: string): void {
+        const DT = [val];
+        this.getData.removeItem(DT, true).then((res: any) => {
+              if (res.code == 0) {
+                    const val = {
+                          page: this.pagination.current,
+                          limit: this.pagination.pageSize,
+                          // eslint-disable-next-line @typescript-eslint/camelcase
+                          parentKey_equal: "position"
+                    };
+                    this.getList(val);
+              }
+        });
+        console.log(val);
+  }
+  private edit(val: any): void {
+        this.visible = true;
+        this.myTitle = "编辑";
+        // const that = this;
+        this.$nextTick(() => {
+              this.form2.setFieldsValue({
+                    dictKey: val.dictKey,
+                    parentKey: val.parentKey,
+                    remark: val.remark,
+                    name: val.value
+              });
+        });
+  }
+  private rowClassName(record: any, index: number): string {
+        return index % 2 === 0 ? "bgF5" : "";
+  }
+  private back(): void {
+        this.form2.resetFields();
+  }
+  private handleOk(e: any): void {
+        e.preventDefault();
+        this.form2.validateFields((err: any, values: any) => {
+              if (!err) {
+                    const val = {
+                          dictKey: values.dictKey,
+                          id: "",
+                          parentKey: values.parentKey,
+                          remark: values.remark,
+                          value: values.name
+                    };
+                    this.getData.saveVal(val, true).then((res: any) => {
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                          if (res.code == 0){
+                                this.visible = !this.visible;
+                                this.form2.resetFields();
+                                const val = {
+                                      page: this.pagination.current,
+                                      limit: this.pagination.pageSize,
+                                      // eslint-disable-next-line @typescript-eslint/camelcase
+                                      parentKey_equal: "position"
+                                };
+                                this.getList(val);
+                          }
+                    });
+                    console.log(values);
+              }
+        });
   }
 }
 </script>

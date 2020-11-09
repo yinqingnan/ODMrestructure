@@ -15,7 +15,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/home",
-    name: "Home",
+    name: "Homes",
     redirect: "/index/home",
     meta: { requiresAuth: true },
     component: () =>
@@ -29,7 +29,7 @@ const routes: Array<RouteConfig> = [
         children: [
           {
             path: "home",
-            // name: "Recording",
+            name: "home",
             component: () => import('@/views/Index/Home.vue')
           },
           {
@@ -191,9 +191,9 @@ const routes: Array<RouteConfig> = [
   },
 ];
 const originalPush = VueRouter.prototype.push
-	VueRouter.prototype.push = function push(location: RawLocation) {
-	   return originalPush.call(this, location).catch(err => err)
-	}
+VueRouter.prototype.push = function push(location: RawLocation) {
+  return originalPush.call(this, location).catch(err => err)
+}
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,

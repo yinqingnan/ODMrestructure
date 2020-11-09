@@ -25,7 +25,7 @@ export class Login {
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -39,7 +39,7 @@ export class Login {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -53,7 +53,7 @@ export class Login {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -73,7 +73,7 @@ export class Login {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -87,7 +87,7 @@ export class Login {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -102,7 +102,7 @@ export class Login {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -116,7 +116,7 @@ export class Login {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
-      }).catch((err: { message: any; }) => {
+      }).catch((err: { message: any }) => {
         reject(err.message);
       });
     });
@@ -125,7 +125,7 @@ export class Login {
  * @param res
  * @param resolve
  */
-  public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void; }) {
+  public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
     // if (res.code === 0) {
     resolve(res);

@@ -2,6 +2,8 @@
   <div>
     <el-scrollbar class="Column">
       <div>
+          <!-- :defaultSelectedKeys="[$route.name]" -->
+
         <a-menu
           :defaultSelectedKeys="defaultSelectedKeys"
           :openKeys="openKeys"
@@ -15,7 +17,7 @@
             <a-menu-item
               @click="titleClick(item)"
               v-if="!item.children"
-              :key="item.key"
+              :key="item.name"
               class="menulist"
               ref="menulist"
             >
@@ -30,7 +32,7 @@
                 <span>{{ item.meta.title }}</span>
               </router-link>
             </a-menu-item>
-            <sub-menu v-else :key="item.key" :menu-info="item" />
+            <sub-menu v-else :key="item.name" :menu-info="item" />
           </template>
         </a-menu>
       </div>
@@ -44,47 +46,66 @@ import subMenu from "./SiderMenu/index.vue";
 import { namespace } from "vuex-class";
 const Tabs = namespace("Tabs");
 @Component({
-  components: {
-    subMenu
-  }
+      components: {
+            subMenu
+      }
 })
 export default class LeftMenu extends Vue {
   @Prop({
-    type: Array,
-    required: true,
-    default: []
+        type: Array,
+        required: true,
+        default: []
   })
   private data!: any[];
   @Tabs.Mutation("menuadd")
   menuadd!: (val: any) => {};
   private list = this.data;
   private current = ["mail"];
-  private openKeys: any = [""];
-  private defaultSelectedKeys: any = ["1"];
+  private openKeys: any = [];
+  private defaultSelectedKeys: any = [this.$route.name];
   private theme = "dark";
   private rootSubmenuKeys = ["sub1", "sub2", "sub4"];
   private mounted() {
-    // console.log(this.data);
+        console.log(this.data);
+        let name =this.$route.name
+        this.openKeys = [this.findIndexArray(this.data,name,[])[0]]
+        
+  }
+  public findIndexArray(data, name, indexArray) {
+        let arr = Array.from(indexArray)
+        for (let i = 0, len = data.length; i < len; i++) {
+              arr.push(data[i].name)
+              if (data[i].name === name) {
+                    return arr
+              }
+              let children = data[i].children
+              if (children && children.length) {
+                    let result = this.findIndexArray(children, name, arr)
+                    if (result) return result
+              }
+              arr.pop()
+        }
+        return false
   }
   public menuClick({ item, key, keyPath }: any): void {
-    if (key === "1") {
-      this.openKeys = ["0"];
-    }
+        if (key === "1") {
+              this.openKeys = ["0"];
+        }
   }
   public onOpenChange(openKeys: Array<string>[]): void {
-    if (openKeys.length !== 0) {
-      this.openKeys = [openKeys[1]];
-      // localStorage.setItem("openKeys", this.openKeys);
-    } else {
-      this.openKeys = [""];
-    }
+        if (openKeys.length !== 0) {
+              this.openKeys = [openKeys[1]];
+              // localStorage.setItem("openKeys", this.openKeys);
+        } else {
+              this.openKeys = [""];
+        }
   }
   private handleClick(e: any): void {
-    console.log("click", e);
+        console.log("click", e);
   }
   private titleClick(data: any): void {
-    // console.log(data);
-    this.menuadd(data);
+        // console.log(data);
+        this.menuadd(data);
   }
 }
 </script>
@@ -197,6 +218,10 @@ export default class LeftMenu extends Vue {
   background: rgba(0, 0, 0, 0.2) !important;
 }
 .menulist .ant-menu-submenu-selected .ant-menu-item {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
   background: rgba(0, 0, 0, 0.2) !important;
 }
 </style>

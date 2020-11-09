@@ -99,12 +99,12 @@
 // import { PropType } from "vue";
 import { Component, Vue } from "vue-property-decorator";
 interface MyD {
-  page: number;
-  limit: number;
-  parentKey_equal: string;
+  page: number
+  limit: number
+  parentKey_equal: string
 }
 @Component({
-  components: {}
+      components: {}
 })
 export default class RightContent extends Vue {
   [x: string]: any;
@@ -115,123 +115,123 @@ export default class RightContent extends Vue {
   public saveData = {};
   public savaID: string;
   public pagination = {
-    pageSize: 1000, // 默认每页显示数量
-    current: 1, //显示当前页数
-    total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页` // 显示总数
+        pageSize: 1000, // 默认每页显示数量
+        current: 1, //显示当前页数
+        total: 0,
+        showSizeChanger: false, // 显示可改变每页数量
+        showQuickJumper: false, //显示跳转到输入的那一页
+        showTotal: (total: number) =>
+              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+                    total / this.pagination.pageSize
+              )} 页` // 显示总数
   };
   public columns = [
-    {
-      title: "序号",
-      className: "pd10",
-      width: 65,
-      dataIndex: "index",
-      fixed: "left",
-      scopedSlots: { customRender: "index" }
-    },
-    {
-      title: "配置值",
-      dataIndex: "code",
-      className: "pd10",
-      width: 350
-    },
-    {
-      title: "配置内容",
-      dataIndex: "value",
-      className: "pd10",
-      width: 350
-    },
-    {
-      title: "配置说明",
-      dataIndex: "remark",
-      className: "pd10",
-      width: 820
-    },
-    {
-      title: "操作",
-      key: "operation",
-      scopedSlots: { customRender: "operation" },
-      className: "pd10",
-      width: 200,
-      fixed: "right"
-    }
+        {
+              title: "序号",
+              className: "pd10",
+              width: 65,
+              dataIndex: "index",
+              fixed: "left",
+              scopedSlots: { customRender: "index" }
+        },
+        {
+              title: "配置值",
+              dataIndex: "code",
+              className: "pd10",
+              width: 350
+        },
+        {
+              title: "配置内容",
+              dataIndex: "value",
+              className: "pd10",
+              width: 350
+        },
+        {
+              title: "配置说明",
+              dataIndex: "remark",
+              className: "pd10",
+              width: 820
+        },
+        {
+              title: "操作",
+              key: "operation",
+              scopedSlots: { customRender: "operation" },
+              className: "pd10",
+              width: 200,
+              fixed: "right"
+        }
   ];
   beforeCreate() {
-    this.form = this.$form.createForm(this);
+        this.form = this.$form.createForm(this);
   }
   created() {
-    const val = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
-    };
-    this.getList(val);
+        const val = {
+              page: this.pagination.current,
+              limit: this.pagination.pageSize,
+        };
+        this.getList(val);
   }
   private getList(val: MyD): void {
-    this.getData.getList(val, true).then((res: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this.tabData = res.data;
-      this.pagination.total = res.pages * 1;
-    });
+        this.getData.getList(val, true).then((res: any) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              this.tabData = res.data;
+              this.pagination.total = res.pages * 1;
+        });
   }
   private healthyTableChange(pagination: {
-    pageSize: number;
-    current: number;
+    pageSize: number
+    current: number
   }) {
-    this.pagination.pageSize = pagination.pageSize;
-    this.pagination.current = pagination.current;
-    const obj = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize
-    };
-    this.getList(obj);
-  }
-  private edit(val: any): void {
-    this.visible = true;
-    this.savaID = val.id;
-    // const that = this;
-    this.$nextTick(() => {
-      this.form.setFieldsValue({
-        code: val.code,
-        value: val.value,
-        remark: val.remark
-      });
-    });
-  }
-  private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : "";
-  }
-  private back(): void {
-    this.form.resetFields();
-  }
-  private handleOk(e: any): void {
-    e.preventDefault();
-    this.form.validateFields((err: any, values: any) => {
-      if (!err) {
-        const val = {
-          code: values.code,
-          value: values.value,
-          remark: values.remark,
-          id: this.savaID
-        };
-        this.getData.upData(val, true).then((res: any) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          if (res.code == 0) {
-            this.visible = !this.visible;
-            this.form.resetFields();
-            const val = {
+        this.pagination.pageSize = pagination.pageSize;
+        this.pagination.current = pagination.current;
+        const obj = {
               page: this.pagination.current,
               limit: this.pagination.pageSize
-            };
-            this.getList(val);
-          }
+        };
+        this.getList(obj);
+  }
+  private edit(val: any): void {
+        this.visible = true;
+        this.savaID = val.id;
+        // const that = this;
+        this.$nextTick(() => {
+              this.form.setFieldsValue({
+                    code: val.code,
+                    value: val.value,
+                    remark: val.remark
+              });
         });
-      }
-    });
+  }
+  private rowClassName(record: any, index: number): string {
+        return index % 2 === 0 ? "bgF5" : "";
+  }
+  private back(): void {
+        this.form.resetFields();
+  }
+  private handleOk(e: any): void {
+        e.preventDefault();
+        this.form.validateFields((err: any, values: any) => {
+              if (!err) {
+                    const val = {
+                          code: values.code,
+                          value: values.value,
+                          remark: values.remark,
+                          id: this.savaID
+                    };
+                    this.getData.upData(val, true).then((res: any) => {
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                          if (res.code == 0) {
+                                this.visible = !this.visible;
+                                this.form.resetFields();
+                                const val = {
+                                      page: this.pagination.current,
+                                      limit: this.pagination.pageSize
+                                };
+                                this.getList(val);
+                          }
+                    });
+              }
+        });
   }
 }
 </script>

@@ -2,16 +2,17 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal, Col, Row, Radio, DatePicker, TreeSelect, Popconfirm, ConfigProvider, Message} from "ant-design-vue";
+import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal, Col, Row, Radio, DatePicker, TreeSelect, Popconfirm, ConfigProvider ,Calendar,Switch} from "ant-design-vue";
 import { Scrollbar} from 'element-ui'
 import { HttpService } from './api/http';
 import 'element-ui/lib/theme-chalk/display.css';
 import confirm from "ant-design-vue/es/modal/confirm";
 import { message } from "ant-design-vue";
 import "./style/index.less"
-
-Vue.use(Scrollbar);   //elementUI
-Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Tabs).use(Select).use(Table).use(Modal).use(Col).use(Row).use(Radio).use(DatePicker).use(TreeSelect).use(Popconfirm).use(ConfigProvider).use(Message); //antdesign
+//elementUI组件
+Vue.use(Scrollbar);   
+//antdesign组件
+Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Tabs).use(Select).use(Table).use(Modal).use(Col).use(Row).use(Radio).use(DatePicker).use(TreeSelect).use(Popconfirm).use(ConfigProvider) .use(Calendar).use(Switch)
 Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
 Vue.prototype.$confirm = confirm;  // 挂载服务
