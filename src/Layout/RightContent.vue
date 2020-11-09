@@ -30,11 +30,7 @@ const Tabs = namespace("Tabs");
       components: {}
 })
 export default class RightContent extends Vue {
-  // @Prop({
-  //   type: Object
-  // })
-  // public myWH!: {};
-  // public obj = this.myWH;
+
   @Tabs.State(state => state.activeKey)
   activeKey!: string;
   @Tabs.State(state => state.tagList)
@@ -43,7 +39,7 @@ export default class RightContent extends Vue {
   dlttbs!: (val: any) => {};
   private activeKeys = "";
   created() {
-        // console.log(this.obj);
+        // console.log(localStorage);
   }
   private onEdit(e: string): void {
         const len: number = this.tagList.length;
@@ -75,7 +71,6 @@ export default class RightContent extends Vue {
                     flag = i;
               }
         });
-        console.log(this.tagList[flag].name == "home");
         if (this.tagList[flag].name == "home") {
               this.$router.push({ path: "/index/home" });
         } else {

@@ -1,5 +1,5 @@
 // 引入types
-import { ADDTBS, MENUADD, DLTTBS } from "../types";
+import { ADDTBS, MENUADD, DLTTBS, INITTABS } from "../types";
 import router from "../../router/index";
 const state = {
   activeKey: "1",
@@ -10,7 +10,10 @@ const state = {
 };
 const getters = {};
 const mutations = {
+
   [ADDTBS](state: any, val: any): void {
+    // console.log(val)
+    // console.log(state.tagList)
     state.tagList.push(val)
     // localStorage.setItem("Tabslist", JSON.stringify(val));
   },
@@ -23,9 +26,14 @@ const mutations = {
         }
       })
       if (!state.result) {
+        //如果不存在就添加
         state.activeKey = val.key
+        console.log(val.key)
+        localStorage.setItem("activeKey", JSON.stringify(val.key))   //保存当前选中项
         state.tagList.push(val)
+        localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存当前所选择的tabs
       } else {
+        //如果存在就进行跳转
         state.activeKey = val.key
         if (val.name == "home") {
           router.push({ path: `${val.path}` })
@@ -46,6 +54,9 @@ const mutations = {
     state.tagList = state.tagList.filter((item: any) => {
       return item.key != val.e
     })
+  },
+  [INITTABS](state: any, val1: any, val2: String) {
+    console.log(val1, val2)
   }
 };
 const actions = {};

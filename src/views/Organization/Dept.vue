@@ -233,7 +233,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import axios from 'axios'
 @Component({
-  components: {}
+      components: {}
 })
 export default class Dept extends Vue {
   [x: string]: any;
@@ -248,15 +248,15 @@ export default class Dept extends Vue {
     wrapperCol: { span: 16 },
   };
   public pagination = {
-    pageSize: 1000, // 默认每页显示数量
-    current: 1, //显示当前页数
-    total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页` // 显示总数
+        pageSize: 1000, // 默认每页显示数量
+        current: 1, //显示当前页数
+        total: 0,
+        showSizeChanger: false, // 显示可改变每页数量
+        showQuickJumper: false, //显示跳转到输入的那一页
+        showTotal: (total: number) =>
+              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+                    total / this.pagination.pageSize
+              )} 页` // 显示总数
   };
   public tabData = [];
   public columns = [
@@ -307,6 +307,7 @@ export default class Dept extends Vue {
   private form: any;
   private form2: any;
   beforeCreate() {
+<<<<<<< HEAD
     this.form = this.$form.createForm(this);
     this.form2 = this.$form.createForm(this);
   }
@@ -375,9 +376,15 @@ export default class Dept extends Vue {
         parentCode: val.code,
       });
     })
+=======
+        this.form = this.$form.createForm(this);
+  }
+  private handleSubmit(e: any): void {
+        console.log(e)
+>>>>>>> dcbef194f5b4678e31f961cdf526051a7e465f1e
   }
   private Export(e: any): void {
-    console.log(e)
+        console.log(e)
   }
   private remove(id: string): void {
     const data = id;
@@ -400,6 +407,7 @@ export default class Dept extends Vue {
     // });
   }
   private add(e: any): void {
+<<<<<<< HEAD
     this.visible = true;
     this.myTitle = "添加公告";
   }
@@ -438,11 +446,15 @@ export default class Dept extends Vue {
   }
   private back() {
     this.form2.resetFields();
+=======
+        console.log(e)
+>>>>>>> dcbef194f5b4678e31f961cdf526051a7e465f1e
   }
   private healthyTableChange(pagination: {
     pageSize: number
     current: number
   }) {
+<<<<<<< HEAD
     this.pagination.pageSize = pagination.pageSize;
     this.pagination.current = pagination.current;
     // const obj = {
@@ -450,9 +462,18 @@ export default class Dept extends Vue {
     //   limit: this.pagination.pageSize
     // };
     // this.getList(obj);
+=======
+        this.pagination.pageSize = pagination.pageSize;
+        this.pagination.current = pagination.current;
+        const obj = {
+              page: this.pagination.current,
+              limit: this.pagination.pageSize
+        };
+        this.getList(obj);
+>>>>>>> dcbef194f5b4678e31f961cdf526051a7e465f1e
   }
   private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : "";
+        return index % 2 === 0 ? "bgF5" : "";
   }
   private edit(val: any): void{
     this.saveID = val.deptId;

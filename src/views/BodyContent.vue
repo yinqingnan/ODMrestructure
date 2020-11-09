@@ -23,6 +23,8 @@ const Tabs = namespace("Tabs");
 export default class BodyContent extends Vue {
   @Tabs.Mutation("addtbs")
   addtabs!: (val: any) => {};
+  @Tabs.Mutation("inittabs")
+  inittabs!: (val1: any,val2: string) => {};
   private menudata: any = [];
   private num = 10;
   public myWH = {
@@ -755,18 +757,48 @@ export default class BodyContent extends Vue {
       ],
     },
   ];
+  
   mounted() {
-    this.menudata = this.data;
-    this.addtabs(this.data[0]);
-    // window.onbeforeunload = function(e) {
-    //   console.log(e);
-    //   e = e || window.event;
-    //   if (e) {
-    //     e.returnValue = "关闭提示";
-    //   }
-    //   return "关闭提示";
-    // };
-    // localStorage.setItem("Tabslist", JSON.stringify(this.data[0]));
+        this.menudata = this.data;
+        if(localStorage.getItem("Tabslist")!= null){
+              let activeKey = JSON.parse(localStorage.getItem("activeKey"))
+              let arr = JSON.parse(localStorage.getItem("Tabslist"))
+              console.log(arr)
+              console.log(activeKey)
+
+        }else{
+              console.log(123)
+              this.addtabs(this.data[0]); //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // window.onbeforeunload = function(e) {
+        //   console.log(e);
+        //   e = e || window.event;
+        //   if (e) {
+        //     e.returnValue = "关闭提示";
+        //   }
+        //   return "关闭提示";
+        // };
+        // localStorage.setItem("Tabslist", JSON.stringify(this.data[0]));
   }
 }
 </script>
