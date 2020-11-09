@@ -66,10 +66,9 @@ export default class LeftMenu extends Vue {
   private theme = "dark";
   private rootSubmenuKeys = ["sub1", "sub2", "sub4"];
   private mounted() {
-        console.log(this.data);
+        // console.log(this.data);
         let name =this.$route.name
         this.openKeys = [this.findIndexArray(this.data,name,[])[0]]
-        
   }
   public findIndexArray(data, name, indexArray) {
         let arr = Array.from(indexArray)
@@ -104,7 +103,6 @@ export default class LeftMenu extends Vue {
         console.log("click", e);
   }
   private titleClick(data: any): void {
-        // console.log(data);
         this.menuadd(data);
   }
 }

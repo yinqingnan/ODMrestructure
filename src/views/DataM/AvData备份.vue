@@ -1,442 +1,316 @@
 <template>
+<!-- 使用封装的筛选 -->
   <div>
-    <div id="AvData" class="layoutcontainer">
-      <div class="container">
-        <div class="contaninerheader">
-          <template>
-            <a-dropdown :trigger="['click']" class="dropdown" >
-              <a class="ant-dropdown-link" @click="popup">
-                筛选 <a-icon type="down" />
-              </a>
-              <a-menu slot="overlay" class="box" >
-                <a-form
-                  autocomplete="off"
-                  :form="form"
-                  :label-col="{ span: 8 }"
-                  :wrapper-col="{ span: 14 }"
-                  @submit="handleSubmit"
+    <div class="contaninerheader">
+      <template>
+        <a-dropdown :trigger="['click']" class="dropdown">
+          <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+            筛选
+            <a-icon type="down" />
+          </a>
+          <a-menu slot="overlay" class="box">
+            <a-form :form="form">
+              <a-row :gutter="48">
+                <a-col
+                  :xs="wrapCol.xs"
+                  :xl="wrapCol.xl"
+                  v-for="(item, index) in Datalist"
+                  :key="index"
                 >
-                  <a-form-item label="部门">
-                    <a-tree-select
+                  <!-- 文本域 -->
+                  <a-form-item
+                    class="tex_textarea"
+                    :class="item.cName"
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'Textfield'"
+                    style="margin-left:-10px;margin-right:0"
+                    allowClear
+                  >
+                    <a-textarea
+                      style="display: flex;height:120px !important;overflow-y:auto;resize: none;"
+                      allowClear
                       v-decorator="[
-                        'department',
-                        {
-                          initialValue: '',
-                          rules: []
-                        }
-                      ]"
-                      :allow-clear="true"
-                      style="width: 100%"
-                      :dropdown-match-select-width="true"
-                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                      :tree-data="departmentData"
-                      :replace-fields="{
-                        id: 'code',
-                        pId: 'parentCode',
-                        value: 'value',
-                        title: 'name'
-                      }"
-                      placeholder="请选择..."
+                item.code,
+                {
+                  initialValue: item.iVal,
+                  rules: item.rule,
+                },
+              ]"
+                      :placeholder="item.placeholder"
+                      :autoSize="{ minRows: 3, maxRows: 3 }"
                     />
                   </a-form-item>
-                  <a-form-item label="姓名/警号">
+                  <!-- 文本输入框-->
+                  <a-form-item
+                    autocomplete="off"
+                    :disabled="item.disabled"
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapper-col="wrapperCol"
+                    v-if="item.type == 'input'"
+                  >
                     <a-input
-                      v-decorator="['user', { initialValue: '', rules: [] }]"
-                      :max-length="LimitInputlength"
-                      placeholder="请输入姓名/警号"
-                    >
-                      />
-                    </a-input>
-                  </a-form-item>
-                  <a-form-item label="时间类型">
-                    <a-select
+                      :disabled="item.disabled"
                       v-decorator="[
-                        'TimeData',
+                item.code,
+                {
+                  initialValue: item.iVal,
+                  rules: item.rule,
+                },
+              ]"
+                      :placeholder="item.placeholder"
+                    />
+                  </a-form-item>
+                  <!-- 数字 -->
+                  <a-form-item
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'number'"
+                  >
+                    <a-input
+                      v-decorator="[
+                item.code,
+                {
+                  initialValue: 0,
+                  rules: item.rule,
+                },
+              ]"
+                      :placeholder="item.placeholder"
+                    />
+                  </a-form-item>
+                  <!-- 时间选择 -->
+                  <a-form-item
+                    :class="item.class"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    :label="item.title"
+                    v-if="item.type == 'time'"
+                  >
+                    <a-range-picker
+                      v-decorator="[
+                        [item.code],
                         {
-                          initialValue: '',
+                          initialValue: item.data,
                           rules: []
                         }
-                      ]"
-                      :allow-clear="true"
-                      style="width: 100%"
-                      placeholder="Please select"
+                        ]"
+                      showTime
+                      :format="item.format"
+                    />
+                  </a-form-item>
+                  <!-- 年月选择 -->
+                  <a-form-item
+                    class="timeP0"
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'year'"
+                  >
+                    <a-range-picker v-decorator="[item.code]" class="timeP0" :format="item.format" />
+                  </a-form-item>
+                  <!-- 日期选择 -->
+                  <a-form-item
+                    :label="item.title"
+                    v-if="item.type == 'riqi'"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    :class="item.class"
+                  >
+                    <a-date-picker
+                      v-decorator="[
+                item.code,
+                {
+                  initialValue: item.iVal,
+                },
+              ]"
+                      class="timeP0"
+                      :placeholder="item.placeholder"
+                    />
+                  </a-form-item>
+                  <!-- 下拉 -->
+                  <a-form-item
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'select'"
+                  >
+                    <a-select
+                      :disabled="item.disabled"
+                      v-decorator="[
+                item.code,
+                {
+                  rules: item.rule,
+                  initialValue: item.iVal,
+                },
+              ]"
+                      :placeholder="item.placeholder"
                     >
-                      <a-select-option v-for="d in Timetype" :key="d.value">
-                        {{ d.title }}
-                      </a-select-option>
+                      <a-select-option
+                        v-for="(it) in item.data"
+                        :value="it.title"
+                        :key="it.value"
+                      >{{ it.title }}</a-select-option>
                     </a-select>
                   </a-form-item>
-                  <a-form-item label="时间">
-                 
-                        <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
-                         v-decorator="[
-                        'date',
-                        {
-                          initialValue: defaultdate,
-                          rules: []
-                        }
-                      ]"
-                      @change="onChange"
-                      />
-                  
-                  </a-form-item>
-                  <a-form-item label="文件类型">
-                    <a-select
-                      v-decorator="[
-                        'Filetype',
-                        {
-                          initialValue: '',
-                          rules: []
-                        }
-                      ]"
-                      :allow-clear="true"
-                      style="width: 100%"
-                      placeholder="Please select"
-                    >
-                      <a-select-option v-for="d in filetype" :key="d.value">
-                        {{ d.title }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                  <a-form-item label="重要级别">
-                    <a-select
-                      v-decorator="[
-                        'levelData',
-                        {
-                          initialValue: '',
-                          rules: []
-                        }
-                      ]"
-                      :allow-clear="true"
-                      style="width: 100%"
-                      placeholder="Please select"
-                    >
-                      <a-select-option v-for="d in levelData" :key="d.value">
-                        {{ d.title }}
-                      </a-select-option>
-                    </a-select>
-                  </a-form-item>
-                  <div class="modulebottom">
-                    <a-button type="Default" @click="reset">
-                      重置
-                    </a-button>
-                    <a-button type="primary" @click="handleSubmit">
-                      查询
-                    </a-button>
-                  </div>
-                </a-form>
-              </a-menu>
-            </a-dropdown>
-          </template>
-          <div>
-            <button @click="download">批量删除</button>
-            <button @click="dlt">批量下载</button>
-          </div>
-        </div>
-        <div>
-          <a-table
-            :rowClassName="rowClassName"
-            :loading="loading"
-            row-key="columns"
-            :columns="columns"
-            :bordered="true"
-            :scroll="{ x: 1300 }"
-            :data-source="tabledata"
-            :pagination="pagination"
-             rowKey="id"
-            :row-selection="{
-              selectedRowKeys: selectedRowKeys,
-              onChange: onSelectChange
-            }"
-          >
-            <span slot="action" slot-scope="text, record">
-              <span style="color:#0db8df" @click="tablebtn(text, record)">
-                操作
-              </span>
-            </span>
-          </a-table>
 
-        </div>
-      </div>
+                  <a-form-item
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'sCkList'"
+                  >
+                    <a-select
+                      v-decorator="[
+                item.code,
+                {
+                  initialValue: item.iVal,
+                  rules: item.rule,
+                },
+              ]"
+                      mode="multiple"
+                      placeholder="请选择"
+                      style="width:165px;"
+                    >
+                      <a-select-option v-for="it in item.data" :key="it.id">{{ it.title }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+
+                  <a-form-item
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'Tselect'"
+                  >
+                    <a-tree-select
+                      style="width:165px;"
+                      :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+                      :treeData="item.data"
+                      placeholder="请选择"
+                      treeDefaultExpandAll
+                      v-decorator="[
+                item.code,
+                {
+                  initialValue: item.iVal,
+                  rules: item.rule,
+                },
+              ]"
+                    >
+                      <span style="color: #08c" slot="title" slot-scope="{ value }">{{ value }}</span>
+                    </a-tree-select>
+                  </a-form-item>
+
+                  <!-- 级联 -->
+                  <a-form-item
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'cascader'"
+                  >
+                    <a-cascader
+                      v-decorator="[
+                item.code,
+                {
+                  rules: item.rule,
+                },
+              ]"
+                      placeholder="请选择"
+                      :options="item.data"
+                    />
+                  </a-form-item>
+
+                  <!-- 开关 -->
+                  <a-form-item
+                    :label="item.title"
+                    :label-col="labelCol"
+                    :wrapperCol="wrapperCol"
+                    v-if="item.type == 'switch'"
+                  >
+                    <a-switch
+                      @change="swChangw(item)"
+                      defaultChecked
+                      v-decorator="[
+                item.code,
+                {
+                  initialValue: item.iVal,
+                  rules: item.rule,
+                },
+              ]"
+                    />
+                  </a-form-item>
+                  <!-- 图形上传 -->
+                  <!-- <a-form-item
+                  :label="item.title"
+                  :labelCol="labelCol"
+                  :wrapperCol="wrapperCol"
+                  v-if="item.type == 'imgupload'"
+                >
+                  <imgupload ref="isUpImg" @datachang="datachang" />
+                  </a-form-item>-->
+
+                  <!-- 按钮 -->
+                  <a-form-item class="longBox" v-if="item.type == 'BootmBtn'" :class="item.class">
+                    <a-button @click="handleReset" style="margin-right:10px">{{item.title1}}</a-button>
+                    <a-button type="primary" @click="handleSubmit">{{item.title2}}</a-button>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-form>
+          </a-menu>
+        </a-dropdown>
+      </template>
     </div>
   </div>
 </template>
+
 <script lang="ts">
-import { LimitInputlength } from '../../InterfaceVariable/variable';
-import { Component,  Vue } from 'vue-property-decorator';
-import moment from 'moment';
+import { Component, Vue, Prop } from "vue-property-decorator"
 @Component({
       components: {},
 })
-export default class AvData extends Vue {
-  [x: string]: any;
-  public DataM = new this.$api.configInterface.DataM();
-  public form!: any;
-  private LimitInputlength = LimitInputlength;
-  private departmentData = [];
-  private Timetype = [
-        { id: 1, value: '1', title: '导入时间' },
-        { id: 2, value: '2', title: '拍摄时间' }
-  ];
-  private filetype = [
-        { id: 1, value: '1', title: '视频' },
-        { id: 2, value: '2', title: '音频' },
-        { id: 3, value: '3', title: '图片' },
-        { id: 4, value: '4', title: '日志' }
-  ];
-  private levelData = [
-        { id: 1, value: '1', title: '高' },
-        { id: 2, value: '2', title: '中' },
-        { id: 3, value: '3', title: '低' }
-  ];
-  private defaultdate = [
-        moment('2015-06-06', 'YYYY-MM-DD'),
-        moment('2015-06-06', 'YYYY-MM-DD')
-  ];
-  private myDate = [];
-  private selectdata = [];
-  private selectedRowKeys = [];
-  private loading = false;
-  public pagination = {
-        pageSize: 15, // 默认每页显示数量
-        current: 1, //显示当前页数
-        total: 0,
-        showSizeChanger: false, // 显示可改变每页数量
-        showQuickJumper: false, //显示跳转到输入的那一页
-        showTotal: (total: number) =>
-              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-                    total / this.pagination.pageSize
-              )} 页` // 显示总数
-  };
-  private columns = [
-        {
-              title: '文件名称',
-              dataIndex: 'fileName',
-              align: 'left',
-              key: 'fileName',
-              width:400,
-              fixed: "left",
-        },
-        {
-              title: '执勤部门',
-              dataIndex: 'deptCode',
-              align: 'center',
-              key: 'deptCode',
-              width:200
-        },
-        {
-              title: '民警姓名',
-              dataIndex: 'userName',
-              align: 'center',
-              width:200,
-              key: 'userName',
-        },
-        {
-              title: '民警警号',
-              dataIndex: 'userCode',
-              align: 'center',
-              key: 'userCode',
-              width:200
-
-        },
-        {
-              title: '文件类型',
-              dataIndex: 'fileType_Name',
-              align: 'center',
-              key: 'fileType_Name',
-              width:80
-
-        },
-        {
-              title: '重要级别',
-              dataIndex: 'fileLevel_Name',
-              align: 'center',
-              key: 'fileLevel_Name',
-              width:80
-
-        },
-        {
-              title: '摄录时间',
-              dataIndex: 'recordDate',
-              align: 'center',
-              key: 'recordDate',
-              width:200
-        },
-        {
-              title: '摄录时长',
-              dataIndex: 'fileDuration_Name',
-              align: 'center',
-              key: 'fileDuration_Name',
-              width:80
-
-        },
-        {
-              title: '导入时间',
-              dataIndex: 'uploadDate',
-              align: 'center',
-              key: 'uploadDate',
-              width:200
-
-        },
-        {
-              title: '关联信息',
-              dataIndex: 'relateCase',
-              align: 'center',
-              key: 'relateCase',
-              width:80
-        },
-        {
-              title: '操作',
-              dataIndex: 'action',
-              align: 'center',
-              key: 'action',
-              width:120,
-              fixed: "right",
-              scopedSlots: { customRender: 'action' }
-        },
-  ];
-  private tabledata = [];
+export default class Popup extends Vue {
+  [x: string]: any
+  public form!: any
+  @Prop({
+        type: Object,
+        default: ()=>({}),
+  })
+  wrapCol: {} | undefined
+  @Prop({
+        type: Object,
+        default: ()=>({}),
+  })
+  labelCol: {} | undefined
+  @Prop({
+        type: Object,
+        default: ()=>({}),
+  })
+  wrapperCol: {} | undefined
+  @Prop({
+        type: Array,
+        default: [],
+  })
+  Datalist: [] | undefined
   private created() {
-        this.form = this.$form.createForm(this);
-        this.getdata();
+        this.form = this.$form.createForm(this)
   }
-
-  private healthyTableChange(pagination: {
-    pageSize: number
-    current: number
-  }) {
-        this.pagination.pageSize = pagination.pageSize;
-        this.pagination.current = pagination.current;
-        const obj = {
-              page: this.pagination.current,
-              limit: this.pagination.pageSize
-        };
-        // this.getList(obj);
+  private handleReset() {
+        console.log(123)
   }
   private handleSubmit(e: any): void {
-        e.preventDefault();
+        e.preventDefault()
         this.form.validateFields((err: any, val: any) => {
               if (!err) {
-                    let uploadDate_gt = val.date[0].format('YYYY-MM-DD HH:mm:ss')
-                    let uploadDate_lt = val.date[1].format('YYYY-MM-DD HH:mm:ss')
-                   
-                    let obj = {
-                          page: 1,
-                          limit: 15,
-                          deptCode_equal: val.department, //部门id
-                          userName: val.user, //警员
-                          timeType: val.TimeData, //时间类型
-                          timeRange: this.myDate,
-                          fileType_equal: '',
-                          fileLevel_equal: val.levelData,
-                          uploadDate_gt: uploadDate_gt, //必填  时间起
-                          uploadDate_lt: uploadDate_lt, //必填  时间止
-                          recordDate_gt: '',
-                    };
-                    this.gettabledata(obj);
+                    console.log(val)  
               }
-        });
-  }
-  private onChange(date: any, dateString: any): void {
-        this.selectdata = dateString;
-  }
-  private getdata() {
-        this.DataM.getMenulist({}, true).then((res: any) => {
-              this.departmentData = res.data;
-        });
-        this.DataM.gettimeframe({ type: 'LATELY_MONTH' }, true).then((res: any) => {  
-              this.myDate = res.data.myDate
-              this.defaultdate = [
-                    moment(res.data.myDate.split('~')[0], 'YYYY-MM-DD'),
-                    moment(res.data.myDate.split('~')[1], 'YYYY-MM-DD'),
-              ];
-        });
-        let obj = {
-              page: 1,
-              limit: 15,
-              deptCode_equal: '', //部门id
-              userName: '', //警员
-              timeType: '', //时间类型
-              timeRange: '2020-10-06 ~ 2020-11-06',
-              fileType_equal: '',
-              fileLevel_equal: '',
-              uploadDate_gt: '2020-10-06 00:00:00', //必填  时间起
-              uploadDate_lt: '2020-11-06 23:59:59', //必填  时间止
-              recordDate_gt: '',
-        };
-        this.gettabledata(obj);
-  }
-  private gettabledata(obj: any) {
-        this.DataM.gettabledata(obj, true).then((res: any) => {
-              console.log(res)
-              this.tabledata = res.data;
-        });
-  }
-  private onSelectChange(selectedRowKeys: any) {
-        console.log(selectedRowKeys)
-        this.selectedRowKeys = selectedRowKeys;
-  }
-  private reset() {
-        this.form.resetFields();
-        this.defaultdate = [];
-  }
-  private popup(e: { preventDefault: () => void }) {
-        this.getdata();
-        e.preventDefault();
-  }
-  private tablebtn(text: any, row: any) {
-        console.log(text, row);
-  }
-  public rowClassName(record: any,index: number) {
-        let className = "light-row";
-        if (index % 2 === 1) className = "dark-row";
-        return className;
-  }
-  public download(){
-        console.log(  this.selectedRowKeys)
-  }
-  public dlt(){
-        console.log(  this.selectedRowKeys)
+        })
   }
 }
 </script>
 
 <style lang="less" scope>
-.ant-form-item {
-  margin-bottom: 7px;
-}
-.modulebottom {
-  display: flex;
-  justify-content: flex-end;
-  > button:nth-of-type(1) {
-    margin-right: 10px;
-  }
-  > button:nth-of-type(2) {
-    margin-right: 28px;
-  }
-}
-.contaninerheader {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 13px;
-}
-.contaninerheader {
-  > div > button {
-    background: #0db8df;
-    border: 0;
-    cursor: pointer;
-    outline: none;
-    color: #fff;
-    width: 58px;
-    height: 30px;
-  }
-  > div > button:nth-of-type(1) {
-    margin-right: 9px;
-  }
-}
 .box {
   width: 347px;
   height: 337px;
@@ -452,34 +326,12 @@ export default class AvData extends Vue {
   text-align: center;
   color: #a1a9b5;
 }
-.ant-row .ant-form-item {
-  width: 100%;
+.bottombtn{
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 29px !important;
 }
-.ant-form-item-label > label {
-  color: #808994;
-}
-#AvData .ant-table-tbody > tr > td {
-  padding: 0px;
-  height: 36px;
-  line-height: 36px;
-}
-#AvData .ant-table-thead {
-  height: 36px;
-  line-height: 36px;
-}
-#AvData .ant-table-thead > tr > th,
-.ant-table-tbody > tr > td {
-  padding: 0px;
-}
-#AvData .ant-table-placeholder{
-  min-height: 600px !important;
-}
-#AvData .ant-table-wrapper{
-  border: 1px solid #f1f1f1;
-}
-.light-row {background-color:#f5f5f5;}
-.dark-row {background-color: #ffffff;}
-.ant-calendar-picker{
-  width: 200px !important;
+.riqi .ant-calendar-picker {
+  width: 230px !important;
 }
 </style>
