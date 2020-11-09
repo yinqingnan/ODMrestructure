@@ -206,28 +206,28 @@ export default class AvData extends Vue {
   public form!: any;
   private departmentData = [];
     private page2 = {
-          currentPage: 1,
-          pageSize: 10,
-          totalResult: 200,
+      currentPage: 1,
+      pageSize: 10,
+      totalResult: 200,
     }
   private Timetype = [
-        { id: 1, value: '1', title: '导入时间' },
-        { id: 2, value: '2', title: '拍摄时间' }
+    { id: 1, value: '1', title: '导入时间' },
+    { id: 2, value: '2', title: '拍摄时间' }
   ];
   private filetype = [
-        { id: 1, value: '1', title: '视频' },
-        { id: 2, value: '2', title: '音频' },
-        { id: 3, value: '3', title: '图片' },
-        { id: 4, value: '4', title: '日志' }
+    { id: 1, value: '1', title: '视频' },
+    { id: 2, value: '2', title: '音频' },
+    { id: 3, value: '3', title: '图片' },
+    { id: 4, value: '4', title: '日志' }
   ];
   private levelData = [
-        { id: 1, value: '1', title: '高' },
-        { id: 2, value: '2', title: '中' },
-        { id: 3, value: '3', title: '低' }
+    { id: 1, value: '1', title: '高' },
+    { id: 2, value: '2', title: '中' },
+    { id: 3, value: '3', title: '低' }
   ];
   private defaultdate = [
-        moment('2015-06-06', 'YYYY-MM-DD'),
-        moment('2015-06-06', 'YYYY-MM-DD')
+    moment('2015-06-06', 'YYYY-MM-DD'),
+    moment('2015-06-06', 'YYYY-MM-DD')
   ];
   private myDate = [];
   private selectdata = [];
@@ -235,206 +235,206 @@ export default class AvData extends Vue {
   private loading = false;
   private Height=""
   public pagination = {
-        pageSize: 15, // 默认每页显示数量
-        current: 1, //显示当前页数
-        total: 0,
-        showSizeChanger: false, // 显示可改变每页数量
-        showQuickJumper: false, //显示跳转到输入的那一页
-        showTotal: (total: number) =>
-              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-                    total / this.pagination.pageSize
-              )} 页` // 显示总数
+    pageSize: 15, // 默认每页显示数量
+    current: 1, //显示当前页数
+    total: 0,
+    showSizeChanger: false, // 显示可改变每页数量
+    showQuickJumper: false, //显示跳转到输入的那一页
+    showTotal: (total: number) =>
+      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+        total / this.pagination.pageSize
+      )} 页` // 显示总数
   };
   private columns = [
-        // {
-        //       title: '文件名称',
-        //       dataIndex: 'fileName',
-        //       align: 'left',
-        //       key: 'fileName',
-        //       width:350,
-        //       fixed: "left",
-        // },
-        // {
-        //       title: '执勤部门',
-        //       dataIndex: 'deptCode',
-        //       align: 'center',
-        //       key: 'deptCode',
-        //       width:200
-        // },
-        // {
-        //       title: '民警姓名',
-        //       dataIndex: 'userName',
-        //       align: 'center',
-        //       width:200,
-        //       key: 'userName',
-        // },
-        // {
-        //       title: '民警警号',
-        //       dataIndex: 'userCode',
-        //       align: 'center',
-        //       key: 'userCode',
-        //       width:200
+    // {
+    //       title: '文件名称',
+    //       dataIndex: 'fileName',
+    //       align: 'left',
+    //       key: 'fileName',
+    //       width:350,
+    //       fixed: "left",
+    // },
+    // {
+    //       title: '执勤部门',
+    //       dataIndex: 'deptCode',
+    //       align: 'center',
+    //       key: 'deptCode',
+    //       width:200
+    // },
+    // {
+    //       title: '民警姓名',
+    //       dataIndex: 'userName',
+    //       align: 'center',
+    //       width:200,
+    //       key: 'userName',
+    // },
+    // {
+    //       title: '民警警号',
+    //       dataIndex: 'userCode',
+    //       align: 'center',
+    //       key: 'userCode',
+    //       width:200
 
-        // },
-        // {
-        //       title: '文件类型',
-        //       dataIndex: 'fileType_Name',
-        //       align: 'center',
-        //       key: 'fileType_Name',
-        //       width:80
+    // },
+    // {
+    //       title: '文件类型',
+    //       dataIndex: 'fileType_Name',
+    //       align: 'center',
+    //       key: 'fileType_Name',
+    //       width:80
 
-        // },
-        // {
-        //       title: '重要级别',
-        //       dataIndex: 'fileLevel_Name',
-        //       align: 'center',
-        //       key: 'fileLevel_Name',
-        //       width:80
+    // },
+    // {
+    //       title: '重要级别',
+    //       dataIndex: 'fileLevel_Name',
+    //       align: 'center',
+    //       key: 'fileLevel_Name',
+    //       width:80
 
-        // },
-        // {
-        //       title: '摄录时间',
-        //       dataIndex: 'recordDate',
-        //       align: 'center',
-        //       key: 'recordDate',
-        //       width:200
-        // },
-        // {
-        //       title: '摄录时长',
-        //       dataIndex: 'fileDuration_Name',
-        //       align: 'center',
-        //       key: 'fileDuration_Name',
-        //       width:80
+    // },
+    // {
+    //       title: '摄录时间',
+    //       dataIndex: 'recordDate',
+    //       align: 'center',
+    //       key: 'recordDate',
+    //       width:200
+    // },
+    // {
+    //       title: '摄录时长',
+    //       dataIndex: 'fileDuration_Name',
+    //       align: 'center',
+    //       key: 'fileDuration_Name',
+    //       width:80
 
-        // },
-        // {
-        //       title: '导入时间',
-        //       dataIndex: 'uploadDate',
-        //       align: 'center',
-        //       key: 'uploadDate',
-        //       width:200
+    // },
+    // {
+    //       title: '导入时间',
+    //       dataIndex: 'uploadDate',
+    //       align: 'center',
+    //       key: 'uploadDate',
+    //       width:200
 
-        // },
-        // {
-        //       title: '关联信息',
-        //       dataIndex: 'relateCase',
-        //       align: 'center',
-        //       key: 'relateCase',
-        //       width:80
-        // },
-        // {
-        //       title: '操作',
-        //       dataIndex: 'action',
-        //       align: 'center',
-        //       key: 'action',
-        //       width:120,
-        //       fixed: "right",
-        //       scopedSlots: { customRender: 'action' }
-        // },
+    // },
+    // {
+    //       title: '关联信息',
+    //       dataIndex: 'relateCase',
+    //       align: 'center',
+    //       key: 'relateCase',
+    //       width:80
+    // },
+    // {
+    //       title: '操作',
+    //       dataIndex: 'action',
+    //       align: 'center',
+    //       key: 'action',
+    //       width:120,
+    //       fixed: "right",
+    //       scopedSlots: { customRender: 'action' }
+    // },
   ];
   private tabledata = [];
   private created() {
-        this.form = this.$form.createForm(this);
-        this.getdata();
-        this.Height = `${document.documentElement.clientHeight - 230}px`
+    this.form = this.$form.createForm(this);
+    this.getdata();
+    this.Height = `${document.documentElement.clientHeight - 230}px`
   }
 
   private healthyTableChange(pagination: {
     pageSize: number
     current: number
   }) {
-        this.pagination.pageSize = pagination.pageSize;
-        this.pagination.current = pagination.current;
-        const obj = {
-              page: this.pagination.current,
-              limit: this.pagination.pageSize
-        };
-        // this.getList(obj);
+    this.pagination.pageSize = pagination.pageSize;
+    this.pagination.current = pagination.current;
+    const obj = {
+      page: this.pagination.current,
+      limit: this.pagination.pageSize
+    };
+    // this.getList(obj);
   }
   private handleSubmit(e: any): void {
-        e.preventDefault();
-        this.form.validateFields((err: any, val: any) => {
-              if (!err) {
-                    let uploadDate_gt = val.date[0].format('YYYY-MM-DD HH:mm:ss')
-                    let uploadDate_lt = val.date[1].format('YYYY-MM-DD HH:mm:ss')
+    e.preventDefault();
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        let uploadDate_gt = val.date[0].format('YYYY-MM-DD HH:mm:ss')
+        let uploadDate_lt = val.date[1].format('YYYY-MM-DD HH:mm:ss')
                    
-                    let obj = {
-                          page: 1,
-                          limit: 15,
-                          deptCode_equal: val.department, //部门id
-                          userName: val.user, //警员
-                          timeType: val.TimeData, //时间类型
-                          timeRange: this.myDate,
-                          fileType_equal: '',
-                          fileLevel_equal: val.levelData,
-                          uploadDate_gt: uploadDate_gt, //必填  时间起
-                          uploadDate_lt: uploadDate_lt, //必填  时间止
-                          recordDate_gt: '',
-                    };
-                    this.gettabledata(obj);
-              }
-        });
-  }
-  private onChange(date: any, dateString: any): void {
-        this.selectdata = dateString;
-  }
-  private getdata() {
-        this.DataM.getMenulist({}, true).then((res: any) => {
-              this.departmentData = res.data;
-        });
-        this.DataM.gettimeframe({ type: 'LATELY_MONTH' }, true).then((res: any) => {  
-              this.myDate = res.data.myDate
-              this.defaultdate = [
-                    moment(res.data.myDate.split('~')[0], 'YYYY-MM-DD'),
-                    moment(res.data.myDate.split('~')[1], 'YYYY-MM-DD'),
-              ];
-        });
         let obj = {
-              page: 1,
-              limit: 15,
-              deptCode_equal: '', //部门id
-              userName: '', //警员
-              timeType: '', //时间类型
-              timeRange: '2020-10-06 ~ 2020-11-06',
-              fileType_equal: '',
-              fileLevel_equal: '',
-              uploadDate_gt: '2020-10-06 00:00:00', //必填  时间起
-              uploadDate_lt: '2020-11-06 23:59:59', //必填  时间止
-              recordDate_gt: '',
+          page: 1,
+          limit: 15,
+          deptCode_equal: val.department, //部门id
+          userName: val.user, //警员
+          timeType: val.TimeData, //时间类型
+          timeRange: this.myDate,
+          fileType_equal: '',
+          fileLevel_equal: val.levelData,
+          uploadDate_gt: uploadDate_gt, //必填  时间起
+          uploadDate_lt: uploadDate_lt, //必填  时间止
+          recordDate_gt: '',
         };
         this.gettabledata(obj);
+      }
+    });
+  }
+  private onChange(date: any, dateString: any): void {
+    this.selectdata = dateString;
+  }
+  private getdata() {
+    this.DataM.getMenulist({}, true).then((res: any) => {
+      this.departmentData = res.data;
+    });
+    this.DataM.gettimeframe({ type: 'LATELY_MONTH' }, true).then((res: any) => {  
+      this.myDate = res.data.myDate
+      this.defaultdate = [
+        moment(res.data.myDate.split('~')[0], 'YYYY-MM-DD'),
+        moment(res.data.myDate.split('~')[1], 'YYYY-MM-DD'),
+      ];
+    });
+    let obj = {
+      page: 1,
+      limit: 15,
+      deptCode_equal: '', //部门id
+      userName: '', //警员
+      timeType: '', //时间类型
+      timeRange: '2020-10-06 ~ 2020-11-06',
+      fileType_equal: '',
+      fileLevel_equal: '',
+      uploadDate_gt: '2020-10-06 00:00:00', //必填  时间起
+      uploadDate_lt: '2020-11-06 23:59:59', //必填  时间止
+      recordDate_gt: '',
+    };
+    this.gettabledata(obj);
   }
   private gettabledata(obj: any) {
-        this.DataM.gettabledata(obj, true).then((res: any) => {
-              console.log(res)
-              this.tabledata = res.data;
-        });
+    this.DataM.gettabledata(obj, true).then((res: any) => {
+      console.log(res)
+      this.tabledata = res.data;
+    });
   }
   private onSelectChange(selectedRowKeys: any) {
-        console.log(selectedRowKeys)
-        this.selectedRowKeys = selectedRowKeys;
+    console.log(selectedRowKeys)
+    this.selectedRowKeys = selectedRowKeys;
   }
   private reset() {
-        this.form.resetFields();
-        this.defaultdate = [];
+    this.form.resetFields();
+    this.defaultdate = [];
   }
   private popup(e: { preventDefault: () => void }) {
-        this.getdata();
-        e.preventDefault();
+    this.getdata();
+    e.preventDefault();
   }
   private tablebtn(text: any, row: any) {
-        console.log(text, row);
+    console.log(text, row);
   }
   public rowClassName(record: any,index: number) {
-        let className = "light-row";
-        if (index % 2 === 1) className = "dark-row";
-        return className;
+    let className = "light-row";
+    if (index % 2 === 1) className = "dark-row";
+    return className;
   }
   public download(){
-        console.log(  this.selectedRowKeys)
+    console.log(  this.selectedRowKeys)
   }
   public dlt(){
-        console.log(  this.selectedRowKeys)
+    console.log(  this.selectedRowKeys)
   }
 }
 </script>

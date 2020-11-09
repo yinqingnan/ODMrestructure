@@ -149,58 +149,58 @@ export default class Recording extends Vue {
   public form!: any;
   private visible = false
   private page2 = {
-        currentPage: 1,
-        pageSize: 10,
-        totalResult: 200,
+    currentPage: 1,
+    pageSize: 10,
+    totalResult: 200,
   }
   private created() {
-        this.form = this.$form.createForm(this); 
+    this.form = this.$form.createForm(this); 
   }
   private mounted() {
-        this.Height = `${document.documentElement.clientHeight - 230}px`
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const _that = this
-        window.addEventListener("resize", () => {
-              _that.Height = `${document.documentElement.clientHeight - 230}px`
-        })
-        this.getdata()
+    this.Height = `${document.documentElement.clientHeight - 230}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    })
+    this.getdata()
   }
   public getdata() {
-        this.DataM.getStoragetable({
-              page: 1,
-              limit: 15,
-        }).then((res) => {
-              console.log(res)
-              this.tableData = res.data
-        })
+    this.DataM.getStoragetable({
+      page: 1,
+      limit: 15,
+    }).then((res) => {
+      console.log(res)
+      this.tableData = res.data
+    })
   }
   private tablebtn(row){
-        console.log(row)
+    console.log(row)
   }
   private tabledlt(row){
-        console.log(row)
-        this.$confirm({
-              title: '提示',
-              content: '删除类别后，标记为该类别的所有文件将恢复默认设置。',
-              onOk() {
-                    console.log()
+    console.log(row)
+    this.$confirm({
+      title: '提示',
+      content: '删除类别后，标记为该类别的所有文件将恢复默认设置。',
+      onOk() {
+        console.log()
                     
-              },
-        });
+      },
+    });
   }
   private hideModal (){
-        console.log("tijiao")
+    console.log("tijiao")
   }
   private Recordingadd(){
-        this.visible = true;
+    this.visible = true;
   }
   private handleSubmit(e){
-        e.preventDefault();
-        this.form.validateFields((err: any, val: any) => {
-              if (!err) {
-                    console.log(val)
-              }
-        })
+    e.preventDefault();
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        console.log(val)
+      }
+    })
   }
 }
 </script>

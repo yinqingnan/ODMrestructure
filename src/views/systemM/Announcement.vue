@@ -5,7 +5,7 @@
       <div class="header">
         <div class="select">
           <a-dropdown :trigger="['click']">
-            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
               筛选<a-icon type="down" />
             </a>
             <a-menu slot="overlay" class="myW">
@@ -22,29 +22,19 @@
                       'select',
                       {
                         initialValue: 'all',
-                        rules: []
-                      }
+                        rules: [],
+                      },
                     ]"
                     placeholder="请选择"
                   >
-                    <a-select-option value="all">
-                      全部
-                    </a-select-option>
-                    <a-select-option value="0">
-                      未截止
-                    </a-select-option>
-                    <a-select-option value="1">
-                      已截止
-                    </a-select-option>
+                    <a-select-option value="all"> 全部 </a-select-option>
+                    <a-select-option value="0"> 未截止 </a-select-option>
+                    <a-select-option value="1"> 已截止 </a-select-option>
                   </a-select>
                 </a-form-item>
                 <a-form-item class="btnBox">
-                  <a-button class="reset">
-                    重置
-                  </a-button>
-                  <a-button html-type="submit" class="upData">
-                    查询
-                  </a-button>
+                  <a-button class="reset"> 重置 </a-button>
+                  <a-button html-type="submit" class="upData"> 查询 </a-button>
                 </a-form-item>
               </a-form>
             </a-menu>
@@ -104,8 +94,8 @@
                   v-decorator="[
                     'title',
                     {
-                      rules: [{ required: true, message: '请输入公告标题' }]
-                    }
+                      rules: [{ required: true, message: '请输入公告标题' }],
+                    },
                   ]"
                   placeholder="请输入公告标题"
                 />
@@ -113,7 +103,7 @@
             </a-col>
             <a-col :span="12">
               <a-form-item
-                style="width:99%"
+                style="width: 99%"
                 label="公告类型"
                 :label-col="myTab.labelCol"
                 :wrapper-col="myTab.wrapperCol"
@@ -123,34 +113,30 @@
                     'type',
                     {
                       rules: [{ required: true, message: '公告类型不能为空' }],
-                      initialValue: '1'
-                    }
+                      initialValue: '1',
+                    },
                   ]"
                   placeholder="请选择"
                 >
-                  <a-select-option value="1">
-                    通知
-                  </a-select-option>
-                  <a-select-option value="2">
-                    系统升级
-                  </a-select-option>
+                  <a-select-option value="1"> 通知 </a-select-option>
+                  <a-select-option value="2"> 系统升级 </a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :span="12">
               <a-form-item label="发送时间" layout="inline">
                 <a-date-picker
-                  style="min-width:175px"
+                  style="min-width: 175px"
                   v-decorator="[
                     'sendTime',
                     {
                       rules: [
                         {
                           required: true,
-                          message: '请选择发送时间！'
-                        }
-                      ]
-                    }
+                          message: '请选择发送时间！',
+                        },
+                      ],
+                    },
                   ]"
                   placeholder="请选择"
                   show-time
@@ -161,17 +147,17 @@
             <a-col :span="12">
               <a-form-item label="截止时间" layout="inline">
                 <a-date-picker
-                  style="min-width:175px"
+                  style="min-width: 175px"
                   v-decorator="[
                     'endTime',
                     {
                       rules: [
                         {
                           required: true,
-                          message: '请选择截止时间！'
-                        }
-                      ]
-                    }
+                          message: '请选择截止时间！',
+                        },
+                      ],
+                    },
                   ]"
                   placeholder="请选择"
                   show-time
@@ -183,7 +169,7 @@
               <a-form-item label="接收部门">
                 <a-tree-select
                   v-show="isShow"
-                  style="min-width:175px"
+                  style="min-width: 175px"
                   :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                   :tree-data="treeData"
                   placeholder="请选择"
@@ -192,13 +178,15 @@
                     children: 'children',
                     title: 'name',
                     key: 'code',
-                    value: 'value'
+                    value: 'value',
                   }"
                   v-decorator="[
                     'acceptDeptCode',
                     {
-                      rules: [{ required: isShow, message: '接收部门不能为空' }]
-                    }
+                      rules: [
+                        { required: isShow, message: '接收部门不能为空' },
+                      ],
+                    },
                   ]"
                 />
               </a-form-item>
@@ -209,21 +197,19 @@
                   v-decorator="['organization']"
                   @change="ckChange"
                 >
-                  <a-checkbox value="isALL">
-                    全部部门
-                  </a-checkbox>
+                  <a-checkbox value="isALL"> 全部部门 </a-checkbox>
                 </a-checkbox-group>
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="公告内容" style="width:100%">
+              <a-form-item label="公告内容" style="width: 100%">
                 <a-textarea
-                  style="width:482px"
+                  style="width: 482px"
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: true, message: '公告内容不能为空' }]
-                    }
+                      rules: [{ required: true, message: '公告内容不能为空' }],
+                    },
                   ]"
                   placeholder="请输入公告内容"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
@@ -243,15 +229,15 @@ import { Component, Vue } from "vue-property-decorator";
 import moment from "moment";
 import { http } from "../../api/interceptors";
 @Component({
-      components: {}
+  components: {},
 })
 export default class RightContent extends Vue {
   [x: string]: any;
   public getData = new this.$api.configInterface.Announcement();
   public visible = false;
   public myTab = {
-        labelCol: { span: 7 },
-        wrapperCol: { span: 15 }
+    labelCol: { span: 7 },
+    wrapperCol: { span: 15 },
   };
   public myTitle = "添加公告";
   private form: any;
@@ -262,256 +248,256 @@ export default class RightContent extends Vue {
   public seachKey = "all";
   public saveData = {};
   public pagination = {
-        pageSize: 10, // 默认每页显示数量
-        current: 1, //显示当前页数
-        total: 0,
-        showSizeChanger: false, // 显示可改变每页数量
-        showQuickJumper: false, //显示跳转到输入的那一页
-        showTotal: (total: number) =>
-              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-                    total / this.pagination.pageSize
-              )} 页` // 显示总数
+    pageSize: 10, // 默认每页显示数量
+    current: 1, //显示当前页数
+    total: 0,
+    showSizeChanger: false, // 显示可改变每页数量
+    showQuickJumper: false, //显示跳转到输入的那一页
+    showTotal: (total: number) =>
+      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+        total / this.pagination.pageSize
+      )} 页`, // 显示总数
   };
   private columns = [
-        {
-              title: "序号",
-              className: "pd10",
-              width: 70,
-              dataIndex: "index",
-              fixed: "left",
-              scopedSlots: { customRender: "index" }
-        },
-        {
-              title: "公告标题",
-              dataIndex: "title",
-              className: "pd10",
-              width: 170
-        },
-        {
-              title: "公告类型",
-              dataIndex: "type",
-              className: "pd10",
-              width: 95
-        },
-        {
-              title: "创建时间",
-              dataIndex: "createTime",
-              className: "pd10",
-              width: 175
-        },
-        {
-              title: "发送时间",
-              dataIndex: "sendTime",
-              className: "pd10",
-              width: 175
-        },
-        {
-              title: "截止时间",
-              dataIndex: "endTime",
-              className: "pd10",
-              width: 175
-        },
-        {
-              title: "发布民警姓名",
-              dataIndex: "sendUserName",
-              className: "pd10",
-              width: 140
-        },
-        {
-              title: "发布民警警号",
-              dataIndex: "sendUserCode",
-              className: "pd10",
-              width: 140
-        },
-        {
-              title: "接收部门",
-              dataIndex: "acceptDeptNames",
-              className: "pd10",
-              width: 140
-        },
-        {
-              title: "公告内容",
-              dataIndex: "content",
-              className: "pd10",
-              width: 360
-        },
-        {
-              title: "操作",
-              key: "operation",
-              scopedSlots: { customRender: "operation" },
-              className: "pd10",
-              width: 180,
-              fixed: "right"
-        }
+    {
+      title: "序号",
+      className: "pd10",
+      width: 70,
+      dataIndex: "index",
+      fixed: "left",
+      scopedSlots: { customRender: "index" },
+    },
+    {
+      title: "公告标题",
+      dataIndex: "title",
+      className: "pd10",
+      width: 170,
+    },
+    {
+      title: "公告类型",
+      dataIndex: "type",
+      className: "pd10",
+      width: 95,
+    },
+    {
+      title: "创建时间",
+      dataIndex: "createTime",
+      className: "pd10",
+      width: 175,
+    },
+    {
+      title: "发送时间",
+      dataIndex: "sendTime",
+      className: "pd10",
+      width: 175,
+    },
+    {
+      title: "截止时间",
+      dataIndex: "endTime",
+      className: "pd10",
+      width: 175,
+    },
+    {
+      title: "发布民警姓名",
+      dataIndex: "sendUserName",
+      className: "pd10",
+      width: 140,
+    },
+    {
+      title: "发布民警警号",
+      dataIndex: "sendUserCode",
+      className: "pd10",
+      width: 140,
+    },
+    {
+      title: "接收部门",
+      dataIndex: "acceptDeptNames",
+      className: "pd10",
+      width: 140,
+    },
+    {
+      title: "公告内容",
+      dataIndex: "content",
+      className: "pd10",
+      width: 360,
+    },
+    {
+      title: "操作",
+      key: "operation",
+      scopedSlots: { customRender: "operation" },
+      className: "pd10",
+      width: 180,
+      fixed: "right",
+    },
   ];
   beforeCreate() {
-        this.form = this.$form.createForm(this);
-        this.form2 = this.$form.createForm(this);
+    this.form = this.$form.createForm(this);
+    this.form2 = this.$form.createForm(this);
   }
   created() {
-        const val = {
-              page: this.pagination.current,
-              limit: this.pagination.pageSize,
-              status: this.seachKey
-        };
-        this.getList(val);
-        this.getSL();
+    const val = {
+      page: this.pagination.current,
+      limit: this.pagination.pageSize,
+      status: this.seachKey,
+    };
+    this.getList(val);
+    this.getSL();
   }
   private getList(val: any) {
-        this.getData.getNotices(val, true).then((res: any) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              this.tabData = res.data;
-              this.pagination.total = res.pages * 1;
-        });
+    this.getData.getNotices(val, true).then((res: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      this.tabData = res.data;
+      this.pagination.total = res.pages * 1;
+    });
   }
 
   private getSL(): void {
-        const val = {
-              notPlatform: true
-        };
-        this.getData.getSelect(val, true).then((res: any) => {
-              this.treeData = res.data;
-        });
+    const val = {
+      notPlatform: true,
+    };
+    this.getData.getSelect(val, true).then((res: any) => {
+      this.treeData = res.data;
+    });
   }
 
   private handleSubmit(e: any): void {
-        e.preventDefault();
-        this.form.validateFields((err: any, values: any) => {
-              if (!err) {
-                    this.seachKey = values.select;
-                    const val = {
-                          page: this.pagination.current,
-                          limit: this.pagination.pageSize,
-                          status: this.seachKey
-                    };
-                    this.getList(val);
-              }
-        });
+    e.preventDefault();
+    this.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        this.seachKey = values.select;
+        const val = {
+          page: this.pagination.current,
+          limit: this.pagination.pageSize,
+          status: this.seachKey,
+        };
+        this.getList(val);
+      }
+    });
   }
   private healthyTableChange(pagination: {
     pageSize: number
     current: number
   }) {
-        this.pagination.pageSize = pagination.pageSize;
-        this.pagination.current = pagination.current;
-        const obj = {
-              page: this.pagination.current,
-              limit: this.pagination.pageSize,
-              status: this.seachKey
-        };
-        this.getList(obj);
+    this.pagination.pageSize = pagination.pageSize;
+    this.pagination.current = pagination.current;
+    const obj = {
+      page: this.pagination.current,
+      limit: this.pagination.pageSize,
+      status: this.seachKey,
+    };
+    this.getList(obj);
   }
   private add(): void {
-        this.visible = true;
-        this.myTitle = "添加公告";
+    this.visible = true;
+    this.myTitle = "添加公告";
   }
   private remove(val: string): void {
-        const DT = [val];
-        this.getData.removeItem(DT, true).then((res: any) => {
-              if (res.code == 0) {
-                    const val = {
-                          page: this.pagination.current,
-                          limit: this.pagination.pageSize,
-                          status: this.seachKey
-                    };
-                    this.getList(val);
-              }
-        });
-        console.log(val);
+    const DT = [val];
+    this.getData.removeItem(DT, true).then((res: any) => {
+      if (res.code == 0) {
+        const val = {
+          page: this.pagination.current,
+          limit: this.pagination.pageSize,
+          status: this.seachKey,
+        };
+        this.getList(val);
+      }
+    });
+    console.log(val);
   }
   private edit(val: any): void {
-        console.log(val);
-        this.visible = true;
-        this.myTitle = "编辑";
-        if (val.acceptDeptCode == "ALL") {
-              val.acceptDeptCode = undefined;
-              val.isALL = ["isALL"];
-              this.isShow = false;
-        } else {
-              val.isALL = undefined;
-              this.isShow = true;
-        }
-        // const that = this;
-        this.$nextTick(() => {
-              this.form2.setFieldsValue({
-                    title: val.title,
-                    type: val.type,
-                    sendTime: val.sendTime,
-                    endTime: val.endTime,
-                    acceptDeptCode: val.acceptDeptCode,
-                    organization: val.isALL,
-                    remark: val.content
-              });
-        });
+    console.log(val);
+    this.visible = true;
+    this.myTitle = "编辑";
+    if (val.acceptDeptCode == "ALL") {
+      val.acceptDeptCode = undefined;
+      val.isALL = ["isALL"];
+      this.isShow = false;
+    } else {
+      val.isALL = undefined;
+      this.isShow = true;
+    }
+    // const that = this;
+    this.$nextTick(() => {
+      this.form2.setFieldsValue({
+        title: val.title,
+        type: val.type,
+        sendTime: val.sendTime,
+        endTime: val.endTime,
+        acceptDeptCode: val.acceptDeptCode,
+        organization: val.isALL,
+        remark: val.content,
+      });
+    });
   }
   private handleOk(e: any): void {
-        e.preventDefault();
-        this.form2.validateFields((err: any, values: any) => {
-              if (!err) {
-                    if (this.isShow == false) {
-                          this.saveData = {
-                                acceptDeptCode: "ALL",
-                                content: values.remark,
-                                endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
-                                sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
-                                title: values.title,
-                                type: values.type,
-                                id: "",
-                                isALL: "on"
-                          };
-                    } else {
-                          this.saveData = {
-                                acceptDeptCode: values.acceptDeptCode,
-                                content: values.remark,
-                                endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
-                                sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
-                                title: values.title,
-                                type: values.type,
-                                id: ""
-                          };
-                    }
-                    this.saveVal(this.saveData);
-              }
-        });
+    e.preventDefault();
+    this.form2.validateFields((err: any, values: any) => {
+      if (!err) {
+        if (this.isShow == false) {
+          this.saveData = {
+            acceptDeptCode: "ALL",
+            content: values.remark,
+            endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
+            sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
+            title: values.title,
+            type: values.type,
+            id: "",
+            isALL: "on",
+          };
+        } else {
+          this.saveData = {
+            acceptDeptCode: values.acceptDeptCode,
+            content: values.remark,
+            endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
+            sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
+            title: values.title,
+            type: values.type,
+            id: "",
+          };
+        }
+        this.saveVal(this.saveData);
+      }
+    });
   }
   private back(): void {
-        this.form2.resetFields();
+    this.form2.resetFields();
   }
   private ckChange(e: any): void {
-        if (e.length > 0) {
-              this.isShow = false;
-        } else {
-              this.isShow = true;
-        }
+    if (e.length > 0) {
+      this.isShow = false;
+    } else {
+      this.isShow = true;
+    }
   }
   private saveVal(val: any) {
-        this.getData.saveVal(val, true).then((res: any) => {
-              if (res.code == 0) {
-                    this.visible = !this.visible;
-                    this.form2.resetFields();
-                    const val = {
-                          page: this.pagination.current,
-                          limit: this.pagination.pageSize,
-                          status: this.seachKey
-                    };
-                    this.getList(val);
-              }
-        });
+    this.getData.saveVal(val, true).then((res: any) => {
+      if (res.code == 0) {
+        this.visible = !this.visible;
+        this.form2.resetFields();
+        const val = {
+          page: this.pagination.current,
+          limit: this.pagination.pageSize,
+          status: this.seachKey,
+        };
+        this.getList(val);
+      }
+    });
   }
   private Export(): void {
-        const data = `status=${this.seachKey}`;
-        window.open(http + "api/pconfig/system/notice/export?" + data);
+    const data = `status=${this.seachKey}`;
+    window.open(http + "api/pconfig/system/notice/export?" + data);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private rowClassName(record: any, index: number): string {
-        return index % 2 === 0 ? "bgF5" : "";
+    return index % 2 === 0 ? "bgF5" : "";
   }
 }
 </script>
 
 <style lang="less" scope>
 #Announcement {
-  width: calc(100% - 250px);
+  width: 100%;
   height: calc(100% - 40px);
   display: flex;
   align-items: center;
