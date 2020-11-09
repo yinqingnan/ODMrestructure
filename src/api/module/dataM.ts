@@ -50,7 +50,7 @@ export class DataM {
       });
     }
   // 初始化请求表格数据
-  // /api/file/filedata/file/list
+ 
   public gettabledata(params: object, jwt: boolean, flag: string) {
     const url = "/api/file/filedata/file/list";
 
@@ -66,10 +66,84 @@ export class DataM {
       });
     });
   }
+  // 简易流程table数据
+  public getprogramTable(params: object, jwt: boolean, flag: string) {
+    const url = "/api/tpb/lawarchives/case/lllegalDatalist";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  //强制措施table数据
+  
+  public getCoercivemeasuresTable(params: object, jwt: boolean, flag: string) {
+    const url = "/api/tpb/lawarchives/case/lllegalDatalist";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // 关联设置接口   /api/tpb/lawarchives/config/matchConfig
+  public getrelationdata(params: object, jwt: boolean, flag: string) {
+    const url = "/api/tpb/lawarchives/config/matchConfig";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  //   关联数据保存
+  public relationsave(params: object, jwt= true) {
+    const url = "/api/tpb/lawarchives/config/matchConfig/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
 
-
-
+  // 存储类别表格接口
+  // 
+  public getStoragetable(params: object, jwt=true) {
+    const url = "/api/file/filedata/storageCategory/getAllList";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
   /**
  * @param res
  * @param resolve

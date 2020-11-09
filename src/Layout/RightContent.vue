@@ -42,6 +42,7 @@ export default class RightContent extends Vue {
         // console.log(localStorage);
   }
   private onEdit(e: string): void {
+        console.log(e)
         const len: number = this.tagList.length;
         let flag = 0;
         if (len == 1) {
@@ -61,6 +62,8 @@ export default class RightContent extends Vue {
         // this.tagList.splice(flag, 1);
   }
   private tabChange(e: string): void {
+        console.log(e)
+        localStorage.setItem("activeKey", JSON.stringify(e))   //保存当前
         const len: number = this.tagList.length;
         let flag = 0;
         if (len == 1) {

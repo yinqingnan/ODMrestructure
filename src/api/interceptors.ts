@@ -2,7 +2,7 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 // const http:string = "https://easy-mock.com/mock/5f9c133f0bf9ee03009406f7"
 // export const http = "http://192.168.10.75:9100/"
-export const http = "http://192.168.10.81:9100/"
+export const http = "http://192.168.10.75:8100/"
 export class Interceptors {
   public instance: any
   constructor() {

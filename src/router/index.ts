@@ -52,11 +52,11 @@ const routes: Array<RouteConfig> = [
             name: "avData",
             component: () => import('@/views/DataM/AvData.vue')
           },
-          {
-            path: "lllegalData",
-            name: "lllegalData",
-            component: () => import('@/views/DataM/LllegalData.vue')
-          },
+          // {
+          //   path: "lllegalData",
+          //   name: "lllegalData",
+          //   component: () => import('@/views/DataM/LllegalData.vue')
+          // },
           {
             path: "lawarchives",
             name: "config",
@@ -66,6 +66,16 @@ const routes: Array<RouteConfig> = [
             path: "recording",
             name: "recording",
             component: () => import('@/views/DataM/Recording.vue')
+          },
+          {
+            path: "Simpleprogram",
+            name: "Simpleprogram",
+            component: () => import('@/views/DataM/Simpleprogram.vue')
+          },
+          {
+            path: "Coercivemeasures",
+            name: "Coercivemeasures",
+            component: () => import('@/views/DataM/Coercivemeasures.vue')
           },
           {
             path: "evalRecord",

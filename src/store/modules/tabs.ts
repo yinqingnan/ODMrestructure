@@ -29,9 +29,11 @@ const mutations = {
         //如果不存在就添加
         state.activeKey = val.key
         console.log(val.key)
-        localStorage.setItem("activeKey", JSON.stringify(val.key))   //保存当前选中项
+        localStorage.setItem("activeKey", JSON.stringify(val.key))   //保存当前
+        localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存选中项
         state.tagList.push(val)
-        localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存当前所选择的tabs
+        localStorage.setItem("activeKey", JSON.stringify(val.key))   //保存当前选中项
+        // 当前所选择的tabs
       } else {
         //如果存在就进行跳转
         state.activeKey = val.key
@@ -44,19 +46,28 @@ const mutations = {
     }
   },
   [DLTTBS](state: any, val: any): void {
+    console.log(val.e)
+   
     if (val.flag == 0) {
       state.activeKey = state.tagList[val.flag + 1].key
       router.push({ path: "/index/" + state.tagList[val.flag + 1].name })
+      // localStorage.setItem("activeKey", JSON.stringify(state.tagList[val.flag + 1].key))   //保存当前
     } else {
-      state.activeKey = state.tagList[val.flag - 1].key
+      state.activeKey = 
       router.push({ path: "/index/" + state.tagList[val.flag - 1].name })
+      // localStorage.setItem("activeKey", JSON.stringify(state.tagList[val.flag - 1].key))   //保存当前
     }
     state.tagList = state.tagList.filter((item: any) => {
       return item.key != val.e
     })
+    localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存
   },
-  [INITTABS](state: any, val1: any, val2: String) {
-    console.log(val1, val2)
+  [INITTABS](state: any) {
+    let activeKey = JSON.parse(localStorage.getItem("activeKey"))
+    let arr = JSON.parse(localStorage.getItem("Tabslist"))
+  
+    state.activeKey = activeKey
+    state.tagList = arr
   }
 };
 const actions = {};

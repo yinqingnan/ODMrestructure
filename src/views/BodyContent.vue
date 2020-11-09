@@ -24,7 +24,7 @@ export default class BodyContent extends Vue {
   @Tabs.Mutation("addtbs")
   addtabs!: (val: any) => {};
   @Tabs.Mutation("inittabs")
-  inittabs!: (val1: any,val2: string) => {};
+  inittabs!: () => {};
   private menudata: any = [];
   private num = 10;
   public myWH = {
@@ -174,14 +174,36 @@ export default class BodyContent extends Vue {
                     },
                     {
                           key: "14",
-                          path: "/lllegalData",
-                          name: "lllegalData",
+                          path: "/Simpleprogram",
+                          name: "Simpleprogram",
                           redirect: null,
                           component: "lawarchives/lllegalData.html",
                           hidden: false,
                           meta: {
                                 key: "14",
-                                title: "违法数据",
+                                title: "简易程序",
+                                icon: "&#xe697;",
+                                keepAlive: false,
+                                permission: [
+                                      "lawarchives:lllegalData:addRelated",
+                                      "lawarchives:lllegalData:download",
+                                      "lawarchives:lllegalData:delRelated",
+                                      "lawarchives:lllegalData:file",
+                                      "lawarchives:lllegalData:look"
+                                ]
+                          },
+                          children: null
+                    },
+                    {
+                          key: "141",
+                          path: "/Coercivemeasures",
+                          name: "Coercivemeasures",
+                          redirect: null,
+                          component: "lawarchives/lllegalData.html",
+                          hidden: false,
+                          meta: {
+                                key: "141",
+                                title: "强制措施",
                                 icon: "&#xe697;",
                                 keepAlive: false,
                                 permission: [
@@ -761,13 +783,8 @@ export default class BodyContent extends Vue {
   mounted() {
         this.menudata = this.data;
         if(localStorage.getItem("Tabslist")!= null){
-              let activeKey = JSON.parse(localStorage.getItem("activeKey"))
-              let arr = JSON.parse(localStorage.getItem("Tabslist"))
-              console.log(arr)
-              console.log(activeKey)
-
+              this.inittabs()
         }else{
-              console.log(123)
               this.addtabs(this.data[0]); //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
         }
 
