@@ -4,11 +4,12 @@
       <div class="container">
         <div class="contaninerheader">
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" >
+            <a-dropdown :trigger="['click']" class="dropdown">
               <a class="ant-dropdown-link" @click="popup">
-                筛选 <a-icon type="down" />
+                筛选
+                <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box" >
+              <a-menu slot="overlay" class="box">
                 <a-form
                   autocomplete="off"
                   :form="form"
@@ -44,9 +45,7 @@
                       v-decorator="['user', { initialValue: '', rules: [] }]"
                       :max-length="LimitInputlength"
                       placeholder="请输入姓名/警号"
-                    >
-                      />
-                    </a-input>
+                    >/></a-input>
                   </a-form-item>
                   <a-form-item label="时间类型">
                     <a-select
@@ -61,18 +60,15 @@
                       style="width: 100%"
                       placeholder="请选择..."
                     >
-                      <a-select-option v-for="d in Timetype" :key="d.value">
-                        {{ d.title }}
-                      </a-select-option>
+                      <a-select-option v-for="d in Timetype" :key="d.value">{{ d.title }}</a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="时间">
-                 
-                        <a-range-picker
-                        :show-time="{
+                    <a-range-picker
+                      :show-time="{
                             hideDisabledOptions: true,
                           }"
-                         v-decorator="[
+                      v-decorator="[
                         'date',
                         {
                           initialValue: defaultdate,
@@ -80,8 +76,7 @@
                         }
                       ]"
                       @change="onChange"
-                      />
-                  
+                    />
                   </a-form-item>
                   <a-form-item label="文件类型">
                     <a-select
@@ -96,9 +91,7 @@
                       style="width: 100%"
                       placeholder="请选择..."
                     >
-                      <a-select-option v-for="d in filetype" :key="d.value">
-                        {{ d.title }}
-                      </a-select-option>
+                      <a-select-option v-for="d in filetype" :key="d.value">{{ d.title }}</a-select-option>
                     </a-select>
                   </a-form-item>
                   <a-form-item label="重要级别">
@@ -114,18 +107,12 @@
                       style="width: 100%"
                       placeholder="请选择..."
                     >
-                      <a-select-option v-for="d in levelData" :key="d.value">
-                        {{ d.title }}
-                      </a-select-option>
+                      <a-select-option v-for="d in levelData" :key="d.value">{{ d.title }}</a-select-option>
                     </a-select>
                   </a-form-item>
                   <div class="modulebottom">
-                    <a-button type="Default" @click="reset">
-                      重置
-                    </a-button>
-                    <a-button type="primary" @click="handleSubmit">
-                      查询
-                    </a-button>
+                    <a-button type="Default" @click="reset">重置</a-button>
+                    <a-button type="primary" @click="handleSubmit">查询</a-button>
                   </div>
                 </a-form>
               </a-menu>
@@ -136,57 +123,49 @@
             <button @click="dlt" style="line-height:1">批量下载</button>
           </div>
         </div>
-        <!-- <div> -->
-          <!-- <a-table
-            :rowClassName="rowClassName"
-            :loading="loading"
-            row-key="columns"
-            :columns="columns"
-            :bordered="true"
-            :scroll="{ x: 1300 }"
-            :data-source="tabledata"
-            :pagination="pagination"
-             rowKey="id"
-            :row-selection="{
-              selectedRowKeys: selectedRowKeys,
-              onChange: onSelectChange
-            }"
-          >
-            <span slot="action" slot-scope="text, record">
-              <span style="color:#0db8df" @click="tablebtn(text, record)">
-                操作
-              </span>
-            </span>
-          </a-table> -->
-
-        <!-- </div> -->
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tabledata">
-            <vxe-table-column type="checkbox" width="60"/>
-            <vxe-table-column field="fileName" title="文件名称" align="center"   show-overflow width="240"/>
+          <vxe-table border height="auto" :data="tabledata" 
+          class="mytable-scrollbar" :loading="loading"   highlight-hover-row ref="xTable1"  @checkbox-all="selectAllEvent"
+          @checkbox-change="selectChangeEvent"
+>>
+            <vxe-table-column type="checkbox" width="60" />
+            <vxe-table-column
+              field="fileName"
+              title="文件名称"
+              align="center"
+              show-overflow
+              width="240"
+            />
             <vxe-table-column field="deptCode" title="执勤部门" align="center" />
-            <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow/>
+            <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow />
             <vxe-table-column field="userCode" title="民警警号" align="center" />
-            <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
+            <vxe-table-column field="fileType_Name" title="文件类型"  align="center" />
             <vxe-table-column field="fileLevel_Name" title="重要级别" align="center" />
-            <vxe-table-column field="recordDate" title="摄录时间" align="center" />
-            <vxe-table-column field="uploadDate" title="导入时间" align="center" />
-            <vxe-table-column field="relateCase" title="关联信息" align="center" />
-            <vxe-table-column field="action" title="操作" align="center">
+            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
+            <vxe-table-column field="uploadDate" title="导入时间" show-overflow align="center" />
+            <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center" >
               <template v-slot="{ row }">
-                <vxe-button type="text" @click="tablebtn(row)">查看</vxe-button>
+               <span>
+                 {{modify(row)}}
+               </span>
               </template>
             </vxe-table-column>
-              
+            <vxe-table-column field="action" title="操作" align="center" fixed="right">
+              <template v-slot="{ row }">
+                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;">查看</span>
+              </template>
+            </vxe-table-column>
           </vxe-table>
           <p>
             <vxe-pager
-                align="right"
-                size="mini"
-                :current-page.sync="page2.currentPage"
-                :page-size.sync="page2.pageSize"
-                :total="page2.totalResult"
-              />
+              align="right"
+              size="mini"
+              :layouts="layouts"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              @page-change="pagerchange"
+            />
           </p>
         </div>
       </div>
@@ -194,170 +173,71 @@
   </div>
 </template>
 <script lang="ts">
-import { LimitInputlength } from '../../InterfaceVariable/variable';
-import { Component,  Vue } from 'vue-property-decorator';
-import moment from 'moment';
-@Component({
-})
+import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { Component, Vue } from "vue-property-decorator"
+import moment from "moment"
+@Component({})
 export default class AvData extends Vue {
-  [x: string]: any;
-  public DataM = new this.$api.configInterface.DataM();
-  private LimitInputlength = LimitInputlength;
-  public form!: any;
-  private departmentData = [];
-    private page2 = {
-      currentPage: 1,
-      pageSize: 10,
-      totalResult: 200,
-    }
+  [x: string]: any
+  public DataM = new this.$api.configInterface.DataM()
+  private LimitInputlength = LimitInputlength
+  public form!: any
+  private departmentData = []
+  private page = {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
+  private layouts = [
+    "PrevJump",
+    "PrevPage",
+    "Jump",
+    "PageCount",
+    "NextPage",
+    "NextJump",
+    "Sizes",
+    "Total",
+  ] 
   private Timetype = [
-    { id: 1, value: '1', title: '导入时间' },
-    { id: 2, value: '2', title: '拍摄时间' }
-  ];
+    { id: 1, value: "uploadDate", title: "导入时间" },
+    { id: 2, value: "recordDate", title: "拍摄时间" },
+  ]
   private filetype = [
-    { id: 1, value: '1', title: '视频' },
-    { id: 2, value: '2', title: '音频' },
-    { id: 3, value: '3', title: '图片' },
-    { id: 4, value: '4', title: '日志' }
-  ];
+    { id: 1, value: "video", title: "视频" },
+    { id: 2, value: "audio", title: "音频" },
+    { id: 3, value: "photo", title: "图片" },
+    { id: 4, value: "log", title: "日志" },
+  ]
   private levelData = [
-    { id: 1, value: '1', title: '高' },
-    { id: 2, value: '2', title: '中' },
-    { id: 3, value: '3', title: '低' }
-  ];
+    { id: 1, value: "3", title: "高" },
+    { id: 2, value: "2", title: "中" },
+    { id: 3, value: "1", title: "低" },
+  ]
   private defaultdate = [
-    moment('2015-06-06', 'YYYY-MM-DD'),
-    moment('2015-06-06', 'YYYY-MM-DD')
-  ];
-  private myDate = [];
-  private selectdata = [];
-  private selectedRowKeys = [];
-  private loading = false;
-  private Height=""
-  public pagination = {
-    pageSize: 15, // 默认每页显示数量
-    current: 1, //显示当前页数
-    total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页` // 显示总数
-  };
-  private columns = [
-    // {
-    //       title: '文件名称',
-    //       dataIndex: 'fileName',
-    //       align: 'left',
-    //       key: 'fileName',
-    //       width:350,
-    //       fixed: "left",
-    // },
-    // {
-    //       title: '执勤部门',
-    //       dataIndex: 'deptCode',
-    //       align: 'center',
-    //       key: 'deptCode',
-    //       width:200
-    // },
-    // {
-    //       title: '民警姓名',
-    //       dataIndex: 'userName',
-    //       align: 'center',
-    //       width:200,
-    //       key: 'userName',
-    // },
-    // {
-    //       title: '民警警号',
-    //       dataIndex: 'userCode',
-    //       align: 'center',
-    //       key: 'userCode',
-    //       width:200
-
-    // },
-    // {
-    //       title: '文件类型',
-    //       dataIndex: 'fileType_Name',
-    //       align: 'center',
-    //       key: 'fileType_Name',
-    //       width:80
-
-    // },
-    // {
-    //       title: '重要级别',
-    //       dataIndex: 'fileLevel_Name',
-    //       align: 'center',
-    //       key: 'fileLevel_Name',
-    //       width:80
-
-    // },
-    // {
-    //       title: '摄录时间',
-    //       dataIndex: 'recordDate',
-    //       align: 'center',
-    //       key: 'recordDate',
-    //       width:200
-    // },
-    // {
-    //       title: '摄录时长',
-    //       dataIndex: 'fileDuration_Name',
-    //       align: 'center',
-    //       key: 'fileDuration_Name',
-    //       width:80
-
-    // },
-    // {
-    //       title: '导入时间',
-    //       dataIndex: 'uploadDate',
-    //       align: 'center',
-    //       key: 'uploadDate',
-    //       width:200
-
-    // },
-    // {
-    //       title: '关联信息',
-    //       dataIndex: 'relateCase',
-    //       align: 'center',
-    //       key: 'relateCase',
-    //       width:80
-    // },
-    // {
-    //       title: '操作',
-    //       dataIndex: 'action',
-    //       align: 'center',
-    //       key: 'action',
-    //       width:120,
-    //       fixed: "right",
-    //       scopedSlots: { customRender: 'action' }
-    // },
-  ];
-  private tabledata = [];
+    moment("2015-06-06", "YYYY-MM-DD"),
+    moment("2015-06-06", "YYYY-MM-DD"),
+  ]
+  private myDate = []
+  private selectdata = []
+  private selectedRowKeys = []
+  private loading = false
+  private Height = ""
+  private tabledata = []
+  private formdata = {}
   private created() {
-    this.form = this.$form.createForm(this);
-    this.getdata();
+    this.form = this.$form.createForm(this)
+    this.getdata()
     this.Height = `${document.documentElement.clientHeight - 230}px`
   }
 
-  private healthyTableChange(pagination: {
-    pageSize: number
-    current: number
-  }) {
-    this.pagination.pageSize = pagination.pageSize;
-    this.pagination.current = pagination.current;
-    const obj = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize
-    };
-    // this.getList(obj);
-  }
   private handleSubmit(e: any): void {
-    e.preventDefault();
+    e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        let uploadDate_gt = val.date[0].format('YYYY-MM-DD HH:mm:ss')
-        let uploadDate_lt = val.date[1].format('YYYY-MM-DD HH:mm:ss')
-                   
+        console.log(val)
+        this.formdata = val
+        let uploadDate_gt = val.date[0].format("YYYY-MM-DD HH:mm:ss")
+        let uploadDate_lt = val.date[1].format("YYYY-MM-DD HH:mm:ss")
         let obj = {
           page: 1,
           limit: 15,
@@ -365,76 +245,118 @@ export default class AvData extends Vue {
           userName: val.user, //警员
           timeType: val.TimeData, //时间类型
           timeRange: this.myDate,
-          fileType_equal: '',
+          fileType_equal: val.Filetype,
           fileLevel_equal: val.levelData,
           uploadDate_gt: uploadDate_gt, //必填  时间起
           uploadDate_lt: uploadDate_lt, //必填  时间止
-          recordDate_gt: '',
-        };
-        this.gettabledata(obj);
+          recordDate_gt: "",
+        }
+        this.gettabledata(obj)
       }
-    });
+    })
   }
   private onChange(date: any, dateString: any): void {
-    this.selectdata = dateString;
+    this.selectdata = dateString
   }
   private getdata() {
     this.DataM.getMenulist({}, true).then((res: any) => {
-      this.departmentData = res.data;
-    });
-    this.DataM.gettimeframe({ type: 'LATELY_MONTH' }, true).then((res: any) => {  
+      this.departmentData = res.data
+    })
+    this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
       this.myDate = res.data.myDate
       this.defaultdate = [
-        moment(res.data.myDate.split('~')[0], 'YYYY-MM-DD'),
-        moment(res.data.myDate.split('~')[1], 'YYYY-MM-DD'),
-      ];
-    });
+        moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
+        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
+      ]
+    })
     let obj = {
       page: 1,
       limit: 15,
-      deptCode_equal: '', //部门id
-      userName: '', //警员
-      timeType: '', //时间类型
-      timeRange: '2020-10-06 ~ 2020-11-06',
-      fileType_equal: '',
-      fileLevel_equal: '',
-      uploadDate_gt: '2020-10-06 00:00:00', //必填  时间起
-      uploadDate_lt: '2020-11-06 23:59:59', //必填  时间止
-      recordDate_gt: '',
-    };
-    this.gettabledata(obj);
+      deptCode_equal: "", //部门id
+      userName: "", //警员
+      timeType: "", //时间类型
+      timeRange: "2020-10-06 ~ 2020-11-06",
+      fileType_equal: "",
+      fileLevel_equal: "",
+      uploadDate_gt: "2020-10-06 00:00:00", //必填  时间起
+      uploadDate_lt: "2020-11-06 23:59:59", //必填  时间止
+      recordDate_gt: "",
+    }
+    this.gettabledata(obj)
   }
   private gettabledata(obj: any) {
+    this.loading = true
     this.DataM.gettabledata(obj, true).then((res: any) => {
-      console.log(res)
-      this.tabledata = res.data;
-    });
+      this.page.totalResult = parseInt(res.count)
+      this.tabledata = res.data
+      this.loading = false
+
+    })
   }
-  private onSelectChange(selectedRowKeys: any) {
-    console.log(selectedRowKeys)
-    this.selectedRowKeys = selectedRowKeys;
-  }
+
   private reset() {
-    this.form.resetFields();
-    this.defaultdate = [];
+    this.form.resetFields()
+    this.defaultdate = []
   }
   private popup(e: { preventDefault: () => void }) {
-    this.getdata();
-    e.preventDefault();
+    this.getdata()
+    e.preventDefault()
   }
-  private tablebtn(text: any, row: any) {
-    console.log(text, row);
+  private tablebtn(row: any, text: any) {
+    console.log(row, text)
   }
-  public rowClassName(record: any,index: number) {
-    let className = "light-row";
-    if (index % 2 === 1) className = "dark-row";
-    return className;
+  public rowClassName(record: any, index: number) {
+    let className = "light-row"
+    if (index % 2 === 1) className = "dark-row"
+    return className
   }
-  public download(){
-    console.log(  this.selectedRowKeys)
+  public download() {
+    console.log(this.selectedRowKeys)
   }
-  public dlt(){
-    console.log(  this.selectedRowKeys)
+  public dlt() {
+    console.log(this.selectedRowKeys)
+  }
+  public pagerchange({ currentPage, pageSize }) {
+    console.log(currentPage)
+    console.log(pageSize)
+    let obj = {
+      page: currentPage,
+      limit: pageSize,
+      deptCode_equal: this.formdata.department, //部门id
+      userName: this.formdata.user, //警员
+      timeType: this.formdata.TimeData, //时间类型
+      timeRange: this.myDate,
+      fileType_equal: this.formdata.Filetype,
+      fileLevel_equal: this.formdata.levelData,
+      uploadDate_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+      uploadDate_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+      recordDate_gt: "",
+    }
+    this.gettabledata(obj)
+  }
+  public selectAllEvent ({ checked, records }) {
+    this.selectedRowKeys = records
+    console.log(checked ? '所有勾选事件' : '所有取消事件', records)
+  }
+  public selectChangeEvent ({ checked, records }) {
+    this.selectedRowKeys = records
+    console.log(checked ? '勾选事件' : '取消事件', records)
+  }
+  public modify(row){
+    var cases = row.relateCase;
+    if (cases) {
+      if (JSON.stringify(cases) == "{}") {
+        return "关联删除";
+      }
+      var resStr = '';
+      for (var key in cases) {
+        resStr += cases[key] + "(" + key + "),";
+      }
+      resStr = resStr.substring(0, resStr.length - 1);
+      return resStr;
+    } else {
+      return '未关联';
+    }
   }
 }
 </script>
@@ -512,9 +434,40 @@ export default class AvData extends Vue {
 // #AvData .ant-table-wrapper{
 //   border: 1px solid #f1f1f1;
 // }
-.light-row {background-color:#f5f5f5;}
-.dark-row {background-color: #ffffff;}
-.ant-calendar-picker{
+.light-row {
+  background-color: #f5f5f5;
+}
+.dark-row {
+  background-color: #ffffff;
+}
+.ant-calendar-picker {
   width: 200px !important;
+}
+
+/*滚动条整体部分*/
+.mytable-scrollbar ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+/*滚动条的轨道*/
+.mytable-scrollbar ::-webkit-scrollbar-track {
+  background-color: #FFFFFF;
+}
+/*滚动条里面的小方块，能向上向下移动*/
+.mytable-scrollbar ::-webkit-scrollbar-thumb {
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  border: 1px solid #F1F1F1;
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+}
+.mytable-scrollbar ::-webkit-scrollbar-thumb:hover {
+  background-color: #A8A8A8;
+}
+.mytable-scrollbar ::-webkit-scrollbar-thumb:active {
+  background-color: #787878;
+}
+/*边角，即两个滚动条的交汇处*/
+.mytable-scrollbar ::-webkit-scrollbar-corner {
+  background-color: #FFFFFF;
 }
 </style>

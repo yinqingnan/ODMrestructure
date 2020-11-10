@@ -74,94 +74,94 @@ export default class Login extends Vue {
   private Title = "";
 
   private created() {
-        this.form = this.$form.createForm(this);
+    this.form = this.$form.createForm(this);
   }
   private LimitInputlength = LimitInputlength;
   private mounted() {
-        this.gettitle();
-        this.jurisdiction();
-        this.getCookie();
+    this.gettitle();
+    this.jurisdiction();
+    this.getCookie();
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleSubmit(e: any): void {
-        e.preventDefault();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.form.validateFields((err: any, values: any) => {
-              if (!err) {
-                    if (this.checkNick) {
-                          this.setCookie(values.username, values.password, 7);
-                          this.login(values);
-                    } else {
-                          this.login(values);
-                          this.clearCookie();
-                          this.login(values);
-                    }
-              }
-        });
+    e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        if (this.checkNick) {
+          this.setCookie(values.username, values.password, 7);
+          this.login(values);
+        } else {
+          this.login(values);
+          this.clearCookie();
+          this.login(values);
+        }
+      }
+    });
   }
   private handleChange(e: { target: { checked: boolean } }) {
-        this.checkNick = e.target.checked;
+    this.checkNick = e.target.checked;
   }
   private login = (data: object) => {
-        this.Login.login(data, false).then((res: any) => {
-              if (res.code == 0) {
-                    localStorage.setItem("token", res.data.accessToken);
-                    this.$router.push({ name: "Index" });
-              } else {
-                    message.error(res.msg);
-                    this.clearCookie();
-                    this.form.setFieldsValue({
-                          password: "",
-                          username: ""
-                    });
-              }
+    this.Login.login(data, false).then((res: any) => {
+      if (res.code == 0) {
+        localStorage.setItem("token", res.data.accessToken);
+        this.$router.push({ name: "home" });
+      } else {
+        message.error(res.msg);
+        this.clearCookie();
+        this.form.setFieldsValue({
+          password: "",
+          username: ""
         });
+      }
+    });
   };
   private jurisdiction = () => {
-        this.Login.getjurisdiction({}, false).then((res: any) => {
-              if (res.code == 1003) {
-                    this.$router.push({ name: "pAuthorize" });
-              }
-        });
+    this.Login.getjurisdiction({}, false).then((res: any) => {
+      if (res.code == 1003) {
+        this.$router.push({ name: "pAuthorize" });
+      }
+    });
   };
   private gettitle() {
-        this.Login.gettitle({}, false).then((res: any) => {
-              this.Title = res.data;
-        });
+    this.Login.gettitle({}, false).then((res: any) => {
+      this.Title = res.data;
+    });
   }
   //设置cookie
   private setCookie(cName: string, cPwd: string, exdays: number) {
-        const exdate = new Date(); //获取时间
-        exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
-        //字符串拼接cookie
-        window.document.cookie =
+    const exdate = new Date(); //获取时间
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //字符串拼接cookie
+    window.document.cookie =
       "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString();
-        window.document.cookie =
+    window.document.cookie =
       "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString();
   }
   // 获取cookie
   private getCookie() {
-        if (document.cookie.length > 0) {
-              this.checkNick = true;
-              const arr = document.cookie.split(";");
-              for (let i = 0; i < arr.length; i++) {
-                    const arr2 = arr[i].split("=");
-                    if (arr2[0] === "userName") {
-                          this.form.setFieldsValue({
-                                username: arr2[1]
-                          });
-                    }
-                    if (arr2[0] === " userPwd") {
-                          this.form.setFieldsValue({
-                                password: arr2[1]
-                          });
-                    }
-              }
+    if (document.cookie.length > 0) {
+      this.checkNick = true;
+      const arr = document.cookie.split(";");
+      for (let i = 0; i < arr.length; i++) {
+        const arr2 = arr[i].split("=");
+        if (arr2[0] === "userName") {
+          this.form.setFieldsValue({
+            username: arr2[1]
+          });
         }
+        if (arr2[0] === " userPwd") {
+          this.form.setFieldsValue({
+            password: arr2[1]
+          });
+        }
+      }
+    }
   }
   //清除cookie
   private clearCookie = () => {
-        this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+    this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
   };
 }
 </script>

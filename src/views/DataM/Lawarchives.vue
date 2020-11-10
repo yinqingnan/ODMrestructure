@@ -37,34 +37,34 @@ export default class Lawarchives extends Vue {
   private time1 = ""
   private time2 = ""
   public mounted() {
-        this.getdata()
-        this.Height = `${document.documentElement.clientHeight - 140}px`
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const _that = this
-        window.addEventListener("resize", () => {
-              _that.Height = `${document.documentElement.clientHeight - 230}px`
-        })
+    this.getdata()
+    this.Height = `${document.documentElement.clientHeight - 140}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    })
   }
   private getdata() {
-        this.DataM.getrelationdata({}).then((res: any) => {
-              console.log(res)
-              this.time1 = res.data[0].value
-              this.time2 = res.data[1].value
-        })
+    this.DataM.getrelationdata({}).then((res: any) => {
+      console.log(res)
+      this.time1 = res.data[0].value
+      this.time2 = res.data[1].value
+    })
   }
   private btn(){
-        console.log(this.time1)
-        console.log(this.time2)
-        this.DataM.relationsave({
-              match_floor: this.time2,
-              match_limit:this.time1
-        }).then((res)=>{
-              console.log(res)
-              if(res.code == 0){
-                    this.$message.success(res.msg)
-                    this.getdata()
-              }
-        })
+    console.log(this.time1)
+    console.log(this.time2)
+    this.DataM.relationsave({
+      match_floor: this.time2,
+      match_limit:this.time1
+    }).then((res)=>{
+      console.log(res)
+      if(res.code == 0){
+        this.$message.success(res.msg)
+        this.getdata()
+      }
+    })
   }
 }
 </script>

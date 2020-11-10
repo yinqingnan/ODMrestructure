@@ -46,15 +46,15 @@ import subMenu from "./SiderMenu/index.vue";
 import { namespace } from "vuex-class";
 const Tabs = namespace("Tabs");
 @Component({
-      components: {
-            subMenu
-      }
+  components: {
+    subMenu
+  }
 })
 export default class LeftMenu extends Vue {
   @Prop({
-        type: Array,
-        required: true,
-        default: []
+    type: Array,
+    required: true,
+    default: []
   })
   private data!: any[];
   @Tabs.Mutation("menuadd")
@@ -66,44 +66,44 @@ export default class LeftMenu extends Vue {
   private theme = "dark";
   private rootSubmenuKeys = ["sub1", "sub2", "sub4"];
   private mounted() {
-        // console.log(this.data);
-        let name =this.$route.name
-        this.openKeys = [this.findIndexArray(this.data,name,[])[0]]
+    // console.log(this.data);
+    let name =this.$route.name
+    this.openKeys = [this.findIndexArray(this.data,name,[])[0]]
   }
   public findIndexArray(data, name, indexArray) {
-        let arr = Array.from(indexArray)
-        for (let i = 0, len = data.length; i < len; i++) {
-              arr.push(data[i].name)
-              if (data[i].name === name) {
-                    return arr
-              }
-              let children = data[i].children
-              if (children && children.length) {
-                    let result = this.findIndexArray(children, name, arr)
-                    if (result) return result
-              }
-              arr.pop()
-        }
-        return false
+    let arr = Array.from(indexArray)
+    for (let i = 0, len = data.length; i < len; i++) {
+      arr.push(data[i].name)
+      if (data[i].name === name) {
+        return arr
+      }
+      let children = data[i].children
+      if (children && children.length) {
+        let result = this.findIndexArray(children, name, arr)
+        if (result) return result
+      }
+      arr.pop()
+    }
+    return false
   }
   public menuClick({ item, key, keyPath }: any): void {
-        if (key === "1") {
-              this.openKeys = ["0"];
-        }
+    if (key === "1") {
+      this.openKeys = ["0"];
+    }
   }
   public onOpenChange(openKeys: Array<string>[]): void {
-        if (openKeys.length !== 0) {
-              this.openKeys = [openKeys[1]];
-              // localStorage.setItem("openKeys", this.openKeys);
-        } else {
-              this.openKeys = [""];
-        }
+    if (openKeys.length !== 0) {
+      this.openKeys = [openKeys[1]];
+      // localStorage.setItem("openKeys", this.openKeys);
+    } else {
+      this.openKeys = [""];
+    }
   }
   private handleClick(e: any): void {
-        console.log("click", e);
+    console.log("click", e);
   }
   private titleClick(data: any): void {
-        this.menuadd(data);
+    this.menuadd(data);
   }
 }
 </script>

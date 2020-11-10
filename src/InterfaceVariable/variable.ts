@@ -4,4 +4,4 @@
 
 // 限制输入框最大输入个数
 export const LimitInputlength = 20;
- 
+export const textarealength = 200

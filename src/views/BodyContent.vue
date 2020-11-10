@@ -60,7 +60,7 @@ export default class BodyContent extends Vue {
         title: "统计分析",
         icon: "&#xe691;",
         keepAlive: false,
-        permission: null,
+        permission: null
       },
       children: [
         {
@@ -75,9 +75,9 @@ export default class BodyContent extends Vue {
             title: "摄录统计",
             icon: "&#xe695;",
             keepAlive: false,
-            permission: ["recording:export"],
+            permission: ["recording:export"]
           },
-          children: null,
+          children: null
         },
         {
           key: "10",
@@ -91,134 +91,25 @@ export default class BodyContent extends Vue {
             title: "关联统计",
             icon: "&#xe694;",
             keepAlive: false,
-            permission: ["lawcase:export"],
+            permission: ["lawcase:export"]
           },
-          children: null,
+          children: null
         },
         {
-          key: "3",
-          path: "/file",
-          name: "file",
+          key: "11",
+          path: "/label",
+          name: "label",
           redirect: null,
-          component: "layout/index.vue",
+          component: "report/label.html",
           hidden: false,
           meta: {
-            key: "3",
-            title: "数据管理",
-            icon: "&#xe664;",
+            key: "11",
+            title: "标注考评",
+            icon: "&#xe6b4;",
             keepAlive: false,
-            permission: null
+            permission: ["label:export"]
           },
-          children: [
-            {
-              key: "13",
-              path: "/avData",
-              name: "avData",
-              redirect: null,
-              component: "avData/avData.html",
-              hidden: false,
-              meta: {
-                key: "13",
-                title: "视音频数据",
-                icon: "&#xe66d;",
-                keepAlive: false,
-                permission: [
-                  "lawarchives:avDate:foreBtn",
-                  "lawarchives:avDate:twoTab",
-                  "lawarchives:avDate:download",
-                  "lawarchives:avDate:twoDel",
-                  "lawarchives:avDate:threeBtn",
-                  "lawarchives:avDate:deletes",
-                  "lawarchives:avDate:downloads",
-                  "lawarchives:avDate:oneBtn",
-                  "lawarchives:avDate:look",
-                  "lawarchives:avDate:fourTab",
-                  "lawarchives:avDate:twoAdd"
-                ]
-              },
-              children: null
-            },
-            {
-              key: "14",
-              path: "/Simpleprogram",
-              name: "Simpleprogram",
-              redirect: null,
-              component: "lawarchives/lllegalData.html",
-              hidden: false,
-              meta: {
-                key: "14",
-                title: "简易程序",
-                icon: "&#xe697;",
-                keepAlive: false,
-                permission: [
-                  "lawarchives:lllegalData:addRelated",
-                  "lawarchives:lllegalData:download",
-                  "lawarchives:lllegalData:delRelated",
-                  "lawarchives:lllegalData:file",
-                  "lawarchives:lllegalData:look"
-                ]
-              },
-              children: null
-            },
-            {
-              key: "141",
-              path: "/Coercivemeasures",
-              name: "Coercivemeasures",
-              redirect: null,
-              component: "lawarchives/lllegalData.html",
-              hidden: false,
-              meta: {
-                key: "141",
-                title: "强制措施",
-                icon: "&#xe697;",
-                keepAlive: false,
-                permission: [
-                  "lawarchives:lllegalData:addRelated",
-                  "lawarchives:lllegalData:download",
-                  "lawarchives:lllegalData:delRelated",
-                  "lawarchives:lllegalData:file",
-                  "lawarchives:lllegalData:look"
-                ]
-              },
-              children: null
-            },
-            {
-              key: "15",
-              path: "/lawarchives",
-              name: "config",
-              redirect: null,
-              component: "lawarchives/config.html",
-              hidden: false,
-              meta: {
-                key: "15",
-                title: "关联设置",
-                icon: "&#xe694;",
-                keepAlive: false,
-                permission: ["lawarchives:config:save"]
-              },
-              children: null
-            },
-            {
-              key: "16",
-              path: "/recording",
-              name: "recording",
-              redirect: null,
-              component: "lawarchives/storageCategory.html",
-              hidden: false,
-              meta: {
-                key: "16",
-                title: "存储类别",
-                icon: "&#xe66e;",
-                keepAlive: false,
-                permission: [
-                  "lawarchives:storageCategory:save",
-                  "lawarchives:storageCategory:update",
-                  "lawarchives:storageCategory:delete"
-                ]
-              },
-              children: null
-            }
-          ]
+          children: null
         },
         {
           key: "12",
@@ -232,11 +123,11 @@ export default class BodyContent extends Vue {
             title: "资产统计",
             icon: "&#xe693;",
             keepAlive: false,
-            permission: ["assets:export"],
+            permission: ["assets:export"]
           },
-          children: null,
-        },
-      ],
+          children: null
+        }
+      ]
     },
     {
       key: "3",
@@ -247,6 +138,8 @@ export default class BodyContent extends Vue {
       hidden: false,
       meta: {
         key: "3",
+
+        
         title: "数据管理",
         icon: "&#xe664;",
         keepAlive: false,
@@ -283,14 +176,36 @@ export default class BodyContent extends Vue {
         },
         {
           key: "14",
-          path: "/lllegalData",
-          name: "lllegalData",
+          path: "/Simpleprogram",
+          name: "Simpleprogram",
           redirect: null,
           component: "lawarchives/lllegalData.html",
           hidden: false,
           meta: {
             key: "14",
-            title: "违法数据",
+            title: "简易程序",
+            icon: "&#xe697;",
+            keepAlive: false,
+            permission: [
+              "lawarchives:lllegalData:addRelated",
+              "lawarchives:lllegalData:download",
+              "lawarchives:lllegalData:delRelated",
+              "lawarchives:lllegalData:file",
+              "lawarchives:lllegalData:look",
+            ],
+          },
+          children: null,
+        },
+        {
+          key: "141",
+          path: "/Coercivemeasures",
+          name: "Coercivemeasures",
+          redirect: null,
+          component: "lawarchives/lllegalData.html",
+          hidden: false,
+          meta: {
+            key: "141",
+            title: "强制措施",
             icon: "&#xe697;",
             keepAlive: false,
             permission: [

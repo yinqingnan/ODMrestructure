@@ -11,7 +11,7 @@ export class DataM {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  // 获取部门菜单数据
+  // todo 获取部门菜单数据
   public getMenulist(params: object, jwt: boolean, flag: string) {
     const url = "/api/uauth/base/dept/select/login";
     const body = {
@@ -30,7 +30,7 @@ export class DataM {
       });
     });
   }
-    // 获取默认时间范围
+    // todo 获取默认时间范围
     public gettimeframe(params: object, jwt: boolean, flag: string) {
       const url = "/api/uauth/my/dateDept";
       const body = {
@@ -49,7 +49,7 @@ export class DataM {
         });
       });
     }
-  // 初始化请求表格数据
+  // todo 初始化请求表格数据
  
   public gettabledata(params: object, jwt: boolean, flag: string) {
     const url = "/api/file/filedata/file/list";
@@ -66,7 +66,7 @@ export class DataM {
       });
     });
   }
-  // 简易流程table数据
+  // todo 简易流程table数据
   public getprogramTable(params: object, jwt: boolean, flag: string) {
     const url = "/api/tpb/lawarchives/case/lllegalDatalist";
     return new Promise((resolve, reject) => {
@@ -81,7 +81,7 @@ export class DataM {
       });
     });
   }
-  //强制措施table数据
+  // todo 强制措施table数据
   
   public getCoercivemeasuresTable(params: object, jwt: boolean, flag: string) {
     const url = "/api/tpb/lawarchives/case/lllegalDatalist";
@@ -97,7 +97,7 @@ export class DataM {
       });
     });
   }
-  // 关联设置接口   /api/tpb/lawarchives/config/matchConfig
+  // todo 关联设置接口   /api/tpb/lawarchives/config/matchConfig
   public getrelationdata(params: object, jwt: boolean, flag: string) {
     const url = "/api/tpb/lawarchives/config/matchConfig";
     return new Promise((resolve, reject) => {
@@ -112,7 +112,7 @@ export class DataM {
       });
     });
   }
-  //   关联数据保存
+  //   todo 关联数据保存
   public relationsave(params: object, jwt= true) {
     const url = "/api/tpb/lawarchives/config/matchConfig/save";
     const body = params
@@ -128,7 +128,7 @@ export class DataM {
   }
 
 
-  // 存储类别表格接口
+  // todo 存储类别表格接口
   // 
   public getStoragetable(params: object, jwt=true) {
     const url = "/api/file/filedata/storageCategory/getAllList";
@@ -138,6 +138,38 @@ export class DataM {
         headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+
+
+    //todo  存储类别添加保存接口
+  public storetypesave(params: object, jwt= true) {
+    const url = "/api/file/filedata/storageCategory/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  //todo存储类型删除
+   
+   public storetypedlt(params: object, jwt= true) {
+    const url = "/api/file/filedata/storageCategory/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
         reject(err.message);

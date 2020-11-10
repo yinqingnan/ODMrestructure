@@ -62,8 +62,9 @@ const mutations = {
     })
     localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存
   },
-  [INITTABS](state: any, val1: any, val2: string) {
-    console.log(val1, val2)
+  [INITTABS](state: any) {
+    state.activeKey=  localStorage.getItem("activeKey"),
+    state.tagList= JSON.parse(localStorage.getItem("Tabslist"))
   }
 };
 const actions = {};

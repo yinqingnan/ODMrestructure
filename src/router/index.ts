@@ -52,11 +52,6 @@ const routes: Array<RouteConfig> = [
             name: "avData",
             component: () => import('@/views/DataM/AvData.vue')
           },
-          // {
-          //   path: "lllegalData",
-          //   name: "lllegalData",
-          //   component: () => import('@/views/DataM/LllegalData.vue')
-          // },
           {
             path: "lawarchives",
             name: "config",
