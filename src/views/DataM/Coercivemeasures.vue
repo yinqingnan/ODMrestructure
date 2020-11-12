@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
     <div id="Simpleprogram" class="layoutcontainer">
       <div class="containers">
         <div class="contaninerheader" style="padding-left:25px">
@@ -20,6 +20,8 @@
                   <el-scrollbar class="screen">
                     <a-form-item label="执勤部门">
                       <a-tree-select
+                        show-search
+                        treeNodeFilterProp="title"
                         v-decorator="[
                         'department',
                         {
@@ -114,35 +116,39 @@
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table border height="auto" :data="tableData" class="mytable-scrollbar">
-            <vxe-table-column type="seq" width="60"  title="序号" align='center'/>
-            <vxe-table-column field="deptName" title="执勤部门" align='center' show-overflow />
-            <vxe-table-column field="userName" title="民警姓名" align='center'/>
-            <vxe-table-column field="code" title="凭证编号" align='center' show-overflow/>
-            <vxe-table-column field="litigant" title="当事人" align='center'/>
-            <vxe-table-column field="driverNum" title="驾驶证号" align='center' show-overflow/>
-            <vxe-table-column field="numberPlate" title="号码号牌"   show-overflow align='center'/>
-            <vxe-table-column field="hpzlText" title="号牌种类" align='center'/>
-            <vxe-table-column field="illegalTime" title="违法时间"  show-overflow align='center'/>
-            <vxe-table-column field="illegalAddress" title="违法地址" align='center' width="100" show-overflow />
-            <vxe-table-column field="illegalDeed" title="违法行为" show-overflow align='center'/>
-            <vxe-table-column field="relatedInfo" title="关联信息" align='center'/>
-            <vxe-table-column field="active" title="操作" align='center'>
+            <vxe-table-column type="seq" width="60" title="序号" align="center" />
+            <vxe-table-column field="deptName" title="执勤部门" align="center" show-overflow />
+            <vxe-table-column field="userName" title="民警姓名" align="center" />
+            <vxe-table-column field="code" title="凭证编号" align="center" show-overflow />
+            <vxe-table-column field="litigant" title="当事人" align="center" />
+            <vxe-table-column field="driverNum" title="驾驶证号" align="center" show-overflow />
+            <vxe-table-column field="numberPlate" title="号码号牌" show-overflow align="center" />
+            <vxe-table-column field="hpzlText" title="号牌种类" align="center" />
+            <vxe-table-column field="illegalTime" title="违法时间" show-overflow align="center" />
+            <vxe-table-column
+              field="illegalAddress"
+              title="违法地址"
+              align="center"
+              width="100"
+              show-overflow
+            />
+            <vxe-table-column field="illegalDeed" title="违法行为" show-overflow align="center" />
+            <vxe-table-column field="relatedInfo" title="关联信息" align="center" />
+            <vxe-table-column field="active" title="操作" align="center">
               <template v-slot="{ row }">
-              <vxe-button type="text" @click="tablebtn(row)">查看</vxe-button>
-            </template>
+                <vxe-button type="text" @click="tablebtn(row)">查看</vxe-button>
+              </template>
             </vxe-table-column>
-
-            
           </vxe-table>
-           <p>
+          <p>
             <vxe-pager
-                align="right"
-                size="mini"
-                :current-page.sync="page.currentPage"
-                :page-size.sync="page.pageSize"
-                :total="page.totalResult"
-                 @page-change="pagerchange"
-              />
+              align="right"
+              size="mini"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              @page-change="pagerchange"
+            />
           </p>
         </div>
       </div>
@@ -153,22 +159,19 @@
 
 <script lang="ts">
 import { LimitInputlength } from "../../InterfaceVariable/variable"
-import{ Component,  Vue}from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 
 @Component({})
-
 export default class Coercivemeasures extends Vue {
-    [x: string]: any
+  [x: string]: any
   public form!: any
   public DataM = new this.$api.configInterface.DataM()
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private Height = ""
-  private tableData= [
-    {active:"roe"}
-  ]
-  private formdata ={}
+  private tableData = [{ active: "roe" }]
+  private formdata = {}
   private page = {
     currentPage: 1,
     pageSize: 10,
@@ -213,13 +216,13 @@ export default class Coercivemeasures extends Vue {
           wfsj: this.myDate,
           pzbh_like: val.DecisionNo,
           jszh_like: val.Drivercode,
-          hphm_like:val.numcode,
-          wfdz_like:val.Illegaladdress,
-          type:1,
-          wfsj_gt:  val.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
-          wfsj_lt:  val.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+          hphm_like: val.numcode,
+          wfdz_like: val.Illegaladdress,
+          type: 1,
+          wfsj_gt: val.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+          wfsj_lt: val.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
         }
-        this.gettabledata(obj);
+        this.gettabledata(obj)
       }
     })
   }
@@ -234,18 +237,17 @@ export default class Coercivemeasures extends Vue {
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
     })
-        
   }
   private gettabledata(obj: any) {
     this.DataM.getCoercivemeasuresTable(obj, true).then((res: any) => {
       console.log(res)
-      this.tableData = res.data;
-    });
+      this.tableData = res.data
+    })
   }
-  private tablebtn(row){
+  private tablebtn(row) {
     console.log(row)
   }
-  private pagerchange ({ currentPage, pageSize }){
+  private pagerchange({ currentPage, pageSize }) {
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -255,15 +257,14 @@ export default class Coercivemeasures extends Vue {
       wfsj: this.myDate,
       pzbh_like: this.formdata.DecisionNo,
       jszh_like: this.formdata.Drivercode,
-      hphm_like:this.formdata.numcode,
-      wfdz_like:this.formdata.Illegaladdress,
-      type:1,
-      wfsj_gt:  this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
-      wfsj_lt:  this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+      hphm_like: this.formdata.numcode,
+      wfdz_like: this.formdata.Illegaladdress,
+      type: 1,
+      wfsj_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+      wfsj_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
     }
     this.gettabledata(obj)
   }
-
 }
 </script>
 
@@ -286,15 +287,16 @@ export default class Coercivemeasures extends Vue {
 .ant-calendar-picker {
   width: 100% !important;
 }
-.modulebot {
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 44px;
-  button:nth-of-type(1) {
-    margin-right: 10px;
-  }
-  height: 34px;
-}
+// .modulebot {
+//   display: flex;
+//   justify-content: flex-end;
+//   padding-right: 44px;
+//   button:nth-of-type(1) {
+//     margin-right: 10px;
+//   }
+//   height: 34px;
+  
+// }
 .Simpleprogrambody {
   // height: 100%;
   padding: 0 26px;
@@ -307,23 +309,23 @@ export default class Coercivemeasures extends Vue {
 }
 /*滚动条的轨道*/
 .mytable-scrollbar ::-webkit-scrollbar-track {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 /*滚动条里面的小方块，能向上向下移动*/
 .mytable-scrollbar ::-webkit-scrollbar-thumb {
   background-color: #bfbfbf;
   border-radius: 5px;
-  border: 1px solid #F1F1F1;
-  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  border: 1px solid #f1f1f1;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .mytable-scrollbar ::-webkit-scrollbar-thumb:hover {
-  background-color: #A8A8A8;
+  background-color: #a8a8a8;
 }
 .mytable-scrollbar ::-webkit-scrollbar-thumb:active {
   background-color: #787878;
 }
 /*边角，即两个滚动条的交汇处*/
 .mytable-scrollbar ::-webkit-scrollbar-corner {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 </style>

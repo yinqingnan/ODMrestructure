@@ -2,7 +2,7 @@
   <div>
     <el-scrollbar class="Column">
       <div>
-          <!-- :defaultSelectedKeys="[$route.name]" -->
+        <!-- :defaultSelectedKeys="[$route.name]" -->
 
         <a-menu
           :defaultSelectedKeys="defaultSelectedKeys"
@@ -41,34 +41,33 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import subMenu from "./SiderMenu/index.vue";
-import { namespace } from "vuex-class";
-const Tabs = namespace("Tabs");
+import { Component, Prop, Vue, Watch } from "vue-property-decorator"
+import subMenu from "./SiderMenu/index.vue"
+import { namespace } from "vuex-class"
+const Tabs = namespace("Tabs")
 @Component({
   components: {
-    subMenu
-  }
+    subMenu,
+  },
 })
 export default class LeftMenu extends Vue {
   @Prop({
     type: Array,
     required: true,
-    default: []
+    default: [],
   })
-  private data!: any[];
+  private data!: any[]
   @Tabs.Mutation("menuadd")
-  menuadd!: (val: any) => {};
-  private list = this.data;
-  private current = ["mail"];
-  private openKeys: any = [];
-  private defaultSelectedKeys: any = [this.$route.name];
-  private theme = "dark";
-  private rootSubmenuKeys = ["sub1", "sub2", "sub4"];
+  menuadd!: (val: any) => {}
+  private list = this.data
+  private openKeys: any = []
+  private defaultSelectedKeys: any = [this.$route.name]
+  private theme = "dark"
+  private rootSubmenuKeys = ["sub1", "sub2", "sub4"]
   private mounted() {
-    // console.log(this.data);
-    let name =this.$route.name
-    this.openKeys = [this.findIndexArray(this.data,name,[])[0]]
+    console.log(this.$route.name)
+    let name = this.$route.name
+    this.openKeys = [this.findIndexArray(this.data, name, [])[0]]
   }
   public findIndexArray(data, name, indexArray) {
     let arr = Array.from(indexArray)
@@ -88,23 +87,29 @@ export default class LeftMenu extends Vue {
   }
   public menuClick({ item, key, keyPath }: any): void {
     if (key === "1") {
-      this.openKeys = ["0"];
+      this.openKeys = ["0"]
     }
   }
   public onOpenChange(openKeys: Array<string>[]): void {
     if (openKeys.length !== 0) {
-      this.openKeys = [openKeys[1]];
+      this.openKeys = [openKeys[1]]
       // localStorage.setItem("openKeys", this.openKeys);
     } else {
-      this.openKeys = [""];
+      this.openKeys = [""]
     }
   }
   private handleClick(e: any): void {
-    console.log("click", e);
+    console.log("click", e)
   }
   private titleClick(data: any): void {
-    this.menuadd(data);
+    this.menuadd(data)
   }
+  // @Watch("$route")
+  // routechange(to: any, from: any) {
+  //   //参数不相等
+  //   console.log(123)
+  //   this.defaultSelectedKeys = [to.name]
+  // }
 }
 </script>
 
@@ -219,7 +224,7 @@ export default class LeftMenu extends Vue {
   background: rgba(0, 0, 0, 0.2) !important;
 }
 
-.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background: rgba(0, 0, 0, 0.2) !important;
 }
 </style>

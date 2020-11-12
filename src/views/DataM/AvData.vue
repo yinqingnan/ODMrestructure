@@ -2,7 +2,7 @@
   <div>
     <div id="AvData" class="layoutcontainer">
       <div class="container">
-        <div class="contaninerheader">
+        <div class="contaninerheader" style="padding-left:26px">
           <template>
             <a-dropdown :trigger="['click']" class="dropdown">
               <a class="ant-dropdown-link" @click="popup">
@@ -19,6 +19,8 @@
                 >
                   <a-form-item label="部门">
                     <a-tree-select
+                      show-search
+                      treeNodeFilterProp="title"
                       v-decorator="[
                         'department',
                         {
@@ -124,10 +126,18 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tabledata" 
-          class="mytable-scrollbar" :loading="loading"   highlight-hover-row ref="xTable1"  @checkbox-all="selectAllEvent"
-          @checkbox-change="selectChangeEvent"
->>
+          <vxe-table
+            border
+            height="auto"
+            :data="tabledata"
+            class="mytable-scrollbar"
+            :loading="loading"
+            highlight-hover-row
+            ref="xTable1"
+            @checkbox-all="selectAllEvent"
+            @checkbox-change="selectChangeEvent"
+          >
+            >
             <vxe-table-column type="checkbox" width="60" />
             <vxe-table-column
               field="fileName"
@@ -139,15 +149,13 @@
             <vxe-table-column field="deptCode" title="执勤部门" align="center" />
             <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow />
             <vxe-table-column field="userCode" title="民警警号" align="center" />
-            <vxe-table-column field="fileType_Name" title="文件类型"  align="center" />
+            <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
             <vxe-table-column field="fileLevel_Name" title="重要级别" align="center" />
             <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
             <vxe-table-column field="uploadDate" title="导入时间" show-overflow align="center" />
-            <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center" >
+            <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
               <template v-slot="{ row }">
-               <span>
-                 {{modify(row)}}
-               </span>
+                <span>{{modify(row)}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="action" title="操作" align="center" fixed="right">
@@ -197,7 +205,7 @@ export default class AvData extends Vue {
     "NextJump",
     "Sizes",
     "Total",
-  ] 
+  ]
   private Timetype = [
     { id: 1, value: "uploadDate", title: "导入时间" },
     { id: 2, value: "recordDate", title: "拍摄时间" },
@@ -290,7 +298,6 @@ export default class AvData extends Vue {
       this.page.totalResult = parseInt(res.count)
       this.tabledata = res.data
       this.loading = false
-
     })
   }
 
@@ -334,28 +341,28 @@ export default class AvData extends Vue {
     }
     this.gettabledata(obj)
   }
-  public selectAllEvent ({ checked, records }) {
+  public selectAllEvent({ checked, records }) {
     this.selectedRowKeys = records
-    console.log(checked ? '所有勾选事件' : '所有取消事件', records)
+    console.log(checked ? "所有勾选事件" : "所有取消事件", records)
   }
-  public selectChangeEvent ({ checked, records }) {
+  public selectChangeEvent({ checked, records }) {
     this.selectedRowKeys = records
-    console.log(checked ? '勾选事件' : '取消事件', records)
+    console.log(checked ? "勾选事件" : "取消事件", records)
   }
-  public modify(row){
-    var cases = row.relateCase;
+  public modify(row) {
+    var cases = row.relateCase
     if (cases) {
       if (JSON.stringify(cases) == "{}") {
-        return "关联删除";
+        return "关联删除"
       }
-      var resStr = '';
+      var resStr = ""
       for (var key in cases) {
-        resStr += cases[key] + "(" + key + "),";
+        resStr += cases[key] + "(" + key + "),"
       }
-      resStr = resStr.substring(0, resStr.length - 1);
-      return resStr;
+      resStr = resStr.substring(0, resStr.length - 1)
+      return resStr
     } else {
-      return '未关联';
+      return "未关联"
     }
   }
 }
@@ -451,23 +458,23 @@ export default class AvData extends Vue {
 }
 /*滚动条的轨道*/
 .mytable-scrollbar ::-webkit-scrollbar-track {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 /*滚动条里面的小方块，能向上向下移动*/
 .mytable-scrollbar ::-webkit-scrollbar-thumb {
   background-color: #bfbfbf;
   border-radius: 5px;
-  border: 1px solid #F1F1F1;
-  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  border: 1px solid #f1f1f1;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 .mytable-scrollbar ::-webkit-scrollbar-thumb:hover {
-  background-color: #A8A8A8;
+  background-color: #a8a8a8;
 }
 .mytable-scrollbar ::-webkit-scrollbar-thumb:active {
   background-color: #787878;
 }
 /*边角，即两个滚动条的交汇处*/
 .mytable-scrollbar ::-webkit-scrollbar-corner {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 </style>

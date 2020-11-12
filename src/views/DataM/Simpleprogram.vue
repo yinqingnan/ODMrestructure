@@ -21,6 +21,8 @@
                   <el-scrollbar class="screen">
                     <a-form-item label="执勤部门">
                       <a-tree-select
+                        show-search
+                        treeNodeFilterProp="title"
                         v-decorator="[
                         'department',
                         {

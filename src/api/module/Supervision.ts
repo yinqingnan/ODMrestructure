@@ -27,6 +27,78 @@ export class Supervision {
       });
     });
   }
+  // 
+    // todo 获取考评记录table数据
+    public getDailytabledata(params: object, jwt=TextTrackCueList) {
+      const url = "/api/tpb/lawarchives/file-evaluate/no/list";
+  
+      return new Promise((resolve, reject) => {
+        this.axios.get(url, {
+          params: params,
+          headers: { isJwt: jwt },
+        }).then((res: any) => {
+          // console.log(res)
+          this.resultHandle(res, resolve);
+        }).catch((err: { message: any }) => {
+          reject(err.message);
+        });
+      });
+    }
+    // todo  随机抽查table数据
+    public getrandomtabledata(params: object, jwt=TextTrackCueList) {
+      const url = "/api/tpb/lawarchives/file-evaluate/random/list";
+      return new Promise((resolve, reject) => {
+        this.axios.get(url, {
+          params: params,
+          headers: { isJwt: jwt },
+        }).then((res: any) => {
+          // console.log(res)
+          this.resultHandle(res, resolve);
+        }).catch((err: { message: any }) => {
+          reject(err.message);
+        });
+      });
+    }
+
+
+    //todo 考评设置数据  
+    public getsettingdata(params: object, jwt=TextTrackCueList) {
+      const url = "/api/tpb/lawarchives/dm-jfx/getAllList";
+      return new Promise((resolve, reject) => {
+        this.axios.get(url, {
+          params: params,
+          headers: { isJwt: jwt },
+        }).then((res: any) => {
+          // console.log(res)
+          this.resultHandle(res, resolve);
+        }).catch((err: { message: any }) => {
+          reject(err.message);
+        });
+      });
+    }
+    // todo 考评设置保存按钮
+    
+    public EvaluationsettingsSave(params: object, jwt= true) {
+      const url = "/api/tpb/lawarchives/dm-jfx/saveList";
+      const body = params
+      return new Promise((resolve, reject) => {
+        this.axios.post(url, body, {
+          headers: { isJwt: jwt },
+        }).then((res: any) => {
+          this.resultHandle(res, resolve);
+        }).catch((err: { message: any }) => {
+          reject(err.message);
+        });
+      });
+    }
+
+
+
+
+
+
+
+
 
   /**
  * @param res

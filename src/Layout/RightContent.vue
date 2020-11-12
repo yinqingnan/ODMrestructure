@@ -10,11 +10,7 @@
           @edit="onEdit"
           @change="tabChange"
         >
-          <a-tab-pane
-            v-for="item in tagList"
-            :key="item.meta.key"
-            :tab="item.meta.title"
-          />
+          <a-tab-pane v-for="item in tagList" :key="item.meta.key" :tab="item.meta.title" />
         </a-tabs>
       </div>
     </div>
@@ -23,71 +19,70 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
-import { namespace } from "vuex-class";
-const Tabs = namespace("Tabs");
+import { Component, Vue, Watch } from "vue-property-decorator"
+import { namespace } from "vuex-class"
+const Tabs = namespace("Tabs")
 @Component({
-  components: {}
+  components: {},
 })
 export default class RightContent extends Vue {
-
-  @Tabs.State(state => state.activeKey)
-  activeKey!: string;
-  @Tabs.State(state => state.tagList)
-  tagList: any;
+  @Tabs.State((state) => state.activeKey)
+  activeKey!: string
+  @Tabs.State((state) => state.tagList)
+  tagList: any
   @Tabs.Mutation("dlttbs")
-  dlttbs!: (val: any) => {};
-  private activeKeys = "";
+  dlttbs!: (val: any) => {}
+  private activeKeys = ""
   created() {
     // console.log(localStorage);
   }
   private onEdit(e: string): void {
     console.log(e)
-    const len: number = this.tagList.length;
-    let flag = 0;
+    const len: number = this.tagList.length
+    let flag = 0
     if (len == 1) {
-      this.$message.warning("保留最后一个标签");
-      return;
+      this.$message.warning("保留最后一个标签")
+      return
     }
     this.tagList.forEach((e2, i) => {
       if (e2.key == e) {
-        flag = i;
+        flag = i
       }
-    });
+    })
     const obj = {
       e,
-      flag
-    };
-    this.dlttbs(obj);
+      flag,
+    }
+    this.dlttbs(obj)
     // this.tagList.splice(flag, 1);
   }
   private tabChange(e: string): void {
     // console.log(e)
-    localStorage.setItem("activeKey", JSON.stringify(e))   //保存当前
-    const len: number = this.tagList.length;
-    let flag = 0;
+    localStorage.setItem("activeKey", JSON.stringify(e)) //保存当前
+    const len: number = this.tagList.length
+    let flag = 0
     if (len == 1) {
-      return;
+      return
     }
     this.tagList.forEach((e2, i) => {
       if (e2.key == e) {
-        flag = i;
+        flag = i
       }
-    });
+    })
     if (this.tagList[flag].name == "home") {
-      this.$router.push({ path: "/index/home" });
+      this.$router.push({ path: "/index/home" })
     } else {
-      this.$router.push({ name: this.tagList[flag].name });
+      this.$router.push({ name: this.tagList[flag].name })
     }
   }
-  $refs!: { quickEntry: HTMLFormElement };
+  $refs!: { quickEntry: HTMLFormElement }
   private mounted() {
-    this.activeKeys = this.activeKey;
-    this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px";
+    this.activeKeys = this.activeKey
+    this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px"
   }
   @Watch("activeKey")
   getPiedata(newval: string) {
-    this.activeKeys = newval;
+    this.activeKeys = newval
   }
   // @Watch("tagList")
   // getdata(newval: string) {
@@ -131,4 +126,13 @@ export default class RightContent extends Vue {
 //   height: ~"calc(100vh - 115px)";
 //   margin-top: 7px;
 // }
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x {
+  margin-top: -13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x:hover{
+  background: rgba(0,0,0,.3);
+  color: #fff;
+}
 </style>

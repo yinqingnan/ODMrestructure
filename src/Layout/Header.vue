@@ -103,90 +103,90 @@ export default class Header extends Vue {
   public form!: any;
   private LimitInputlength = LimitInputlength;
   private created() {
-        this.form = this.$form.createForm(this);
+    this.form = this.$form.createForm(this);
   }
   private mounted() {
-        this.getusermsg();
+    this.getusermsg();
   }
   private modify() {
-        this.visible = true;
+    this.visible = true;
 
-        this.Login.usermsg({}, true).then((res: any) => {
-              this.$nextTick(() => {
-                    this.form.setFieldsValue({
-                          username: this.username
-                    });
-              });
+    this.Login.usermsg({}, true).then((res: any) => {
+      this.$nextTick(() => {
+        this.form.setFieldsValue({
+          username: this.username
         });
+      });
+    });
   }
   private outuser() {
-        this.Login.outuser({}, false).then((res: any) => {
-              // eslint-disable-next-line @typescript-eslint/no-this-alias
-              const that = this;
-              this.$confirm({
-                    title: "确认是否退出?",
-                    okText: "确认",
-                    cancelText: "取消",
-                    onOk() {
-                          localStorage.removeItem("activeKey")
-                          localStorage.removeItem("Tabslist")
-                          that.$router.push({ name: "Login" });
-                          localStorage.removeItem("token");
-                    },
-                    class: "test"
-              });
-        });
+    this.Login.outuser({}, false).then((res: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that = this;
+      this.$confirm({
+        title: "确认是否退出?",
+        okText: "确认",
+        cancelText: "取消",
+        onOk() {
+          localStorage.removeItem("activeKey")
+          localStorage.removeItem("Tabslist")
+          that.$router.push({ name: "Login" });
+          localStorage.removeItem("token");
+        },
+        class: "test"
+      });
+    });
   }
   private handleSubmit() {
-        // e.preventDefault();
-        this.form.validateFields((err: any, values: any) => {
-              if (!err) {
-                    if (
-                          values.oldPassword === values.newPassword ||
+    // e.preventDefault();
+    this.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        if (
+          values.oldPassword === values.newPassword ||
           values.oldPassword === values.newRePassword
-                    ) {
-                          this.$message.error("旧密码与新密码相同");
-                    } else if (values.newPassword != values.newRePassword) {
-                          this.$message.error("两次输入密码不一致");
-                    } else if (values.newPassword === values.newRePassword) {
-                          // this.$message.success("修改成功");
-                          this.Login.editpsd(values, true).then((res: any) => {
-                                if (res.code == 1) {
-                                      this.$message.error(res.msg);
-                                } else {
-                                      this.$message.success(res.msg);
-                                      this.visible = false;
-                                      this.$router.push({ name: "Login" });
-                                      localStorage.removeItem("token");
-                                      //清除cookie
-                                      this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
-                                }
-                          });
-                    }
-              }
-        });
+        ) {
+          this.$message.error("旧密码与新密码相同");
+        } else if (values.newPassword != values.newRePassword) {
+          this.$message.error("两次输入密码不一致");
+        } else if (values.newPassword === values.newRePassword) {
+          // this.$message.success("修改成功");
+          this.Login.editpsd(values, true).then((res: any) => {
+            if (res.code == 1) {
+              this.$message.error(res.msg);
+            } else {
+              this.$message.success(res.msg);
+              this.visible = false;
+              this.$router.push({ name: "Login" });
+              localStorage.removeItem("token");
+              //清除cookie
+              this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+            }
+          });
+        }
+      }
+    });
   }
   //设置cookie
   private setCookie(cName: string, cPwd: string, exdays: number) {
-        const exdate = new Date(); //获取时间
-        exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
-        //字符串拼接cookie
-        window.document.cookie =
+    const exdate = new Date(); //获取时间
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    //字符串拼接cookie
+    window.document.cookie =
       "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString();
-        window.document.cookie =
+    window.document.cookie =
       "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString();
   }
   private hideModal() {
-        this.handleSubmit();
-        // this.visible = false;
+    this.handleSubmit();
+    // this.visible = false;
   }
   private getusermsg() {
-        this.Login.usermsg({}, true).then((res: any) => {
-              this.username = res.data.name;
-              // console.log(res.data);
-              localStorage.setItem("username", res.data.name);
-              localStorage.setItem("department", res.data.deptName);
-        });
+    this.Login.usermsg({}, true).then((res: any) => {
+      this.username = res.data.name;
+      // console.log(res.data);
+      localStorage.setItem("username", res.data.name);
+      localStorage.setItem("department", res.data.deptName);
+    });
   }
 }
 </script>

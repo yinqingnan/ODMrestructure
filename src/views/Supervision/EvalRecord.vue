@@ -21,6 +21,8 @@
                   <el-scrollbar class="screen">
                     <a-form-item label="执勤部门">
                       <a-tree-select
+                        show-search
+                        treeNodeFilterProp="title"
                         v-decorator="[
                         'department',
                         {
@@ -125,7 +127,7 @@
             </vxe-table-column>
             <vxe-table-column field="actions" title="操作" align="center">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df">查看</span>
+                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;">查看</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -167,7 +169,7 @@ export default class EvalRecord extends Vue {
   }
   private textcolor = false
   private tableColumn = [
-    { type: "seq", width: 60, fixed: null, title: "序号",align:"center" },
+    { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
     { field: "deptCode", title: "执勤部门", width: 80 },
     { field: "userName", title: "民警姓名" },
@@ -185,9 +187,7 @@ export default class EvalRecord extends Vue {
     "Sizes",
     "Total",
   ]
-  private tableData = [
-   
-  ]
+  private tableData = []
   private formdata = {}
   private Evaluationlist = [
     { id: "1", value: "-1", title: "全部" },
@@ -205,18 +205,17 @@ export default class EvalRecord extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-
   }
   private mounted() {
-    this.gettabledata({
-      page: 1,
-      limit: 15,
-      deptCode: "",
-      user: "",
-      isNormal: -1,
-      dateRange: "2020-11-01 ~ 2020-11-10",
-      isDown: 0,
-    })
+    // this.gettabledata({
+    //   page: 1,
+    //   limit: 15,
+    //   deptCode: "",
+    //   user: "",
+    //   isNormal: -1,
+    //   dateRange: "2020-11-01 ~ 2020-11-10",
+    //   isDown: 0,
+    // })
   }
   private getdata() {
     this.DataM.getMenulist({}, true).then((res: any) => {
@@ -229,6 +228,15 @@ export default class EvalRecord extends Vue {
         moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
+      this.gettabledata({
+        page: 1,
+        limit: 15,
+        deptCode: "",
+        user: "",
+        isNormal: -1,
+        dateRange: res.data.myDate,
+        isDown: 0,
+      })
     })
   }
   private reset() {
@@ -240,32 +248,35 @@ export default class EvalRecord extends Vue {
   private handleSubmit(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
+      this.formdata = val
       if (!err) {
         let str = 0
-        if(val.contain){
-          str=1
-        }else{
+        if (val.contain) {
+          str = 1
+        } else {
           str = 0
         }
-        let date = `${moment(val.date[0]).format('YYYY-MM-DD')} ~ ${moment(val.date[1]).format('YYYY-MM-DD')}`
+        let date = `${moment(val.date[0]).format("YYYY-MM-DD")} ~ ${moment(
+          val.date[1]
+        ).format("YYYY-MM-DD")}`
         this.gettabledata({
           page: 1,
           limit: 15,
           deptCode: val.department,
           user: val.user,
-          isNormal: val.Evaluation ,
+          isNormal: val.Evaluation,
           dateRange: date,
           isDown: str,
         })
       }
     })
   }
-  
+
   // api/file/filedata/file/list
   private gettabledata(obj) {
     this.Supervision.gettabledata(obj).then((res) => {
       this.tableData = res.data
-      this.page.totalResult =parseInt(res.count) 
+      this.page.totalResult = parseInt(res.count)
     })
   }
   private popup() {
@@ -313,20 +324,23 @@ export default class EvalRecord extends Vue {
     }
   }
   private pagerchange({ currentPage, pageSize }) {
-    // console.log(currentPage, pageSize)
+    console.log(currentPage, pageSize)
     let str = 0
-    if(this.formdata.contain){
-      str=1
-    }else{
+    if (this.formdata.contain) {
+      str = 1
+    } else {
       str = 0
     }
-    let date = `${moment(this.formdata.date[0]).format('YYYY-MM-DD')} ~ ${moment(this.formdata.date[1]).format('YYYY-MM-DD')}`
+    let date = `${moment(this.formdata.date[0]).format(
+      "YYYY-MM-DD"
+    )} ~ ${moment(this.formdata.date[1]).format("YYYY-MM-DD")}`
+    console.log(str, date)
     this.gettabledata({
       page: currentPage,
-      limit: contain,
+      limit: pageSize,
       deptCode: this.formdata.department,
       user: this.formdata.user,
-      isNormal: this.formdata.Evaluation ,
+      isNormal: this.formdata.Evaluation,
       dateRange: date,
       isDown: str,
     })

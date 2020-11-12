@@ -1,15 +1,744 @@
 <template>
+  <!-- 执法仪 -->
   <div>
-    <h2>Matche</h2>
+    <div id="EvalRecord" class="layoutcontainer">
+      <div class="containers">
+        <div
+          class="contaninerheader"
+          style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
+        >
+          <template>
+            <a-dropdown :trigger="['click']" class="dropdown">
+              <a class="ant-dropdown-link" @click="popup">
+                筛选
+                <a-icon type="down" />
+              </a>
+              <a-menu slot="overlay" class="box">
+                <a-form
+                  autocomplete="off"
+                  :form="form"
+                  :label-col="{ span: 8 }"
+                  :wrapper-col="{ span: 14 }"
+                  @submit="handle"
+                >
+                  <el-scrollbar class="screen">
+                    <a-form-item label="所属部门">
+                      <a-tree-select
+                        show-search
+                        treeNodeFilterProp="title"
+                        v-decorator="[
+                        'department',
+                        {
+                          initialValue: '',
+                          rules: []
+                        }
+                      ]"
+                        :allow-clear="true"
+                        style="width: 100%"
+                        :dropdown-match-select-width="true"
+                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                        :tree-data="departmentData"
+                        :replace-fields="{
+                        id: 'code',
+                        pId: 'parentCode',
+                        value: 'value',
+                        title: 'name',
+                      }"
+                        placeholder="请选择..."
+                      />
+                    </a-form-item>
+                    <a-form-item label="姓名/警号">
+                      <a-input
+                        v-decorator="['user', { initialValue: '', rules: [] }]"
+                        :max-length="LimitInputlength"
+                        placeholder="请输入姓名/警号"
+                      >/></a-input>
+                    </a-form-item>
+                    <a-form-item label="绑定状态">
+                      <a-select
+                        v-decorator="[
+                        'deviceStatus',
+                        {
+                          initialValue: '',
+                          rules: []
+                        }
+                      ]"
+                        :allow-clear="true"
+                        style="width: 100%"
+                        placeholder="请选择..."
+                      >
+                        <a-select-option v-for="d in bindingstatus" :key="d.value">{{ d.title }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="设备类型">
+                      <a-input
+                        v-decorator="['deviceType', { initialValue: '', rules: [] }]"
+                        :max-length="LimitInputlength"
+                        placeholder="请输入设备类型"
+                      >/></a-input>
+                    </a-form-item>
+                    <a-form-item label="设备状态">
+                      <a-select
+                        v-decorator="[
+                        'deviceStatusName',
+                        {
+                          initialValue: '',
+                          rules: []
+                        }
+                      ]"
+                        :allow-clear="true"
+                        style="width: 100%"
+                        placeholder="请选择..."
+                      >
+                        <a-select-option v-for="d in equipmentstatus" :key="d.value">{{ d.title }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="产品序号">
+                      <a-input
+                        v-decorator="['code', { initialValue: '', rules: [] }]"
+                        :max-length="LimitInputlength"
+                        placeholder="请输入产品序号"
+                      >/></a-input>
+                    </a-form-item>
+                  </el-scrollbar>
+                  <div class="modulebot">
+                    <a-button type="Default" @click="reset">重置</a-button>
+                    <a-button type="primary" @click="handle">查询</a-button>
+                  </div>
+                </a-form>
+              </a-menu>
+            </a-dropdown>
+          </template>
+          <div class="btns">
+            <button @click="add">添加</button>
+            <button @click="dlt">删除</button>
+            <button @click="imports">导入</button>
+            <button @click="exports">导出</button>
+          </div>
+        </div>
+        <div class="Simpleprogrambody" :style="{height:Height}">
+          <vxe-table border height="auto" :data="tableData" ref="xTable2" class="mytable-scrollbar">
+            <vxe-table-column
+              v-for="(config, index) in tableColumn"
+              show-overflow
+              :key="index"
+              v-bind="config"
+            />
+            <vxe-table-column field="actions" title="操作" align="center" flexd="right">
+              <template v-slot="{ row }">
+                <span
+                  type="text"
+                  @click="edit(row)"
+                  style="color:#0db8df;cursor: pointer;margin-right:10px"
+                >编辑</span>
+                <span
+                  type="text"
+                  @click="Report(row)"
+                  style="color:#0db8df;cursor: pointer;"
+                  v-if="row.deviceStatusName != '报废'"
+                >报修</span>
+              </template>
+            </vxe-table-column>
+          </vxe-table>
+          <p>
+            <vxe-pager
+              align="right"
+              size="mini"
+              :layouts="layouts"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              @page-change="pagerchange"
+            />
+          </p>
+        </div>
+      </div>
+
+      <a-modal
+        class="addmodal"
+        :title="state"
+        :visible="visible"
+        cancelText
+        okText="保存"
+        :width="674"
+        @ok="handleSubmit"
+        @cancel="handleCancel"
+      >
+        <a-form
+          autocomplete="off"
+          :form="form2"
+          :label-col="{ span: 6 }"
+          :wrapper-col="{ span: 16 }"
+          @submit="handleSubmit"
+        >
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="产品序号">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入产品序号"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="设备类型">
+                <a-input
+                  v-decorator="['deviceType', { initialValue: '', rules: [{ required: true, message: '必填项不能为空' }]}]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入设备类型"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="设备状态">
+                <a-select
+                  v-decorator="[
+                        'deviceStatusName',
+                        {
+                          initialValue: '1',
+                           rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请选择设备状态..."
+                >
+                  <a-select-option v-for="d in equipmenystate" :key="d.value">{{ d.title }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="所属部门">
+                <a-tree-select
+                  show-search
+                  @change="departmentchange"
+                  treeNodeFilterProp="title"
+                  v-decorator="[
+                        'department',
+                        {
+                          initialValue: '',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  :dropdown-match-select-width="true"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="departmentData"
+                  :replace-fields="{
+                        id: 'code',
+                        pId: 'parentCode',
+                        value: 'value',
+                        title: 'name',
+                      }"
+                  placeholder="请选择所属部门..."
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="姓名/警号">
+                <a-select
+                  show-search
+                  :filterOption="filterOption"
+                  v-decorator="[
+                        'username',
+                        {
+                          initialValue: 'no',
+                           rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请选择..."
+                >
+                  <a-select-option v-for="d in namelist" :key="d.code">{{ d.nameCode }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="购买日期">
+                <a-date-picker
+                  allowClear
+                  v-decorator="[
+                        'purchasedate',
+                        {
+                          initialValue: '',
+                          rules: []
+                        }
+                      ]"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="保修日期">
+                <a-date-picker
+                  allowClear
+                  v-decorator="[
+                        'Warrantydate',
+                        {
+                          initialValue: '',
+                          rules: []
+                        }
+                      ]"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-modal>
+
+      <a-modal
+        class="addmodal"
+        :visible="repairshow"
+        title="报修"
+        cancelText
+        :width="674"
+        okText="提交"
+        @ok="repairSubmit"
+        @cancel="repairCancel"
+      >
+        <a-form
+          autocomplete="off"
+          :form="form3"
+          :label-col="{ span: 8 }"
+          :wrapper-col="{ span: 16 }"
+          @submit="handleSubmit"
+        >
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="产品序号">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入产品序号"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="所属部门">
+                <a-tree-select
+                  show-search
+                  @change="departmentchange"
+                  treeNodeFilterProp="title"
+                  v-decorator="[
+                        'department',
+                        {
+                          initialValue: '',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  :dropdown-match-select-width="true"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="departmentData"
+                  :replace-fields="{
+                        id: 'code',
+                        pId: 'parentCode',
+                        value: 'value',
+                        title: 'name',
+                      }"
+                  placeholder="请选择所属部门..."
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="报修人">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['Sendrepair', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入报修人"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="开始时间">
+                <a-date-picker
+                  allowClear
+                  v-decorator="[
+                        'startdate',
+                        {
+                          initialValue: '',
+                          rules: []
+                        }
+                      ]"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="影响民警1">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['Influencer1', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入受影响的民警警号"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="影响民警2">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['Influencer2', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入受影响的民警警号"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="12">
+              <a-form-item label="影响民警3">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['Influencer3', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入受影响的民警警号"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-item label="影响民警4">
+                <a-input
+                  :disabled="Disabled"
+                  v-decorator="['Influencer4', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="请输入受影响的民警警号"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24" >
+            <a-col :span="24"/>
+          </a-row>
+
+        </a-form>
+      </a-modal>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator"
+import { LimitInputlength } from "../../InterfaceVariable/variable"
+import moment from "moment"
 @Component({
-  components: {}
+  components: {},
 })
-export default class Matche extends Vue {}
+export default class Matche extends Vue {
+  [x: string]: any
+  public form!: any
+  public form2!: any
+  public form3!: any
+  public DataM = new this.$api.configInterface.DataM()
+  public DeviceM = new this.$api.configInterface.DeviceM()
+  private LimitInputlength = LimitInputlength
+  private state = ""
+  private Title = ""
+  private page = {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
+  private repairshow = false
+  private namelist = []
+  private departmentData = []
+  private tableColumn = [
+    { type: "checkbox", width: 60, fixed: null },
+    { field: "code", title: "产品序号" },
+    { field: "deviceType", title: "设备类型", width: 80 },
+    { field: "deptName", title: "所属部门" },
+    { field: "userName", title: "民警姓名" },
+    { field: "userCode", title: "民警警号" },
+    { field: "deviceStatusName", title: "设备状态" },
+    { field: "lastUploadTime", title: "最后上传时间" },
+    { field: "purchasingDate", title: "购买日期" },
+    { field: "warrantyDate", title: "保修日期" },
+  ]
+  private layouts = [
+    "PrevJump",
+    "PrevPage",
+    "Jump",
+    "PageCount",
+    "NextPage",
+    "NextJump",
+    "Sizes",
+    "Total",
+  ]
+  private bindingstatus = [
+    { id: "0", value: "all", title: "全部" },
+    { id: "1", value: "1", title: "已绑定" },
+    { id: "2", value: "2", title: "未绑定" },
+  ]
+  private equipmentstatus = [
+    { id: "0", value: "all", title: "全部" },
+    { id: "1", value: "1", title: "启用" },
+    { id: "2", value: "2", title: "禁用" },
+    { id: "3", value: "3", title: "报废" },
+    { id: "4", value: "4", title: "维修" },
+  ]
+  private equipmenystate = [
+    { id: "1", value: "1", title: "启用" },
+    { id: "2", value: "2", title: "禁用" },
+    { id: "3", value: "3", title: "报废" },
+  ]
+  private editId = "" //编辑时获取的ID
+  private Disabled = false
+  private visible = false
+  private formdata = {}
+  private tableData = []
+  // todo 事件和生命周期
+  private created() {
+    this.Height = `${document.documentElement.clientHeight - 230}px`
+    this.form = this.$form.createForm(this)
+    this.form2 = this.$form.createForm(this)
+    this.form3 = this.$form.createForm(this)
+    this.getdata()
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    })
+  }
+  private getdata() {
+    this.DataM.getMenulist({}, true).then((res: any) => {
+      this.departmentData = res.data
+    })
+    let obj = {
+      page: 1,
+      limit: 15,
+    }
+    this.gettable(obj)
+  }
+  public gettable(obj) {
+    this.DeviceM.gettabledata(obj).then((res) => {
+      this.page.totalResult = parseInt(res.count)
+      this.tableData = res.data
+    })
+  }
+  private popup() {
+    return
+  }
+  private getPolicepersonneldata(obj) {
+    //获取警员姓名信息
+    this.DeviceM.getPolicepersonneldata(obj).then((res) => {
+      let obj = {
+        code: "no",
+        nameCode: "不绑定民警",
+      }
+      this.namelist = res.data
+      this.namelist.unshift(obj)
+    })
+  }
+  private reset() {
+    this.form.resetFields()
+    this.form2.resetFields()
+    this.getdata()
+  }
+  private handle(e) {
+    e.preventDefault()
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        console.log(val)
+        this.gettable({
+          page: 1,
+          limit: 15,
+          deptCode: val.department,
+          userCode: val.user,
+          isBinding: val.deviceStatusName,
+          deviceType: val.deviceType,
+          deviceStatus: val.deviceStatus,
+        })
+      }
+    })
+  }
+  // 添加和编辑事件
+  private handleSubmit(e) {
+    e.preventDefault()
+    this.form2.validateFields((err: any, val: any) => {
+      this.formdata = val
+      console.log(this.state)
+      if (!err) {
+        if (this.state == "添加") {
+          this.Policepersonnelsave({
+            code: val.code,
+            deptCode: val.department,
+            deviceStatus: val.deviceStatusName,
+            deviceType: val.deviceType,
+            id: "",
+            purchasingDate: moment(val.purchasedate, "YYYY-MM-DD"),
+            userCode: val.username,
+            warrantyDate: moment(val.Warrantydate, "YYYY-MM-DD"),
+          })
+        } else if (this.state === "编辑") {
+          console.log(123123)
+          this.Policepersonnelsave({
+            code: val.code,
+            deptCode: val.department,
+            deviceStatus: val.deviceStatusName,
+            deviceType: val.deviceType,
+            id: this.editId,
+            purchasingDate: moment(val.purchasedate, "YYYY-MM-DD"),
+            userCode: val.username,
+            warrantyDate: moment(val.Warrantydate, "YYYY-MM-DD"),
+          })
+        }
+      }
+    })
+  }
+  private filterOption(input, option) {
+    return (
+      option.componentOptions.children[0].text
+        .toLowerCase()
+        .indexOf(input.toLowerCase()) >= 0
+    )
+  }
+  // 编辑
+  private edit(row) {
+    this.visible = true
+    this.state = "编辑"
+    this.Disabled = true
+    this.editId = row.id
+    this.getPolicepersonneldata({
+      deptCode_equal: row.deptCode,
+      source_notequal: 3,
+    })
+    this.$nextTick(() => {
+      this.form2.setFieldsValue({
+        code: row.code,
+        department: row.deptCode,
+        username: row.userCode,
+        deviceType: row.deviceType,
+        purchasedate: row.purchasingDate,
+        Warrantydate: row.warrantyDate,
+        deviceStatusName: row.deviceStatusName,
+      })
+    })
+  }
+  private Report(row) {
+    console.log(row)
+    this.repairshow = true
+  }
+  private pagerchange({ currentPage, pageSize }) {
+    console.log(currentPage, pageSize)
+    this.gettable({ page: currentPage, limit: pageSize })
+  }
+  private departmentchange(value) {
+    console.log(value)
+    this.namelist = []
+    this.form2.setFieldsValue({
+      username: "",
+    })
+    this.getPolicepersonneldata({ deptCode_equal: value, source_notequal: 3 })
+  }
+  private add() {
+    this.visible = true
+    this.Disabled = false
+    this.state = "添加"
+
+    this.getPolicepersonneldata({ deptCode_equal: "", source_notequal: 3 })
+  }
+  private dlt() {
+    let arr = this.getSelectEvent1()
+    let dltarr = []
+    arr.map((item) => {
+      dltarr.push(item.id)
+    })
+    this.instrumentdlt(dltarr)
+  }
+  private imports() {
+    console.log(1)
+  }
+  private exports() {
+    console.log(1)
+  }
+  private getSelectEvent1() {
+    let selectRecords = this.$refs.xTable2.getCheckboxRecords()
+    return selectRecords
+  }
+  private instrumentdlt(arr) {
+    if (arr.length > 0) {
+      this.DeviceM.instrumentdlt(arr).then((res) => {
+        if (res.code == 0) {
+          this.$message.success(res.msg)
+          this.gettable({
+            page: 1,
+            limit: 15,
+          })
+        }
+      })
+    }
+  }
+  private Policepersonnelsave(obj) {
+    this.DeviceM.Policepersonnelsave(obj).then((res) => {
+      console.log(res)
+      if (res.code == 0) {
+        setTimeout(() => {
+          this.visible = false
+        }, 1000)
+        this.gettable({
+          page: 1,
+          limit: 15,
+        })
+        this.$message.success(res.msg)
+        this.reset()
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
+  }
+  private handleCancel(e) {
+    this.reset()
+    this.visible = false
+  }
+}
 </script>
 
-<style lang="less" scope></style>
+<style lang="less" scope>
+.el-scrollbar__wrap {
+  width: 100%;
+}
+.screen {
+  width: 347px;
+  height: 260px;
+}
+.btns {
+  display: flex;
+
+  button {
+    width: 58px;
+    height: 30px;
+    line-height: 1;
+    color: #fff;
+    background: #207ebd;
+    outline: none;
+    cursor: pointer;
+    border: 0;
+    margin-left: 10px;
+  }
+}
+#EvalRecord .ant-modal-body {
+  height: 400px;
+}
+.addmodal /deep/ .ant-col-12 {
+  height: 60px;
+}
+.addmodal /deep/ .ant-calendar-picker-input {
+  width: 200px;
+}
+</style>
