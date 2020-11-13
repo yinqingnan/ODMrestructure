@@ -43,7 +43,7 @@ export class Interface {
    * @param flag          标记
    * @param service      服务,默认api
    */
-  public postData(params: object, jwt: boolean, modulename: string,
+  public postData(params: object, jwt=true, modulename: string,
     flag: string, service = 'api') {
     const url = service + '/' + modulename ;
     const body = {

@@ -109,6 +109,11 @@ const routes: Array<RouteConfig> = [
             component: () => import('@/views/Device/Storage.vue')
           },
           {
+            path: "Repairrecord",
+            name: "Repairrecord",
+            component: () => import('@/views/Device/Repairrecord.vue')
+          },
+          {
             path: "platform",
             name: "platform",
             component: () => import('@/views/Device/Platform.vue')

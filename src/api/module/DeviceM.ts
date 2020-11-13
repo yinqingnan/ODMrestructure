@@ -74,12 +74,302 @@ export class DeviceM {
       });
     });
   }
+  // todo 保修接口
+  
+  public Sendforrepair(params: object, jwt= true) {
+    const url = "/api/mdm/device/matche-repairs/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo 启用执法仪
+
+  public Enable(params: object, jwt=TextTrackCueList) {
+    const url = "/api/mdm/device/matche/modify";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo 报修记录
+  
+  public Repairrecord(params: object, jwt=TextTrackCueList) {
+    const url = "/api/mdm/device/matche-repairs/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+
+  // todo采集站table数据
+ 
+  public stationstable(params: object, jwt=TextTrackCueList) {
+    const url = "/api/mdm/device/stations/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
 
 
 
 
-  /**
+
+  //todo 存储服务器table  
+  public storetable(params: object, jwt=TextTrackCueList) {
+    const url = "/api/mdm/device/storage/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo存储服务器新增  
+  public storeadd(params: object, jwt= true) {
+    const url = "/api/mdm/device/storage/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo FTP设置表格数据 
+  public ftptable(params: object, jwt=TextTrackCueList) {
+    const url = "/api/mdm/device/storage-ftp/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo ftp配置新增 
+  public ftpconfigadd(params: object, jwt= true) {
+    const url = "/api/mdm/device/storage-ftp/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo ftp设置的删除
+  
+  public ftpconfigdlt(params: object, jwt= true) {
+    const url = "/api/mdm/device/storage-ftp/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站启用
+  
+  public collectionEnable(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/enable";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站重启 
+  public collectionrestart(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/restart";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站数据同步
+  
+  public collectiondatasync(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/sync";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站数据升级
+  public collectionupgrade(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/upgrade";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站数据关机
+ 
+  public collectionShutdown(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/shutdown";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站数据禁用
+  public collectionDisable(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/disable";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 采集站数据删除
+  public collectionDlt(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo 子平台table
+  // 
+  public platformtable(params: object, jwt=TextTrackCueList) {
+    const url = "/api/mdm/device/stations/platform-list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  //todo 子平台删除  
+  public platformdlt(params: object, jwt= true) {
+    const url = "/api/mdm/device/stations/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   /**
  * @param res
  * @param resolve
  */

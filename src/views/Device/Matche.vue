@@ -110,10 +110,10 @@
             </a-dropdown>
           </template>
           <div class="btns">
-            <button @click="add">添加</button>
-            <button @click="dlt">删除</button>
-            <button @click="imports">导入</button>
-            <button @click="exports">导出</button>
+            <a-button @click="add" type="primary">添加</a-button>
+            <a-button @click="dlt" type="primary">删除</a-button>
+            <a-button @click="imports" type="primary">导入</a-button>
+            <a-button @click="exports" type="primary">导出</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -133,9 +133,16 @@
                 >编辑</span>
                 <span
                   type="text"
+                  @click="Enable(row)"
+                   v-if="row.deviceStatusName == '维修'"
+                  style="color:#0db8df;cursor: pointer"
+                >启用</span>
+                <span
+                  type="text"
                   @click="Report(row)"
                   style="color:#0db8df;cursor: pointer;"
-                  v-if="row.deviceStatusName != '报废'"
+                  v-if="row.deviceStatusName != '报废' "
+                  v-show="row.deviceStatusName != '维修'"
                 >报修</span>
               </template>
             </vxe-table-column>
@@ -317,7 +324,7 @@
             <a-col :span="12">
               <a-form-item label="产品序号">
                 <a-input
-                  :disabled="Disabled"
+                  :disabled="true"
                   v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入产品序号"
@@ -327,6 +334,7 @@
             <a-col :span="12">
               <a-form-item label="所属部门">
                 <a-tree-select
+                  :disabled="true"
                   show-search
                   @change="departmentchange"
                   treeNodeFilterProp="title"
@@ -357,7 +365,6 @@
             <a-col :span="12">
               <a-form-item label="报修人">
                 <a-input
-                  :disabled="Disabled"
                   v-decorator="['Sendrepair', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入报修人"
@@ -368,11 +375,12 @@
               <a-form-item label="开始时间">
                 <a-date-picker
                   allowClear
+                  placeholder="请选择故障开始时间"
                   v-decorator="[
                         'startdate',
                         {
                           initialValue: '',
-                          rules: []
+                          rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
                 />
@@ -383,8 +391,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警1">
                 <a-input
-                  :disabled="Disabled"
-                  v-decorator="['Influencer1', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  v-decorator="['Influencer1', { initialValue: '',  rules: [] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -393,8 +400,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警2">
                 <a-input
-                  :disabled="Disabled"
-                  v-decorator="['Influencer2', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  v-decorator="['Influencer2', { initialValue: '',  rules: [] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -405,8 +411,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警3">
                 <a-input
-                  :disabled="Disabled"
-                  v-decorator="['Influencer3', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  v-decorator="['Influencer3', { initialValue: '',  rules: [] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -415,18 +420,34 @@
             <a-col :span="12">
               <a-form-item label="影响民警4">
                 <a-input
-                  :disabled="Disabled"
-                  v-decorator="['Influencer4', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  v-decorator="['Influencer4', { initialValue: '',  rules: [] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row :gutter="24" >
-            <a-col :span="24"/>
+          <a-row :gutter="24">
+            <a-col :span="24" />
           </a-row>
-
+          <a-row class="gzms">
+            <a-form-item label="故障描述" class="textareatext" :span="4">
+              <a-textarea
+                :maxLength="textarealength"
+                allowClear
+                rows="3"
+                style="resize: none;"
+                placeholder="最大支持输入字数200..."
+                v-decorator="[
+                        'describe',
+                        {
+                          initialValue: '',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+              />
+            </a-form-item>
+          </a-row>
         </a-form>
       </a-modal>
     </div>
@@ -435,7 +456,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import {
+  LimitInputlength,
+  textarealength,
+} from "../../InterfaceVariable/variable"
 import moment from "moment"
 @Component({
   components: {},
@@ -448,6 +472,7 @@ export default class Matche extends Vue {
   public DataM = new this.$api.configInterface.DataM()
   public DeviceM = new this.$api.configInterface.DeviceM()
   private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
   private state = ""
   private Title = ""
   private page = {
@@ -631,8 +656,14 @@ export default class Matche extends Vue {
     })
   }
   private Report(row) {
-    console.log(row)
     this.repairshow = true
+    this.Disabled = true
+    this.$nextTick(() => {
+      this.form3.setFieldsValue({
+        code: row.code,
+        department: row.deptCode,
+      })
+    })
   }
   private pagerchange({ currentPage, pageSize }) {
     console.log(currentPage, pageSize)
@@ -652,6 +683,24 @@ export default class Matche extends Vue {
     this.state = "添加"
 
     this.getPolicepersonneldata({ deptCode_equal: "", source_notequal: 3 })
+  }
+  private Enable(row){
+    console.log(row)
+    this.DeviceM.Enable({
+      matcheCode: row.code
+    }).then(res=>{
+      if(res.code==0){
+        this.$message.success(res.msg)
+        this.gettable(
+          {
+            page: 1,
+            limit: 15,
+          }
+        )
+      }else{
+        this.$message.error(res.msg)
+      }
+    })
   }
   private dlt() {
     let arr = this.getSelectEvent1()
@@ -706,6 +755,42 @@ export default class Matche extends Vue {
     this.reset()
     this.visible = false
   }
+  private repairSubmit(e) {
+    console.log("tijiao")
+    e.preventDefault()
+    this.form3.validateFields((err: any, val: any) => {
+      if (!err) {
+        this.DeviceM.Sendforrepair({
+          Id: "",
+          affectUser1Code: val.Influencer1,
+          affectUser2Code: val.Influencer2,
+          affectUser3Code: val.Influencer3,
+          affectUser4Code: val.Influencer4,
+          deptCode: val.department,
+          matcheCode: val.code,
+          repairsDesc: val.describe,
+          reportTime: moment(val.statrdate).format("YYYY-MM-DD HH:mm:ss"),
+          reportUserCode: val.Sendrepair,
+        }).then((res) => {
+          console.log(res)
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+            this.repairshow = true
+            this.form3.resetFields()
+            this.gettable({
+              page: 1,
+              limit: 15,
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    })
+  }
+  private repairCancel() {
+    this.repairshow = false
+  }
 }
 </script>
 
@@ -721,7 +806,7 @@ export default class Matche extends Vue {
   display: flex;
 
   button {
-    width: 58px;
+    // width: 58px;
     height: 30px;
     line-height: 1;
     color: #fff;
@@ -740,5 +825,11 @@ export default class Matche extends Vue {
 }
 .addmodal /deep/ .ant-calendar-picker-input {
   width: 200px;
+}
+.gzms /deep/ .ant-form-item-label {
+  width: 100px;
+}
+.gzms /deep/ .ant-form-item-control-wrapper {
+  width: 524px;
 }
 </style>

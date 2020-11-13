@@ -1,5 +1,6 @@
 <template>
   <div>
+    运行监控，暂不做
     <h2>OMonitor</h2>
   </div>
 </template>

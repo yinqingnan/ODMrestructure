@@ -431,16 +431,7 @@ export default class AvData extends Vue {
   height: 36px;
   line-height: 36px;
 }
-// #AvData .ant-table-thead > tr > th,
-// .ant-table-tbody > tr > td {
-//   padding: 0px;
-// }
-// #AvData .ant-table-placeholder{
-//   min-height: 600px !important;
-// }
-// #AvData .ant-table-wrapper{
-//   border: 1px solid #f1f1f1;
-// }
+
 .light-row {
   background-color: #f5f5f5;
 }
