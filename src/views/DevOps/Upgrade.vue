@@ -90,14 +90,22 @@
           </p>
         </div>
       </div>
-      <a-modal v-model="visible" :title="str" @ok="Upgrade" class="quxiao"   @cancel="handleCancel" okText="提交" :width="640">
+      <a-modal
+        v-model="visible"
+        :title="str"
+        @ok="Upgrade"
+        class="quxiao"
+        @cancel="handleCancel"
+        okText="提交"
+        :width="640"
+      >
         <a-form
           autocomplete="off"
           :form="form"
           :label-col="{ span: 8 }"
           :wrapper-col="{ span: 14 }"
           @submit="Upgrade"
->
+        >
           <a-row :gutter="24">
             <a-col :span="12">
               <a-form-item label="升级类型">
@@ -197,11 +205,11 @@
                         }
                       ]"
                 >
-                  <a-button>
+                  <a-button @click="filebtn">
                     <a-icon type="upload" />选择文件上传
                   </a-button>
                 </a-upload>
-                <h2  class="filename">{{filename}}</h2>
+                <h2 class="filename">{{filename}}</h2>
               </a-form-item>
             </a-col>
           </a-row>
@@ -229,6 +237,7 @@ export default class Upgrade extends Vue {
   private Height = ""
   private str = "上传升级包"
   private http = http
+  private path = ""
   private Acquisitionlist = [
     { id: "0", value: "1", title: "柜式采集站" },
     { id: "0", value: "2", title: "便携式采集站" },
@@ -241,6 +250,7 @@ export default class Upgrade extends Vue {
   private headers = {
     authorization: "authorization-text",
   }
+
   private layouts = [
     "PrevJump",
     "PrevPage",
@@ -282,7 +292,6 @@ export default class Upgrade extends Vue {
   // todo 事件
   private Uploadpackage() {
     this.visible = true
-    this.status = true
   }
   private tableRowClassName(record: any) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
@@ -318,18 +327,23 @@ export default class Upgrade extends Vue {
   private edit(row) {
     console.log(row)
     this.visible = true
-    this.id = row.id  
-    this.filename = row.updateFile
+    this.id = row.id
     this.status = false
+    this.path = row.updatePath
+    this.filename = row.updateFile
     this.$nextTick(() => {
       this.form.setFieldsValue({
         version: row.version,
-        upgradeType:row.upgradeType+"",
-        softwareType:row.softwareType+"",
-        updateContent:row.updateContent,
+        upgradeType: row.upgradeType + "",
+        softwareType: row.softwareType + "",
+        updateContent: row.updateContent,
+        file: [{
+          uid: '-1',
+          name: 'xxx.png',
+          status: 'done',
+        }],
       })
     })
-
   }
   private dlt(row) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -372,7 +386,7 @@ export default class Upgrade extends Vue {
     return false
   }
   private handleChange(info) {
-    this.form.resetFields()
+    // this.form.resetFields()
     // this.$nextTick(() => {
     //   this.form.setFieldsValue({
     //     file: info,
@@ -382,52 +396,82 @@ export default class Upgrade extends Vue {
 
   private Upgrade(e) {
     e.preventDefault()
-  
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val.file)
-        // eslint-disable-next-line no-irregular-whitespace
-        let formData = new FormData() //保存文件后再保存
-        formData.append("file", val.file.file)
-        axios
-          .post(this.http + "api/mdm/system/upgrade/uploadFile", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Token: localStorage.getItem("token"),
-            },
-          })
-          .then((res) => {
-            let path = res.data
-            let obj = {
-              id: this.id,
-              path: path,
-              softwareType: val.softwareType,
-              updateContent: val.updateContent,
-              upgradeType: val.upgradeType,
-              version: val.version,
-            }
-            this.Luckmanagement.Uploadsave(obj).then((res) => {
-              if (res.code == 0) {
-                this.$message.success(res.msg)
-                this.filename = ""
-                this.form.resetFields()
-                this.visible = false
-                let obj = {
-                  page: 1,
-                  limit: 15,
-                }
-                this.gettabledata(obj)
-              } else {
-                this.$message.error(res.msg)
-              }
+        if (this.status) {
+          // eslint-disable-next-line no-irregular-whitespace
+          let formData = new FormData() //保存文件后再保存
+          formData.append("file", val.file.file)
+          axios
+            .post(this.http + "api/mdm/system/upgrade/uploadFile", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Token: localStorage.getItem("token"),
+              },
             })
+            .then((res) => {
+              let path = res.data
+              let obj = {
+                id: this.id,
+                path: path,
+                softwareType: val.softwareType,
+                updateContent: val.updateContent,
+                upgradeType: val.upgradeType,
+                version: val.version,
+              }
+              this.Luckmanagement.Uploadsave(obj).then((res) => {
+                if (res.code == 0) {
+                  this.$message.success(res.msg)
+                  this.filename = ""
+                  this.form.resetFields()
+                  this.visible = false
+                  let obj = {
+                    page: 1,
+                    limit: 15,
+                  }
+                  this.gettabledata(obj)
+                } else {
+                  this.$message.error(res.msg)
+                }
+              })
+            })
+        } else {
+          console.log("编辑保存")
+          let obj = {
+            id: this.id,
+            path: this.path,
+            softwareType: val.softwareType,
+            updateContent: val.updateContent,
+            upgradeType: val.upgradeType,
+            version: val.version,
+          }
+          console.log(obj);
+          
+          this.Luckmanagement.Uploadsave(obj).then((res) => {
+            if (res.code == 0) {
+              this.$message.success(res.msg)
+              this.filename = ""
+              this.form.resetFields()
+              this.visible = false
+              let obj = {
+                page: 1,
+                limit: 15,
+              }
+              this.gettabledata(obj)
+            } else {
+              this.$message.error(res.msg)
+            }
           })
+        }
       }
     })
   }
-  private handleCancel(){
-    this.form.resetFields()
-    this.filename = ''
+  private handleCancel() {
+    this.filename = ""
+  }
+  private filebtn() {
+    this.status = true
   }
 
   // todo 数据请求
