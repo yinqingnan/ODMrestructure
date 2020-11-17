@@ -117,7 +117,15 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tableData" ref="xTable2" class="mytable-scrollbar">
+          <vxe-table
+            border
+            height="auto"
+            :data="tableData"
+            ref="xTable2"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
+            class="mytable-scrollbar"
+          >
             <vxe-table-column
               v-for="(config, index) in tableColumn"
               show-overflow
@@ -134,7 +142,7 @@
                 <span
                   type="text"
                   @click="Enable(row)"
-                   v-if="row.deviceStatusName == '维修'"
+                  v-if="row.deviceStatusName == '维修'"
                   style="color:#0db8df;cursor: pointer"
                 >启用</span>
                 <span
@@ -655,6 +663,9 @@ export default class Matche extends Vue {
       })
     })
   }
+  private tableRowClassName(record: any, index: number) {
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
   private Report(row) {
     this.repairshow = true
     this.Disabled = true
@@ -684,20 +695,18 @@ export default class Matche extends Vue {
 
     this.getPolicepersonneldata({ deptCode_equal: "", source_notequal: 3 })
   }
-  private Enable(row){
+  private Enable(row) {
     console.log(row)
     this.DeviceM.Enable({
-      matcheCode: row.code
-    }).then(res=>{
-      if(res.code==0){
+      matcheCode: row.code,
+    }).then((res) => {
+      if (res.code == 0) {
         this.$message.success(res.msg)
-        this.gettable(
-          {
-            page: 1,
-            limit: 15,
-          }
-        )
-      }else{
+        this.gettable({
+          page: 1,
+          limit: 15,
+        })
+      } else {
         this.$message.error(res.msg)
       }
     })

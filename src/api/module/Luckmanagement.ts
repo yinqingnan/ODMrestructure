@@ -60,21 +60,138 @@ export class Luckmanagement {
     });
   }
 
-// todo 接入管理新增接入 子平台和采集站  
-public accessauthsave(params: object, jwt= true) {
-  const url = "/api/system/authorization/save";
-  const body = params
-  return new Promise((resolve, reject) => {
-    this.axios.post(url, body, {
-      headers: { isJwt: jwt },
-    }).then((res: any) => {
-      this.resultHandle(res, resolve);
-    }).catch((err: { message: any }) => {
-      reject(err.message);
+  // todo 接入管理新增接入 子平台和采集站  
+  public accessauthsave(params: object, jwt = true) {
+    const url = "/api/pconfig/system/authorization/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
     });
-  });
-}
+  }
 
+  // todo 平台删除 
+  public accessauthdlt(params: object, jwt = true) {
+    const url = "/api/pconfig/system/authorization/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+
+  //todo 升级管理table
+  public getUpgradeMtable(params: object, jwt = true) {
+    const url = "/api/mdm/system/upgrade/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res)
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 升级管理删除 
+  public Uploaddlt(params: object, jwt = true) {
+    const url = "/api/mdm/system/upgrade/delete";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res)
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 文件上传接口
+  public Uploadsave(params: object, jwt = true) {
+    const url = "/api/mdm/system/upgrade/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo 日志管理获取时间
+  public getlogdate(params: object, jwt = true) {
+    const url = "/api/uauth/my/date";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res)
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo 日志管理获取日志类型下拉
+  public getlogtype(params: object, jwt = true) {
+    const url = "/api/pconfig/base/log/logType";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res)
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  // todo 日志管理获取功能模块下拉
+  public getlogfunmodule(params: object, jwt = true) {
+    const url = "/api/pconfig/base/log/logBiz";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res)
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo  日志管理table  
+  public getlogtable(params: object, jwt = true) {
+    const url = "/api/pconfig/base/log/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        resolve(res)
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
   /**
  * @param res
  * @param resolve
@@ -82,7 +199,7 @@ public accessauthsave(params: object, jwt= true) {
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
     // if (res.status === 200) {
-      resolve(res.data);
+    resolve(res.data);
     // } else {
     //   this.errorHandle(res);
     // }

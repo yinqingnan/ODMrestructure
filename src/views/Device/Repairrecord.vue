@@ -86,10 +86,17 @@
               </a-menu>
             </a-dropdown>
           </template>
-    
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tableData" ref="xTable2" class="mytable-scrollbar">
+          <vxe-table
+            border
+            height="auto"
+            :data="tableData"
+            ref="xTable2"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
+            class="mytable-scrollbar"
+          >
             <vxe-table-column
               v-for="(config, index) in tableColumn"
               show-overflow
@@ -151,7 +158,7 @@ export default class Repairrecord extends Vue {
     "Total",
   ]
   private tableColumn = [
-    {  width: 60, fixed: null,title:"序号",align:"center" ,type:"seq" },
+    { width: 60, fixed: null, title: "序号", align: "center", type: "seq" },
     { field: "reportUserCode", title: "报修人" },
     { field: "matcheCode", title: "产品序号", width: 80 },
     { field: "deviceType", title: "设备类型" },
@@ -172,14 +179,14 @@ export default class Repairrecord extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
   }
-  private mounted(){
+  private mounted() {
     let obj = {
       page: 1,
       limit: 15,
-      deptCode:'',
-      reportUserName:'' ,
-      reportTimes: '',
-      matcheCode: '',
+      deptCode: "",
+      reportUserName: "",
+      reportTimes: "",
+      matcheCode: "",
     }
     this.getdata()
     this.gettabledata(obj)
@@ -191,10 +198,10 @@ export default class Repairrecord extends Vue {
     let obj = {
       page: currentPage,
       limit: pageSize,
-      deptCode:'',
-      reportUserName:'' ,
-      reportTimes: '',
-      matcheCode: '',
+      deptCode: "",
+      reportUserName: "",
+      reportTimes: "",
+      matcheCode: "",
     }
     this.gettabledata(obj)
   }
@@ -203,28 +210,33 @@ export default class Repairrecord extends Vue {
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val.date.length)
-        if(val.date.length>0){
+        if (val.date.length > 0) {
           this.gettabledata({
             page: 1,
             limit: 15,
             deptCode: val.department,
             reportUserName: val.user,
-            reportTimes: `${moment(val.date[0]).format("YYYY-MM-DD")}~${moment(val.date[1]).format("YYYY-MM-DD")}`,
-            matcheCode:val.code
+            reportTimes: `${moment(val.date[0]).format("YYYY-MM-DD")}~${moment(
+              val.date[1]
+            ).format("YYYY-MM-DD")}`,
+            matcheCode: val.code,
           })
-        }else{
+        } else {
           this.gettabledata({
             page: 1,
             limit: 15,
             deptCode: val.department,
             reportUserName: val.user,
             reportTimes: "",
-            matcheCode:val.code
+            matcheCode: val.code,
           })
         }
-     
       }
     })
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private reset() {
     this.form.resetFields()
@@ -232,10 +244,10 @@ export default class Repairrecord extends Vue {
     this.gettabledata({
       page: 1,
       limit: 15,
-      deptCode:'',
-      reportUserName:'' ,
-      reportTimes: '',
-      matcheCode: '',
+      deptCode: "",
+      reportUserName: "",
+      reportTimes: "",
+      matcheCode: "",
     })
   }
   private popup() {
@@ -251,12 +263,12 @@ export default class Repairrecord extends Vue {
       this.departmentData = res.data
     })
   }
-  private gettabledata (obj){
-    this.DeviceM.Repairrecord(obj).then(res=>{
-      if(res.code == 0){
+  private gettabledata(obj) {
+    this.DeviceM.Repairrecord(obj).then((res) => {
+      if (res.code == 0) {
         this.page.totalResult = parseInt(res.count)
         this.tableData = res.data
-      }else{
+      } else {
         this.$message.error(res.msg)
       }
     })

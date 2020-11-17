@@ -233,7 +233,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import axios from 'axios'
 @Component({
-      components: {}
+  components: {}
 })
 export default class Dept extends Vue {
   [x: string]: any;
@@ -248,15 +248,15 @@ export default class Dept extends Vue {
     wrapperCol: { span: 16 },
   };
   public pagination = {
-        pageSize: 1000, // 默认每页显示数量
-        current: 1, //显示当前页数
-        total: 0,
-        showSizeChanger: false, // 显示可改变每页数量
-        showQuickJumper: false, //显示跳转到输入的那一页
-        showTotal: (total: number) =>
-              `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-                    total / this.pagination.pageSize
-              )} 页` // 显示总数
+    pageSize: 1000, // 默认每页显示数量
+    current: 1, //显示当前页数
+    total: 0,
+    showSizeChanger: false, // 显示可改变每页数量
+    showQuickJumper: false, //显示跳转到输入的那一页
+    showTotal: (total: number) =>
+      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+        total / this.pagination.pageSize
+      )} 页` // 显示总数
   };
   public tabData = [];
   public columns = [
@@ -377,7 +377,7 @@ export default class Dept extends Vue {
     })
   }
   private Export(e: any): void {
-        console.log(e)
+    console.log(e)
   }
   private remove(id: string): void {
     const data = id;
@@ -452,7 +452,7 @@ export default class Dept extends Vue {
     // this.getList(obj);
   }
   private rowClassName(record: any, index: number): string {
-        return index % 2 === 0 ? "bgF5" : "";
+    return index % 2 === 0 ? "bgF5" : "";
   }
   private edit(val: any): void{
     this.saveID = val.deptId;

@@ -97,6 +97,7 @@
             height="auto"
             ref="Acquisitionstation"
             class="mytable-scrollbar"
+            highlight-hover-row :row-class-name="tableRowClassName" 
             :data="tableData"
             :checkbox-config="{ checkMethod: checCheckboxkMethod2}"
           >
@@ -428,6 +429,10 @@ export default class Stations extends Vue {
     } else {
       this.$message.error("选择参数后操作")
     }
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
   // 删除
   public dlt() {

@@ -128,6 +128,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            :row-class-name="tableRowClassName"
             height="auto"
             :data="tabledata"
             class="mytable-scrollbar"
@@ -344,6 +345,10 @@ export default class AvData extends Vue {
   public selectAllEvent({ checked, records }) {
     this.selectedRowKeys = records
     console.log(checked ? "所有勾选事件" : "所有取消事件", records)
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
   public selectChangeEvent({ checked, records }) {
     this.selectedRowKeys = records

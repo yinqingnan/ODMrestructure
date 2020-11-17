@@ -115,7 +115,7 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tableData" class="mytable-scrollbar">
+          <vxe-table border height="auto" :data="tableData"     highlight-hover-row :row-class-name="tableRowClassName" class="mytable-scrollbar">
             <vxe-table-column type="seq" width="60" title="序号" align="center" />
             <vxe-table-column field="deptName" title="执勤部门" align="center" show-overflow />
             <vxe-table-column field="userName" title="民警姓名" align="center" />
@@ -264,6 +264,10 @@ export default class Coercivemeasures extends Vue {
       wfsj_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
     }
     this.gettabledata(obj)
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
 }
 </script>

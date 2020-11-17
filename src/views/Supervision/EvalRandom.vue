@@ -89,7 +89,14 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tableData" class="mytable-scrollbar">
+          <vxe-table
+            border
+            height="auto"
+            :data="tableData"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
+            class="mytable-scrollbar"
+          >
             <vxe-table-column
               v-for="(config, index) in tableColumn"
               show-overflow
@@ -119,7 +126,7 @@
               :total="page.totalResult"
               @page-change="pagerchange"
             />
-          </p> -->
+          </p>-->
         </div>
       </div>
     </div>
@@ -199,7 +206,6 @@ export default class EvalRandom extends Vue {
         dateRange: res.data.myDate,
         isDown: 0,
         length: "",
-    
       })
     })
   }
@@ -236,13 +242,16 @@ export default class EvalRandom extends Vue {
           limit: 10,
           deptCode: val.department,
           dateRange: date,
-          length:val.count,
+          length: val.count,
           isDown: str,
         })
       }
     })
   }
-
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
   private getDailytabledata(obj) {
     this.Supervision.getrandomtabledata(obj).then((res) => {
       console.log(res)

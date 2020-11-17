@@ -4,7 +4,9 @@
       <a-button @click="Recordingadd">添加</a-button>
     </div>
     <div :style="{height:Height}" class="Recording">
-      <vxe-table border height="auto" :data="tableData" class="mytable-scrollbar">
+      <vxe-table border height="auto" :data="tableData" 
+       highlight-hover-row :row-class-name="tableRowClassName" class="mytable-scrollbar"
+>
         <vxe-table-column type="seq" width="60" title="序号" align="center" />
         <vxe-table-column field="name" title="类别名称" align="center" min-width="180px" />
         <vxe-table-column
@@ -251,6 +253,10 @@ export default class Recording extends Vue {
         })
       }
     })
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
 }
 </script>

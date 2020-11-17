@@ -88,7 +88,14 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tableData" class="mytable-scrollbar">
+          <vxe-table
+            border
+            height="auto"
+            :data="tableData"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
+            class="mytable-scrollbar"
+          >
             <vxe-table-column
               v-for="(config, index) in tableColumn"
               show-overflow
@@ -98,7 +105,7 @@
             <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
               <template v-slot="{ row }">{{relateCase(row)}}</template>
             </vxe-table-column>
-            
+
             <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
             </vxe-table-column>
@@ -146,7 +153,7 @@ export default class EvalRecord extends Vue {
   }
   private textcolor = false
   private tableColumn = [
-    { type: "seq", width: 60, fixed: null, title: "序号",align:"center" },
+    { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
     { field: "deptCode", title: "执勤部门", width: 80 },
     { field: "userName", title: "民警姓名" },
@@ -163,9 +170,7 @@ export default class EvalRecord extends Vue {
     "Sizes",
     "Total",
   ]
-  private tableData = [
-   
-  ]
+  private tableData = []
   private formdata = {}
 
   // todo 事件和生命周期
@@ -196,7 +201,7 @@ export default class EvalRecord extends Vue {
         limit: 15,
         deptCode: "",
         user: "",
-        dateRange:res.data.myDate ,
+        dateRange: res.data.myDate,
         isDown: 0,
       })
     })
@@ -210,17 +215,19 @@ export default class EvalRecord extends Vue {
   private handleSubmit(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
-      console.log(val);
-      
+      console.log(val)
+
       this.formdata = val
       if (!err) {
         let str = 0
-        if(val.contain){
-          str=1
-        }else{
+        if (val.contain) {
+          str = 1
+        } else {
           str = 0
         }
-        let date = `${moment(val.date[0]).format('YYYY-MM-DD')} ~ ${moment(val.date[1]).format('YYYY-MM-DD')}`
+        let date = `${moment(val.date[0]).format("YYYY-MM-DD")} ~ ${moment(
+          val.date[1]
+        ).format("YYYY-MM-DD")}`
         this.getDailytabledata({
           page: 1,
           limit: 15,
@@ -232,13 +239,15 @@ export default class EvalRecord extends Vue {
       }
     })
   }
-  
-  // api/file/filedata/file/list
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
   private getDailytabledata(obj) {
     this.Supervision.getDailytabledata(obj).then((res) => {
       console.log(res)
       this.tableData = res.data
-      this.page.totalResult =parseInt(res.count) 
+      this.page.totalResult = parseInt(res.count)
     })
   }
   private popup() {
@@ -247,7 +256,6 @@ export default class EvalRecord extends Vue {
   private tablebtn(row) {
     console.log(row)
   }
-
 
   private relateCase(row) {
     var cases = row.relateCase
@@ -265,29 +273,31 @@ export default class EvalRecord extends Vue {
       return "未关联"
     }
   }
-  private fileType(x){
-    if (x.fileType == 'photo') {
-      return '图片';
-    } else if (x.fileType == 'log') {
-      return '日志';
-    } else if (x.fileType == 'video') {
-      return '视频';
-    } else if (x.fileType == 'audio') {
-      return '音频';
+  private fileType(x) {
+    if (x.fileType == "photo") {
+      return "图片"
+    } else if (x.fileType == "log") {
+      return "日志"
+    } else if (x.fileType == "video") {
+      return "视频"
+    } else if (x.fileType == "audio") {
+      return "音频"
     } else {
-      return '';
+      return ""
     }
   }
   private pagerchange({ currentPage, pageSize }) {
     console.log(currentPage, pageSize)
     let str = 0
-    if(this.formdata.contain){
-      str=1
-    }else{
+    if (this.formdata.contain) {
+      str = 1
+    } else {
       str = 0
     }
-    let date = `${moment(this.formdata.date[0]).format('YYYY-MM-DD')} ~ ${moment(this.formdata.date[1]).format('YYYY-MM-DD')}`
-    console.log(str,date)
+    let date = `${moment(this.formdata.date[0]).format(
+      "YYYY-MM-DD"
+    )} ~ ${moment(this.formdata.date[1]).format("YYYY-MM-DD")}`
+    console.log(str, date)
     this.getDailytabledata({
       page: currentPage,
       limit: pageSize,
@@ -296,7 +306,6 @@ export default class EvalRecord extends Vue {
       dateRange: date,
       isDown: str,
     })
-  
   }
 }
 </script>

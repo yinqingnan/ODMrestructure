@@ -88,14 +88,16 @@
             ref="Acquisitionstation"
             class="mytable-scrollbar"
             :data="tableData"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column field="name" title="子平台名称" show-overflow align="center" />
             <vxe-table-column field="code" title="子平台编号" show-overflow align="center" />
             <vxe-table-column field="deptName" title="所属部门" show-overflow align="center" />
             <vxe-table-column field="ip" title="IP地址" show-overflow align="center" />
-            <vxe-table-column field="storageShow" title="剩余容量（GB）" show-overflow  align="center">
-             <template v-slot="{ row }">
+            <vxe-table-column field="storageShow" title="剩余容量（GB）" show-overflow align="center">
+              <template v-slot="{ row }">
                 <span
                   v-if="row.storageRest/(1024*1024*1024) < 500"
                   style="color:red"
@@ -114,8 +116,8 @@
                 <span style="color:red" v-else>{{row.isOline}}</span>
               </template>
             </vxe-table-column>
-          
-            <vxe-table-column  title="操作" align="center">
+
+            <vxe-table-column title="操作" align="center">
               <template v-slot="{ row }">
                 <span @click="dlt(row)" style="color:#4d96ca;cursor:pointer;">删除</span>
               </template>
@@ -153,14 +155,14 @@ export default class Platform extends Vue {
   public form!: any
   public DataM = new this.$api.configInterface.DataM()
   public DeviceM = new this.$api.configInterface.DeviceM()
-  public LimitInputlength  = LimitInputlength
+  public LimitInputlength = LimitInputlength
   public textarealength = textarealength
   private page = {
     currentPage: 1, //当前页数
     pageSize: 15, //每页多少条
     totalResult: 200, //总数
   }
-  private tableData =[]
+  private tableData = []
   private departmentData = []
   private layouts = [
     "PrevJump",
@@ -172,107 +174,109 @@ export default class Platform extends Vue {
     "Sizes",
     "Total",
   ]
-    private list = [
-      { id: "0", value: "all", title: "全部" },
-      { id: "1", value: "1", title: "在线" },
-      { id: "2", value: "0", title: "离线" },
-    ]
-    // todo 生命周期
-    private created() {
-      this.Height = `${document.documentElement.clientHeight - 230}px`
-      this.form = this.$form.createForm(this)
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const _that = this
-      window.addEventListener("resize", () => {
-        _that.Height = `${document.documentElement.clientHeight - 230}px`
-      })
+  private list = [
+    { id: "0", value: "all", title: "全部" },
+    { id: "1", value: "1", title: "在线" },
+    { id: "2", value: "0", title: "离线" },
+  ]
+  // todo 生命周期
+  private created() {
+    this.Height = `${document.documentElement.clientHeight - 230}px`
+    this.form = this.$form.createForm(this)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    })
+  }
+  private mounted() {
+    let obj = {
+      page: 1,
+      limit: 15,
+      type_equal: 3,
     }
-    private mounted() {
-      let obj = {
-        page: 1,
-        limit: 15,
-        type_equal: 3,
+    this.gettabledata(obj)
+    this.getdata()
+  }
+  // todo事件.
+  private popup() {
+    return
+  }
+  private getdata() {
+    this.DataM.getMenulist({}, true).then((res: any) => {
+      this.departmentData = res.data
+    })
+  }
+  private gettabledata(obj) {
+    this.DeviceM.platformtable(obj, true).then((res) => {
+      console.log(res)
+      if (res.code == 0) {
+        this.tableData = res.data
+        this.page.totalResult = parseInt(res.count)
       }
-      this.gettabledata(obj)
-      this.getdata()
+    })
+  }
+  private pagerchange({ currentPage, pageSize }) {
+    let obj = {
+      page: currentPage,
+      limit: pageSize,
+      type_equal: 3,
     }
-    // todo事件.
-    private popup() {
-      return
+    this.gettabledata(obj)
+  }
+  private reset() {
+    this.form.resetFields()
+    let obj = {
+      page: 1,
+      limit: 15,
+      type_equal: 3,
     }
-    private getdata() {
-      this.DataM.getMenulist({}, true).then((res: any) => {
-        this.departmentData = res.data
-      })
-    }
-    private gettabledata(obj){
-      this.DeviceM.platformtable(obj,true).then(res=>{
-        console.log(res)
-        if(res.code == 0){
-          this.tableData = res.data
-          this.page.totalResult =parseInt(res.count) 
+    this.gettabledata(obj)
+  }
+  private handle(e) {
+    e.preventDefault()
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        console.log(val)
+        let obj = {
+          page: 1,
+          limit: 15,
+          type_equal: 3,
+          deptCode_equal: val.department,
+          name_like: val.name,
+          stationStatus: val.deviceStatus,
         }
-      })
-    }
-    private pagerchange({ currentPage, pageSize }) {
-      let obj = {
-        page: currentPage,
-        limit: pageSize,
-        type_equal: 3,
+        this.gettabledata(obj)
       }
-      this.gettabledata(obj)
-    }
-    private reset(){
-      this.form.resetFields()
-      let obj = {
-        page: 1,
-        limit: 15,
-        type_equal: 3,
-          
-      }
-      this.gettabledata(obj)
-    }
-    private handle(e){
-      e.preventDefault()
-      this.form.validateFields((err: any, val: any) => {
-        if (!err) {
-          console.log(val)
-          let obj = {
-            page: 1,
-            limit: 15,
-            type_equal: 3,
-            deptCode_equal: val.department,
-            name_like: val.name,
-            stationStatus: val.deviceStatus,
+    })
+  }
+  private dlt(row) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this
+    this.$confirm({
+      title: "提示",
+      content: "确定要删除子平台TCL视音频数据管理平台(上级平台)吗？",
+      onOk() {
+        // alert(`删除id为：${row.id}的这项`)
+        that.DeviceM.platformdlt([row.id]).then((res) => {
+          if (res.code == 0) {
+            that.$message.success(res.msg)
+            that.gettabledata({
+              page: 1,
+              limit: 15,
+              type_equal: 3,
+            })
+          } else {
+            that.$message.error(res.msg)
           }
-          this.gettabledata(obj)
-        }
-      })
-    }
-    private dlt(row){
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const that = this
-      this.$confirm({
-        title: '提示',
-        content: '确定要删除子平台TCL视音频数据管理平台(上级平台)吗？',
-        onOk() {
-          // alert(`删除id为：${row.id}的这项`)
-          that.DeviceM.platformdlt([row.id]).then(res=>{
-            if(res.code == 0){
-              that.$message.success(res.msg)
-              that.gettabledata({
-                page: 1,
-                limit: 15,
-                type_equal: 3,
-              })
-            }else{
-              that.$message.error(res.msg)
-            }
-          })
-        },
-          
-      });
-    }
+        })
+      },
+    })
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : "";
+  }
 }
 </script>
 

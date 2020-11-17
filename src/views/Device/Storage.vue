@@ -67,6 +67,8 @@
             ref="Acquisition"
             class="mytable-scrollbar"
             :data="tableData"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
             :checkbox-config="{ checkMethod: checCheckboxkMethod2}"
           >
             <vxe-table-column type="checkbox" width="60" align="center" />
@@ -255,7 +257,7 @@ export default class Storage extends Vue {
   public visible = false
   public FTPvisible = false
   public addshow = false
-  public ftpdisabled = false 
+  public ftpdisabled = false
   public DataM = new this.$api.configInterface.DataM()
   public DeviceM = new this.$api.configInterface.DeviceM()
   private LimitInputlength = LimitInputlength
@@ -383,6 +385,10 @@ export default class Storage extends Vue {
     }
     this.gettabledata(obj)
   }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
   private add() {
     this.visible = true
     this.form2.resetFields()
@@ -390,18 +396,14 @@ export default class Storage extends Vue {
   }
   private dlt() {
     let arr = this.getSelectEvent1()
-    if(arr.length>0){
+    if (arr.length > 0) {
       let dltarr = []
-      arr.map((item)=>{
+      arr.map((item) => {
         dltarr.push(item.id)
       })
-    }else{
+    } else {
       this.$message.error("请先选择删除的对象")
     }
- 
-    
-    
-    
   }
   private FTPconfig(row) {
     console.log(row.ip)
@@ -439,16 +441,14 @@ export default class Storage extends Vue {
           path: val.path,
           storageIp: this.IP,
           userName: val.name,
-        }).then(res=>{
+        }).then((res) => {
           console.log(res)
-          if(res.code == 0 ){
+          if (res.code == 0) {
             this.addshow = false
             this.$message.success(res.msg)
             this.form3.resetFields()
-            
-          }else{
+          } else {
             this.$message.error(res.msg)
-
           }
           this.ftpid = ""
         })
@@ -460,7 +460,7 @@ export default class Storage extends Vue {
     this.ftpid = row.id
     this.ftpdisabled = true
     this.addshow = true
-    this.$nextTick(()=>{
+    this.$nextTick(() => {
       this.form3.setFieldsValue({
         name: row.userName,
         passwd: row.passwd,
@@ -477,10 +477,10 @@ export default class Storage extends Vue {
     console.log()
     this.DeviceM.ftpconfigdlt({
       ip: this.IP,
-      userName: row.userName
-    }).then(res=>{
+      userName: row.userName,
+    }).then((res) => {
       console.log(res)
-      if(res.code== 0){
+      if (res.code == 0) {
         this.$message.success(res.msg)
         this.DeviceM.ftptable({
           storageIp_equal: row.ip,
@@ -489,7 +489,7 @@ export default class Storage extends Vue {
         }).then((res) => {
           this.ftptable = res.data
         })
-      }else{
+      } else {
         this.$message.error(res.msg)
       }
     })
@@ -499,7 +499,6 @@ export default class Storage extends Vue {
     this.ftpdisabled = false
     this.ftpid = ""
     this.form3.resetFields()
-
   }
   private ftpquxiao() {
     this.addshow = false

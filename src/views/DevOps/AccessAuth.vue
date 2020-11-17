@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
   <div>
     <!-- 接入管理 -->
@@ -14,20 +15,35 @@
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
+            stripe
             border
             height="auto"
             ref="Acquisitionstation"
+            highlight-hover-row
             class="mytable-scrollbar"
+            :row-class-name="tableRowClassName"
             :data="tableData"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column field="secretKey" title="接入秘钥" show-overflow align="center" />
-            <vxe-table-column field="isEnabled" title="状态" show-overflow align="center" />
-            <vxe-table-column field="isUse" title="使用状态" show-overflow align="center" />
+            <vxe-table-column field="isEnabled" title="状态" show-overflow align="center" >
+              <template  v-slot="{ row }">
+                {{isEnabled(row.isEnabled)}}
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="isUse" title="使用状态" show-overflow align="center">
+                <template  v-slot="{ row }">
+                {{isEnabled(isuse(row.isUse))}}
+              </template>
+            </vxe-table-column>
             <vxe-table-column field="deptName" title="所属部门" show-overflow align="center" />
-            <vxe-table-column field="type" title="接入类型" show-overflow align="center" />
+            <vxe-table-column field="type" title="接入类型" show-overflow align="center" >
+               <template  v-slot="{ row }">
+                {{istype(row.type)}}
+              </template>
+            </vxe-table-column>
             <vxe-table-column field="merchant" title="厂商" align="center" />
-            <vxe-table-column field="联系方式" title="联系方式" show-overflow align="center" />
+            <vxe-table-column field="phone" title="联系方式" show-overflow align="center" />
             <vxe-table-column field="createTime" title="创建时间" show-overflow align="center" />
             <vxe-table-column title="操作" align="center">
               <template v-slot="{ row }">
@@ -65,7 +81,7 @@
                   :disabled="true"
                   v-decorator="['Sendrepair', { initialValue: '',  rules:  [{ required: true, message: '必填项不能为空' }] }]"
                   :max-length="LimitInputlength"
-                  placeholder="请输入报修人"
+                  placeholder="点击生成秘钥"
                 >/></a-input>
               </a-form-item>
             </a-col>
@@ -73,20 +89,20 @@
           <a-row :gutter="24">
             <a-col :span="24">
               <a-form-item label="秘钥状态">
-               <a-select
-                        v-decorator="[
+                <a-select
+                  v-decorator="[
                         'deviceStatus',
                         {
                           initialValue: '1',
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
-                      >
-                        <a-select-option v-for="d in statuslist" :key="d.value">{{ d.title }}</a-select-option>
-                      </a-select>
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请选择..."
+                >
+                  <a-select-option v-for="d in statuslist" :key="d.value">{{ d.title }}</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </a-row>
@@ -122,9 +138,132 @@
         </a-form>
       </a-modal>
       <a-modal v-model="collection" :title="str2" @ok="caijizhan" class="quxiao" okText="提交">
-        <p>caijizhan</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <a-form
+          autocomplete="off"
+          :form="form2"
+          :label-col="{ span: 6 }"
+          :wrapper-col="{ span: 18 }"
+          @submit="caijizhan"
+        >
+          <a-row :gutter="24" class="Access">
+            <a-col :span="24">
+              <a-form-item label="接入秘钥">
+                <a-button class="createKey" @click="createKey">自动生成</a-button>
+                <a-input
+                  :disabled="true"
+                  v-decorator="['Sendrepair', { initialValue: '',  rules:  [{ required: true, message: '必填项不能为空' }] }]"
+                  :max-length="LimitInputlength"
+                  placeholder="点击生成秘钥"
+                >/></a-input>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="24">
+              <a-form-item label="秘钥状态">
+                <a-select
+                  v-decorator="[
+                        'deviceStatus',
+                        {
+                          initialValue: '1',
+                          rules: []
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请选择..."
+                >
+                  <a-select-option v-for="d in statuslist" :key="d.value">{{ d.title }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="24">
+              <a-form-item label="所属部门">
+                <a-tree-select
+                  show-search
+                  treeNodeFilterProp="title"
+                  v-decorator="[
+                        'department',
+                        {
+                          initialValue: '',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  :dropdown-match-select-width="true"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="departmentData"
+                  :replace-fields="{
+                        id: 'code',
+                        pId: 'parentCode',
+                        value: 'value',
+                        title: 'name',
+                      }"
+                  placeholder="请选择所属部门..."
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="24">
+              <a-form-item label="采集站类型">
+                <a-select
+                  v-decorator="[
+                        'Acquisition',
+                        {
+                          initialValue: '1',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请选择..."
+                >
+                  <a-select-option v-for="d in Acquisitionlist" :key="d.value">{{ d.title }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+                   <a-row :gutter="24">
+            <a-col :span="24">
+              <a-form-item label="厂商">
+                <a-input
+                  v-decorator="[
+                        'manufacturer',
+                        {
+                          initialValue: '',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请输入厂商"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+                         <a-row :gutter="24">
+            <a-col :span="24">
+              <a-form-item label="联系方式">
+                <a-input
+                  v-decorator="[
+                        'iphone',
+                        {
+                          initialValue: '',
+                          rules: [{ required: true, message: '必填项不能为空' }]
+                        }
+                      ]"
+                  :allow-clear="true"
+                  style="width: 100%"
+                  placeholder="请输入管理员联系方式"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
       </a-modal>
     </div>
   </div>
@@ -155,9 +294,12 @@ export default class AccessAuth extends Vue {
     "Total",
   ]
   private statuslist = [
-    {id:"0",value:"1",title:"启用"},
-    {id:"1",value:"0",title:"禁用"}
-
+    { id: "0", value: "1", title: "启用" },
+    { id: "1", value: "0", title: "禁用" },
+  ]
+  private Acquisitionlist= [
+    { id: "0", value: "1", title: "柜式采集站" },
+    { id: "0", value: "2", title: "便携式采集站" },
   ]
   private departmentData = []
   private Height = ""
@@ -171,7 +313,8 @@ export default class AccessAuth extends Vue {
     pageSize: 15, //每页多少条
     totalResult: 200, //总数
   }
-
+  private caijizhanid = ""
+  private zipingtaiid = ""
   // todo 生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -191,6 +334,7 @@ export default class AccessAuth extends Vue {
     this.gettabledata(obj)
     this.getdata()
   }
+ 
   // todo事件
   private pagerchange({ currentPage, pageSize }) {
     let obj = {
@@ -212,38 +356,76 @@ export default class AccessAuth extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
         let obj = {
           deptCode: val.department,
-          id: "",
+          id: this.zipingtaiid,
           isEnabled: val.deviceStatus,
           secretKey: val.Sendrepair,
-          type: "3",  //固定为子平台3    采集站2
+          type: "3", //固定为子平台3    采集站2
         }
         this.Luckmanagement.accessauthsave(obj).then((res) => {
-          console.log(res)
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+            this.visible = false
+            this.form.resetFields()
+            this.gettabledata({
+              page: 1,
+              limit: 15,
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
         })
       }
     })
   }
-  // /api/system/authorization/save
-  // /api/system/authorization/save
   private caijizhan(e) {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val)
-  
+        let obj = {
+          deptCode: val.department,
+          id: this.caijizhanid,
+          merchant:val.manufacturer,
+          phone:val.iphone,
+          isEnabled: val.deviceStatus,
+          secretKey: val.Sendrepair,
+          type: "1", //固定为子平台3    采集站1
+        }
+        this.Luckmanagement.accessauthsave(obj).then((res) => {
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+            this.collection = false
+            this.form2.resetFields()
+            this.gettabledata({
+              page: 1,
+              limit: 15,
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       }
     })
   }
   private createKey() {
-    this.$nextTick(() => {
-      this.form.setFieldsValue({
-        Sendrepair:this.guid()
+    if(this.collection){
+      this.$nextTick(() => {
+        this.form2.setFieldsValue({
+          Sendrepair: this.guid(),
+        })
       })
-    })
+    }
+    if(this.visible){
+      this.$nextTick(() => {
+        this.form.setFieldsValue({
+          Sendrepair: this.guid(),
+        })
+      })
+    }
   }
+
   private guid() {
     return "xxxxxxxxxx".replace(/[xy]/g, function (c) {
       var r = (Math.random() * 16) | 0,
@@ -251,11 +433,86 @@ export default class AccessAuth extends Vue {
       return v.toString(16)
     })
   }
+  private isEnabled(status){
+    if(status==1){
+      return "启用"
+    }else{
+      return "未启用"
+    }
+  }
+  private isuse(status){
+    if(status==1){
+      return "已使用"
+    }else{
+      return "未使用"
+    }
+  }
+  private istype(status){
+    if(status==3){
+      return "子平台"
+    }else if(status == 1){
+      return "柜式采集站"
+    }else if(status == 2){
+      return "便携式采集站"
 
+    }
+  }
+  private edit(row) {
+    console.log(row)
+    if(row.type == 1 || row.type == 2){
+      this.caijizhanid = row.id
+      this.collection = true
+      this.$nextTick(() => {
+        this.form2.setFieldsValue({
+          Sendrepair:row.secretKey,
+          department:row.deptCode,
+          deviceStatus:row.isEnabled+"",
+          Acquisition:row.type+"",
+          manufacturer: row.merchant,
+          iphone:row.phone
+        })
+      })
+      
+    }else if(row.type == 3){
+      this.zipingtaiid = row.id
+      this.visible = true
+      this.$nextTick(() => {
+        this.form.setFieldsValue({
+          Sendrepair:row.secretKey,
+          department:row.deptCode,
+          deviceStatus:row.isEnabled+"",
+        })
+      })
+    }
+  }
+  private dlt(row) {
+    console.log(row)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    this.$confirm({
+      title: '提示',
+      content: '确定要删除该秘钥吗？',
+      onOk() {
+        return new Promise((resolve, reject) => {
+          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+          _that.Luckmanagement.accessauthdlt([row]).then(res=>{
+            if(res.code == 0){
+              _that.gettabledata({
+                page: 1,
+                limit: 15,
+              })
+              _that.$message.success(res.msg)
+            }else{
+              _that.$message.error(res.msg)
+            }
+          })
+        }).catch(() => console.log('Oops errors!'));
+      },
+    });
+  }
   // todo 数据请求
   private gettabledata(obj) {
     this.Luckmanagement.getIncomingtabledata(obj).then((res) => {
-      console.log(res)
       this.tableData = res
       this.page.totalResult = res.length
     })
@@ -264,6 +521,10 @@ export default class AccessAuth extends Vue {
     this.DataM.getMenulist({}, true).then((res: any) => {
       this.departmentData = res.data
     })
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
 }
 </script>

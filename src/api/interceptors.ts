@@ -33,6 +33,7 @@ export class Interceptors {
         const token = localStorage.getItem("token");
         token && (config.headers.Token = token);
         return config;
+
       },
       (error: any) => {
         console.log(error);

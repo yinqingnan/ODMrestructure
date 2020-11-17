@@ -104,7 +104,14 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table border height="auto" :data="tableData" class="mytable-scrollbar">
+          <vxe-table
+            border
+            height="auto"
+            :data="tableData"
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
+            class="mytable-scrollbar"
+          >
             <vxe-table-column
               v-for="(config, index) in tableColumn"
               show-overflow
@@ -344,6 +351,10 @@ export default class EvalRecord extends Vue {
       dateRange: date,
       isDown: str,
     })
+  }
+  private tableRowClassName(record: any, index: number) {
+     
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
 }
 </script>
