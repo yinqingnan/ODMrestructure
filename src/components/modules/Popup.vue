@@ -267,44 +267,44 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator"
 @Component({
-      components: {},
+  components: {},
 })
 export default class Popup extends Vue {
   [x: string]: any
   public form!: any
   @Prop({
-        type: Object,
-        default: ()=>({}),
+    type: Object,
+    default: () => ({}),
   })
   wrapCol: {} | undefined
   @Prop({
-        type: Object,
-        default: ()=>({}),
+    type: Object,
+    default: () => ({}),
   })
   labelCol: {} | undefined
   @Prop({
-        type: Object,
-        default: ()=>({}),
+    type: Object,
+    default: () => ({}),
   })
   wrapperCol: {} | undefined
   @Prop({
-        type: Array,
-        default: [],
+    type: Array,
+    default: [],
   })
   Datalist: [] | undefined
   private created() {
-        this.form = this.$form.createForm(this)
+    this.form = this.$form.createForm(this)
   }
   private handleReset() {
-        console.log(123)
+    console.log(123)
   }
   private handleSubmit(e: any): void {
-        e.preventDefault()
-        this.form.validateFields((err: any, val: any) => {
-              if (!err) {
-                    console.log(val)  
-              }
-        })
+    e.preventDefault()
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        console.log(val)
+      }
+    })
   }
 }
 </script>
@@ -325,7 +325,7 @@ export default class Popup extends Vue {
   text-align: center;
   color: #a1a9b5;
 }
-.bottombtn{
+.bottombtn {
   display: flex;
   justify-content: flex-end;
   padding-right: 29px !important;

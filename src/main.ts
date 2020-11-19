@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal, Col, Row, Radio, DatePicker, TreeSelect, Popconfirm, ConfigProvider, Calendar, Switch, Pagination, InputNumber ,Upload} from "ant-design-vue";
+import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal, Col, Row, Radio, DatePicker, TreeSelect, Popconfirm, ConfigProvider, Calendar, Switch, Pagination, InputNumber ,Upload,Tree,Card,Empty } from "ant-design-vue";
 // import { Scrollbar } from 'element-ui';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -26,7 +26,7 @@ import VXETablePluginExportXLSX from 'vxe-table-plugin-export-xlsx'
 VXETable.use(VXETablePluginExportXLSX)
 Vue.use(VXETable)
 //antdesign组件
-Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Tabs).use(Select).use(Table).use(Modal).use(Col).use(Row).use(Radio).use(DatePicker).use(TreeSelect).use(Popconfirm).use(ConfigProvider).use(Calendar).use(Switch).use(Pagination).use(InputNumber).use(Upload)
+Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Tabs).use(Select).use(Table).use(Modal).use(Col).use(Row).use(Radio).use(DatePicker).use(TreeSelect).use(Popconfirm).use(ConfigProvider).use(Calendar).use(Switch).use(Pagination).use(InputNumber).use(Upload).use(Tree).use(Card).use(Empty)
 Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
 Vue.prototype.$confirm = confirm;  // 挂载服务

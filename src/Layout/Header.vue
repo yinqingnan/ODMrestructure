@@ -6,23 +6,17 @@
       </div>
       <div class="header_rigth hidden-sm-and-down">
         <div class="logo">
-          <div id="components-badge-demo-title">
+          <div id="components-badge-demo-title" @click="getNotice">
             <a-badge :dot="true" title="Custom hover text">
               <a-icon type="alert" style="color:#fff;font-size:22px" />
             </a-badge>
           </div>
-          <!-- <div id="components-badge-demo-title">
-          <a-icon type="alert" style="color:#fff;font-size:22px" />
-        </div> -->
         </div>
         <div class="headportrait hidden-sm-and-down">
           <img src="../assets/image/user/123123.png" alt="" />
         </div>
         <div class="Menuss ">
           <a-dropdown :trigger="['click']">
-            <!-- <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-              Admin <a-icon type="down" />
-            </a> -->
             <span>{{ username }} <a-icon type="down"/></span>
             <a-menu slot="overlay">
               <a-menu-item>
@@ -87,6 +81,12 @@
         </a-form-item>
       </a-form>
     </a-modal>
+    <a-modal v-model="Noticeshow" title="公告" :footer="null">
+      <div style="text-align: center;height:130px;line-height:130px" v-if="!blank">
+        公告示例
+      </div>
+      <a-empty v-else/>
+    </a-modal>
   </div>
 </template>
 
@@ -98,8 +98,10 @@ import { LimitInputlength } from "../InterfaceVariable/variable";
 export default class Header extends Vue {
   [x: string]: any;
   public Login = new this.$api.configInterface.Login();
+  private Noticeshow =  false
   private visible = false;
   private username = "";
+  private blank = false
   public form!: any;
   private LimitInputlength = LimitInputlength;
   private created() {
@@ -188,6 +190,18 @@ export default class Header extends Vue {
       localStorage.setItem("department", res.data.deptName);
     });
   }
+  private getNotice(){
+    this.Noticeshow = true
+    this.Login.getNotice().then(res=>{
+      console.log(res)
+      if(res.data){
+        this.blank = true
+      }else{
+        this.blank = false
+      }
+    })
+  }
+
 }
 </script>
 

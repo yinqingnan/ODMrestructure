@@ -146,6 +146,11 @@ const routes: Array<RouteConfig> = [
             component: () => import('@/views/Organization/Dept.vue')
           },
           {
+            path: "Menu",
+            name: "Menu",
+            component: () => import('@/views/Organization/Menu.vue')
+          },
+          {
             path: "user",
             name: "user",
             component: () => import('@/views/Organization/User.vue')

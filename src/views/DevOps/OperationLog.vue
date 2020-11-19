@@ -319,7 +319,6 @@ export default class OperationLog extends Vue {
     height: 30px;
     line-height: 1;
     color: #fff;
-    background: #207ebd;
     outline: none;
     cursor: pointer;
     border: 0;

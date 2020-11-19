@@ -72,7 +72,6 @@ export class Dept {
   }
 
   public removeID(params, jwt: boolean, flag: string) {
-    console.log(params)
     const url = "/api/uauth/base/dept/delete";
     const body = JSON.stringify({ params })
     console.log(body)

@@ -2,8 +2,6 @@
   <div>
     <el-scrollbar class="Column">
       <div>
-        <!-- :defaultSelectedKeys="[$route.name]" -->
-
         <a-menu
           :defaultSelectedKeys="defaultSelectedKeys"
           :openKeys="openKeys"

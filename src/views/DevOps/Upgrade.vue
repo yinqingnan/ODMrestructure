@@ -158,11 +158,11 @@
                 if (!pattern.test(val)){
                 callback('必须包含数字');
                 }else {
-                callback();
+                  callback();
                 }
-                callback();
+                  callback();
                 },
-                },]
+                }]
                 }
                 ]"
                   :allow-clear="true"
@@ -337,11 +337,13 @@ export default class Upgrade extends Vue {
         upgradeType: row.upgradeType + "",
         softwareType: row.softwareType + "",
         updateContent: row.updateContent,
-        file: [{
-          uid: '-1',
-          name: 'xxx.png',
-          status: 'done',
-        }],
+        file: [
+          {
+            uid: "-1",
+            name: "xxx.png",
+            status: "done",
+          },
+        ],
       })
     })
   }
@@ -446,8 +448,8 @@ export default class Upgrade extends Vue {
             upgradeType: val.upgradeType,
             version: val.version,
           }
-          console.log(obj);
-          
+          console.log(obj)
+
           this.Luckmanagement.Uploadsave(obj).then((res) => {
             if (res.code == 0) {
               this.$message.success(res.msg)
