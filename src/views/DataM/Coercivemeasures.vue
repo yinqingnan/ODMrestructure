@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 强制措施 -->
     <div id="Simpleprogram" class="layoutcontainer">
       <div class="containers">
         <div class="contaninerheader" style="padding-left:25px">

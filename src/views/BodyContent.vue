@@ -25,6 +25,8 @@ export default class BodyContent extends Vue {
   addtabs!: (val: any) => {};
   @Tabs.Mutation("inittabs")
   inittabs!: () => {};
+   [x: string]: any;
+  public Login = new this.$api.configInterface.Login();
   private menudata: any = [];
   private num = 10;
   public myWH = {
@@ -832,33 +834,15 @@ export default class BodyContent extends Vue {
     },
   ];
   
-  mounted() {
+  private mounted() {
     this.menudata = this.data;
     if(localStorage.getItem("Tabslist")!= null){
       this.inittabs()
     }else{
       this.addtabs(this.data[0]); //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // 
+    this.getdata()
     // window.onbeforeunload = function(e) {
     //   console.log(e);
     //   e = e || window.event;
@@ -868,6 +852,11 @@ export default class BodyContent extends Vue {
     //   return "关闭提示";
     // };
     // localStorage.setItem("Tabslist", JSON.stringify(this.data[0]));
+  }
+  private getdata() {
+    this.Login.getMenudata().then(res=>{
+      // console.log(res)
+    })
   }
 }
 </script>

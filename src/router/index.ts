@@ -1,4 +1,6 @@
+
 import { Login } from "@/api/module/login";
+
 import Vue from "vue";
 import VueRouter, { RawLocation, RouteConfig } from "vue-router";
 Vue.use(VueRouter);

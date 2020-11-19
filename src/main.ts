@@ -1,12 +1,27 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-17 11:08:45
+ * @LastEditTime: 2020-11-19 15:33:35
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ODMrestructure\src\main.ts
+ */
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+// todo 按需引入antdesign组件
 import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal, Col, Row, Radio, DatePicker, TreeSelect, Popconfirm, ConfigProvider, Calendar, Switch, Pagination, InputNumber ,Upload,Tree,Card,Empty } from "ant-design-vue";
 // import { Scrollbar } from 'element-ui';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
+
+// todo 引入视频播放插件
+import VideoPlayer from 'vue-video-player'
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
+Vue.use(VideoPlayer)
 
 import 'xe-utils';
 import VXETable from 'vxe-table';

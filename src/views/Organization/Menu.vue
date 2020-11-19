@@ -178,7 +178,7 @@
                 },
                 }] }]"
                 :max-length="LimitInputlength"
-                placeholder="请输入菜单名称"
+                placeholder="请输入数字，不接受英文字母及汉字"
               >/></a-input>
             </a-form-item>
           </a-col>

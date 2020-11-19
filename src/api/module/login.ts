@@ -135,6 +135,21 @@ export class Login {
         reject(err.message);
       });
     });
+  } 
+  // todo 获取菜单 
+  public getMenudata(params: object, jwt=true) {
+    const url = "/api/uauth/base/menu/navbak";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
   }
   /**
  * @param res
