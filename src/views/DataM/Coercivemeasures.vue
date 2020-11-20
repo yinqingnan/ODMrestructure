@@ -292,18 +292,7 @@ export default class Coercivemeasures extends Vue {
 .ant-calendar-picker {
   width: 100% !important;
 }
-// .modulebot {
-//   display: flex;
-//   justify-content: flex-end;
-//   padding-right: 44px;
-//   button:nth-of-type(1) {
-//     margin-right: 10px;
-//   }
-//   height: 34px;
-  
-// }
 .Simpleprogrambody {
-  // height: 100%;
   padding: 0 26px;
   background: #fff;
 }

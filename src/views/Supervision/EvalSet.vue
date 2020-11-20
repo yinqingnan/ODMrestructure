@@ -167,7 +167,7 @@ export default class EvalSet extends Vue {
       color: red;
     }
     button {
-      width: 58px;
+      // width: 58px;
       height: 30px;
       line-height: 1;
       margin-top: 14px;

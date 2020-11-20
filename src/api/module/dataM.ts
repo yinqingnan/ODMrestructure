@@ -1,6 +1,6 @@
 import { Interceptors } from '../interceptors';
-import { message } from 'ant-design-vue';   // 弹吐司
-
+import { message, Modal } from 'ant-design-vue';   // 弹吐司
+import router from '../../router/index'
 /**
   *@param param 参数
   *@param jwt   是否token校验
@@ -271,7 +271,7 @@ export class DataM {
   }
   // todo  标注下拉 2
   private taggingselect2(params: object, jwt = true) {
-    const url = "/api/tpb/lawarchives/dic-child-label/select/"+params;
+    const url = "/api/tpb/lawarchives/dic-child-label/select/" + params;
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
@@ -317,7 +317,6 @@ export class DataM {
 
 
   //todo 扣分项目 
-
   private lawarchives(params: object, jwt = true) {
     const url = "/api/tpb/lawarchives/dm-jfx/getAll";
     return new Promise((resolve, reject) => {
@@ -333,27 +332,20 @@ export class DataM {
     });
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // todo 評分baocun 
+  public pfsave(params: object, jwt = true) {
+    const url = "/api/tpb/lawarchives/file-evaluate/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
 
 
@@ -382,10 +374,29 @@ export class DataM {
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
     // if (res.code === 0) {
-    resolve(res);
+    // resolve(res);
     // } else {
     //   this.errorHandle(res);
     // }
+    if (res.code == 1002) {
+      Modal.confirm({
+        content: 'destroy all',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            localStorage.removeItem("activeKey")
+            localStorage.removeItem("Tabslist")
+            localStorage.removeItem("token");
+            router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        cancelText: 'Click to destroy all',
+    
+      });
+    } else {
+      resolve(res);
+    }
   }
   /**
  * 服务端状态处理,例如中断性异常,退出异常等等(与拦截器http握手状态注意区分,一般都能分清楚吧)
@@ -394,13 +405,14 @@ export class DataM {
   public errorHandle(res: any) {
     message.warn(res.msg);  // 统一谈服务端提示,我们提示统一由服务端提供
     // 状态码判断
-    // switch (res.status) {
-    //   case -102:
-    //     break;
-    //   case -152:
-    //     break;
-    //   default:
-    //   // console.log(other);
-    // }
+    switch (res.status) {
+      case 1002:
+        // console.log(12)
+        break;
+      case -152:
+        break;
+      default:
+      // console.log(other);
+    }
   }
 }

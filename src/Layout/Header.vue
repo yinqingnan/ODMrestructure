@@ -132,8 +132,8 @@ export default class Header extends Vue {
         onOk() {
           localStorage.removeItem("activeKey")
           localStorage.removeItem("Tabslist")
-          that.$router.push({ name: "Login" });
           localStorage.removeItem("token");
+          that.$router.push({ name: "Login" });
         },
         class: "test"
       });

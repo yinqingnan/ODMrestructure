@@ -180,7 +180,7 @@
           </p>
         </div>
       </div>
-      <a-modal v-model="visible" title="视频查看" @ok="handleOk" :width="1000">
+      <a-modal @cancel="tccancel" v-model="visible" title="视频查看" @ok="handleOk" :width="1000">
         <div class="filesee">
           <div class="filesee_left">
             <div v-if="filedetails.fileType_Name == '图片'">
@@ -190,7 +190,7 @@
                 alt
               />
             </div>
-            <div v-if="filedetails.fileType_Name == '视频'">
+            <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
               <video-player
                 style="height:423px"
                 class="video-player vjs-custom-skin"
@@ -374,37 +374,78 @@
               <a-tab-pane key="4" tab="评价">
                 <a-form
                   :form="form3"
-                  :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
+                  :label-col="{ span:4 }"
+                  :wrapper-col="{ span: 20 }"
                   @submit="pingjiaSubmit"
                 >
                   <a-form-item label="评价总分">
                     <a-input
+                      :disabled="true"
                       v-decorator="[
                         'Total',
                         {
-                          initialValue: '100',
+                          initialValue: Total,
                           rules: []
                         }
                       ]"
                     />
                   </a-form-item>
-                  <a-form-item label="存储类别">
-                    <a-select
+                  <a-form-item label="评分项">
+                    <a-checkbox-group
+                      :disabled="disabled"
+                      v-decorator="['Scoring', { initialValue: []}]"
+                      style="width: 100%;"
+                    >
+                      <el-scrollbar style="height:130px;" v-if="!disabled">
+                        <a-row>
+                          <a-col
+                            :span="24"
+                            v-for="(d) in options"
+                            :key="d.id"
+                            style="line-height: 30px;height: 30px;"
+                          >
+                            <a-checkbox
+                              style="letter-spacing: -0.5px;"
+                              @change="checkboxChange($event, d.jffz)"
+                              :value="d.jfbh"
+                            >{{d.jfmc}}(-{{d.jffz}}分)</a-checkbox>
+                          </a-col>
+                        </a-row>
+                      </el-scrollbar>
+                      <el-scrollbar style="height:130px;" v-else>
+                        <a-row>
+                          <a-col
+                            :span="24"
+                            v-for="(d) in options"
+                            :key="d.id"
+                            style="line-height: 30px;height: 30px;"
+                          >
+                            <a-checkbox
+                              style="letter-spacing: -0.5px;"
+                              @change="checkboxChange($event, d.jffz)"
+                              :value="d.code"
+                            >{{d.name}}(-{{d.score}}分)</a-checkbox>
+                          </a-col>
+                        </a-row>
+                      </el-scrollbar>
+                    </a-checkbox-group>
+                  </a-form-item>
+                  <a-form-item label="实际评分">
+                    <a-input
+                      :disabled="true"
                       v-decorator="[
-                        'category',
+                        'Actualscore',
                         {
-                          initialValue: filedetails.categoryId+'',
+                          initialValue:Actualscore,
                           rules: []
                         }
                       ]"
-                    >
-                      <a-select-option v-for="d in tcselect" :key="d.id">{{ d.name }}</a-select-option>
-                    </a-select>
+                    />
                   </a-form-item>
                   <a-form-item label="备注">
                     <a-textarea
-                      style="display: flex;height:120px !important;overflow-y:auto;resize: none;"
+                      :disabled="disabled"
+                      style="display: flex;overflow-y:auto;resize: none;"
                       allowClear
                       v-decorator="[
                       'remark',
@@ -416,7 +457,11 @@
                       :autoSize="{ minRows: 3, maxRows: 3 }"
                     />
                   </a-form-item>
-                  <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
+                  <a-form-item
+                    :wrapper-col="{ span: 12, offset: 5 }"
+                    v-if="!disabled"
+                    style="text-align:center"
+                  >
                     <a-button type="primary" html-type="submit">保存</a-button>
                   </a-form-item>
                 </a-form>
@@ -426,10 +471,10 @@
         </div>
 
         <template slot="footer">
-          <a-button type>上一个</a-button>
-          <a-button type>下一个</a-button>
+          <a-button type @click="previous">上一个</a-button>
+          <a-button type @click="next">下一个</a-button>
           <a-button type @click="filedownload">下载</a-button>
-          <a-button type>删除</a-button>
+          <a-button type @click="moduleDlt">删除</a-button>
         </template>
       </a-modal>
     </div>
@@ -467,6 +512,10 @@ export default class AvData extends Vue {
     "Sizes",
     "Total",
   ]
+  private options = []
+  private Total = 0
+  private fileId = ""
+  private Actualscore = 0
   private playerOptions = {
     playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
     autoplay: false, //如果true,浏览器准备好时开始回放。
@@ -512,7 +561,7 @@ export default class AvData extends Vue {
     moment("2012-06-06", "YYYY-MM-DD"),
     moment("2020-06-06", "YYYY-MM-DD"),
   ]
-  private filedetails = []
+  private filedetails = {}
   private myDate = []
   private selectdata = []
   private selectedRowKeys = []
@@ -524,7 +573,9 @@ export default class AvData extends Vue {
   private taggingselect2 = []
   private labelType = ""
   private taggingmsg = []
-  private flieCode = ""
+  private fileCode = ""
+  private disabled = false
+  private Tablesubscript = []
   private created() {
     this.form = this.$form.createForm(this)
     this.form1 = this.$form.createForm(this)
@@ -575,23 +626,13 @@ export default class AvData extends Vue {
       // console.log(res.data)
       this.tcselect = res.data
     })
-    // // 标注下拉数据1
-    // this.DataM.taggingselect1().then((res) => {
-    //   console.log(res.data)
-    //   this.taggingselect1 = res.data
-    // })
-    // // 标注下拉数据2
-    // this.DataM.taggingselect2(300).then((res) => {
-    //   console.log(res.data)
-    //   this.taggingselect2 = res.data
-    // })
     this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
       this.myDate = res.data.myDate
       // todo 请求默认时间
-      // this.defaultdate = [
-      //   moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
-      //   moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
-      // ]
+      this.defaultdate = [
+        moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
+        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
+      ]
       let obj = {
         page: 1,
         limit: 15,
@@ -608,12 +649,18 @@ export default class AvData extends Vue {
       this.gettabledata(obj)
     })
   }
-  private gettabledata(obj: any) {
+  private gettabledata(obj): void {
     this.loading = true
     this.DataM.gettabledata(obj, true).then((res: any) => {
+      console.log(res)
       this.page.totalResult = parseInt(res.count)
       this.tabledata = res.data
       this.loading = false
+      this.Tablesubscript = []
+      // 保存当前表格的所有code
+      res.data.map((item) => {
+        this.Tablesubscript.push(item.id)
+      })
     })
   }
 
@@ -622,32 +669,31 @@ export default class AvData extends Vue {
     this.defaultdate = []
   }
   private popup(e: { preventDefault: () => void }) {
-    this.getdata()
     e.preventDefault()
   }
   private tablebtn(row: any) {
     this.visible = true
-    this.flieCode = row.code
+    this.fileCode = row.code
+    this.fileId = row.id
     this.activeKey = "1"
     this.form2.resetFields()
     this.form1.resetFields()
-    console.log(row)
     // 弹窗文件信息
     this.DataM.getfiledetails(row.id).then((res) => {
+      console.log(typeof res.data)
       this.filedetails = res.data
-      // this.playerOptions['sources'][0]['src'] = res.data.httpPath;
+      // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
     })
   }
   private tabchange(activeKey) {
     console.log(activeKey)
     if (activeKey == 3) {
       // 标注信息
-      this.DataM.getfiletagging(this.flieCode).then((res) => {
+      this.DataM.getfiletagging(this.fileCode).then((res) => {
         console.log(res.data)
-        this.labelType = res.data.labelType
         if (res.data) {
+          this.labelType = res.data.labelType
           this.taggingmsg = res.data
-
           // 标注下拉数据1
           this.DataM.taggingselect1().then((res) => {
             console.log(res.data)
@@ -669,21 +715,53 @@ export default class AvData extends Vue {
                 remark: res.data.remark,
               })
             })
-          },500);
+          })
         }
       })
     } else if (activeKey == 4) {
-      this.DataM.evaluate(this.flieCode).then((res) => {
+      this.DataM.evaluate(this.fileCode).then((res) => {
         console.log(res)
         if (res.data) {
+          this.Total = res.data.total
+          this.disabled = true
           console.log(res.data)
+          this.options = res.data.items
+          let arr = res.data.items
+          let newarr = []
+          arr.map((item) => {
+            newarr.push(item.code)
+          })
+          this.$nextTick(() => {
+            this.form3.setFieldsValue({
+              Scoring: newarr,
+              Actualscore: res.data.score,
+              remark: res.data.remark,
+              Total: res.data.total,
+            })
+          })
           console.log("这是已经评价过的")
         } else {
-          console.log("未评价")
+          console.log("尚未评价")
+          this.disabled = false
           this.DataM.lawarchives().then((res) => {
             console.log(res)
+            this.$nextTick(() => {
+              this.form3.setFieldsValue({
+                Scoring: [],
+                remark: "",
+              })
+            })
+            this.Total = res.data.total
+            this.options = res.data.list
           })
         }
+      })
+    } else if (activeKey == 2) {
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.filedetails = res.data
+        console.log(res.data)
+        this.fileCode = res.data.code
+        // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
       })
     }
   }
@@ -694,7 +772,7 @@ export default class AvData extends Vue {
   }
   private biaojiSubmit(e) {
     e.preventDefault()
-    this.form1.validateFields((err: any, val: any) => {
+    this.form.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val)
         let obj = {
@@ -704,7 +782,8 @@ export default class AvData extends Vue {
           marker: val.marker,
         }
         this.DataM.marksave(obj).then((res) => {
-          console.log(res)
+          // console.log(res)
+          this.$message.info(res.msg)
         })
       }
     })
@@ -713,52 +792,95 @@ export default class AvData extends Vue {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(moment(val.gatheringTime).format('YYYY-MM-DD HH:mm:ss'))
-        console.log(this.flieCode)
+        console.log(moment(val.gatheringTime).format("YYYY-MM-DD HH:mm:ss"))
+        console.log(this.fileCode)
         let obj = {
-          fileCode: this.flieCode,
+          fileCode: this.fileCode,
           gatheringPlace: val.gatheringPlace,
-          gatheringTime: moment(val.gatheringTime).format('YYYY-MM-DD HH:mm:ss'),
+          gatheringTime: moment(val.gatheringTime).format(
+            "YYYY-MM-DD HH:mm:ss"
+          ),
           labelSubclass: val.labelSubclass,
           labelType: val.labelType,
           plateNumber: val.labelType,
           remark: val.remark,
         }
         this.DataM.taggingsave(obj).then((res) => {
-          if(res.code == 0){
+          if (res.code == 0) {
             this.$message.success(res.msg)
           }
         })
       }
     })
   }
+  public sum = 0
+  private checkboxChange(e, val) {
+    console.log(e.target.checked)
+    if (e.target.checked) {
+      this.sum += val
+    } else {
+      this.sum -= val
+    }
+    this.Actualscore = this.Total - this.sum
+  }
   private pingjiaSubmit(e) {
     e.preventDefault()
     this.form3.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(this.fileCode)
         console.log(val)
-        console.log(this.flieCode)
-        // let obj = {
-        //   fileCode: "826bceceda35bd08c358e7209c720d2f",
-        //   gatheringPlace: "ewsqar",
-        //   gatheringTime: "2020-08-21 00:00:00",
-        //   labelSubclass: "30002",
-        //   labelType: "300",
-        //   plateNumber: "54545",
-        //   remark: "asdasdasd",
-        // }
-        // this.DataM.marksave(obj).then((res) => {
-        //   console.log(res)
-        // })
+        let arr = val.Scoring
+        let newarr = []
+        arr.map((item) => {
+          newarr.push(
+            this.options.filter((el) => {
+              return el.jfbh == item
+            })
+          )
+        })
+        let items = []
+        newarr.map((item) => {
+          let obj = {
+            code: item[0].jfbh,
+            score: item[0].jffz + "",
+            name: item[0].jfmc,
+          }
+          items.push(obj)
+        })
+        let obj = {
+          fileCode: this.fileCode,
+          items: items,
+          logType: "1",
+          score: val.Actualscore,
+          total: val.Total,
+          remark: val.remark,
+        }
+        this.DataM.pfsave(obj).then((res) => {
+          console.log(res)
+          if (res.code == 0) {
+            this.disabled = true
+            this.$message.success(res.msg)
+            this.sum = 0
+            this.DataM.evaluate(this.fileCode).then((res) => {
+              if (res.data) {
+                this.Total = res.data.total
+                console.log(res.data)
+                this.options = res.data.items
+              }
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       }
     })
   }
-  private labelTypeChange(value){
+  private labelTypeChange(value) {
     this.DataM.taggingselect2(value).then((res) => {
       console.log(res.data)
       this.taggingselect2 = res.data
       this.form2.setFieldsValue({
-        labelSubclass:undefined
+        labelSubclass: undefined,
       })
     })
   }
@@ -842,6 +964,79 @@ export default class AvData extends Vue {
     alert("当前下载" + this.filedetails.downloadPath)
     console.log(this.filedetails.downloadPath)
   }
+  private tccancel() {
+    this.activeKey = "1"
+    this.form.resetFields()
+    this.form2.resetFields()
+    this.form3.resetFields()
+  }
+  private previous() {
+    console.log(this.Tablesubscript)
+    console.log(this.fileId)
+    let index = this.arrSelect(this.Tablesubscript, this.fileId)
+    if (index == 0) {
+      this.$message.info("已经是第一个了")
+    } else {
+      this.fileId = this.Tablesubscript[index - 1]
+      console.log(this.fileId)
+      // 修改弹窗文件信息
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.filedetails = res.data
+        console.log(res.data)
+        this.fileCode = res.data.code
+        this.activeKey = "1"
+        // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
+      })
+    }
+  }
+  private next() {
+    let index = this.arrSelect(this.Tablesubscript, this.fileId)
+    if (index == this.Tablesubscript.length - 1) {
+      this.$message.info("已经是当前页面最后一个")
+    } else {
+      this.fileId = this.Tablesubscript[index + 1]
+      console.log(this.fileId)
+      // 修改弹窗文件信息
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.filedetails = res.data
+        console.log(res.data)
+        this.fileCode = res.data.code
+        this.activeKey = "1"
+        // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
+      })
+    }
+  }
+  private arrSelect(arr, val) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] == val + "") return i
+    }
+    return -1
+  }
+  private moduleDlt() {
+    console.log(this.fileId)
+    this.DataM.bumendlt([this.fileId]).then((res) => {
+      if (res.code == 0) {
+        this.$message.success(res.msg)
+        let obj = {
+          page: 1,
+          limit: 15,
+          deptCode_equal: this.formdata.department, //部门id
+          userName: this.formdata.user, //警员
+          timeType: this.formdata.TimeData, //时间类型
+          timeRange: this.myDate,
+          fileType_equal: this.formdata.Filetype,
+          fileLevel_equal: this.formdata.levelData,
+          uploadDate_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+          uploadDate_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+          recordDate_gt: "",
+        }
+        this.gettabledata(obj)
+        this.visible = false
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
+  }
 }
 </script>
 
@@ -862,7 +1057,7 @@ export default class AvData extends Vue {
     cursor: pointer;
     outline: none;
     color: #fff;
-    width: 58px;
+    // width: 58px;
     height: 30px;
   }
   > div > button:nth-of-type(1) {
@@ -977,8 +1172,10 @@ export default class AvData extends Vue {
     color: #7f8893;
   }
 }
-.vjs-custom-skin > .video-js {
-  height: 423px;
+.AvData {
+  .vjs-custom-skin > .video-js {
+    height: 423px;
+  }
 }
 .biaozhu {
   .ant-calendar-picker {
