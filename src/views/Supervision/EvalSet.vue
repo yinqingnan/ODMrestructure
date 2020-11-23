@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { LimitInputlength } from "@/InterfaceVariable/variable"
 
 @Component({
   components: {},

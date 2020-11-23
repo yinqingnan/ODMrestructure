@@ -125,9 +125,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
 import {
+  layouts,
   LimitInputlength,
   textarealength,
-} from "../../InterfaceVariable/variable"
+  page,
+} from "@/InterfaceVariable/variable"
 import moment from "moment"
 @Component({
   components: {},
@@ -139,24 +141,11 @@ export default class Repairrecord extends Vue {
   public DeviceM = new this.$api.configInterface.DeviceM()
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private departmentData = []
   private tableData = []
   private Date = []
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private tableColumn = [
     { width: 60, fixed: null, title: "序号", align: "center", type: "seq" },
     { field: "reportUserCode", title: "报修人" },
@@ -235,7 +224,6 @@ export default class Repairrecord extends Vue {
     })
   }
   private tableRowClassName(record: any, index: number) {
-     
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private reset() {

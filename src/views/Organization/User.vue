@@ -379,9 +379,11 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 import QRCode from "qrcode"
 import {
+  layouts,
   LimitInputlength,
+  page,
   textarealength,
-} from "../../InterfaceVariable/variable"
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
@@ -402,25 +404,12 @@ export default class User extends Vue {
   private maxTagTextLength = 2
   private visible = false
   private str = ""
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page =page
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private tableData = []
   private departmentData = []
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts =layouts
   private QRshow = false
   private deptCode = ""
   private name = ""

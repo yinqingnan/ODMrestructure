@@ -1,5 +1,6 @@
 import { Interceptors } from '../interceptors';
-import { message } from 'ant-design-vue';   // 弹吐司
+import { message, Modal } from 'ant-design-vue';   // 弹吐司
+import router from '../../router/index'
 
 /**
   *@param param 参数
@@ -107,10 +108,31 @@ export class Dictionary {
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
     // if (res.code === 0) {
-    resolve(res);
+    // resolve(res);
     // } else {
     //   this.errorHandle(res);
     // }
+    if (res.code == 1002) {
+              Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            localStorage.removeItem("activeKey")
+            localStorage.removeItem("Tabslist")
+            localStorage.removeItem("token");
+            router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    } else {
+      resolve(res);
+    }
   }
   /**
  * 服务端状态处理,例如中断性异常,退出异常等等(与拦截器http握手状态注意区分,一般都能分清楚吧)

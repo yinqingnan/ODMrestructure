@@ -177,9 +177,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import {
+  layouts,
   LimitInputlength,
+  page,
   textarealength,
-} from "../../InterfaceVariable/variable"
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
@@ -191,11 +193,7 @@ export default class Role extends Vue {
   public str = ""
   public visible = false
   public OrganizationM = new this.$api.configInterface.OrganizationM()
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private options = []
   private selectarr = []
   private configshow = false
@@ -206,16 +204,7 @@ export default class Role extends Vue {
   private textarealength = textarealength
   private tableData = []
   private departmentData = []
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts =layouts
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`

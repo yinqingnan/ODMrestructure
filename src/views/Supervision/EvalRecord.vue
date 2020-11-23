@@ -115,9 +115,9 @@
               :key="index"
               v-bind="config"
             />
-            <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
+            <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
               <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column>
+            </vxe-table-column> -->
             <vxe-table-column field="score" title="考评结果" align="center" show-overflow>
               <template v-slot="{ row }">
                 <span :style="{'color': (textcolor==true ? 'green':'#ff0000')}">{{score(row)}}</span>
@@ -228,7 +228,7 @@
                       <a-select-option v-for="d in tcselect" :key="d.id">{{ d.name }}</a-select-option>
                     </a-select>
                   </a-form-item>
-                  <a-form-item label="备注">
+                  <a-form-item label="标记描述">
                     <a-textarea
                       :disabled="disabled"
                       style="display: flex;height:120px !important;overflow-y:auto;resize: none;"
@@ -401,7 +401,7 @@
                       ]"
                     />
                   </a-form-item>
-                  <a-form-item label="备注">
+                  <a-form-item label="评分说明">
                     <a-textarea
                       :disabled="disabled"
                       style="display: flex;overflow-y:auto;resize: none;"
@@ -441,7 +441,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
+
 import moment from "moment"
 @Component({
   components: {},
@@ -457,11 +458,7 @@ export default class EvalRecord extends Vue {
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private defaultdate = [moment("2010-10-20"), moment("2020-10-20")]
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private textcolor = false
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
@@ -472,16 +469,7 @@ export default class EvalRecord extends Vue {
     { field: "fileType_Name", title: "文件类型" },
     { field: "recordDate", title: "摄录时间" },
   ]
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private tableData = []
   private formdata = {}
   private Evaluationlist = [
@@ -552,10 +540,10 @@ export default class EvalRecord extends Vue {
     this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
       console.log(res.data.myDate)
       this.myDate = res.data.myDate
-      // this.defaultdate = [
-      //   moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
-      //   moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
-      // ]
+      this.defaultdate = [
+        moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
+        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
+      ]
       this.gettabledata({
         page: 1,
         limit: 15,
@@ -567,7 +555,6 @@ export default class EvalRecord extends Vue {
       })
       // 标记下拉数据
       this.DataM.getfileselect().then((res) => {
-        // console.log(res.data)
         this.tcselect = res.data
       })
     })
@@ -578,7 +565,7 @@ export default class EvalRecord extends Vue {
   private onChange(date: any, dateString: any): void {
     this.selectdata = dateString
   }
-  private handleSubmit(e) {
+  private handleSubmit(e: MouseEvent) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       this.formdata = val

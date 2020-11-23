@@ -162,7 +162,10 @@
 
 
 <script lang="ts">
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import {
+  LimitInputlength,
+  page,layouts
+} from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 @Component({
@@ -176,22 +179,9 @@ export default class Simpleprogram extends Vue {
   private departmentData = []
   private Height = ""
   private tableData = []
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private loading = false
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private defaultdate = [
     moment("2015-06-06", "YYYY-MM-DD"),
     moment("2015-06-06", "YYYY-MM-DD"),

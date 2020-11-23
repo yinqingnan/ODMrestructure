@@ -221,7 +221,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { layouts, LimitInputlength, page } from "@/InterfaceVariable/variable"
 import axios from "axios"
 import { http } from "../../api/interceptors"
 
@@ -251,22 +251,9 @@ export default class Upgrade extends Vue {
     authorization: "authorization-text",
   }
 
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private visible = false
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private filename = ""
   private fileList = []
   private id = ""

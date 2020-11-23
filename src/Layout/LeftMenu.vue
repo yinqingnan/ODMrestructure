@@ -63,7 +63,6 @@ export default class LeftMenu extends Vue {
   private theme = "dark"
   private rootSubmenuKeys = ["sub1", "sub2", "sub4"]
   private mounted() {
-    console.log(this.$route.name)
     let name = this.$route.name
     this.openKeys = [this.findIndexArray(this.data, name, [])[0]]
   }
@@ -105,8 +104,7 @@ export default class LeftMenu extends Vue {
   // @Watch("$route")
   // routechange(to: any, from: any) {
   //   //参数不相等
-  //   console.log(123)
-  //   this.defaultSelectedKeys = [to.name]
+  //   this.openKeys = [to.name]
   // }
 }
 </script>

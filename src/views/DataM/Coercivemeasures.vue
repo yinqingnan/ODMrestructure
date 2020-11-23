@@ -159,7 +159,8 @@
 
 
 <script lang="ts">
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { LimitInputlength,page } from "@/InterfaceVariable/variable"
+
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 
@@ -173,11 +174,7 @@ export default class Coercivemeasures extends Vue {
   private Height = ""
   private tableData = [{ active: "roe" }]
   private formdata = {}
-  private page = {
-    currentPage: 1,
-    pageSize: 10,
-    totalResult: 200,
-  }
+  private page =page
   private defaultdate = [
     moment("2015-06-06", "YYYY-MM-DD"),
     moment("2015-06-06", "YYYY-MM-DD"),

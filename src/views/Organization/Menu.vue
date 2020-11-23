@@ -348,7 +348,7 @@ import {
   textarealength,
   page,
   layouts,
-} from "../../InterfaceVariable/variable"
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })

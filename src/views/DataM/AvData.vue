@@ -256,7 +256,7 @@
                       <a-select-option v-for="d in tcselect" :key="d.id">{{ d.name }}</a-select-option>
                     </a-select>
                   </a-form-item>
-                  <a-form-item label="备注">
+                  <a-form-item label="标记描述">
                     <a-textarea
                       style="display: flex;height:120px !important;overflow-y:auto;resize: none;"
                       allowClear
@@ -442,7 +442,7 @@
                       ]"
                     />
                   </a-form-item>
-                  <a-form-item label="备注">
+                  <a-form-item label="评分说明">
                     <a-textarea
                       :disabled="disabled"
                       style="display: flex;overflow-y:auto;resize: none;"
@@ -481,7 +481,8 @@
   </div>
 </template>
 <script lang="ts">
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
+
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 @Component({})
@@ -494,28 +495,15 @@ export default class AvData extends Vue {
   public form2!: any
   public form3!: any
   private departmentData = []
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private activeKey = "1"
   private tcselect = []
   private visible = false
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts =layouts
   private options = []
   private Total = 0
   private fileId = ""
-  private Actualscore = 0
+  private Actualscore = 100
   private playerOptions = {
     playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
     autoplay: false, //如果true,浏览器准备好时开始回放。

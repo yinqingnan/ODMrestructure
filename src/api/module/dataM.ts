@@ -380,7 +380,8 @@ export class DataM {
     // }
     if (res.code == 1002) {
       Modal.confirm({
-        content: 'destroy all',
+        title: '提示',
+        content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
@@ -391,8 +392,9 @@ export class DataM {
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
-        cancelText: 'Click to destroy all',
-    
+        onCancel() {
+          Modal.destroyAll();
+        },
       });
     } else {
       resolve(res);

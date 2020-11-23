@@ -466,8 +466,8 @@
 import { Component, Vue } from "vue-property-decorator"
 import {
   LimitInputlength,
-  textarealength,
-} from "../../InterfaceVariable/variable"
+  textarealength,page,layouts
+} from "@/InterfaceVariable/variable"
 import moment from "moment"
 @Component({
   components: {},
@@ -483,11 +483,7 @@ export default class Matche extends Vue {
   private textarealength = textarealength
   private state = ""
   private Title = ""
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private repairshow = false
   private namelist = []
   private departmentData = []
@@ -503,16 +499,7 @@ export default class Matche extends Vue {
     { field: "purchasingDate", title: "购买日期" },
     { field: "warrantyDate", title: "保修日期" },
   ]
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private bindingstatus = [
     { id: "0", value: "all", title: "全部" },
     { id: "1", value: "1", title: "已绑定" },

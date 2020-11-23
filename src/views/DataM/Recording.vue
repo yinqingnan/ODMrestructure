@@ -135,7 +135,8 @@
 import {
   LimitInputlength,
   textarealength,
-} from "../../InterfaceVariable/variable"
+  page
+} from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 @Component({})
 export default class Recording extends Vue {
@@ -148,11 +149,7 @@ export default class Recording extends Vue {
   private tableData = []
   public form!: any
   private visible = false
-  private page = {
-    currentPage: 1,
-    pageSize: 10,
-    totalResult: 200,
-  }
+  private page = page
   private storageTime = [
     { id: 1, value: "0", title: "永久保存" },
     { id: 1, value: "30", title: "30" },

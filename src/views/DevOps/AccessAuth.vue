@@ -271,7 +271,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
@@ -283,16 +283,7 @@ export default class AccessAuth extends Vue {
   public DataM = new this.$api.configInterface.DataM()
   public Luckmanagement = new this.$api.configInterface.Luckmanagement()
   private LimitInputlength = LimitInputlength
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private statuslist = [
     { id: "0", value: "1", title: "启用" },
     { id: "1", value: "0", title: "禁用" },
@@ -308,11 +299,7 @@ export default class AccessAuth extends Vue {
   private tableData = []
   private visible = false //子平台接入框
   private collection = false //采集站接入框
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private caijizhanid = ""
   private zipingtaiid = ""
   // todo 生命周期

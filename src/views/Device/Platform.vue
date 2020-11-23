@@ -144,8 +144,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 import {
   LimitInputlength,
-  textarealength,
-} from "../../InterfaceVariable/variable"
+  textarealength,layouts,page
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
@@ -157,23 +157,10 @@ export default class Platform extends Vue {
   public DeviceM = new this.$api.configInterface.DeviceM()
   public LimitInputlength = LimitInputlength
   public textarealength = textarealength
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private tableData = []
   private departmentData = []
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
+  private layouts = layouts
   private list = [
     { id: "0", value: "all", title: "全部" },
     { id: "1", value: "1", title: "在线" },

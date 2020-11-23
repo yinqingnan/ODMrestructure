@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
-import { LimitInputlength } from "../../InterfaceVariable/variable"
+import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
 @Component({})
 export default class Lawarchives extends Vue {
   //

@@ -167,8 +167,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 import {
   LimitInputlength,
-  textarealength,
-} from "../../InterfaceVariable/variable"
+  textarealength,page,layouts
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
@@ -186,23 +186,9 @@ export default class Stations extends Vue {
     { id: "2", value: "0", title: "离线" },
   ]
   private tableData = []
-  private page = {
-    currentPage: 1, //当前页数
-    pageSize: 15, //每页多少条
-    totalResult: 200, //总数
-  }
+  private page = page
   private departmentData = []
-  private layouts = [
-    "PrevJump",
-    "PrevPage",
-    "Jump",
-    "PageCount",
-    "NextPage",
-    "NextJump",
-    "Sizes",
-    "Total",
-  ]
-
+  private layouts =layouts
   // todo 生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`

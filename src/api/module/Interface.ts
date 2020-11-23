@@ -1,5 +1,14 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-17 11:08:45
+ * @LastEditTime: 2020-11-20 20:46:45
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \ODMrestructure\src\api\module\Interface.ts
+ */
 import { Interceptors } from '../interceptors';
-import { message } from 'ant-design-vue';   // 弹吐司
+import { message, Modal } from 'ant-design-vue';   // 弹吐司
+import router from '../../router/index'
 
 /**
   *@param param 参数
