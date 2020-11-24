@@ -1,6 +1,7 @@
 import { Interceptors } from '../interceptors';
 import { message, Modal } from 'ant-design-vue';   // 弹吐司
 import router from '../../router/index'
+import qs from  'qs'
 /**
   *@param param 参数
   *@param jwt   是否token校验
@@ -347,19 +348,99 @@ export class DataM {
     });
   }
 
+  //todo  查看案件详情 
+  private CaseDetails(params: object, jwt = true) {
+    const url = "/api/tpb/lawarchives/case/info";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
+  //todo 案件关联信息 /api/tpb/lawarchives/match/files/
+  private MatchFiles(params: object, jwt = true) {
+    const url = "/api/tpb/lawarchives/match/files/" + params;
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        // params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo是否可以查看其他部门信息接口  
+  private roledataright(params: object, jwt = true) {
+    const url = "/api/uauth/base/role/data/right";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        // params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+  // todo 关联文件table查询 
+  private Associatedfiles(params: object, jwt = true) {
+    const url = "/api/file/filedata/file/caseList";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params:params,
+        headers: {
+          isJwt: jwt,
+          'Accept-Language': 'zh-CN,zh;q=0.9'
+        },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
-
-
-
-
-
-
-
-
-
-
-
+// todo 关联案件 
+public saveRelate(params: object, jwt = true) {
+  const url = "/api/tpb/lawarchives/match/saveRelate";
+  const body = params
+  return new Promise((resolve, reject) => {
+    this.axios.post(url, body, {
+      headers: { isJwt: jwt },
+    }).then((res: any) => {
+      this.resultHandle(res, resolve);
+    }).catch((err: { message: any }) => {
+      reject(err.message);
+    });
+  });
+}
+// todo 删除关联 
+public deleteRelate(params: object, jwt = true) {
+  const url = "/api/tpb/lawarchives/match/deleteRelate";
+  const body = params
+  return new Promise((resolve, reject) => {
+    this.axios.post(url, body, {
+      headers: { isJwt: jwt },
+    }).then((res: any) => {
+      this.resultHandle(res, resolve);
+    }).catch((err: { message: any }) => {
+      reject(err.message);
+    });
+  });
+}
 
 
 
@@ -378,7 +459,7 @@ export class DataM {
     // } else {
     //   this.errorHandle(res);
     // }
-    if (res.code == 1002) {
+    if (res.code == 1002 || res.code == 1004) {
       Modal.confirm({
         title: '提示',
         content: res.msg,
@@ -386,9 +467,10 @@ export class DataM {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            // localStorage.removeItem("activeKey")
+            // localStorage.removeItem("Tabslist")
+            // localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },

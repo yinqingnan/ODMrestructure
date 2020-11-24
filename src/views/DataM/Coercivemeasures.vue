@@ -137,7 +137,7 @@
             <vxe-table-column field="relatedInfo" title="关联信息" align="center" />
             <vxe-table-column field="active" title="操作" align="center">
               <template v-slot="{ row }">
-                <vxe-button type="text" @click="tablebtn(row)">查看</vxe-button>
+                <vxe-button type="text" @click="tablebtn(row)" style="color:#0db8df">查看</vxe-button>
               </template>
             </vxe-table-column>
           </vxe-table>

@@ -56,7 +56,7 @@ const routes: Array<RouteConfig> = [
           },
           {
             path: "lawarchives",
-            name: "config",
+            name: "lawarchives",
             component: () => import('@/views/DataM/Lawarchives.vue')
           },
           {
@@ -111,8 +111,8 @@ const routes: Array<RouteConfig> = [
             component: () => import('@/views/Device/Storage.vue')
           },
           {
-            path: "Repairrecord",
-            name: "Repairrecord",
+            path: "matcheRepair",
+            name: "matcheRepair",
             component: () => import('@/views/Device/Repairrecord.vue')
           },
           {
@@ -168,18 +168,18 @@ const routes: Array<RouteConfig> = [
             component: () => import('@/views/Organization/Right.vue')
           },
           {
-            path: "Announcement",
-            name: "Announcement",
+            path: "notice",
+            name: "notice",
             component: () => import('@/views/systemM/Announcement.vue')
           },
           {
-            path: "Authorization",
-            name: "Authorization",
+            path: "authInfo",
+            name: "authInfo",
             component: () => import('@/views/systemM/Authorization.vue')
           },
           {
-            path: "Dictionary",
-            name: "Dictionary",
+            path: "dict",
+            name: "dict",
             component: () => import('@/views/systemM/Dictionary.vue')
           },
           {

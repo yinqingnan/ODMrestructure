@@ -112,7 +112,6 @@ export default class Header extends Vue {
   }
   private modify() {
     this.visible = true;
-
     this.Login.usermsg({}, true).then((res: any) => {
       this.$nextTick(() => {
         this.form.setFieldsValue({
@@ -130,9 +129,10 @@ export default class Header extends Vue {
         okText: "确认",
         cancelText: "取消",
         onOk() {
-          localStorage.removeItem("activeKey")
-          localStorage.removeItem("Tabslist")
-          localStorage.removeItem("token");
+          // localStorage.removeItem("activeKey")
+          // localStorage.removeItem("Tabslist")
+          // localStorage.removeItem("token");
+          localStorage.clear()
           that.$router.push({ name: "Login" });
         },
         class: "test"
@@ -185,9 +185,10 @@ export default class Header extends Vue {
   private getusermsg() {
     this.Login.usermsg({}, true).then((res: any) => {
       this.username = res.data.name;
-      // console.log(res.data);
+      console.log(res.data);
       localStorage.setItem("username", res.data.name);
       localStorage.setItem("department", res.data.deptName);
+      localStorage.setItem("deptCode",res.data.deptCode)
     });
   }
   private getNotice(){

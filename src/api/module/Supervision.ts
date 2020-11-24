@@ -111,7 +111,7 @@ export class Supervision {
     // } else {
     //   this.errorHandle(res);
     // }
-    if (res.code == 1002) {
+     if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
         content: res.msg,

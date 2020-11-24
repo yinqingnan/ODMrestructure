@@ -14,38 +14,7 @@ export class Luckmanagement {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  // todo post
-  // public collectionDlt(params: object, jwt= true) {
-  //   const url = "/api/mdm/device/stations/delete";
-  //   const body = params
-  //   return new Promise((resolve, reject) => {
-  //     this.axios.post(url, body, {
-  //       headers: { isJwt: jwt },
-  //     }).then((res: any) => {
-  //       this.resultHandle(res, resolve);
-  //     }).catch((err: { message: any }) => {
-  //       reject(err.message);
-  //     });
-  //   });
-  // }
-  // todo get
-  // public gettabledata(params: object, jwt=true) {
-  //   const url = "/api/mdm/device/matche/list";
-  //   return new Promise((resolve, reject) => {
-  //     this.axios.get(url, {
-  //       params: params,
-  //       headers: { isJwt: jwt },
-  //     }).then((res: any) => {
-  //       // console.log(res)
-  //       this.resultHandle(res, resolve);
-  //     }).catch((err: { message: any }) => {
-  //       reject(err.message);
-  //     });
-  //   });
-  // }
-
   // todo 接入管理table
-
   public getIncomingtabledata(params: object, jwt = true) {
     const url = "/api/pconfig/system/authorization/list";
     return new Promise((resolve, reject) => {
@@ -204,7 +173,7 @@ export class Luckmanagement {
     // } else {
     //   this.errorHandle(res);
     // }
-    if (res.code == 1002) {
+     if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
         content: res.msg,
@@ -212,9 +181,10 @@ export class Luckmanagement {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            // localStorage.removeItem("activeKey")
+            // localStorage.removeItem("Tabslist")
+            // localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },

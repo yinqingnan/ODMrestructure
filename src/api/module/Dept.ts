@@ -114,7 +114,7 @@ export class Dept {
     // } else {
     //   this.errorHandle(res);
     // }
-    if (res.code == 1002) {
+     if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
         content: res.msg,
@@ -122,9 +122,10 @@ export class Dept {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            // localStorage.removeItem("activeKey")
+            // localStorage.removeItem("Tabslist")
+            // localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },

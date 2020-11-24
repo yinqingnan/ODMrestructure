@@ -27,14 +27,14 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 const Tabs = namespace("Tabs");
 @Component({
-      components: {}
+  components: {}
 })
 export default class Index extends Vue {
   @Prop() menuInfo: any;
   @Tabs.Mutation("menuadd")
   menuadd!: (val: any) => {};
   private btn(item: any) {
-        this.menuadd(item);
+    this.menuadd(item);
   }
 }
 </script>

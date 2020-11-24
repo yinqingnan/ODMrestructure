@@ -147,7 +147,7 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row class="gzms">
+          <a-row >
             <a-col :span="24">
               <a-form-item label="角色描述" class="textareatext" :span="4">
                 <a-checkbox-group

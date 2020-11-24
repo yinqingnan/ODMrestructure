@@ -123,8 +123,8 @@
             </a-dropdown>
           </template>
           <div style="line-height:1">
-            <button @click="dlt" style="line-height:1">批量删除</button>
-            <button @click="download" style="line-height:1">批量下载</button>
+            <a-button type="primary" @click="dlt" style="line-height:1">批量删除</a-button>
+            <a-button type="primary" @click="download" style="line-height:1">批量下载</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -481,7 +481,7 @@
   </div>
 </template>
 <script lang="ts">
-import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
 
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
@@ -499,7 +499,7 @@ export default class AvData extends Vue {
   private activeKey = "1"
   private tcselect = []
   private visible = false
-  private layouts =layouts
+  private layouts = layouts
   private options = []
   private Total = 0
   private fileId = ""
@@ -549,14 +549,33 @@ export default class AvData extends Vue {
     moment("2012-06-06", "YYYY-MM-DD"),
     moment("2020-06-06", "YYYY-MM-DD"),
   ]
-  private filedetails = {}
+  private filedetails = {
+    fileName: "",
+    deptName: "",
+    deptCode: "",
+    userCode: "",
+    recordDate: "",
+    uploadDate: "",
+    fileSize_Name: "",
+    storageLocation_Name: "",
+    storageDays: "",
+    downloadPath: "",
+    id:""
+  }
   private myDate = []
   private selectdata = []
   private selectedRowKeys = []
   private loading = false
   private Height = ""
   private tabledata = []
-  private formdata = {}
+  private formdata = {
+    department: "",
+    user: "",
+    TimeData: "",
+    Filetype: "",
+    levelData: "",
+    date: [],
+  }
   private taggingselect1 = []
   private taggingselect2 = []
   private labelType = ""
@@ -925,13 +944,14 @@ export default class AvData extends Vue {
     this.selectedRowKeys = records
     console.log(checked ? "所有勾选事件" : "所有取消事件", records)
   }
-  private tableRowClassName(record: any, index: number) {
-    return record.rowIndex % 2 === 0 ? "bgF5" : ""
-  }
   public selectChangeEvent({ checked, records }) {
     this.selectedRowKeys = records
     console.log(checked ? "勾选事件" : "取消事件", records)
   }
+  private tableRowClassName(record: any, index: number) {
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
+  
   public modify(row) {
     var cases = row.relateCase
     if (cases) {

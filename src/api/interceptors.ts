@@ -1,14 +1,24 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-17 11:08:45
+ * @LastEditTime: 2020-11-24 17:37:40
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ODMrestructure\src\api\interceptors.ts
+ */
 import axios from "axios";
 import { message } from "ant-design-vue";
+import qs from 'qs'
+
 // const http:string = "https://easy-mock.com/mock/5f9c133f0bf9ee03009406f7"
 // export const http = "http://192.168.10.75:9100/"
 // export const http = "http://192.168.10.81:9100/"
-export const http = window.gurl.SERVICE_CONTEXT_PATH
+export const http = ' http://192.168.10.75:8100/'
 export class Interceptors {
   public instance: any
   constructor() {
     // 创建axios实例
-    this.instance = axios.create({ timeout: window.gurl.AXIOS_TIMEOUT, baseURL: http })
+    this.instance = axios.create({ timeout: 10000, baseURL: http })
     // 初始化拦截器
     this.initInterceptors()
   }
@@ -25,7 +35,14 @@ export class Interceptors {
      * 每次请求前，如果存在token则在请求头中携带token
      */
     this.instance.interceptors.request.use(
-      (config: { headers: { isJwt: any; Token: string } }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (config: { headers: { isJwt: any; Token: string }; method: any; paramsSerializer: any}) => {
+        if (config.method == "get") {
+          //如果是get请求，且params是数组类型如arr=[1,2]，则转换成arr=1&arr=2
+          config.paramsSerializer = function (params) {
+            return qs.stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
         // 登录流程控制中，根据本地是否存在token判断用户的登录情况
         // 但是即使token存在，也有可能token是过期的，所以在每次的请求头中携带token
         // 后台根据携带的token判断用户的登录情况，并返回给我们对应的状态码

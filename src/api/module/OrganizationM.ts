@@ -175,6 +175,9 @@ export class OrganizationM {
   // todo 获取生成二维码的数据 /api/uauth/base/user/getQRcode
 
 
+
+  
+
   //todo 角色管理table 
   public getroletable(params: object, jwt = true) {
     const url = "/api/uauth/base/role/list";
@@ -522,7 +525,7 @@ export class OrganizationM {
     // } else {
     //   this.errorHandle(res);
     // }
-    if (res.code == 1002) {
+     if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
         content: res.msg,
@@ -530,9 +533,10 @@ export class OrganizationM {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            // localStorage.removeItem("activeKey")
+            // localStorage.removeItem("Tabslist")
+            // localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },

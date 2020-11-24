@@ -74,10 +74,9 @@ export default class RightContent extends Vue {
       this.$router.push({ name: this.tagList[flag].name })
     }
   }
-  $refs!: { quickEntry: HTMLFormElement }
   private mounted() {
     this.activeKeys = this.activeKey
-    this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px"
+    // this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px"
   }
   @Watch("activeKey")
   getPiedata(newval: string) {
@@ -130,8 +129,11 @@ export default class RightContent extends Vue {
   border-radius: 50%;
   display: inline-block;
 }
-.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x:hover{
-  background: rgba(0,0,0,.3);
+.ant-tabs.ant-tabs-card
+  .ant-tabs-card-bar
+  .ant-tabs-tab
+  .ant-tabs-close-x:hover {
+  background: rgba(0, 0, 0, 0.3);
   color: #fff;
 }
 </style>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-19 15:33:35
+ * @LastEditTime: 2020-11-24 11:34:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\main.ts
@@ -17,6 +17,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+ import '../public/localiconfont/iconfont.css'
 // todo 引入视频播放插件
 import VideoPlayer from 'vue-video-player'
 require('video.js/dist/video-js.css')

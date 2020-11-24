@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-17 11:08:44
+ * @LastEditTime: 2020-11-24 11:19:05
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \ODMrestructure\.eslintrc.js
+ */
 module.exports = {
   root: true,
   env: {
@@ -12,7 +20,7 @@ module.exports = {
     ecmaVersion: 2020
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off', // allow console during development
+    'no-console': process.env.NODE_ENV === 'production' ? 'off' : 'off', // allow console during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off', // allow debugger during development
     // 以下为该项目自定义部分
     'indent': [1, 2], //缩进风格 - 开启缩进6格

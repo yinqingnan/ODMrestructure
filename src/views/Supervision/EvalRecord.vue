@@ -504,7 +504,9 @@ export default class EvalRecord extends Vue {
     },
   }
   private visible = false
-  private filedetails = {}
+  private filedetails = {
+    downloadPath:""
+  }
   private activeKey = "4"
   private fileId = ""
   private fileCode = ""

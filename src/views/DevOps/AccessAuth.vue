@@ -500,7 +500,7 @@ export default class AccessAuth extends Vue {
   // todo 数据请求
   private gettabledata(obj) {
     this.Luckmanagement.getIncomingtabledata(obj).then((res) => {
-      this.tableData = res
+      this.tableData = res.data
       this.page.totalResult = res.length
     })
   }

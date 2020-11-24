@@ -1,6 +1,6 @@
 import { Interceptors } from '../interceptors';
 import { message, Modal } from 'ant-design-vue';   // 弹吐司
-import router from '../../router/index'
+import router from '@/router/index'
 /**
   *@param param 参数
   *@param jwt   是否token校验
@@ -138,7 +138,7 @@ export class Login {
   } 
   // todo 获取菜单 
   public getMenudata(params: object, jwt=true) {
-    const url = "/api/uauth/base/menu/navbak";
+    const url = "/api/uauth/base/menu/nav";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
@@ -162,7 +162,7 @@ export class Login {
     // } else {
     //   this.errorHandle(res);
     // }
-    if (res.code == 1002) {
+     if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
         content: res.msg,
@@ -170,9 +170,10 @@ export class Login {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            // localStorage.removeItem("activeKey")
+            // localStorage.removeItem("Tabslist")
+            // localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
