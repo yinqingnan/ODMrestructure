@@ -123,7 +123,7 @@
             <vxe-table-column type="seq" width="60" title="序号" align="center" />
             <vxe-table-column field="deptName" title="执勤部门" align="center" show-overflow />
             <vxe-table-column field="userName" title="民警姓名" align="center" />
-            <vxe-table-column field="code" title="决定书编号" align="center" show-overflow />
+            <vxe-table-column field="code" title="决定书编号" align="center"  width="130" show-overflow />
             <vxe-table-column field="litigant" title="当事人" align="center" />
             <vxe-table-column field="driverNum" title="驾驶证号" align="center" show-overflow />
             <vxe-table-column field="numberPlate" title="号码号牌" align="center" />
@@ -356,7 +356,7 @@
               </template>
             </vxe-table-column>
           </vxe-table>
-          <p>
+          <!-- <p>
             <vxe-pager
               align="right"
               size="mini"
@@ -366,7 +366,7 @@
               :total="page.totalResult"
               @page-change="Associatedfilestablechange"
             />
-          </p>
+          </p> -->
         </div>
       </a-modal>
 
@@ -478,7 +478,9 @@ export default class Simpleprogram extends Vue {
   private deptCode = localStorage.getItem("deptCode")
   private MatchFiles = []
   private WithID = []
-  private defaultone = []
+  private defaultone = {
+    fileName:""
+  }
   private Associatedfilestabledata = []
   private calculationdate = [
     moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -522,6 +524,7 @@ export default class Simpleprogram extends Vue {
   }
   private reset() {
     this.form.resetFields()
+    this.form1.resetFields()
   }
   private onChange(date: any, dateString: any): void {
     this.selectdata = dateString
@@ -591,10 +594,10 @@ export default class Simpleprogram extends Vue {
     })
     this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
       this.myDate = res.data.myDate
-      // this.defaultdate = [
-      //   moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
-      //   moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
-      // ]
+      this.defaultdate = [
+        moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
+        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
+      ]
     })
   }
   private gettabledata(obj: any) {
@@ -649,8 +652,6 @@ export default class Simpleprogram extends Vue {
     this.visible = false
     this.visible2 = true
     this.deptCode = localStorage.getItem("deptCode")
-    // console.log(moment(moment(this.CaseDetails.illegalTime)).subtract(3, "days").format("YYYY-MM-DD HH:mm:ss")) //违法时间减去3天
-    // console.log(moment(moment(this.CaseDetails.illegalTime).add(3, 'd')).format("YYYY-MM-DD HH:mm:ss"))  // 违法时间加3天
     this.WithID = []
     this.MatchFiles.map((item) => {
       this.WithID.push(item.id) //保存当前已有的id
@@ -708,6 +709,8 @@ export default class Simpleprogram extends Vue {
   }
   private Filedetails() {
     this.num = 0
+     this.gettabledata({})
+     this.reset()
   }
   private Filedetails2() {
     this.visible = true
@@ -718,9 +721,9 @@ export default class Simpleprogram extends Vue {
   private pause() {
     console.log("pause click")
   }
-  private Associatedfilestablechange({ currentPage, pageSize }) {
-    console.log(currentPage, pageSize)
-  }
+  // private Associatedfilestablechange({ currentPage, pageSize }) {
+  //   console.log(currentPage, pageSize)
+  // }
   private Playvideo(row) {
     console.log(row)
     this.visible3 = true
@@ -736,8 +739,8 @@ export default class Simpleprogram extends Vue {
       let obj = {
         caseNumbers: [this.casecode],
         fileCodes: arr,
-        logType: 2,
-        type: 1,
+        logType: 2, //1、视音频数据页面；2、违法数据页面
+        type: 1,    //1.简易程序 2.强制执法
       }
       this.DataM.saveRelate(obj).then((res) => {
         console.log(res)
@@ -778,8 +781,14 @@ export default class Simpleprogram extends Vue {
             if (res.code == 0) {
               _that.$message.success(res.msg)
               _that.DataM.MatchFiles(_that.casecode).then((res) => {
-                _that.MatchFiles = res.data
-                _that.defaultone = res.data[0]
+                   if (res.data.length > 0) {
+                  _that.MatchFiles = res.data
+                  _that.num = 0
+                  _that.defaultone = res.data[0]
+                }else{
+                   _that.MatchFiles = []
+                  _that.defaultone = {fileName:""}
+                }
               setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
               })
             }

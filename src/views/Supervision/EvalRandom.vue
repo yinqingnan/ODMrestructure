@@ -105,7 +105,7 @@
             />
             <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
               <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column> -->
+            </vxe-table-column>-->
 
             <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
@@ -406,7 +406,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
 import moment from "moment"
 @Component({
   components: {},
@@ -429,16 +429,18 @@ export default class EvalRandom extends Vue {
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
-    { field: "deptCode", title: "执勤部门", width: 80,align: "center" },
-    { field: "userName", title: "民警姓名" ,align: "center"},
-    { field: "userCode", title: "民警警号" ,align: "center"},
-    { field: "recordDate", title: "摄录时间",align: "center" },
+    { field: "deptCode", title: "执勤部门", width: 120, align: "center" },
+    { field: "userName", title: "民警姓名", align: "center" },
+    { field: "userCode", title: "民警警号", align: "center" },
+    { field: "recordDate", title: "摄录时间", align: "center" },
   ]
   private tableData = []
-  private formdata = {}
+  private formdata = { contain: "", date: [], department: "", user: "" }
 
   private visible = false
-  private filedetails = {}
+  private filedetails = {
+    downloadPath: "",
+  }
   private activeKey = "4"
   private fileId = ""
   private fileCode = ""

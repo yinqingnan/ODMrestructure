@@ -157,7 +157,10 @@
                     style="border-bottom: 0.5px solid #0cb9de;cursor:pointer;color:#0cb9de"
                     @click="zfy(row)"
                   >执法仪（{{row.commDeviceCode}}）</span>
-                  <img src="../../assets/image/prcode.png" alt style="width:20px" />
+                  <img
+                    src="../../assets/image/prcode.png"
+                    style="width: 18px;height: 18px;margin-top: 5px;"
+                  />
                 </div>
                 <div v-if="row.commScheduleCode" style="display:flex;">
                   <span>调度台({{row.commScheduleCode}})</span>
@@ -369,7 +372,37 @@
       </a-modal>
       <!-- 二维码弹窗 -->
       <a-modal v-model="QRshow" title="二维码登录" :width="325" :footer="null" class="qrcodemodule">
-        <div>asdasdasd</div>
+        <div style="text-alin">
+        <div class="qrcode" ref="qrCodeUrl"></div>
+        </div>
+      </a-modal>
+
+      <a-modal v-model="importshow" title="用户导入" :width="675"  class="importmodule" @cancel = "importclear">
+        <div class="importheader">
+          <p>提示：第一次导入的时候请先下载模板，编辑内容后再进行导入操作。</p>
+            <div style="display:flex">
+              <a-upload :file-list="fileList" :before-upload="beforeUpload" accept=".xls,.xlsx">
+                <a-button @click="selectfile">
+                  <a-icon type="upload" />选择文件上传
+                </a-button>
+              </a-upload>
+              <a-button type @click="downloadtemplate" style="margin-left:9px">下载模板</a-button>
+            </div>
+            <h2>{{filename||""}}</h2>
+        </div>
+         <div class="importfooter">
+           <div v-if="iserror">
+              <a-divider orientation="left" style="color:#919AA6;font-size:12px">
+                失败原因
+              </a-divider>
+              <p style="padding:0 36px 0 30px">
+                {{errormsg}}
+              </p>
+           </div>
+         </div>
+        <template slot="footer">
+          <a-button type="primary" @click="importben">开始导入</a-button>
+        </template>
       </a-modal>
     </div>
   </div>
@@ -377,13 +410,15 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
-import QRCode from "qrcode"
+import QRCode from "qrcodejs2"
 import {
   layouts,
   LimitInputlength,
   page,
   textarealength,
 } from "@/InterfaceVariable/variable"
+import axios from "axios"
+import { http } from "../../api/interceptors"
 @Component({
   components: {},
 })
@@ -404,12 +439,12 @@ export default class User extends Vue {
   private maxTagTextLength = 2
   private visible = false
   private str = ""
-  private page =page
+  private page = page
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private tableData = []
   private departmentData = []
-  private layouts =layouts
+  private layouts = layouts
   private QRshow = false
   private deptCode = ""
   private name = ""
@@ -424,6 +459,12 @@ export default class User extends Vue {
   }
   private status = ""
   private id = ""
+  private importshow = false
+  private fileList = []
+  private iserror = false
+  private errormsg = ""
+  private filename = ""
+  private errormsg = ""
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -532,7 +573,7 @@ export default class User extends Vue {
   }
   // 获取选中
   private getSelectEvent1() {
-    let selectRecords = this.$refs.usertable.getCheckboxRecords()
+    let selectRecords = (this.$refs.usertable as any).getCheckboxRecords()
     return selectRecords
   }
 
@@ -640,11 +681,11 @@ export default class User extends Vue {
   }
   // 导入
   private imports() {
-    return
+    this.importshow = true
   }
   // 导出
   private exports() {
-    this.$refs.usertable.exportData({
+    (this.$refs.usertable as any).exportData({
       filename: "用户管理",
       sheetName: "Sheet1",
       type: "xlsx",
@@ -846,11 +887,93 @@ export default class User extends Vue {
     )
   }
   private zfy(row) {
-    console.log(row.id)
     this.QRshow = true
+    this.OrganizationM.getQRcode({ userId: row.id }).then((res) => {
+      if (res.code == 0) {
+        let text = res.data
+        this.$message.success(res.msg);
+        (this.$refs.qrCodeUrl as any).innerHTML = ''   //清空当前
+        this.qrCode(text)
+
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
+  }
+  private qrCode(data: any): void {
+    // console.log(this.$refs.qrCodeUrl)
+      let qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        width: 230, //图像宽度
+        height: 230, //图像高度
+        colorDark: "#000000", //前景色
+        colorLight: "#ffffff", //背景色
+        typeNumber: 4,
+        correctLevel: QRCode.CorrectLevel.L,
+      })
+      // 容错登记———从低到高
+    // QRCode.CorrectLevel.L
+    // QRCode.CorrectLevel.M
+    // QRCode.CorrectLevel.Q
+    // QRCode.CorrectLevel.H
+      qrcode.clear() //清除二维码
+      qrcode.makeCode(data) //生成另一个新的二维码
+
   }
   private repairCancel() {
     this.visible = false
+  }
+  private importclear(){
+    this.filename = ""
+    this.fileList = []
+    this.iserror = false
+  }
+  private downloadtemplate() {
+    //下载本地文件
+    let downloadUrl = `${process.env.BASE_URL}template/用户导入模板.xls`
+    window.location.href = downloadUrl
+  }
+  private beforeUpload(file) {
+    
+    if(file.type === "application/vnd.ms-excel"){
+        this.filename = file.name
+        this.fileList = [file]
+        return false
+    }else{
+      this.$message.error("文件类型错误，仅支持.xls 和 .xlsx 类型的文件")
+    }
+  }
+  private importben() {
+  
+  if(this.fileList.length>0){
+    let formData = new FormData() //保存文件后再保存
+        formData.append("file", this.fileList[0])
+        axios
+          .post(http + "api/mdm/device/matche/import", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Token: localStorage.getItem("token"),
+            },
+          })
+          .then((res: any) => {
+            if(res == 'ok'){
+              this.importshow = false
+              this.iserror = false
+              this.fileList = []
+              this.filename =""
+            }else{
+              this.iserror = true
+              this.errormsg = res.data
+            }
+          })
+  }else{
+    this.$message.error("未选择文件")
+  }
+  
+  }
+  private selectfile() {
+    this.filename = ""
+    this.fileList = []
+    this.iserror = false
   }
 }
 </script>
@@ -887,4 +1010,10 @@ export default class User extends Vue {
 .qrcodemodule /deep/ .ant-modal-body {
   height: 280px;
 }
+.qrcode {
+  img{
+    margin: 0 auto;
+  }
+}
+
 </style>

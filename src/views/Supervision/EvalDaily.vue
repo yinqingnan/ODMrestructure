@@ -104,7 +104,7 @@
             />
             <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
               <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column> -->
+            </vxe-table-column>-->
 
             <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
@@ -414,7 +414,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
 
 import moment from "moment"
 @Component({
@@ -431,22 +431,29 @@ export default class EvalRecord extends Vue {
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private defaultdate = [moment("2010-10-20"), moment("2020-10-20")]
-  private page =page
+  private page = page
   private textcolor = false
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
-    { field: "deptCode", title: "执勤部门", width: 80 },
+    { field: "deptCode", title: "执勤部门", width: 120 },
     { field: "userName", title: "民警姓名" },
     { field: "userCode", title: "民警警号" },
     { field: "recordDate", title: "摄录时间" },
   ]
   private layouts = layouts
   private tableData = []
-  private formdata = {}
+  private formdata = {
+    contain: "",
+    date: [],
+    department: "",
+    user: "",
+  }
 
   private visible = false
-  private filedetails = {}
+  private filedetails = {
+    downloadPath: "",
+  }
   private activeKey = "4"
   private fileId = ""
   private fileCode = ""

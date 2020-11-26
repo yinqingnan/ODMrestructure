@@ -172,8 +172,21 @@ export class OrganizationM {
         });
     });
   }
-  // todo 获取生成二维码的数据 /api/uauth/base/user/getQRcode
-
+  // todo 获取生成二维码的数据 
+  public getQRcode(params: object, jwt = true) {
+    const url = "/api/uauth/base/user/getQRcode";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
 
   
@@ -181,7 +194,6 @@ export class OrganizationM {
   //todo 角色管理table 
   public getroletable(params: object, jwt = true) {
     const url = "/api/uauth/base/role/list";
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,

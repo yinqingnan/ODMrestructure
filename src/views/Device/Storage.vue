@@ -456,7 +456,7 @@ export default class Storage extends Vue {
     })
   }
   private getSelectEvent1() {
-    let selectRecords = this.$refs.Acquisition.getCheckboxRecords()
+    let selectRecords = (this.$refs.Acquisition as any).getCheckboxRecords()
     return selectRecords
   }
   private ftpdlt(row) {

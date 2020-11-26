@@ -115,7 +115,7 @@
                     </a-form-item>
                   </el-scrollbar>
                   <div class="modulebot">
-                    <a-button type="Default" @click="reset">重置</a-button>
+                    <a-button  type="Default" @click="reset">重置</a-button>
                     <a-button type="primary" @click="handleSubmit">查询</a-button>
                   </div>
                 </a-form>
@@ -123,7 +123,7 @@
             </a-dropdown>
           </template>
           <div style="line-height:1">
-            <a-button type="primary" @click="dlt" style="line-height:1">批量删除</a-button>
+            <a-button type="primary" @click="dlt" style="line-height:1" v-isshow="'lawarchives:avDate:deletes'">批量删除</a-button>
             <a-button type="primary" @click="download" style="line-height:1">批量下载</a-button>
           </div>
         </div>
@@ -659,7 +659,6 @@ export default class AvData extends Vue {
   private gettabledata(obj): void {
     this.loading = true
     this.DataM.gettabledata(obj, true).then((res: any) => {
-      console.log(res)
       this.page.totalResult = parseInt(res.count)
       this.tabledata = res.data
       this.loading = false

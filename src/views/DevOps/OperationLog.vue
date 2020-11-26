@@ -256,7 +256,7 @@ export default class OperationLog extends Vue {
     })
   }
   private exports() {
-    this.$refs.logAdministration.exportData({
+    (this.$refs.logAdministration as any).exportData({
       filename: "日志管理",
       sheetName: "Sheet1",
       type: "xlsx",

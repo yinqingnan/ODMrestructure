@@ -117,7 +117,7 @@
             />
             <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
               <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column> -->
+            </vxe-table-column>-->
             <vxe-table-column field="score" title="考评结果" align="center" show-overflow>
               <template v-slot="{ row }">
                 <span :style="{'color': (textcolor==true ? 'green':'#ff0000')}">{{score(row)}}</span>
@@ -347,11 +347,7 @@
                 >保存</a-button>-->
               </a-tab-pane>
               <a-tab-pane key="4" tab="评价">
-                <a-form
-                  :form="form3"
-                  :label-col="{ span:4 }"
-                  :wrapper-col="{ span: 20 }"
-                >
+                <a-form :form="form3" :label-col="{ span:4 }" :wrapper-col="{ span: 20 }">
                   <a-form-item label="评价总分">
                     <a-input
                       :disabled="true"
@@ -386,7 +382,6 @@
                           </a-col>
                         </a-row>
                       </el-scrollbar>
-             
                     </a-checkbox-group>
                   </a-form-item>
                   <a-form-item label="实际评分">
@@ -422,7 +417,7 @@
                     style="text-align:center"
                   >
                     <a-button type="primary" html-type="submit">保存</a-button>
-                  </a-form-item> -->
+                  </a-form-item>-->
                 </a-form>
               </a-tab-pane>
             </a-tabs>
@@ -441,7 +436,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength,page,layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
 
 import moment from "moment"
 @Component({
@@ -463,7 +458,7 @@ export default class EvalRecord extends Vue {
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
-    { field: "deptCode", title: "执勤部门", width: 80 },
+    { field: "deptCode", title: "执勤部门", width: 120 },
     { field: "userName", title: "民警姓名" },
     { field: "userCode", title: "民警警号" },
     { field: "fileType_Name", title: "文件类型" },
@@ -471,7 +466,13 @@ export default class EvalRecord extends Vue {
   ]
   private layouts = layouts
   private tableData = []
-  private formdata = {}
+  private formdata = {
+    contain!: "",
+    date!: [],
+    department!: "",
+    user!: "",
+    Evaluation!:""
+  }
   private Evaluationlist = [
     { id: "1", value: "-1", title: "全部" },
     { id: "1", value: "1", title: "正常" },
@@ -505,7 +506,7 @@ export default class EvalRecord extends Vue {
   }
   private visible = false
   private filedetails = {
-    downloadPath:""
+    downloadPath: "",
   }
   private activeKey = "4"
   private fileId = ""
@@ -681,17 +682,17 @@ export default class EvalRecord extends Vue {
     })
     this.DataM.evaluate(this.fileCode).then((res) => {
       console.log(res)
-      let arr =[] 
-      res.data.items.map(item=>{
+      let arr = []
+      res.data.items.map((item) => {
         arr.push(item.code)
       })
       this.options = res.data.items
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.form3.setFieldsValue({
-          Scoring:arr,
-          Total:res.data.total,
-          Actualscore:res.data.score,
-          remark:res.data.remark
+          Scoring: arr,
+          Total: res.data.total,
+          Actualscore: res.data.score,
+          remark: res.data.remark,
         })
       })
     })
@@ -737,7 +738,7 @@ export default class EvalRecord extends Vue {
     this.activeKey = "4"
     //取消重置所有用到的表单
   }
-  private filedownload(){
+  private filedownload() {
     alert("当前下载" + this.filedetails.downloadPath)
     console.log(this.filedetails.downloadPath)
   }

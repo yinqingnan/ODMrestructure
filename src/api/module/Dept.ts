@@ -71,26 +71,40 @@ export class Dept {
     });
   }
 
-  public removeID(params, jwt: boolean, flag: string) {
-    const url = "/api/uauth/base/dept/delete";
-    const body = JSON.stringify({ params })
-    console.log(body)
-    return new Promise((resolve, reject) => {
-      this.axios
-        .post(url, params, {
-          headers: { isJwt: jwt },
-        })
-        .then(res => {
-          this.resultHandle(res, resolve);
-        })
-        .catch(err => {
-          reject(err.message);
-        });
-    });
-  }
+  // public removeID(params, jwt: boolean, flag: string) {
+  //   const url = "/api/uauth/base/dept/delete";
+  //   const body = JSON.stringify({ params })
+  //   console.log(body)
+  //   return new Promise((resolve, reject) => {
+  //     this.axios
+  //       .post(url, params, {
+  //         headers: { isJwt: jwt },
+  //       })
+  //       .then(res => {
+  //         this.resultHandle(res, resolve);
+  //       })
+  //       .catch(err => {
+  //         reject(err.message);
+  //       });
+  //   });
+  // }
 
   public saveVal(params: object, jwt: boolean, flag: string) {
     const url = "/api/uauth/base/dept/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
+
+  public deptdlt(params: object, jwt=true) {
+    const url = "/api/uauth/base/dept/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
@@ -108,12 +122,7 @@ export class Dept {
  * @param resolve
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
-    // 在此处判断res.status状态然后返回值
-    // if (res.code === 0) {
-    // resolve(res);
-    // } else {
-    //   this.errorHandle(res);
-    // }
+  
      if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
@@ -122,9 +131,6 @@ export class Dept {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            // localStorage.removeItem("activeKey")
-            // localStorage.removeItem("Tabslist")
-            // localStorage.removeItem("token");
             localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));

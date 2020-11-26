@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-24 17:37:40
+ * @LastEditTime: 2020-11-25 10:21:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\api\interceptors.ts
@@ -10,15 +10,12 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 import qs from 'qs'
 
-// const http:string = "https://easy-mock.com/mock/5f9c133f0bf9ee03009406f7"
-// export const http = "http://192.168.10.75:9100/"
-// export const http = "http://192.168.10.81:9100/"
-export const http = ' http://192.168.10.75:8100/'
+export const http = window.gurl.SERVICE_CONTEXT_PATH
 export class Interceptors {
   public instance: any
   constructor() {
     // 创建axios实例
-    this.instance = axios.create({ timeout: 10000, baseURL: http })
+    this.instance = axios.create({ timeout: window.gurl.AXIOS_TIMEOUT, baseURL: http })
     // 初始化拦截器
     this.initInterceptors()
   }

@@ -95,9 +95,10 @@
           <vxe-table
             border
             height="auto"
-            ref="Acquisitionstation"
+            ref="caijizhan"
             class="mytable-scrollbar"
-            highlight-hover-row :row-class-name="tableRowClassName" 
+            highlight-hover-row
+            :row-class-name="tableRowClassName"
             :data="tableData"
             :checkbox-config="{ checkMethod: checCheckboxkMethod2}"
           >
@@ -167,7 +168,9 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 import {
   LimitInputlength,
-  textarealength,page,layouts
+  textarealength,
+  page,
+  layouts,
 } from "@/InterfaceVariable/variable"
 @Component({
   components: {},
@@ -188,7 +191,7 @@ export default class Stations extends Vue {
   private tableData = []
   private page = page
   private departmentData = []
-  private layouts =layouts
+  private layouts = layouts
   // todo 生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -264,7 +267,7 @@ export default class Stations extends Vue {
     this.gettabledata(obj)
   }
   private getSelectEvent1() {
-    return this.$refs.Acquisitionstation.getCheckboxRecords()
+    return (this.$refs.Acquisitionstation as any).getCheckboxRecords()
   }
   // 禁用
   public Enable() {
@@ -417,8 +420,7 @@ export default class Stations extends Vue {
     }
   }
   private tableRowClassName(record: any, index: number) {
-     
-    return record.rowIndex % 2 === 0 ? "bgF5" : "";
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   // 删除
   public dlt() {
@@ -446,7 +448,11 @@ export default class Stations extends Vue {
     }
   }
   public daochu() {
-    console.log("daochu")
+    (this.$refs.caijizhan as any).exportData({
+      filename: "采集站",
+      sheetName: "Sheet1",
+      type: "xlsx",
+    })
   }
 }
 </script>

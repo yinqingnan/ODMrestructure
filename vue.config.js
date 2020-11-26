@@ -1,11 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-24 17:49:24
+ * @LastEditTime: 2020-11-25 09:58:17
  * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit,
+ * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\vue.config.js
  */
+
 // const AntDesignThemePlugin = require("antd-theme-webpack-plugin");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

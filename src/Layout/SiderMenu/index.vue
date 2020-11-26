@@ -1,8 +1,16 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-11-17 11:08:45
+ * @LastEditTime: 2020-11-25 18:26:05
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ODMrestructure\src\Layout\SiderMenu\index.vue
+-->
 <template>
   <div>
     <a-sub-menu :key="menuInfo.name">
       <span slot="title">
-        <a-icon :type="menuInfo.meta.icon" />
+         <span class="iconfont " :class="menuInfo.meta.icon" style="font-size: 17px;margin-right: 10px;"></span>
         <span>{{ menuInfo.meta.title }}</span>
       </span>
       <template v-for="item in menuInfo.children">
@@ -13,7 +21,7 @@
               params: { sTitle: item.meta.title, title: item.meta.title }
             }"
           >
-            <a-icon :type="item.meta.icon" />
+             <span class="iconfont" :class="item.meta.icon" style="font-size: 17px;margin-right: 10px;"></span>
             <span>{{ item.meta.title }}</span>
           </router-link>
         </a-menu-item>
@@ -36,5 +44,6 @@ export default class Index extends Vue {
   private btn(item: any) {
     this.menuadd(item);
   }
+  private iconbaojing1 = "iconuser_user"
 }
 </script>

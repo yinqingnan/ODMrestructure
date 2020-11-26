@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 Vue.use(Vuex);
-import { Test ,Tabs} from "./modules/index";
+import { Test ,Tabs ,Menu} from "./modules/index";
 
 export default new Vuex.Store({
   state: {},
@@ -10,6 +10,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     Test,
-    Tabs
+    Tabs,
+    Menu
   }
 });
