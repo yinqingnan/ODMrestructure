@@ -135,4 +135,13 @@ export default class RightContent extends Vue {
   background: rgba(0, 0, 0, 0.3);
   color: #fff;
 }
+.Multitab{
+  .ant-tabs-nav-container{
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .ant-tabs-nav-wrap{
+    overflow: hidden;
+    background:#f5f5f5;
+  }
+}
 </style>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-11-27 17:40:17
+ * @LastEditTime: 2020-11-27 17:48:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
@@ -747,8 +747,6 @@ export const list = [
         },
         children: null,
       },
-     
-      
       // {
       //   key: "25",
       //   path: "/oMonitor",

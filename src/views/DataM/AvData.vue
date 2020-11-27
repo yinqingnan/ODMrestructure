@@ -148,12 +148,19 @@
               align="center"
               show-overflow
               width="240"
-            />
+            >
+              <template v-slot="{ row }">
+                <span class="iconfont" :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}" style="font-size:24px;vertical-align: middle;color:#a7a7a7;margin-right: 14px;"></span>
+                <span style="height:22px;width:30px;color:#fff;    border-radius: 5px;margin-right:15px;display: inline-block;line-height: 22px;font-size: 12px;" :class="{'gao': row.fileLevel_Name === '高', 'zhong': row.fileLevel_Name=='中', 'di': row.fileLevel_Name=='低'}">{{row.fileLevel_Name}}</span>
+
+                <span>{{row.fileName}}</span>
+              </template>
+            </vxe-table-column>
             <vxe-table-column field="deptCode" title="执勤部门" align="center" />
             <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow />
             <vxe-table-column field="userCode" title="民警警号" align="center" />
             <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
-            <vxe-table-column field="fileLevel_Name" title="重要级别" align="center" />
+            <!-- <vxe-table-column field="fileLevel_Name" title="重要级别" align="center" /> -->
             <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
             <vxe-table-column field="uploadDate" title="导入时间" show-overflow align="center" />
             <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
@@ -1189,5 +1196,14 @@ export default class AvData extends Vue {
   .ant-calendar-picker {
     width: 284px !important;
   }
+}
+.gao{
+  background:#bc4141 ;
+}
+.zhong{
+  background:#f19149 ;
+}
+.di{
+  background:#5086c2 ;
 }
 </style>

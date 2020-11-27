@@ -109,10 +109,10 @@ export default class Login extends Vue {
     this.checkNick = e.target.checked
   }
   private login = (data: object) => {
+    localStorage.clear();
     this.Login.login(data, false).then((res: any) => {
       if (res.code == 0) {
         localStorage.setItem("token", res.data.accessToken)
-
         this.Login.getMenudata().then((res) => {
           if (res.code == 0) {
             //  let arr = res.data   //菜单数据
@@ -122,8 +122,6 @@ export default class Login extends Vue {
             resetRouter(); //重置路由
             router.options.routes =concatrouter()
             router.addRoutes(concatrouter())
-
-            console.log(router)
             this.$router.push({ name: "Homes" }) //成功后跳转
           }
         })
