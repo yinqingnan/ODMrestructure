@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-26 16:37:49
+ * @LastEditTime: 2020-11-27 10:22:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\views\BodyContent.vue
@@ -40,7 +40,6 @@ export default class BodyContent extends Vue {
     height: 1,
   }
   private mounted() {
-    console.log()
     if (JSON.parse(localStorage.getItem("Tabslist")) != null) {
       this.inittabs()
       console.log(this.$route.meta.key)

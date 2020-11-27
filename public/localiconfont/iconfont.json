@@ -6,6 +6,27 @@
   "description": "音视频数据管理图标",
   "glyphs": [
     {
+      "icon_id": "18491374",
+      "name": "ziping",
+      "font_class": "ziping",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "18491355",
+      "name": "key",
+      "font_class": "key",
+      "unicode": "e6f8",
+      "unicode_decimal": 59128
+    },
+    {
+      "icon_id": "18491184",
+      "name": "setting",
+      "font_class": "setting",
+      "unicode": "e6f7",
+      "unicode_decimal": 59127
+    },
+    {
       "icon_id": "18452811",
       "name": "chenggong",
       "font_class": "chenggong",

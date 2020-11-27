@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-11-26 19:56:43
+ * @LastEditTime: 2020-11-27 17:40:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
@@ -412,7 +412,7 @@ export const list = [
         meta: {
           key: "24",
           title: "子平台",
-          icon: "&#xe6b9;",
+          icon: "iconziping",
           keepAlive: false,
           permission: ["device:platform:list", "device:platform:delete"],
         },
@@ -741,7 +741,7 @@ export const list = [
         meta: {
           key: "36",
           title: "平台设置",
-          icon: "&#xe67f;",
+          icon: "iconsetting",
           keepAlive: false,
           permission: ["system:setting:list", "system:setting:save"],
         },
@@ -779,7 +779,7 @@ export const list = [
         meta: {
           key: "26",
           title: "密钥管理",
-          icon: "&#xe687;",
+          icon: "iconkey",
           keepAlive: false,
           permission: [
             "system:authorization:cjz",
