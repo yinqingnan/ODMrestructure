@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-11-26 14:59:50
+ * @LastEditTime: 2020-11-26 19:56:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
@@ -652,12 +652,10 @@ export const list = [
           icon: "iconuser_menu",
           keepAlive: false,
           permission: [
-            "role:update",
-            "role:list",
-            "role:delete",
-            "role:refright",
-            "role:save",
-            "role:right",
+            "menu:save",
+            "menu:update",
+            "menu:delete",
+            
           ],
         },
         children: null,

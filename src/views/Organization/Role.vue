@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <div class="btns">
-            <a-button @click="add" type="primary">添加</a-button>
+            <a-button @click="add" type="primary" v-isshow="'role:save'">添加</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -54,16 +54,19 @@
             <vxe-table-column title="操作" show-overflow align="center" fixed="right" minWidth="180">
               <template v-slot="{ row }">
                 <span
+                  v-isshow="'role:update'"
                   type="text"
                   @click="edit(row)"
                   style="color:#0db8df;margin-right:8px;cursor: pointer;"
                 >编辑</span>
                 <span
+                v-isshow="'role:delete'"
                   type="text"
                   @click="dlt(row)"
                   style="color:#0db8df;margin-right:8px;cursor: pointer;"
                 >删除</span>
                 <span
+                 v-isshow="'role:refright,role:right'"
                   type="text"
                   @click="configure(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:8px;"

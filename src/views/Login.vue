@@ -67,6 +67,7 @@ import router from "@/router"
 import { list } from "@/InterfaceVariable/variable"
 import { namespace } from "vuex-class"
 const Menu = namespace("Menu")
+const Tabs = namespace("Tabs")
 @Component
 export default class Login extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

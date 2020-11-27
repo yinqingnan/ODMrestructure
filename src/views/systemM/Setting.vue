@@ -212,7 +212,7 @@
               </a-col>
               <a-col :span="24" :style="{ textAlign: 'center' }" class="aNone">
                 <a-form-item label=" " style="width:100%">
-                  <a-button html-type="submit" class="upData">
+                  <a-button html-type="submit" class="upData" v-isshow="'system:setting:save'">
                     提交
                   </a-button>
                 </a-form-item>

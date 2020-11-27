@@ -124,7 +124,7 @@
           </template>
           <div style="line-height:1">
             <a-button type="primary" @click="dlt" style="line-height:1" v-isshow="'lawarchives:avDate:deletes'">批量删除</a-button>
-            <a-button type="primary" @click="download" style="line-height:1">批量下载</a-button>
+            <a-button v-isshow="'lawarchives:avDate:downloads'" type="primary" @click="download" style="line-height:1">批量下载</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -163,7 +163,7 @@
             </vxe-table-column>
             <vxe-table-column field="action" title="操作" align="center" fixed="right">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;">查看</span>
+                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'lawarchives:avDate:look'">查看</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -220,7 +220,7 @@
                   <h2>剩余存储天数：{{filedetails.storageDays}}</h2>
                 </div>
               </a-tab-pane>
-              <a-tab-pane key="2" tab="标记" force-render>
+              <a-tab-pane key="2" tab="标记" force-render >
                 <a-form
                   :form="form"
                   :label-col="{ span: 6 }"
@@ -271,7 +271,7 @@
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
-                    <a-button type="primary" html-type="submit">保存</a-button>
+                    <a-button v-isshow="'lawarchives:avDate:oneBtn'" type="primary" html-type="submit">保存</a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -366,12 +366,13 @@
                   </el-scrollbar>
                 </a-form>
                 <a-button
+                  v-isshow="'lawarchives:avDate:threeBtn'"
                   type="primary"
                   @click="biaozhuSubmit"
                   style="margin-top: 14px;margin-left: 44%;"
                 >保存</a-button>
               </a-tab-pane>
-              <a-tab-pane key="4" tab="评价">
+              <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
                   :form="form3"
                   :label-col="{ span:4 }"
@@ -462,7 +463,7 @@
                     v-if="!disabled"
                     style="text-align:center"
                   >
-                    <a-button type="primary" html-type="submit">保存</a-button>
+                    <a-button v-isshow="'lawarchives:avDate:foreBtn'" type="primary" html-type="submit">保存</a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -473,7 +474,7 @@
         <template slot="footer">
           <a-button type @click="previous">上一个</a-button>
           <a-button type @click="next">下一个</a-button>
-          <a-button type @click="filedownload">下载</a-button>
+          <a-button type @click="filedownload" v-isshow ="'lawarchives:avDate:download'">下载</a-button>
           <a-button type @click="moduleDlt">删除</a-button>
         </template>
       </a-modal>

@@ -9,8 +9,8 @@
             <h2>{{count}}</h2>
           </div>
           <div>
-            <button @click="add">添加</button>
-            <button @click="handleSubmit">保存</button>
+            <a-button type="primary" @click="add" v-isshow="'fileEvaluate:evSet:add'">添加</a-button>
+            <a-button type="primary" @click="handleSubmit" v-isshow="'fileEvaluate:evSet:save'">保存</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody seting" :style="{height:Height}">

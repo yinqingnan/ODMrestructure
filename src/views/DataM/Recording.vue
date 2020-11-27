@@ -1,12 +1,17 @@
 <template>
   <div>
     <div class="Recordingheader">
-      <a-button @click="Recordingadd">添加</a-button>
+      <a-button v-isshow="'lawarchives:storageCategory:save'" @click="Recordingadd">添加</a-button>
     </div>
     <div :style="{height:Height}" class="Recording">
-      <vxe-table border height="auto" :data="tableData" 
-       highlight-hover-row :row-class-name="tableRowClassName" class="mytable-scrollbar"
->
+      <vxe-table
+        border
+        height="auto"
+        :data="tableData"
+        highlight-hover-row
+        :row-class-name="tableRowClassName"
+        class="mytable-scrollbar"
+      >
         <vxe-table-column type="seq" width="60" title="序号" align="center" />
         <vxe-table-column field="name" title="类别名称" align="center" min-width="180px" />
         <vxe-table-column
@@ -22,14 +27,26 @@
           align="center"
         />
         <vxe-table-column field="remark" title="备注" align="center" min-width="200px" />
-        <vxe-table-column field="isDefault" title="操作" align="center" min-width="120px" fixed="right">
+        <vxe-table-column
+          field="isDefault"
+          title="操作"
+          align="center"
+          min-width="120px"
+          fixed="right"
+        >
           <template v-slot="{ row }" class="anniu">
             <span
+              v-isshow="'lawarchives:storageCategory:update'"
               @click="tablebtn(row)"
               v-if="!row.isDefault"
               style="color:#0db8df;margin-rgiht:8px"
             >编辑</span>
-            <span @click="tabledlt(row)" v-if="!row.isDefault" style="color:#0db8df">删除</span>
+            <span
+              @click="tabledlt(row)"
+              v-if="!row.isDefault"
+              v-isshow="'lawarchives:storageCategory:delete'"
+              style="color:#0db8df"
+            >删除</span>
           </template>
         </vxe-table-column>
       </vxe-table>
@@ -70,7 +87,7 @@
         </a-form-item>
         <a-form-item label="已上传文件存储时间">
           <a-select
-           mode="combobox" 
+            mode="combobox"
             v-decorator="[
                         'storageTime',
                         {
@@ -91,7 +108,7 @@
 
         <a-form-item label="采集站文件存储时间">
           <a-select
-           mode="combobox" 
+            mode="combobox"
             v-decorator="[
                         'stationStorageTime',
                         {
@@ -135,7 +152,7 @@
 import {
   LimitInputlength,
   textarealength,
-  page
+  page,
 } from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 @Component({})
@@ -187,11 +204,11 @@ export default class Recording extends Vue {
     this.$nextTick(() => {
       this.form.setFieldsValue({
         user: row.name,
-        storageTime:row.storageTime_Name,
-        stationStorageTime:row.stationStorageTime_Name,
-        remarks:row.remark
-      });
-    });
+        storageTime: row.storageTime_Name,
+        stationStorageTime: row.stationStorageTime_Name,
+        remarks: row.remark,
+      })
+    })
   }
   private tabledlt(row) {
     console.log(row.id)
@@ -202,11 +219,11 @@ export default class Recording extends Vue {
       content: "删除类别后，标记为该类别的所有文件将恢复默认设置。",
       onOk() {
         console.log(123)
-        _that.DataM.storetypedlt([row.id]).then(res=>{
+        _that.DataM.storetypedlt([row.id]).then((res) => {
           console.log(res)
-          if(res.code == 1){
+          if (res.code == 1) {
             _that.$message.error(res.msg)
-          }else{
+          } else {
             _that.$message.success(res.msg)
             _that.getdata()
           }
@@ -232,16 +249,16 @@ export default class Recording extends Vue {
       if (!err) {
         console.log(val)
         this.DataM.storetypesave({
-          id:"",
-          name:val.user,
-          stationStorageTime:val.stationStorageTime,
-          storageTime:val.storageTime,
-          remark:val.remarks
-        }).then(res=>{
+          id: "",
+          name: val.user,
+          stationStorageTime: val.stationStorageTime,
+          storageTime: val.storageTime,
+          remark: val.remarks,
+        }).then((res) => {
           console.log(res)
-          if(res.code == 1){
+          if (res.code == 1) {
             this.$message.error(res.msg)
-          }else if(res.code == 0){
+          } else if (res.code == 0) {
             this.$message.success(res.msg)
             this.visible = false
             this.reset()
@@ -252,8 +269,7 @@ export default class Recording extends Vue {
     })
   }
   private tableRowClassName(record: any, index: number) {
-     
-    return record.rowIndex % 2 === 0 ? "bgF5" : "";
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
 }
 </script>
@@ -289,8 +305,8 @@ export default class Recording extends Vue {
     cursor: pointer;
   }
 }
-.textareatext{
-  textarea{
+.textareatext {
+  textarea {
     resize: none;
   }
 }

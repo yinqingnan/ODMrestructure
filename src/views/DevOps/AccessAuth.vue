@@ -9,8 +9,8 @@
           style="padding:12px 25px 0 25px;display:flex;justify-content: flex-end;"
         >
           <div class="accessbtn">
-            <a-button type="primary" @click="Childrenbtn">子平台接入</a-button>
-            <a-button type="primary" @click="Parentbtn">采集站接入</a-button>
+            <a-button type="primary" @click="Childrenbtn" v-isshow="'system:authorization:zpt'">子平台接入</a-button>
+            <a-button type="primary" @click="Parentbtn" v-isshow="'system:authorization:cjz'">采集站接入</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -47,8 +47,8 @@
             <vxe-table-column field="createTime" title="创建时间" show-overflow align="center" />
             <vxe-table-column title="操作" align="center">
               <template v-slot="{ row }">
-                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;margin-right:8px">编辑</span>
-                <span @click="dlt(row.id)" style="color:#4d96ca;cursor:pointer;">删除</span>
+                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;margin-right:8px" v-isshow="'system:authorization:update'">编辑</span>
+                <span @click="dlt(row.id)" style="color:#4d96ca;cursor:pointer;" v-isshow="'system:authorization:delete'">删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>

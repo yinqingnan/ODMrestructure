@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-26 13:51:23
+ * @LastEditTime: 2020-11-26 18:27:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\main.ts
@@ -21,7 +21,7 @@ Vue.use(ElementUI);
  Vue.directive('isshow',{
   inserted: function(el, binding, vnode) {
     const {value} = binding
-    const roles = vnode.context.$route
+    const roles = vnode.context.$route.meta.permission
     let btn = "";
     //获取单个按钮权限
     if (value) {
@@ -34,8 +34,8 @@ Vue.use(ElementUI);
       return;
     }
     //查找到当前路由下存在的权限
-    let list = vnode.context.$route.meta.permission;
-    if (list.indexOf(btn) == -1) {
+
+    if (roles.indexOf(btn) == -1) {
       el.style.display = "none"; //隐藏元素
     }
   }
@@ -80,9 +80,10 @@ Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
 Vue.prototype.$confirm = confirm;  // 挂载服务
 Vue.prototype.$message = message;  // 挂载服务
-console.log(store)
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
+
+//路由拦截
 router.beforeEach((to, from, next) => {
   NProgress.start();
   // console.log(localStorage.getItem("lockpsd"));

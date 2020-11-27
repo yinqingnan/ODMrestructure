@@ -58,6 +58,9 @@ export default class LeftMenu extends Vue {
   inittabs!: () => {}
   @Tabs.Mutation("menuadd")
   menuadd!: (val: any) => {}
+  @Tabs.Mutation("setactive")
+  setactive!: (val: any) => {}
+
   private icondata_video = "icondata_video"
 
   private list = []
@@ -72,11 +75,6 @@ export default class LeftMenu extends Vue {
       if (res.code == 0) {
         // this.list = res.data
         this.list = list
-        if (localStorage.getItem("Tabslist") != null) {
-          this.inittabs()
-        } else {
-          this.addtabs(this.list[0]) //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
-        }
         let name = this.$route.name
         this.openKeys = [this.findIndexArray(this.list, name, [])[0]]
       }
@@ -118,7 +116,8 @@ export default class LeftMenu extends Vue {
   }
   @Watch("$route")
   routechange(to: any) {
-    console.log(to.name)
+    console.log(to)
+    this.setactive(to.meta.key)
     this.$set(this.defaultSelectedKeys , 0, to.name)
     let name =  this.findIndexArray(this.list, to.name, [])[0]
     this.$nextTick(()=>{

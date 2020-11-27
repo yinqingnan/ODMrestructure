@@ -111,7 +111,13 @@
             </vxe-table-column>
             <vxe-table-column field="actions" title="操作" align="center">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;">评分</span>
+                <span
+                  type="text"
+                  @click="tablebtn(row)"
+                  style="color:#0db8df;
+                cursor: pointer;"
+                  v-isshow="'fileEvaluate:evaluationDaily:look'"
+                >评分</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -394,7 +400,11 @@
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
-                    <a-button type="primary" html-type="submit">保存</a-button>
+                    <a-button
+                      type="primary"
+                      html-type="submit"
+                      v-isshow="'fileEvaluate:evaluationDaily:saveEva'"
+                    >保存</a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -405,7 +415,7 @@
         <template slot="footer">
           <!-- <a-button type @click="previous">上一个</a-button>
           <a-button type @click="next">下一个</a-button>-->
-          <a-button type @click="filedownload">下载</a-button>
+          <a-button type @click="filedownload" v-isshow="'fileEvaluate:evaluationDaily:download'">下载</a-button>
           <!-- <a-button type @click="moduleDlt">删除</a-button> -->
         </template>
       </a-modal>

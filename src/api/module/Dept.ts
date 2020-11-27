@@ -88,6 +88,21 @@ export class Dept {
   //       });
   //   });
   // }
+  public removeID(params: object, jwt=true) {
+    const url = "/api/uauth/base/dept/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: body,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
   public saveVal(params: object, jwt: boolean, flag: string) {
     const url = "/api/uauth/base/dept/save";
@@ -103,19 +118,19 @@ export class Dept {
     });
   }
 
-  public deptdlt(params: object, jwt=true) {
-    const url = "/api/uauth/base/dept/delete";
-    const body = params
-    return new Promise((resolve, reject) => {
-      this.axios.post(url, body, {
-        headers: { isJwt: jwt },
-      }).then((res: any) => {
-        this.resultHandle(res, resolve);
-      }).catch((err: { message: any }) => {
-        reject(err.message);
-      });
-    });
-  }
+  // public deptdlt(params: object, jwt=true) {
+  //   const url = "/api/uauth/base/dept/delete";
+  //   const body = params
+  //   return new Promise((resolve, reject) => {
+  //     this.axios.post(url, body, {
+  //       headers: { isJwt: jwt },
+  //     }).then((res: any) => {
+  //       this.resultHandle(res, resolve);
+  //     }).catch((err: { message: any }) => {
+  //       reject(err.message);
+  //     });
+  //   });
+  // }
 
   /**
  * @param res

@@ -1,7 +1,7 @@
 <template>
   <div style="height:100%" id="myRight">
     <!-- <button @click="add">添加</button> -->
-    <div class="Multitab" ref="Multitab">
+    <div class="Multitab" :style="{width:Width}">
       <div class="tag">
         <a-tabs
           v-model="activeKeys"
@@ -33,10 +33,13 @@ export default class RightContent extends Vue {
   @Tabs.Mutation("dlttbs")
   dlttbs!: (val: any) => {}
   private activeKeys = ""
+  private Width = ""
   created() {
     // console.log(localStorage);
   }
   private onEdit(e: string): void {
+    console.log(e)
+
     const len: number = this.tagList.length
     let flag = 0
     if (len == 1) {
@@ -56,7 +59,6 @@ export default class RightContent extends Vue {
     // this.tagList.splice(flag, 1);
   }
   private tabChange(e: string): void {
-    console.log(e)
     localStorage.setItem("activeKey", JSON.stringify(e)) //保存当前
     const len: number = this.tagList.length
     let flag = 0
@@ -74,21 +76,22 @@ export default class RightContent extends Vue {
       this.$router.push({ name: this.tagList[flag].name })
     }
   }
+
   private mounted() {
     this.activeKeys = this.activeKey
-    // this.$refs.Multitab.style.width = document.body.clientWidth - 250 + "px"
+    this.Width = document.body.clientWidth - 250 + "px"
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Width = `${document.documentElement.clientWidth - 250}px`
+    })
   }
   @Watch("activeKey")
   getPiedata(newval: string) {
     this.activeKeys = newval
   }
-  // @Watch("tagList")
-  // getdata(newval: string) {
-  //   this.tagList = newval;
-  // }
 }
 </script>
-
 <style lang="less" scope>
 #myRight {
   width: calc(100% - 250px);
@@ -120,10 +123,6 @@ export default class RightContent extends Vue {
 .tag {
   width: 100%;
 }
-// .view {
-//   height: ~"calc(100vh - 115px)";
-//   margin-top: 7px;
-// }
 .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x {
   margin-top: -13px;
   border-radius: 50%;

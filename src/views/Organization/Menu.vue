@@ -5,7 +5,7 @@
     <div id="EvalRecord" class="layoutcontainer menuguanli">
       <div class="menuleft">
         <div class="menuleft_header">
-          <a-button type="primary" @click="addmenu">新增菜单</a-button>
+          <a-button type="primary" @click="addmenu" v-isshow="'menu:save'">新增菜单</a-button>
         </div>
         <div>
           <div class="page-header-index-wide" id="Tree">
@@ -53,7 +53,7 @@
           <div style="height:40px;padding-top:5px;display: flex;
     justify-content: flex-end;"
 >
-            <a-button type="primary" @click="addbtn">添加按钮</a-button>
+            <a-button type="primary" @click="addbtn" v-isshow="'menu:save'">添加按钮</a-button>
           </div>
           <vxe-table
             stripe
@@ -100,7 +100,7 @@
                   @click="tableedit(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
                 >编辑</span>
-                <span type="text" @click="tableDlt(row)" style="color:#0db8df;cursor: pointer;">删除</span>
+                <span type="text" @click="tableDlt(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'menu:delete'">删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -227,7 +227,7 @@
         <a-row :gutter="24" class="menucenter">
           <a-col :span="12">
             <a-form-item label="是否启用">
-              <a-radio-group v-decorator="['isDisable', { initialValue: '1',  rules: [] }]">
+              <a-radio-group v-decorator="['isDisable', { initialValue: '',  rules: [] }]">
                 <a-radio value="1">是</a-radio>
                 <a-radio value="0">否</a-radio>
               </a-radio-group>
@@ -236,7 +236,7 @@
           <a-col :span="12">
             <a-form-item label="是否路由菜单">
               <a-radio-group
-                v-decorator="['route', { initialValue: '1',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                v-decorator="['route', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                 :max-length="LimitInputlength"
               >
                 <a-radio value="1">是</a-radio>
@@ -248,7 +248,7 @@
         <a-row :gutter="24" class="menucenter">
           <a-col :span="12">
             <a-form-item label="是否隐藏">
-              <a-radio-group v-decorator="['isHide', { initialValue: '0',  rules: [] }]">
+              <a-radio-group v-decorator="['isHide', { initialValue: '',  rules: [] }]">
                 <a-radio value="1">是</a-radio>
                 <a-radio value="0">否</a-radio>
               </a-radio-group>
@@ -256,7 +256,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-item label="是否缓存">
-              <a-radio-group v-decorator="['isKeepAlive', { initialValue: '0',  rules: [] }]">
+              <a-radio-group v-decorator="['isKeepAlive', { initialValue: '',  rules: [] }]">
                 <a-radio value="1">是</a-radio>
                 <a-radio value="0">否</a-radio>
               </a-radio-group>
@@ -398,6 +398,7 @@ export default class Menu extends Vue {
   // todo事件
 
   private rightClick(e) {
+    
     this.tmDisplay = true
     this.id = e.node.dataRef.code
     this.parentid = e.node.dataRef.parentCode
@@ -535,11 +536,10 @@ export default class Menu extends Vue {
         } else if (this.status == "编辑菜单") {
           console.log("编辑菜单")
           console.log(val)
-          console.log(this.id)
           obj = {
             icon: val.IconClass,
             id: this.id, //自身id
-            isRoot: val.isDisable, //禁用或启用
+            isEnabled: val.isDisable, //禁用或启用
             name: val.MenuName,
             parentId: this.parentid, //父级id
             remark: val.remark, //备注
@@ -616,11 +616,11 @@ export default class Menu extends Vue {
           pathalias: val.pathAlias,
           component: val.component,
           permission: val.permission,
-          isDisable: val.isEnabled + "",
+          remark: res.data.remark,
+          isDisable: val.isEnabled +"" ,
           route: val.route + "",
           isHide: val.hidden + "",
           isKeepAlive: val.keepAlive + "",
-          remark: res.data.remark,
         })
       })
     })

@@ -23,7 +23,7 @@
           </template>
           <template slot="operation" slot-scope="text, record">
             <div class="linkBox">
-              <a-button type="link" block @click="edit(record)">编辑</a-button>
+              <a-button type="link" block @click="edit(record)" v-isshow="'system:highConfig:update'">编辑</a-button>
             </div>
           </template>
         </a-table>

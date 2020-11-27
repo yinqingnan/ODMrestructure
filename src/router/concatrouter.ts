@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-26 10:25:19
- * @LastEditTime: 2020-11-26 14:17:08
+ * @LastEditTime: 2020-11-26 15:16:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\router\concatrouter.ts
@@ -38,7 +38,6 @@
 function concatrouter() {
   let obj = JSON.parse(localStorage.getItem("navlist"));
   let arr = createrouter(obj);
-  console.log(arr)
   const routers = [
     {
       path: "/",

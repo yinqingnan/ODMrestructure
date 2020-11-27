@@ -41,8 +41,8 @@
           </a-dropdown>
         </div>
         <div class="btnList">
-          <a-button class="upData mr10" @click="Export">导出</a-button>
-          <a-button class="upData" @click="add">添加</a-button>
+          <a-button class="upData mr10" @click="Export" v-isshow="'system:notice:export'">导出</a-button>
+          <a-button class="upData" @click="add" v-isshow="'system:notice:save'">添加</a-button>
         </div>
       </div>
       <!-- 内容 -->
@@ -62,14 +62,14 @@
           </template>
           <template slot="operation" slot-scope="text, record">
             <div class="linkBox">
-              <a-button type="link" block @click="edit(record)">编辑</a-button>
+              <a-button type="link" block @click="edit(record)" v-isshow="'system:notice:update'">编辑</a-button>
               <a-popconfirm
                 title="确定删除？"
                 ok-text="是"
                 cancel-text="否"
                 @confirm="remove(record.id)"
               >
-                <a-button type="link" block>删除</a-button>
+                <a-button type="link" block v-isshow="'system:notice:delete'">删除</a-button>
               </a-popconfirm>
             </div>
           </template>

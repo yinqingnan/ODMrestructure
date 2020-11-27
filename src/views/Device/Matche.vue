@@ -110,10 +110,10 @@
             </a-dropdown>
           </template>
           <div class="btns">
-            <a-button @click="add" type="primary">添加</a-button>
-            <a-button @click="dlt" type="primary">删除</a-button>
-            <a-button @click="imports" type="primary">导入</a-button>
-            <a-button @click="exports" type="primary">导出</a-button>
+            <a-button @click="add" type="primary" v-isshow="'device:matche:save'">添加</a-button>
+            <a-button @click="dlt" type="primary" v-isshow="'device:matche:delete'">删除</a-button>
+            <a-button @click="imports" type="primary" v-isshow="'device:matche:import'">导入</a-button>
+            <a-button @click="exports" type="primary" v-isshow="'device:matche:export'">导出</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -135,17 +135,20 @@
             <vxe-table-column field="actions" title="操作" align="center" flexd="right">
               <template v-slot="{ row }">
                 <span
+                  v-isshow="'device:matche:update'"
                   type="text"
                   @click="edit(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
                 >编辑</span>
                 <span
+                  v-isshow="'device:matche:active'"
                   type="text"
                   @click="Enable(row)"
                   v-if="row.deviceStatusName == '维修'"
                   style="color:#0db8df;cursor: pointer"
                 >启用</span>
                 <span
+                  v-isshow="'device:matche:repair'"
                   type="text"
                   @click="Report(row)"
                   style="color:#0db8df;cursor: pointer;"

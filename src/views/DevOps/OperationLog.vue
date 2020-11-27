@@ -79,7 +79,7 @@
             </a-dropdown>
           </template>
           <div class="btns">
-            <a-button @click="exports" type="primary">导出</a-button>
+            <a-button @click="exports" type="primary" v-isshow="'base:log:export'">导出</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">

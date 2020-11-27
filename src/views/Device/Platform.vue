@@ -92,11 +92,11 @@
             :row-class-name="tableRowClassName"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
-            <vxe-table-column field="name" title="子平台名称" show-overflow align="center" />
-            <vxe-table-column field="code" title="子平台编号" show-overflow align="center" />
-            <vxe-table-column field="deptName" title="所属部门" show-overflow align="center" />
-            <vxe-table-column field="ip" title="IP地址" show-overflow align="center" />
-            <vxe-table-column field="storageShow" title="剩余容量（GB）" show-overflow align="center">
+            <vxe-table-column field="name" title="子平台名称" show-overflow width="140" align="center" />
+            <vxe-table-column field="code" title="子平台编号" show-overflow width="140" align="center" />
+            <vxe-table-column field="deptName" title="所属部门" show-overflow  width="140" align="center" />
+            <vxe-table-column field="ip" title="IP地址" show-overflow  width="140" align="center" />
+            <vxe-table-column field="storageShow" title="剩余容量（GB）" width="140" show-overflow align="center">
               <template v-slot="{ row }">
                 <span
                   v-if="row.storageRest/(1024*1024*1024) < 500"
@@ -105,7 +105,7 @@
                 <span v-else>{{row.storageShow}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="storageShow2" title="总容量（GB）" align="center">
+            <vxe-table-column field="storageShow2" title="总容量（GB）" width="140" align="center">
               <template v-slot="{ row }">
                 <span>{{row.storageShow.replace(/GB/g,"").split('/')[1]}}</span>
               </template>
@@ -119,7 +119,7 @@
 
             <vxe-table-column title="操作" align="center">
               <template v-slot="{ row }">
-                <span @click="dlt(row)" style="color:#4d96ca;cursor:pointer;">删除</span>
+                <span @click="dlt(row)" style="color:#4d96ca;cursor:pointer;" v-isshow="'device:platform:delete'">删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>

@@ -27,8 +27,8 @@
                     </div>
                     <div>
                       <template v-if="item.isEnabled">
-                        <a-button style="margin-right:8px" @click="edit(item)">编辑</a-button>
-                        <a-button @click="dlt(item)" type="primary">删除</a-button>
+                        <a-button style="margin-right:8px" @click="edit(item)" v-isshow="'right:update,right:refmenu'">编辑</a-button>
+                        <a-button @click="dlt(item)" type="primary" v-isshow="'right:delete'">删除</a-button>
                       </template>
                       <template v-else>
                         <a-button
@@ -44,7 +44,7 @@
               </el-scrollbar>
             </div>
             <div class="rightfooter">
-              <a-button type="primary" @click="addbtn">添加</a-button>
+              <a-button type="primary" @click="addbtn" v-isshow="'right:save'">添加</a-button>
             </div>
           </div>
         </div>

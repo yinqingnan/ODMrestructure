@@ -56,8 +56,8 @@
             </a-dropdown>
           </template>
           <div class="btns">
-            <a-button @click="add">添加</a-button>
-            <a-button @click="dlt" type="primary">删除</a-button>
+            <a-button @click="add" type="primary" v-isshow="'device:storage:save'">添加</a-button>
+            <a-button @click="dlt" type="primary" v-isshow="'device:storage:delete'">删除</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -86,8 +86,8 @@
             <vxe-table-column field title="操作" align="center">
               <template v-slot="{ row }">
                 <div style="color:#4d96ca" v-if="!row.isPlatform">
-                  <span style="cursor:pointer" @click="edit(row)">编辑</span>
-                  <span style="margin-left: 8px;cursor:pointer;" @click="FTPconfig(row)">FTP配置</span>
+                  <span style="cursor:pointer" @click="edit(row)" v-isshow="'device:storage:update'">编辑</span>
+                  <span style="margin-left: 8px;cursor:pointer;" @click="FTPconfig(row)" v-isshow="'device:storage:ftp'">FTP配置</span>
                 </div>
               </template>
             </vxe-table-column>
@@ -159,7 +159,7 @@
         :width="800"
         class="ftptc"
       >
-        <a-button class="ftpadd" @click="ftpaddconfig">添加</a-button>
+        <a-button class="ftpadd" @click="ftpaddconfig" type="primary" v-isshow="'device:storageFtp:save'">添加</a-button>
         <vxe-table
           style="margin-top:40px"
           border
@@ -176,8 +176,8 @@
           <vxe-table-column field title="操作" align="center">
             <template v-slot="{ row }">
               <div style="color:#4d96ca">
-                <span style="cursor:pointer" @click="ftpedit(row)">编辑</span>
-                <span style="margin-left: 8px;cursor:pointer;" @click="ftpdlt(row)">删除</span>
+                <span style="cursor:pointer" @click="ftpedit(row)" v-isshow="'device:storageFtp:update'">编辑</span>
+                <span style="margin-left: 8px;cursor:pointer;" @click="ftpdlt(row)" v-isshow="'device:storageFtp:delete'">删除</span>
               </div>
             </template>
           </vxe-table-column>

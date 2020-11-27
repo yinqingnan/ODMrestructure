@@ -93,9 +93,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { LimitInputlength } from "../InterfaceVariable/variable";
-
+import { namespace } from "vuex-class"
+const Tabs = namespace("Tabs")
 @Component
 export default class Header extends Vue {
+   @Tabs.Mutation("cleartablist")
+  cleartablist!: (val: any) => {}
   [x: string]: any;
   public Login = new this.$api.configInterface.Login();
   private Noticeshow =  false
@@ -129,11 +132,9 @@ export default class Header extends Vue {
         okText: "确认",
         cancelText: "取消",
         onOk() {
-          // localStorage.removeItem("activeKey")
-          // localStorage.removeItem("Tabslist")
-          // localStorage.removeItem("token");
           localStorage.clear()
           that.$router.push({ name: "Login" });
+          that.cleartablist([])
         },
         class: "test"
       });

@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;justify-content: flex-end;"
         >
           <div class="accessbtn">
-            <a-button type="primary" @click="Uploadpackage">上传升级包</a-button>
+            <a-button type="primary" @click="Uploadpackage" v-isshow="'system:upgrade:save'">上传升级包</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -72,8 +72,8 @@
             <vxe-table-column field="modifyTime" title="上传时间" align="center" width="180" />
             <vxe-table-column title="操作" align="center" fixed="right" width="180">
               <template v-slot="{ row }">
-                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;margin-right:8px">编辑</span>
-                <span @click="dlt(row.id)" style="color:#4d96ca;cursor:pointer;">删除</span>
+                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;margin-right:8px" v-isshow="'system:upgrade:update'">编辑</span>
+                <span @click="dlt(row.id)" style="color:#4d96ca;cursor:pointer;" v-isshow="'system:upgrade:delete'">删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>

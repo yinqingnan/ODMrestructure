@@ -47,9 +47,9 @@
           </a-dropdown>
         </div>
         <div class="btnList">
-          <a-button class="upData mr10" @click="imports">导入</a-button>
-          <a-button class="upData mr10" @click="Export">导出</a-button>
-          <a-button class="upData" @click="add">添加</a-button>
+          <a-button class="upData mr10" @click="imports" v-isshow="'base:dept:import'">导入</a-button>
+          <a-button class="upData mr10" @click="Export" v-isshow="'base:dept:export'">导出</a-button>
+          <a-button class="upData" @click="add" v-isshow="'base:dept:save'">添加</a-button>
         </div>
       </div>
       <!-- 内容 -->
@@ -74,9 +74,9 @@
           <el-table-column prop="remark" label="部门描述" width="300" />
           <el-table-column fixed="right" label="操作" width="300">
             <template slot-scope="scope">
-              <el-button @click="addS(scope.row)" type="text">添加子部门</el-button>
-              <el-button @click="edit(scope.row)" type="text">编辑</el-button>
-              <el-button type="text" @click="remove(scope.row.deptId)">删除</el-button>
+              <el-button @click="addS(scope.row)" type="text" v-isshow="'base:dept:savelow'">添加子部门</el-button>
+              <el-button @click="edit(scope.row)" type="text" v-isshow="'base:dept:update'">编辑</el-button>
+              <el-button type="text" @click="remove(scope.row.deptId)" v-isshow="'base:dept:delete'">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -458,8 +458,16 @@ export default class Dept extends Vue {
     }
   }
   private remove(id: string): void {
-    this.getData.deptdlt(id).then(res=>{
-      console.log(res)
+    this.getData.removeID({id:id}).then(res=>{
+      if(res.code == 0){
+        this.$message.success(res.msg)
+        const val = {
+              parentCode: "parent_top",
+              name_like: "",
+              code_like: "",
+            }
+        this.getList(val)
+      }
     })
     
   }

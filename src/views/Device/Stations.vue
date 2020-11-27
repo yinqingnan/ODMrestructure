@@ -81,14 +81,14 @@
             </a-dropdown>
           </template>
           <div class="btns">
-            <a-button type="primary" @click="Enable">启用</a-button>
-            <a-button type="primary" @click="restarts">重启</a-button>
-            <a-button type="primary" @click="datasync">数据同步</a-button>
-            <a-button type="primary" @click="upgrade">升级</a-button>
-            <a-button type="primary" @click="Shutdown">关机</a-button>
-            <a-button type="primary" @click="Disable">禁用</a-button>
-            <a-button type="primary" @click="dlt">删除</a-button>
-            <a-button type="primary" @click="daochu">导出</a-button>
+            <a-button type="primary" @click="Enable" v-isshow="'device:stations:active'">启用</a-button>
+            <a-button type="primary" @click="restarts" v-isshow="'device:stations:restart'">重启</a-button>
+            <a-button type="primary" @click="datasync" v-isshow="'device:stations:sync'">数据同步</a-button>
+            <a-button type="primary" @click="upgrade" v-isshow="'device:stations:upgrade'">升级</a-button>
+            <a-button type="primary" @click="Shutdown" v-isshow="'device:stations:shutdown'">关机</a-button>
+            <a-button type="primary" @click="Disable" v-isshow="'device:stations:disable'">禁用</a-button>
+            <a-button type="primary" @click="dlt" v-isshow="'device:stations:delete'">删除</a-button>
+            <a-button type="primary" @click="daochu" v-isshow="'device:stations:export'">导出</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">

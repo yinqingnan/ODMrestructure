@@ -87,13 +87,21 @@
             </a-dropdown>
           </template>
           <div class="btns">
-            <a-button @click="add" type="primary">添加</a-button>
-            <a-button @click="distributionzfy" type="primary">分配4G执法仪账号</a-button>
-            <a-button @click="distributionddt" type="primary">分配4G调度台账号</a-button>
-            <a-button @click="Resetpwd" type="primary">重置密码</a-button>
-            <a-button @click="imports" type="primary">导入</a-button>
-            <a-button @click="exports" type="primary">导出</a-button>
-            <a-button @click="dlt" type="primary">删除</a-button>
+            <a-button @click="add" type="primary" v-isshow="'base:user:save'">添加</a-button>
+            <a-button
+              @click="distributionzfy"
+              type="primary"
+              v-isshow="'base:user:access'"
+            >分配4G执法仪账号</a-button>
+            <a-button
+              @click="distributionddt"
+              type="primary"
+              v-isshow="'base:user:accessdd'"
+            >分配4G调度台账号</a-button>
+            <a-button @click="Resetpwd" type="primary" v-isshow="'base:user:reset'">重置密码</a-button>
+            <a-button @click="imports" type="primary" v-isshow="'base:user:import'">导入</a-button>
+            <a-button @click="exports" type="primary" v-isshow="'base:user:export'">导出</a-button>
+            <a-button @click="dlt" type="primary" v-isshow="'base:user:delete'">删除</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -152,7 +160,7 @@
               minWidth="190"
             >
               <template v-slot="{ row }">
-                <div v-if="row.commDeviceCode" style="display:flex;">
+                <div v-if="row.commDeviceCode" style="display:flex;" v-isshow="'base:user:4glist'">
                   <span
                     style="border-bottom: 0.5px solid #0cb9de;cursor:pointer;color:#0cb9de"
                     @click="zfy(row)"
@@ -190,7 +198,7 @@
             />
             <vxe-table-column title="操作" show-overflow align="center" fixed="right" minWidth="100">
               <template v-slot="{ row }">
-                <span type="text" @click="edit(row)" style="color:#0db8df;cursor: pointer;">编辑</span>
+                <span type="text" @click="edit(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'base:user:update'">编辑</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -373,33 +381,35 @@
       <!-- 二维码弹窗 -->
       <a-modal v-model="QRshow" title="二维码登录" :width="325" :footer="null" class="qrcodemodule">
         <div style="text-alin">
-        <div class="qrcode" ref="qrCodeUrl"></div>
+          <div class="qrcode" ref="qrCodeUrl"></div>
         </div>
       </a-modal>
 
-      <a-modal v-model="importshow" title="用户导入" :width="675"  class="importmodule" @cancel = "importclear">
+      <a-modal
+        v-model="importshow"
+        title="用户导入"
+        :width="675"
+        class="importmodule"
+        @cancel="importclear"
+      >
         <div class="importheader">
           <p>提示：第一次导入的时候请先下载模板，编辑内容后再进行导入操作。</p>
-            <div style="display:flex">
-              <a-upload :file-list="fileList" :before-upload="beforeUpload" accept=".xls,.xlsx">
-                <a-button @click="selectfile">
-                  <a-icon type="upload" />选择文件上传
-                </a-button>
-              </a-upload>
-              <a-button type @click="downloadtemplate" style="margin-left:9px">下载模板</a-button>
-            </div>
-            <h2>{{filename||""}}</h2>
+          <div style="display:flex">
+            <a-upload :file-list="fileList" :before-upload="beforeUpload" accept=".xls, .xlsx">
+              <a-button @click="selectfile">
+                <a-icon type="upload" />选择文件上传
+              </a-button>
+            </a-upload>
+            <a-button type @click="downloadtemplate" style="margin-left:9px">下载模板</a-button>
+          </div>
+          <h2>{{filename||""}}</h2>
         </div>
-         <div class="importfooter">
-           <div v-if="iserror">
-              <a-divider orientation="left" style="color:#919AA6;font-size:12px">
-                失败原因
-              </a-divider>
-              <p style="padding:0 36px 0 30px">
-                {{errormsg}}
-              </p>
-           </div>
-         </div>
+        <div class="importfooter">
+          <div v-if="iserror">
+            <a-divider orientation="left" style="color:#919AA6;font-size:12px">失败原因</a-divider>
+            <p style="padding:0 36px 0 30px">{{errormsg}}</p>
+          </div>
+        </div>
         <template slot="footer">
           <a-button type="primary" @click="importben">开始导入</a-button>
         </template>
@@ -891,10 +901,9 @@ export default class User extends Vue {
     this.OrganizationM.getQRcode({ userId: row.id }).then((res) => {
       if (res.code == 0) {
         let text = res.data
-        this.$message.success(res.msg);
-        (this.$refs.qrCodeUrl as any).innerHTML = ''   //清空当前
+        this.$message.success(res.msg)
+        ;(this.$refs.qrCodeUrl as any).innerHTML = "" //清空当前
         this.qrCode(text)
-
       } else {
         this.$message.error(res.msg)
       }
@@ -902,27 +911,26 @@ export default class User extends Vue {
   }
   private qrCode(data: any): void {
     // console.log(this.$refs.qrCodeUrl)
-      let qrcode = new QRCode(this.$refs.qrCodeUrl, {
-        width: 230, //图像宽度
-        height: 230, //图像高度
-        colorDark: "#000000", //前景色
-        colorLight: "#ffffff", //背景色
-        typeNumber: 4,
-        correctLevel: QRCode.CorrectLevel.L,
-      })
-      // 容错登记———从低到高
+    let qrcode = new QRCode(this.$refs.qrCodeUrl, {
+      width: 230, //图像宽度
+      height: 230, //图像高度
+      colorDark: "#000000", //前景色
+      colorLight: "#ffffff", //背景色
+      typeNumber: 4,
+      correctLevel: QRCode.CorrectLevel.L,
+    })
+    // 容错登记———从低到高
     // QRCode.CorrectLevel.L
     // QRCode.CorrectLevel.M
     // QRCode.CorrectLevel.Q
     // QRCode.CorrectLevel.H
-      qrcode.clear() //清除二维码
-      qrcode.makeCode(data) //生成另一个新的二维码
-
+    qrcode.clear() //清除二维码
+    qrcode.makeCode(data) //生成另一个新的二维码
   }
   private repairCancel() {
     this.visible = false
   }
-  private importclear(){
+  private importclear() {
     this.filename = ""
     this.fileList = []
     this.iserror = false
@@ -933,42 +941,39 @@ export default class User extends Vue {
     window.location.href = downloadUrl
   }
   private beforeUpload(file) {
-    
-    if(file.type === "application/vnd.ms-excel"){
-        this.filename = file.name
-        this.fileList = [file]
-        return false
-    }else{
+    if (file.type === "application/vnd.ms-excel") {
+      this.filename = file.name
+      this.fileList = [file]
+      return false
+    } else {
       this.$message.error("文件类型错误，仅支持.xls 和 .xlsx 类型的文件")
     }
   }
   private importben() {
-  
-  if(this.fileList.length>0){
-    let formData = new FormData() //保存文件后再保存
-        formData.append("file", this.fileList[0])
-        axios
-          .post(http + "api/mdm/device/matche/import", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Token: localStorage.getItem("token"),
-            },
-          })
-          .then((res: any) => {
-            if(res == 'ok'){
-              this.importshow = false
-              this.iserror = false
-              this.fileList = []
-              this.filename =""
-            }else{
-              this.iserror = true
-              this.errormsg = res.data
-            }
-          })
-  }else{
-    this.$message.error("未选择文件")
-  }
-  
+    if (this.fileList.length > 0) {
+      let formData = new FormData() //保存文件后再保存
+      formData.append("file", this.fileList[0])
+      axios
+        .post(http + "api/mdm/device/matche/import", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Token: localStorage.getItem("token"),
+          },
+        })
+        .then((res: any) => {
+          if (res == "ok") {
+            this.importshow = false
+            this.iserror = false
+            this.fileList = []
+            this.filename = ""
+          } else {
+            this.iserror = true
+            this.errormsg = res.data
+          }
+        })
+    } else {
+      this.$message.error("未选择文件")
+    }
   }
   private selectfile() {
     this.filename = ""
@@ -1011,9 +1016,8 @@ export default class User extends Vue {
   height: 280px;
 }
 .qrcode {
-  img{
+  img {
     margin: 0 auto;
   }
 }
-
 </style>

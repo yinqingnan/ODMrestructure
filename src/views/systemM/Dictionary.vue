@@ -5,7 +5,7 @@
       <div class="header">
         <div class="select">岗位字典项</div>
         <div class="btnList">
-          <a-button class="upData" @click="add">添加字典项</a-button>
+          <a-button class="upData" @click="add" v-isshow="'base:dict:save'">添加字典项</a-button>
         </div>
       </div>
       <!-- 内容 -->
@@ -25,14 +25,14 @@
           </template>
           <template slot="operation" slot-scope="text, record">
             <div class="linkBox">
-              <a-button type="link" block @click="edit(record)">编辑</a-button>
+              <a-button type="link" block @click="edit(record)" v-isshow="'base:dict:update'">编辑</a-button>
               <a-popconfirm
                 title="确定删除？"
                 ok-text="是"
                 cancel-text="否"
                 @confirm="remove(record.id)"
               >
-                <a-button type="link" block>删除</a-button>
+                <a-button type="link" block v-isshow="'base:dict:delete'">删除</a-button>
               </a-popconfirm>
             </div>
           </template>

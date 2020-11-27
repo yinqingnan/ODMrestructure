@@ -131,7 +131,7 @@
             </vxe-table-column>
             <vxe-table-column field="actions" title="操作" align="center">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;">查看</span>
+                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'fileEvaluate:evaluationRecord:look'">查看</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -427,7 +427,7 @@
         <template slot="footer">
           <!-- <a-button type @click="previous">上一个</a-button>
           <a-button type @click="next">下一个</a-button>-->
-          <a-button type @click="filedownload">下载</a-button>
+          <a-button type @click="filedownload" v-isshow="'fileEvaluate:evaluationRecord:download'" >下载</a-button>
           <!-- <a-button type @click="moduleDlt">删除</a-button> -->
         </template>
       </a-modal>
