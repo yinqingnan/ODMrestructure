@@ -70,10 +70,11 @@ const Menu = namespace("Menu")
 const Tabs = namespace("Tabs")
 @Component
 export default class Login extends Vue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any
   @Menu.Mutation("addmenu")
   addmenu!: (val: any) => {}
+  @Tabs.Mutation("cleartablist")
+  cleartablist!: (val: any) => {}
   public form!: any
   private checkNick = false
   public Login = new this.$api.configInterface.Login()
@@ -87,6 +88,7 @@ export default class Login extends Vue {
     this.gettitle()
     this.jurisdiction()
     this.getCookie()
+    this.cleartablist([])
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleSubmit(e: any): void {

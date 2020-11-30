@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-11-27 17:48:46
+ * @LastEditTime: 2020-11-30 14:17:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
@@ -53,7 +53,7 @@ export const list = [
     path: "/file",
     name: "file",
     redirect: null,
-    component: "",
+    component: "Index/Home.vue",
     hidden: false,
     meta: {
       key: "3",
@@ -273,7 +273,7 @@ export const list = [
         hidden: false,
         meta: {
           key: "20",
-          title: "考评统计",
+          title: "考评设置",
           icon: "iconsupervise_statistics",
           keepAlive: false,
           permission: ["fileEvaluate:evSet:save", "fileEvaluate:evSet:add"],
@@ -529,8 +529,8 @@ export const list = [
   },
   {
     key: "7",
-    path: "/",
-    name: "yonghuzhongxin",
+    path: "/Usercore",
+    name: "Usercore",
     redirect: null,
     component: "",
     hidden: false,
@@ -664,8 +664,8 @@ export const list = [
   },
   {
     key: "8",
-    path: "/",
-    name: "pingtaiguanli",
+    path: "/PlatformM",
+    name: "PlatformM",
     redirect: null,
     component: "",
     hidden: false,

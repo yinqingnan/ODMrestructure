@@ -115,7 +115,7 @@
                     </a-form-item>
                   </el-scrollbar>
                   <div class="modulebot">
-                    <a-button  type="Default" @click="reset">重置</a-button>
+                    <a-button type="Default" @click="reset">重置</a-button>
                     <a-button type="primary" @click="handleSubmit">查询</a-button>
                   </div>
                 </a-form>
@@ -123,8 +123,18 @@
             </a-dropdown>
           </template>
           <div style="line-height:1">
-            <a-button type="primary" @click="dlt" style="line-height:1" v-isshow="'lawarchives:avDate:deletes'">批量删除</a-button>
-            <a-button v-isshow="'lawarchives:avDate:downloads'" type="primary" @click="download" style="line-height:1">批量下载</a-button>
+            <a-button
+              type="primary"
+              @click="dlt"
+              style="line-height:1"
+              v-isshow="'lawarchives:avDate:deletes'"
+            >批量删除</a-button>
+            <a-button
+              v-isshow="'lawarchives:avDate:downloads'"
+              type="primary"
+              @click="download"
+              style="line-height:1"
+            >批量下载</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -150,9 +160,14 @@
               width="240"
             >
               <template v-slot="{ row }">
-                <span class="iconfont" :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}" style="font-size:24px;vertical-align: middle;color:#a7a7a7;margin-right: 14px;"></span>
-                <span style="height:22px;width:30px;color:#fff;    border-radius: 5px;margin-right:15px;display: inline-block;line-height: 22px;font-size: 12px;" :class="{'gao': row.fileLevel_Name === '高', 'zhong': row.fileLevel_Name=='中', 'di': row.fileLevel_Name=='低'}">{{row.fileLevel_Name}}</span>
-
+                <span
+                  class="iconfont iconblock"
+                  :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
+                ></span>
+                <span
+                  class="textblock"
+                  :class="{'gao': row.fileLevel_Name === '高', 'zhong': row.fileLevel_Name=='中', 'di': row.fileLevel_Name=='低'}"
+                >{{row.fileLevel_Name}}</span>
                 <span>{{row.fileName}}</span>
               </template>
             </vxe-table-column>
@@ -160,7 +175,6 @@
             <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow />
             <vxe-table-column field="userCode" title="民警警号" align="center" />
             <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
-            <!-- <vxe-table-column field="fileLevel_Name" title="重要级别" align="center" /> -->
             <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
             <vxe-table-column field="uploadDate" title="导入时间" show-overflow align="center" />
             <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
@@ -170,7 +184,12 @@
             </vxe-table-column>
             <vxe-table-column field="action" title="操作" align="center" fixed="right">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'lawarchives:avDate:look'">查看</span>
+                <span
+                  type="text"
+                  @click="tablebtn(row)"
+                  style="color:#0db8df;cursor: pointer;"
+                  v-isshow="'lawarchives:avDate:look'"
+                >查看</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -227,7 +246,7 @@
                   <h2>剩余存储天数：{{filedetails.storageDays}}</h2>
                 </div>
               </a-tab-pane>
-              <a-tab-pane key="2" tab="标记" force-render >
+              <a-tab-pane key="2" tab="标记" force-render>
                 <a-form
                   :form="form"
                   :label-col="{ span: 6 }"
@@ -278,7 +297,11 @@
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
-                    <a-button v-isshow="'lawarchives:avDate:oneBtn'" type="primary" html-type="submit">保存</a-button>
+                    <a-button
+                      v-isshow="'lawarchives:avDate:oneBtn'"
+                      type="primary"
+                      html-type="submit"
+                    >保存</a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -470,7 +493,11 @@
                     v-if="!disabled"
                     style="text-align:center"
                   >
-                    <a-button v-isshow="'lawarchives:avDate:foreBtn'" type="primary" html-type="submit">保存</a-button>
+                    <a-button
+                      v-isshow="'lawarchives:avDate:foreBtn'"
+                      type="primary"
+                      html-type="submit"
+                    >保存</a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -481,7 +508,7 @@
         <template slot="footer">
           <a-button type @click="previous">上一个</a-button>
           <a-button type @click="next">下一个</a-button>
-          <a-button type @click="filedownload" v-isshow ="'lawarchives:avDate:download'">下载</a-button>
+          <a-button type @click="filedownload" v-isshow="'lawarchives:avDate:download'">下载</a-button>
           <a-button type @click="moduleDlt">删除</a-button>
         </template>
       </a-modal>
@@ -568,7 +595,7 @@ export default class AvData extends Vue {
     storageLocation_Name: "",
     storageDays: "",
     downloadPath: "",
-    id:""
+    id: "",
   }
   private myDate = []
   private selectdata = []
@@ -958,7 +985,7 @@ export default class AvData extends Vue {
   private tableRowClassName(record: any, index: number) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
-  
+
   public modify(row) {
     var cases = row.relateCase
     if (cases) {
@@ -1197,13 +1224,5 @@ export default class AvData extends Vue {
     width: 284px !important;
   }
 }
-.gao{
-  background:#bc4141 ;
-}
-.zhong{
-  background:#f19149 ;
-}
-.di{
-  background:#5086c2 ;
-}
+
 </style>

@@ -269,10 +269,10 @@ export default class Right extends Vue {
 .rights {
   display: flex;
   justify-content: flex-start;
-  .rightsleft {
-  }
+  // .rightsleft {
+  // }
   .rightsright {
-    background: pink;
+    // background: pink;
     width: 100%;
   }
 }

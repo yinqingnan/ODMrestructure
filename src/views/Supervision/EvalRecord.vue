@@ -109,15 +109,30 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
+            <vxe-table-column type="checkbox" width="50" align="center" />
             <vxe-table-column
-              v-for="(config, index) in tableColumn"
+              field="fileName"
+              title="文件名称"
+              align="center"
               show-overflow
-              :key="index"
-              v-bind="config"
-            />
-            <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
+              width="300"
+            >
+              <template v-slot="{ row }">
+                <span
+                  class="iconfont iconblock"
+                  :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
+                ></span>
+                <span>{{row.fileName}}</span>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="deptCode" title="执勤部门" align="center" width="100" />
+            <vxe-table-column field="userName" title="民警姓名" align="center" width="100" show-overflow />
+            <vxe-table-column field="userCode" title="民警警号" align="center"  width="100" />
+            <vxe-table-column field="fileType_Name" title="文件类型" width="100" align="center" />
+            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
+            <vxe-table-column field="relateCase" title="关联信息" show-overflow width="100" align="center">
               <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column>-->
+            </vxe-table-column>
             <vxe-table-column field="score" title="考评结果" align="center" show-overflow>
               <template v-slot="{ row }">
                 <span :style="{'color': (textcolor==true ? 'green':'#ff0000')}">{{score(row)}}</span>
@@ -129,7 +144,7 @@
             <vxe-table-column field="evaluateName" title="考评人" show-overflow align="center">
               <template v-slot="{ row }">{{evaluateName(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="actions" title="操作" align="center">
+            <vxe-table-column field="actions" title="操作" align="center" flexd="right">
               <template v-slot="{ row }">
                 <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'fileEvaluate:evaluationRecord:look'">查看</span>
               </template>

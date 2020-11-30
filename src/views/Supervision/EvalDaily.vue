@@ -96,20 +96,45 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
+            <vxe-table-column type="checkbox" width="50" align="center" />
             <vxe-table-column
-              v-for="(config, index) in tableColumn"
+              field="fileName"
+              title="文件名称"
+              align="center"
               show-overflow
-              :key="index"
-              v-bind="config"
+              width="350"
+            >
+              <template v-slot="{ row }">
+                <span
+                  class="iconfont iconblock"
+                  :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
+                ></span>
+                <span>{{row.fileName}}</span>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="deptCode" title="执勤部门" align="center" />
+            <vxe-table-column
+              field="userName"
+              title="民警姓名"
+              align="center"
+              width="100"
+              show-overflow
             />
-            <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
-              <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column>-->
-
+            <vxe-table-column field="userCode" title="民警警号" align="center" />
             <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="actions" title="操作" align="center">
+            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
+            <vxe-table-column
+              field="relateCase"
+              title="关联信息"
+              show-overflow
+              width="100"
+              align="center"
+            >
+              <template v-slot="{ row }">{{relateCase(row)}}</template>
+            </vxe-table-column>
+            <vxe-table-column field="actions" title="操作" align="center" width="150">
               <template v-slot="{ row }">
                 <span
                   type="text"
