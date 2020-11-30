@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-25 10:21:44
+ * @LastEditTime: 2020-11-30 19:37:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\api\interceptors.ts
  */
 import axios from "axios";
-import { message } from "ant-design-vue";
+import { message } from 'ant-design-vue';   // 弹吐司
 import qs from 'qs'
 
 export const http = window.gurl.SERVICE_CONTEXT_PATH
@@ -105,3 +105,4 @@ export class Interceptors {
     }
   }
 }
+

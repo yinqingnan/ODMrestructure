@@ -8,13 +8,14 @@ import router from '../../router/index'
  */
 export class Supervision {
   public axios: any;
+  public Resultprocessing: any
   constructor() {
     this.axios = new Interceptors().getInterceptors()
+
   }
   // todo 获取考评记录table数据
   public gettabledata(params: object, jwt=TextTrackCueList) {
     const url = "/api/tpb/lawarchives/file-evaluate/already/list";
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
@@ -105,12 +106,6 @@ export class Supervision {
  * @param resolve
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
-    // 在此处判断res.status状态然后返回值
-    // if (res.code === 0) {
-    // resolve(res);
-    // } else {
-    //   this.errorHandle(res);
-    // }
      if (res.code == 1002 || res.code == 1004) {
               Modal.confirm({
         title: '提示',
