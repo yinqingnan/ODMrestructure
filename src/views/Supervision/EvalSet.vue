@@ -83,7 +83,6 @@ export default class EvalSet extends Vue {
   public created() {
     this.form = this.$form.createForm(this)
     this.Height = `${document.documentElement.clientHeight - 210}px`
-    console.log(this.Height)
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {

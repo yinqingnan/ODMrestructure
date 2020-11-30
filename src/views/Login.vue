@@ -117,8 +117,8 @@ export default class Login extends Vue {
         localStorage.setItem("token", res.data.accessToken)
         this.Login.getMenudata().then((res) => {
           if (res.code == 0) {
-            //  let arr = res.data   //菜单数据
-            let arr = list //菜单数据
+             let arr = res.data   //菜单数据
+            // let arr = list //菜单数据
             localStorage.setItem("navlist", JSON.stringify(arr))
             this.addmenu(concatrouter())
             resetRouter(); //重置路由

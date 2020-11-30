@@ -73,8 +73,9 @@ export default class LeftMenu extends Vue {
   private getdata() {
     this.Login.getMenudata().then((res) => {
       if (res.code == 0) {
-        // this.list = res.data
-        this.list = list
+        console.log(res.data)
+        this.list = res.data
+        // this.list = list
         let name = this.$route.name
         this.openKeys = [this.findIndexArray(this.list, name, [])[0]]
       }

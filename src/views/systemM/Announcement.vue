@@ -1,5 +1,6 @@
 <template>
   <div id="Announcement">
+    <!-- 公告管理 -->
     <div class="box">
       <!-- 头部 -->
       <div class="header">

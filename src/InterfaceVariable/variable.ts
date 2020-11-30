@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-11-30 14:17:40
+ * @LastEditTime: 2020-11-30 16:54:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
@@ -635,6 +635,7 @@ export const list = [
             "right:update",
             "right:delete",
             "right:save",
+            "right:update,right:refmenu"
           ],
         },
         children: null,

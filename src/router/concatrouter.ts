@@ -1,14 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2020-11-26 10:25:19
- * @LastEditTime: 2020-11-26 15:16:44
+ * @LastEditTime: 2020-11-30 19:04:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\router\concatrouter.ts
  */
-// import createrouter  from "./createrouter";
  function createrouter(routerMap, parent?) {
-  // console.log(routerMap)
   let routerarr = [];
   routerMap.map(item => {
     if (item.children == null) {
@@ -37,6 +35,7 @@
 }
 function concatrouter() {
   let obj = JSON.parse(localStorage.getItem("navlist"));
+  // console.log(obj)
   let arr = createrouter(obj);
   const routers = [
     {
