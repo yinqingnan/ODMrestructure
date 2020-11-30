@@ -39,7 +39,7 @@
                     v-decorator="['Points'+index, {
                           initialValue: item.jffz,
                           rules: [],
-                           getValueFromEvent: (event) => {
+                          getValueFromEvent: (event) => {
                 return event.target.value.replace(/[\u4E00-\u9FA5]/g,'')
             }
                         }]"
