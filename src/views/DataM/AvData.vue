@@ -2,7 +2,7 @@
   <div>
     <div id="AvData" class="layoutcontainer">
       <div class="container">
-        <div class="contaninerheader" style="padding-left:26px">
+        <div class="contaninerheader" style="padding:13px 26px 0 26px">
           <template>
             <a-dropdown :trigger="['click']" class="dropdown">
               <a class="ant-dropdown-link" @click="popup">
@@ -171,7 +171,7 @@
                 <span>{{row.fileName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deptCode" title="执勤部门" align="center" />
+            <vxe-table-column field="deptCode" title="执勤部门" align="center" width="100" />
             <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow />
             <vxe-table-column field="userCode" title="民警警号" align="center" />
             <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
@@ -206,7 +206,14 @@
           </p>
         </div>
       </div>
-      <a-modal @cancel="tccancel" v-model="visible" title="视频查看" @ok="handleOk" :width="1000">
+      <a-modal
+        @cancel="tccancel"
+        v-model="visible"
+        title="视频查看"
+        @ok="handleOk"
+        :width="1000"
+        :destroyOnClose="true"
+      >
         <div class="filesee">
           <div class="filesee_left">
             <div v-if="filedetails.fileType_Name == '图片'">
@@ -312,7 +319,7 @@
                   :wrapper-col="{ span: 18 }"
                   @submit="biaozhuSubmit"
                 >
-                  <el-scrollbar style="height:300px;width: 397px;">
+                  <el-scrollbar style="height:300px;width: 379px;">
                     <a-form-item label="标注类型">
                       <a-select
                         @change="labelTypeChange"
@@ -596,6 +603,11 @@ export default class AvData extends Vue {
     storageDays: "",
     downloadPath: "",
     id: "",
+    fileType_Name: "",
+    marker: "",
+    categoryId: "",
+    userName: "",
+    fileLevel: "",
   }
   private myDate = []
   private selectdata = []
@@ -713,15 +725,14 @@ export default class AvData extends Vue {
     e.preventDefault()
   }
   private tablebtn(row: any) {
-    this.visible = true
-    this.fileCode = row.code
-    this.fileId = row.id
-    this.activeKey = "1"
-    this.form2.resetFields()
-    this.form1.resetFields()
     // 弹窗文件信息
     this.DataM.getfiledetails(row.id).then((res) => {
-      console.log(typeof res.data)
+      this.visible = true
+      this.fileCode = row.code
+      this.fileId = row.id
+      this.activeKey = "1"
+      this.form2.resetFields()
+      this.form1.resetFields()
       this.filedetails = res.data
       // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
     })
@@ -1200,7 +1211,7 @@ export default class AvData extends Vue {
     color: #7f8893;
   }
   ul {
-    padding-left: 30px;
+    padding-left: 24px;
     li {
       line-height: 36px;
       font-size: 12px;
@@ -1224,5 +1235,4 @@ export default class AvData extends Vue {
     width: 284px !important;
   }
 }
-
 </style>

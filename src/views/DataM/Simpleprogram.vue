@@ -120,15 +120,45 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="60" title="序号" align="center" />
-            <vxe-table-column field="deptName" title="执勤部门" align="center" show-overflow />
-            <vxe-table-column field="userName" title="民警姓名" align="center" />
-            <vxe-table-column field="code" title="决定书编号" align="center"  width="130" show-overflow />
-            <vxe-table-column field="litigant" title="当事人" align="center" />
-            <vxe-table-column field="driverNum" title="驾驶证号" align="center" show-overflow />
-            <vxe-table-column field="numberPlate" title="号码号牌" align="center" />
-            <vxe-table-column field="hpzlText" title="号牌种类" align="center" show-overflow />
-            <vxe-table-column field="illegalTime" title="违法时间" show-overflow align="center" />
+            <vxe-table-column type="seq" width="50" title="序号" align="center" />
+            <vxe-table-column
+              field="deptName"
+              title="执勤部门"
+              align="center"
+              min-width="80"
+              show-overflow
+            />
+            <vxe-table-column field="userName" title="民警姓名" align="center" min-width="80" />
+            <vxe-table-column
+              field="code"
+              title="决定书编号"
+              align="center"
+              min-width="110"
+              show-overflow
+            />
+            <vxe-table-column field="litigant" title="当事人" align="center" min-width="80" />
+            <vxe-table-column
+              field="driverNum"
+              title="驾驶证号"
+              align="center"
+              show-overflow
+              min-width="80"
+            />
+            <vxe-table-column field="numberPlate" title="号码号牌" align="center" min-width="80" />
+            <vxe-table-column
+              field="hpzlText"
+              title="号牌种类"
+              align="center"
+              show-overflow
+              min-width="80"
+            />
+            <vxe-table-column
+              field="illegalTime"
+              title="违法时间"
+              show-overflow
+              align="center"
+              min-width="80"
+            />
             <vxe-table-column
               field="illegalAddress"
               title="违法地址"
@@ -136,9 +166,15 @@
               width="100"
               show-overflow
             />
-            <vxe-table-column field="illegalDeed" title="违法行为" show-overflow align="center" />
-            <vxe-table-column field="relatedInfo" title="关联信息" align="center" />
-            <vxe-table-column field="active" title="操作" align="center">
+            <vxe-table-column
+              field="illegalDeed"
+              title="违法行为"
+              show-overflow
+              align="center"
+              min-width="80"
+            />
+            <vxe-table-column field="relatedInfo" title="关联信息" align="center" min-width="80" />
+            <vxe-table-column field="active" title="操作" align="center" min-width="80">
               <template v-slot="{ row }">
                 <vxe-button type="text" @click="tablebtn(row)" style="color:#0db8df">查看</vxe-button>
               </template>
@@ -356,17 +392,6 @@
               </template>
             </vxe-table-column>
           </vxe-table>
-          <!-- <p>
-            <vxe-pager
-              align="right"
-              size="mini"
-              :layouts="layouts"
-              :current-page.sync="page.currentPage"
-              :page-size.sync="page.pageSize"
-              :total="page.totalResult"
-              @page-change="Associatedfilestablechange"
-            />
-          </p> -->
         </div>
       </a-modal>
 
@@ -420,7 +445,6 @@ export default class Simpleprogram extends Vue {
   private departmentData = []
   private Height = ""
   private tableData = []
-
   private page = page
   private loading = false
   private layouts = layouts
@@ -468,6 +492,10 @@ export default class Simpleprogram extends Vue {
     illegalAddress: "",
     illegalDeed: "",
     illegalTime: [],
+    deptName: "",
+    userName: "",
+    userCode: "",
+    driverNum: "",
   }
   private filetype = [
     { id: 0, value: "请选择", title: "请选择" },
@@ -479,7 +507,8 @@ export default class Simpleprogram extends Vue {
   private MatchFiles = []
   private WithID = []
   private defaultone = {
-    fileName:""
+    fileName: "",
+    fileType:""
   }
   private Associatedfilestabledata = []
   private calculationdate = [
@@ -498,7 +527,9 @@ export default class Simpleprogram extends Vue {
     })
     this.gettabledata({})
   }
-  private Fileview = {}
+  private Fileview = {
+    fileType:''
+  }
   private formdata = {
     department: "",
     user: "",
@@ -614,13 +645,21 @@ export default class Simpleprogram extends Vue {
     this.casecode = row.code
     this.visible = true
     this.DataM.CaseDetails({ code: row.code, type: 1 }).then((res) => {
-      console.log(res)
-      this.CaseDetails = res.data
+      console.log(res.data)
+      if (res.data) {
+        this.CaseDetails = res.data
+      }
     })
     this.DataM.MatchFiles(row.code).then((res) => {
       console.log(res)
-      this.MatchFiles = res.data
-      this.defaultone = res.data[0]
+      if(res.data.length> 0){
+        this.MatchFiles = res.data
+        this.defaultone = res.data[0]
+      }else{
+        this.defaultone.fileName=""
+        this.defaultone.fileType=""
+      }
+      
     })
   }
   private pagerchange({ currentPage, pageSize }) {
@@ -709,8 +748,7 @@ export default class Simpleprogram extends Vue {
   }
   private Filedetails() {
     this.num = 0
-     this.gettabledata({})
-     this.reset()
+    this.reset()
   }
   private Filedetails2() {
     this.visible = true
@@ -740,7 +778,7 @@ export default class Simpleprogram extends Vue {
         caseNumbers: [this.casecode],
         fileCodes: arr,
         logType: 2, //1、视音频数据页面；2、违法数据页面
-        type: 1,    //1.简易程序 2.强制执法
+        type: 1, //1.简易程序 2.强制执法
       }
       this.DataM.saveRelate(obj).then((res) => {
         console.log(res)
@@ -781,15 +819,15 @@ export default class Simpleprogram extends Vue {
             if (res.code == 0) {
               _that.$message.success(res.msg)
               _that.DataM.MatchFiles(_that.casecode).then((res) => {
-                   if (res.data.length > 0) {
+                if (res.data.length > 0) {
                   _that.MatchFiles = res.data
                   _that.num = 0
                   _that.defaultone = res.data[0]
-                }else{
-                   _that.MatchFiles = []
-                  _that.defaultone = {fileName:""}
+                } else {
+                  _that.MatchFiles = []
+                  _that.defaultone = { fileName: "" }
                 }
-              setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
+                setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
               })
             }
           })
@@ -978,4 +1016,5 @@ export default class Simpleprogram extends Vue {
     }
   }
 }
+
 </style>

@@ -2,22 +2,25 @@
   <div>
     <div class="headers">
       <div class="header_left">
-        <img src="../assets/image/logo.png" alt="" />
+        <img src="../assets/image/logo.png" alt />
       </div>
       <div class="header_rigth hidden-sm-and-down">
         <div class="logo">
           <div id="components-badge-demo-title" @click="getNotice">
-            <a-badge :dot="true" title="Custom hover text">
+            <a-badge :dot="isshow" title="Custom hover text" >
               <a-icon type="alert" style="color:#fff;font-size:22px" />
             </a-badge>
           </div>
         </div>
         <div class="headportrait hidden-sm-and-down">
-          <img src="../assets/image/user/123123.png" alt="" />
+          <img src="../assets/image/user/123123.png" alt />
         </div>
-        <div class="Menuss ">
+        <div class="Menuss">
           <a-dropdown :trigger="['click']">
-            <span>{{ username }} <a-icon type="down"/></span>
+            <span>
+              {{ username }}
+              <a-icon type="down" />
+            </span>
             <a-menu slot="overlay">
               <a-menu-item>
                 <a href="javascript:;" @click="modify">修改密码</a>
@@ -30,13 +33,7 @@
         </div>
       </div>
     </div>
-    <a-modal
-      v-model="visible"
-      title="修改密码"
-      ok-text="确认"
-      cancel-text="取消"
-      @ok="hideModal"
-    >
+    <a-modal v-model="visible" title="修改密码" ok-text="确认" cancel-text="取消" @ok="hideModal">
       <a-form
         :form="form"
         :label-col="{ span: 5 }"
@@ -82,63 +79,61 @@
       </a-form>
     </a-modal>
     <a-modal v-model="Noticeshow" title="公告" :footer="null">
-      <div style="text-align: center;height:130px;line-height:130px" v-if="!blank">
-        公告示例
-      </div>
-      <a-empty v-else/>
+      <div style="text-align: center;height:130px;line-height:130px" v-if="!blank">公告示例</div>
+      <a-empty v-else />
     </a-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { LimitInputlength } from "../InterfaceVariable/variable";
+import { Component, Prop, Vue } from "vue-property-decorator"
+import { LimitInputlength } from "../InterfaceVariable/variable"
 import { namespace } from "vuex-class"
 const Tabs = namespace("Tabs")
 @Component
 export default class Header extends Vue {
-   @Tabs.Mutation("cleartablist")
-  cleartablist!: (val: any) => {}
-  [x: string]: any;
-  public Login = new this.$api.configInterface.Login();
-  private Noticeshow =  false
-  private visible = false;
-  private username = "";
+  @Tabs.Mutation("cleartablist")
+  cleartablist!: (val: any) => {};
+  [x: string]: any
+  public Login = new this.$api.configInterface.Login()
+  private Noticeshow = false
+  private visible = false
+  private username = ""
   private blank = false
-  public form!: any;
-  private LimitInputlength = LimitInputlength;
+  public form!: any
+  private isshow = false
+  private LimitInputlength = LimitInputlength
   private created() {
-    this.form = this.$form.createForm(this);
+    this.form = this.$form.createForm(this)
   }
   private mounted() {
-    this.getusermsg();
+    this.getusermsg()
   }
   private modify() {
-    this.visible = true;
+    this.visible = true
     this.Login.usermsg({}, true).then((res: any) => {
       this.$nextTick(() => {
         this.form.setFieldsValue({
-          username: this.username
-        });
-      });
-    });
+          username: this.username,
+        })
+      })
+    })
   }
   private outuser() {
-    this.Login.outuser({}, false).then((res: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const that = this;
-      this.$confirm({
-        title: "确认是否退出?",
-        okText: "确认",
-        cancelText: "取消",
-        onOk() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this
+    this.$confirm({
+      title: "确认是否退出?",
+      okText: "确认",
+      cancelText: "取消",
+      onOk() {
+        that.Login.outuser({}, false).then((res: any) => {
           localStorage.clear()
-          that.$router.push({ name: "Login" });
+          that.$router.push({ name: "Login" })
           that.cleartablist([])
-        },
-        class: "test"
-      });
-    });
+        })
+      },
+    })
   }
   private handleSubmit() {
     // e.preventDefault();
@@ -148,62 +143,67 @@ export default class Header extends Vue {
           values.oldPassword === values.newPassword ||
           values.oldPassword === values.newRePassword
         ) {
-          this.$message.error("旧密码与新密码相同");
+          this.$message.error("旧密码与新密码相同")
         } else if (values.newPassword != values.newRePassword) {
-          this.$message.error("两次输入密码不一致");
+          this.$message.error("两次输入密码不一致")
         } else if (values.newPassword === values.newRePassword) {
           // this.$message.success("修改成功");
           this.Login.editpsd(values, true).then((res: any) => {
             if (res.code == 1) {
-              this.$message.error(res.msg);
+              this.$message.error(res.msg)
             } else {
-              this.$message.success(res.msg);
-              this.visible = false;
-              this.$router.push({ name: "Login" });
-              localStorage.removeItem("token");
+              this.$message.success(res.msg)
+              this.visible = false
+              this.$router.push({ name: "Login" })
+              localStorage.removeItem("token")
               //清除cookie
-              this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+              this.setCookie("", "", -1) //修改2值都为空，天数为负1天就好了
             }
-          });
+          })
         }
       }
-    });
+    })
   }
   //设置cookie
   private setCookie(cName: string, cPwd: string, exdays: number) {
-    const exdate = new Date(); //获取时间
-    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+    const exdate = new Date() //获取时间
+    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays) //保存的天数
     //字符串拼接cookie
     window.document.cookie =
-      "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString();
+      "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString()
     window.document.cookie =
-      "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString();
+      "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString()
   }
   private hideModal() {
-    this.handleSubmit();
+    this.handleSubmit()
     // this.visible = false;
   }
   private getusermsg() {
     this.Login.usermsg({}, true).then((res: any) => {
-      this.username = res.data.name;
+      this.username = res.data.name
       // console.log(res.data);
-      localStorage.setItem("username", res.data.name);
-      localStorage.setItem("department", res.data.deptName);
-      localStorage.setItem("deptCode",res.data.deptCode)
-    });
-  }
-  private getNotice(){
-    this.Noticeshow = true
-    this.Login.getNotice().then(res=>{
-      console.log(res)
-      if(res.data){
-        this.blank = true
+      localStorage.setItem("username", res.data.name)
+      localStorage.setItem("department", res.data.deptName)
+      localStorage.setItem("deptCode", res.data.deptCode)
+    })
+    this.Login.getNotice().then((res) => {
+      if(res.data.length>0){
+        this.isshow = true
       }else{
+        this.isshow = false
+      }
+    })
+  }
+  private getNotice() {
+    this.Noticeshow = true
+    this.Login.getNotice().then((res) => {
+      if (res.data) {
+        this.blank = true
+      } else {
         this.blank = false
       }
     })
   }
-
 }
 </script>
 

@@ -1,23 +1,26 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-26 18:27:30
+ * @LastEditTime: 2020-12-01 17:17:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\main.ts
  */
+// 使用命令行打开浏览器
+// C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chrome.exe 
+//语法兼容IE
+import '@babel/polyfill';
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-// todo 按需引入antdesign组件
-import { Button, Layout, Menu, Icon, Badge, Dropdown, Form, Checkbox, Input, Tabs, Select, Table, Modal, Col, Row, Radio, DatePicker, TreeSelect, Popconfirm, ConfigProvider, Calendar, Switch, Pagination, InputNumber ,Upload,Tree,Card,Empty,Divider } from "ant-design-vue";
-// import { Scrollbar } from 'element-ui';
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+Vue.use(Antd)
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 // todo 引入自定义指令
-// import {isshow} from "@/directives/isshow"
  Vue.directive('isshow',{
   inserted: function(el, binding, vnode) {
     const {value} = binding
@@ -34,7 +37,6 @@ Vue.use(ElementUI);
       return;
     }
     //查找到当前路由下存在的权限
-
     if (roles.indexOf(btn) == -1) {
       el.style.display = "none"; //隐藏元素
     }
@@ -57,6 +59,7 @@ import 'element-ui/lib/theme-chalk/display.css';
 import confirm from "ant-design-vue/es/modal/confirm";
 import { message } from "ant-design-vue";
 import "./style/index.less"
+import "./style/iecss.css"
 XEAjax.setup({
   headers: {
     "token": localStorage.getItem("token")
@@ -74,8 +77,6 @@ Vue.use(NProgress);
 import VXETablePluginExportXLSX from 'vxe-table-plugin-export-xlsx'
 VXETable.use(VXETablePluginExportXLSX)
 Vue.use(VXETable)
-//antdesign组件
-Vue.use(Button).use(Layout).use(Menu).use(Icon).use(Badge).use(Dropdown).use(Form).use(Checkbox).use(Input).use(Tabs).use(Select).use(Table).use(Modal).use(Col).use(Row).use(Radio).use(DatePicker).use(TreeSelect).use(Popconfirm).use(ConfigProvider).use(Calendar).use(Switch).use(Pagination).use(InputNumber).use(Upload).use(Tree).use(Card).use(Empty).use(Divider)
 Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
 Vue.prototype.$confirm = confirm;  // 挂载服务

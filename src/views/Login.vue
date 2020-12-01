@@ -44,6 +44,7 @@
                 <a-icon slot="prefix" type="unlock" />
               </a-input-password>
             </a-form-item>
+           
             <a-form-item>
               <a-checkbox :checked="checkNick" @change="handleChange">记住密码</a-checkbox>
             </a-form-item>

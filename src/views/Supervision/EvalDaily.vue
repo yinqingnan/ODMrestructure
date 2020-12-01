@@ -612,7 +612,6 @@ export default class EvalRecord extends Vue {
     // console.log(1)
   }
   private tablebtn(row) {
-    console.log(row)
     this.visible = true
     this.fileId = row.id
     this.fileCode = row.code
@@ -815,7 +814,7 @@ export default class EvalRecord extends Vue {
     color: #7f8893;
   }
   ul {
-    padding-left: 30px;
+    padding-left: 24px;
     li {
       line-height: 36px;
       font-size: 12px;
