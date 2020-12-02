@@ -13,7 +13,7 @@
                 <a-form
                   autocomplete="off"
                   :form="form"
-                  :label-col="{ span: 8 }"
+                  :label-col="{ span: 6 }"
                   :wrapper-col="{ span: 14 }"
                   @submit="handleSubmit"
                 >

@@ -825,7 +825,7 @@ export default class Simpleprogram extends Vue {
                   _that.defaultone = res.data[0]
                 } else {
                   _that.MatchFiles = []
-                  _that.defaultone = { fileName: "" }
+                  _that.defaultone.fileName =  "" 
                 }
                 setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
               })

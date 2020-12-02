@@ -392,7 +392,7 @@ export default class Coercivemeasures extends Vue {
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private Height = ""
-  private tableData = [{ active: "roe" }]
+  private tableData = []
   private formdata = {
     department: "",
     user: "",
@@ -409,6 +409,7 @@ export default class Coercivemeasures extends Vue {
   public visible2 = false
   private defaultone = {
     fileName: "",
+    fileType:""
   }
   private CaseDetails = {
     daptName: "",
@@ -419,6 +420,10 @@ export default class Coercivemeasures extends Vue {
     illegalAddress: "",
     illegalDeed: "",
     illegalTime: [],
+    userName: "",
+    driverNum: "",
+    deptName: "",
+    userCode: "",
   }
   private deptCode = localStorage.getItem("deptCode")
   private MatchFiles = []
@@ -556,9 +561,8 @@ export default class Coercivemeasures extends Vue {
         this.defaultone = res.data[0]
       } else {
         this.MatchFiles = []
-        this.defaultone = {
-          fileName: "",
-        }
+        this.defaultone.fileName= ""
+        this.defaultone.fileType= ""
       }
     })
   }
@@ -674,7 +678,8 @@ export default class Coercivemeasures extends Vue {
                   _that.defaultone = res.data[0]
                 } else {
                   _that.MatchFiles = []
-                  _that.defaultone = { fileName: "" }
+                  _that.defaultone.fileName= "" 
+                  _that.defaultone.fileType ="" 
                 }
                 setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
               })

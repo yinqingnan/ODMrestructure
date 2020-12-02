@@ -330,4 +330,8 @@ export default class VideoStatistics extends Vue {
     margin-right: 8px;
   }
 }
+.ant-calendar-range-picker-input {
+  letter-spacing: 0.1px !important;
+}
+
 </style>
