@@ -441,7 +441,21 @@ public deleteRelate(params: object, jwt = true) {
     });
   });
 }
-
+  // todo 请求日志信息 
+  public getlogmsg(params: object, jwt=TextTrackCueList) {
+    const url = "/api/file/filedata/file/getLogText/"+params;
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        // params: params,
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        // resolve(res);
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
 
 

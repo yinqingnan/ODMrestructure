@@ -14,7 +14,6 @@
           :columns="columns"
           :data-source="tabData"
           bordered
-          :scroll="{ x: 1300 }"
           :rowClassName="rowClassName"
           :pagination="pagination"
           @change="healthyTableChange"

@@ -217,11 +217,7 @@
         <div class="filesee">
           <div class="filesee_left">
             <div v-if="filedetails.fileType_Name == '图片'">
-              <!-- <img :src="filedetails.httpPath" alt /> -->
-              <img
-                src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3868564487,3858491216&fm=26&gp=0.jpg"
-                alt
-              />
+              <img :src="filedetails.httpPath" />
             </div>
             <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
               <video-player
@@ -231,6 +227,13 @@
                 :playsinline="true"
                 :options="playerOptions"
               />
+            </div>
+            <div v-if="filedetails.fileType_Name == '音频'" class="audiofig">
+               <audio
+                controls="controls"
+                controlsList="nodownload"
+                :src="filedetails.httpPath"
+              ></audio>
             </div>
           </div>
           <div class="filesee_right">
@@ -519,6 +522,12 @@
           <a-button type @click="moduleDlt">删除</a-button>
         </template>
       </a-modal>
+      <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear">
+        <el-scrollbar style="200px">
+          <p v-for="item in logmsg" :key="item.id" style="text-align: center;margin-top:8px;font-size:12px">{{item.text}}</p>
+        </el-scrollbar>
+        
+      </a-modal>
     </div>
   </div>
 </template>
@@ -546,6 +555,7 @@ export default class AvData extends Vue {
   private Total = 0
   private fileId = ""
   private Actualscore = 100
+  private logshow = false
   private playerOptions = {
     playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
     autoplay: false, //如果true,浏览器准备好时开始回放。
@@ -608,6 +618,7 @@ export default class AvData extends Vue {
     categoryId: "",
     userName: "",
     fileLevel: "",
+    httpPath: "",
   }
   private myDate = []
   private selectdata = []
@@ -623,6 +634,7 @@ export default class AvData extends Vue {
     levelData: "",
     date: [],
   }
+  private logmsg = []
   private taggingselect1 = []
   private taggingselect2 = []
   private labelType = ""
@@ -724,18 +736,40 @@ export default class AvData extends Vue {
   private popup(e: { preventDefault: () => void }) {
     e.preventDefault()
   }
+  private logclear (){
+    this.logshow = false;
+    this.logmsg = []
+  }
   private tablebtn(row: any) {
-    // 弹窗文件信息
-    this.DataM.getfiledetails(row.id).then((res) => {
-      this.visible = true
-      this.fileCode = row.code
-      this.fileId = row.id
-      this.activeKey = "1"
-      this.form2.resetFields()
-      this.form1.resetFields()
-      this.filedetails = res.data
-      // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
-    })
+    console.log(row)
+    if (row.fileType_Name == "日志") {
+      this.DataM.getlogmsg(row.id).then(res=>{
+        console.log(res.data.split(/\r\n/g))
+         let splits = res.data.split(/\r\n/g);
+         let dataList= []
+        for (let i = 0; i < splits.length; i++) {
+            dataList.push({
+                id: i,
+                text: splits[i]
+            });
+        }
+        console.log(dataList)
+        this.logshow = true
+        this.logmsg = dataList
+      })
+    } else {
+      // 弹窗文件信息
+      this.DataM.getfiledetails(row.id).then((res) => {
+        this.visible = true
+        this.fileCode = row.code
+        this.fileId = row.id
+        this.activeKey = "1"
+        this.form2.resetFields()
+        this.form1.resetFields()
+        this.filedetails = res.data
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+      })
+    }
   }
   private tabchange(activeKey) {
     console.log(activeKey)
@@ -1014,8 +1048,8 @@ export default class AvData extends Vue {
     }
   }
   private filedownload() {
-    alert("当前下载" + this.filedetails.downloadPath)
-    console.log(this.filedetails.downloadPath)
+    // alert("当前下载" + this.filedetails.downloadPath)
+    window.open(this.filedetails.downloadPath)
   }
   private tccancel() {
     this.activeKey = "1"
@@ -1038,7 +1072,7 @@ export default class AvData extends Vue {
         console.log(res.data)
         this.fileCode = res.data.code
         this.activeKey = "1"
-        // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
       })
     }
   }
@@ -1055,7 +1089,7 @@ export default class AvData extends Vue {
         console.log(res.data)
         this.fileCode = res.data.code
         this.activeKey = "1"
-        // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
       })
     }
   }
@@ -1196,9 +1230,12 @@ export default class AvData extends Vue {
     width: 560px;
     margin-right: 12px;
     overflow: hidden;
+    div {
+      height: 100%;
+    }
     img {
       width: 100%;
-      height: auto;
+      height: 100%;
     }
   }
   .filesee_right {
@@ -1233,6 +1270,12 @@ export default class AvData extends Vue {
 .biaozhu {
   .ant-calendar-picker {
     width: 284px !important;
+  }
+}
+.audiofig{
+  audio{
+    margin-top: 36%;
+    margin-left: 19%;
   }
 }
 </style>

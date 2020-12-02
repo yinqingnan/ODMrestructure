@@ -51,7 +51,7 @@
                       <a-input
                         v-decorator="['name', { initialValue: '', rules: [] }]"
                         :max-length="LimitInputlength"
-                        placeholder="请输入采集站名称"
+                        placeholder="请输入子平台名称"
                       >/></a-input>
                     </a-form-item>
 

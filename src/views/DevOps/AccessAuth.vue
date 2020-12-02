@@ -424,7 +424,7 @@ export default class AccessAuth extends Vue {
     if(status==1){
       return "启用"
     }else{
-      return "未启用"
+      return "未使用"
     }
   }
   private isuse(status){

@@ -26,6 +26,10 @@
      -ms-overflow-style: none;
      overflow: auto;
    }
+   .audiofig >audio{
+      margin-top: 36%;
+      margin-left: 0%;
+  }
  }
 
  @-moz-document url-prefix(){

@@ -86,8 +86,16 @@
             <vxe-table-column field title="操作" align="center">
               <template v-slot="{ row }">
                 <div style="color:#4d96ca" v-if="!row.isPlatform">
-                  <span style="cursor:pointer" @click="edit(row)" v-isshow="'device:storage:update'">编辑</span>
-                  <span style="margin-left: 8px;cursor:pointer;" @click="FTPconfig(row)" v-isshow="'device:storage:ftp'">FTP配置</span>
+                  <span
+                    style="cursor:pointer"
+                    @click="edit(row)"
+                    v-isshow="'device:storage:update'"
+                  >编辑</span>
+                  <span
+                    style="margin-left: 8px;cursor:pointer;"
+                    @click="FTPconfig(row)"
+                    v-isshow="'device:storage:ftp'"
+                  >FTP配置</span>
                 </div>
               </template>
             </vxe-table-column>
@@ -159,7 +167,12 @@
         :width="800"
         class="ftptc"
       >
-        <a-button class="ftpadd" @click="ftpaddconfig" type="primary" v-isshow="'device:storageFtp:save'">添加</a-button>
+        <a-button
+          class="ftpadd"
+          @click="ftpaddconfig"
+          type="primary"
+          v-isshow="'device:storageFtp:save'"
+        >添加</a-button>
         <vxe-table
           style="margin-top:40px"
           border
@@ -176,8 +189,16 @@
           <vxe-table-column field title="操作" align="center">
             <template v-slot="{ row }">
               <div style="color:#4d96ca">
-                <span style="cursor:pointer" @click="ftpedit(row)" v-isshow="'device:storageFtp:update'">编辑</span>
-                <span style="margin-left: 8px;cursor:pointer;" @click="ftpdlt(row)" v-isshow="'device:storageFtp:delete'">删除</span>
+                <span
+                  style="cursor:pointer"
+                  @click="ftpedit(row)"
+                  v-isshow="'device:storageFtp:update'"
+                >编辑</span>
+                <span
+                  style="margin-left: 8px;cursor:pointer;"
+                  @click="ftpdlt(row)"
+                  v-isshow="'device:storageFtp:delete'"
+                >删除</span>
               </div>
             </template>
           </vxe-table-column>
@@ -238,8 +259,11 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 import {
   LimitInputlength,
-  textarealength,page,layouts
+  textarealength,
+  page,
+  layouts,
 } from "@/InterfaceVariable/variable"
+import axios from "axios"
 @Component({
   components: {},
 })
@@ -373,7 +397,6 @@ export default class Storage extends Vue {
     this.gettabledata(obj)
   }
   private tableRowClassName(record: any, index: number) {
-     
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private add() {
@@ -383,29 +406,69 @@ export default class Storage extends Vue {
   }
   private dlt() {
     let arr = this.getSelectEvent1()
+    console.log(arr)
     if (arr.length > 0) {
       let dltarr = []
       arr.map((item) => {
         dltarr.push(item.id)
       })
+      console.log(dltarr)
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const that = this
+      this.$confirm({
+        title: "提示",
+        content: "是否确定删除？",
+        onOk() {
+          that.DeviceM.storedlt(dltarr).then((res) => {
+            console.log(res)
+            if (res.code == 0) {
+              that.$message.success(res.msg)
+              let obj = {
+                page: 1,
+                limit: 15,
+              }
+              that.gettabledata(obj)
+              return new Promise((resolve, reject) => {
+                setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+              }).catch(() => console.log("Oops errors!"))
+            } else {
+              that.$message.error(res.msg)
+            }
+          })
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+          })
+        },
+      })
     } else {
       this.$message.error("请先选择删除的对象")
     }
   }
-  private FTPconfig(row) {
-    console.log(row.ip)
+
+  // private async getftptable(obj) {
+  //   await this.DeviceM.ftptable(obj).then((res) => {
+  //     console.log(res)
+  //   })
+  // }
+  private async FTPconfig(row) {
     this.IP = row.ip
     this.FTPvisible = true
-    this.DeviceM.ftptable({
-      storageIp_equal: row.ip,
-      page: 1,
-      limit: 10,
-    }).then((res) => {
-      this.ftptable = res.data
-    })
+    let obj = { storageIp_equal: row.ip, page: 1, limit: 10 }
+    // await this.getftptable(obj)
+    console.log()
+    axios
+      .get(
+        `${window.gurl.SERVICE_CONTEXT_PATH}api/mdm/device/storage-ftp/list`,
+        {
+          params: obj,
+          headers: { Token: localStorage.getItem("token") },
+        }
+      )
+      .then((res: any) => {
+        this.ftptable = res.data.data
+      })
   }
   private edit(row) {
-    console.log(row)
     this.visible = true
     this.isDisable = true
     this.id = row.id
@@ -511,14 +574,20 @@ export default class Storage extends Vue {
 .ftpadd {
   float: right;
 }
-.ftptc /deep/ .ant-modal-body {
-  height: 430px;
+.ftptc {
+  .ant-modal-body {
+    height: 430px;
+  }
 }
-.ftpinput /deep/ .ant-form-item-label {
-  width: 90px;
+.ftpinput {
+  .ant-form-item-label {
+    width: 90px;
+  }
 }
-.ftpinput /deep/ .ant-form-item-control {
-  width: 630px;
+.ftpinput {
+  .ant-form-item-control {
+    width: 630px;
+  }
 }
 .ftptc .ant-modal-footer {
   display: none;

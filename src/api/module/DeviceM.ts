@@ -185,7 +185,6 @@ export class DeviceM {
         params: params,
         headers: { isJwt: jwt },
       }).then((res: any) => {
-        // resolve(res);
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
         reject(err.message);
@@ -325,7 +324,6 @@ export class DeviceM {
   }
 
   // todo 子平台table
-  // 
   public platformtable(params: object, jwt=TextTrackCueList) {
     const url = "/api/mdm/device/stations/platform-list";
     return new Promise((resolve, reject) => {
@@ -355,9 +353,20 @@ export class DeviceM {
     });
   }
 
-
-
-
+  //todo 存储服务器删除 
+  public storedlt(params: object, jwt= true) {
+    const url = "/api/mdm/device/storage/delete";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
 
 
