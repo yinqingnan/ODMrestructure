@@ -243,7 +243,6 @@ export default class VideoStatistics extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     this.deptCode = localStorage.getItem("deptCode")
-    console.log(this.deptCode)
   }
   private mounted() {
     this.getdata()

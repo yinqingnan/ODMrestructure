@@ -54,6 +54,7 @@
         <vxe-pager
           align="right"
           size="mini"
+          :page-sizes="[15, 50, 100, 200]"
           :current-page.sync="page.currentPage"
           :page-size.sync="page.pageSize"
           :total="page.totalResult"
@@ -152,7 +153,7 @@
 import {
   LimitInputlength,
   textarealength,
-  page,
+  page,pagesize
 } from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 @Component({})
@@ -163,6 +164,7 @@ export default class Recording extends Vue {
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private Height = ""
+  private pagesize = pagesize
   private tableData = []
   public form!: any
   private visible = false

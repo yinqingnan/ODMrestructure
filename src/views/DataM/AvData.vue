@@ -66,7 +66,7 @@
                         <a-select-option v-for="d in Timetype" :key="d.value">{{ d.title }}</a-select-option>
                       </a-select>
                     </a-form-item>
-                    <a-form-item label="时间">
+                    <a-form-item label="时间范围">
                       <a-range-picker
                         :show-time="{
                             hideDisabledOptions: true,
@@ -144,7 +144,6 @@
             height="auto"
             :data="tabledata"
             class="mytable-scrollbar"
-            :loading="loading"
             highlight-hover-row
             ref="xTable1"
             @checkbox-all="selectAllEvent"
@@ -201,6 +200,7 @@
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
               @page-change="pagerchange"
             />
           </p>
@@ -623,7 +623,6 @@ export default class AvData extends Vue {
   private myDate = []
   private selectdata = []
   private selectedRowKeys = []
-  private loading = false
   private Height = ""
   private tabledata = []
   private formdata = {
@@ -721,11 +720,9 @@ export default class AvData extends Vue {
     })
   }
   private gettabledata(obj): void {
-    this.loading = true
     this.DataM.gettabledata(obj, true).then((res: any) => {
       this.page.totalResult = parseInt(res.count)
       this.tabledata = res.data
-      this.loading = false
       this.Tablesubscript = []
       // 保存当前表格的所有code
       res.data.map((item) => {

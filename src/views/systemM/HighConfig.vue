@@ -8,33 +8,7 @@
       </div>
       <!-- 内容 -->
       <div class="content">
-          <!-- <a-table
-            :columns="columns"
-            :data-source="tabData"
-            bordered
-            :scroll="{y: Height }"
-            :rowClassName="rowClassName"
-            :pagination="pagination"
-
-            @change="healthyTableChange"
-            rowKey="id"
-          >
-            <template
-              slot="index"
-              slot-scope="text, record, index"
-            >{{ (pagination.current - 1) * pagination.pageSize + index + 1 }}</template>
-            <template slot="operation" slot-scope="text, record">
-              <div class="linkBox">
-                <a-button
-                  type="link"
-                  block
-                  @click="edit(record)"
-                  v-isshow="'system:highConfig:update'"
-                >编辑</a-button>
-              </div>
-            </template>
-          </a-table> -->
-          <div class="Simpleprogrambody" :style="{height:Height}">
+        <div class :style="{height:Height}">
           <vxe-table
             stripe
             border
@@ -46,13 +20,7 @@
             :data="tabData"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
-            <vxe-table-column
-              field="code"
-              title="配置值"
-              show-overflow
-              align="center"
-              minWidth="150"
-            />
+            <vxe-table-column field="code" title="配置值" show-overflow align="center" minWidth="150" />
             <vxe-table-column
               field="value"
               title="配置内容"
@@ -87,6 +55,7 @@
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
               @page-change="pagerchange"
             />
           </p>
@@ -197,7 +166,7 @@ export default class RightContent extends Vue {
     const _that = this
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
-    }) 
+    })
   }
   created() {
     const val = {
@@ -216,10 +185,10 @@ export default class RightContent extends Vue {
     this.getData.getList(val, true).then((res) => {
       console.log(res)
       this.tabData = res.data
-      this.page.totalResult= res.data.length
+      this.page.totalResult = res.data.length
     })
   }
-   private pagerchange({ currentPage, pageSize }) {
+  private pagerchange({ currentPage, pageSize }) {
     let val = {
       page: currentPage,
       limit: pageSize,

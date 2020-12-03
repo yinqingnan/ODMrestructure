@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 14:08:12
- * @LastEditTime: 2020-11-30 15:56:42
+ * @LastEditTime: 2020-12-03 16:28:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\api\module\Statistics.ts
@@ -34,12 +34,11 @@ export class Statistics {
     //   });
     // }
     // todo 时间获取 
-  public getdate(params: object, jwt=TextTrackCueList) {
+  public getdate(params: object) {
     const url = "/api/uauth/my/dateDept";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -48,12 +47,11 @@ export class Statistics {
     });
   }
   // todo  摄录统计表格 
-  public gettabledata(params: object, jwt=TextTrackCueList) {
+  public gettabledata(params: object ) {
     const url = "/api/tpb/report/recording/user";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -62,12 +60,11 @@ export class Statistics {
     });
   }
   //todo 关联统计表格数据
-  public getlawcasetable(params: object, jwt=TextTrackCueList) {
+  public getlawcasetable(params: object) {
     const url = "/api/tpb/report/lawcase/unit";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -76,12 +73,11 @@ export class Statistics {
     });
   }
   // todo  考评统计表格 
-  public getlabeltable(params: object, jwt=TextTrackCueList) {
+  public getlabeltable(params: EventListenerObject) {
     const url = "/api/tpb/report/label/unit";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -90,12 +86,11 @@ export class Statistics {
     });
   }
   // 资产统计表格  
-  public getassetstable(params: object, jwt=TextTrackCueList) {
+  public getassetstable(params: object) {
     const url = "/api/tpb/report/assets/unit";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {

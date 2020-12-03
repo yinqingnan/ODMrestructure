@@ -96,7 +96,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column type="seq" width="50" align="center" title="序号" />
             <vxe-table-column
               field="fileName"
               title="文件名称"
@@ -151,6 +151,7 @@
               align="right"
               size="mini"
               :layouts="layouts"
+              :page-sizes="[15, 50, 100, 200]"
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
@@ -488,6 +489,20 @@ export default class EvalRecord extends Vue {
   private visible = false
   private filedetails = {
     downloadPath: "",
+    fileName: "",
+    deptName: "",
+    deptCode: "",
+    userName: "",
+    userCode: "",
+    recordDate: "",
+    uploadDate: "",
+    fileSize_Name: "",
+    storageLocation_Name: "",
+    storageDays: "",
+    fileLevel: "",
+    categoryId: "",
+    marker: "",
+    fileType_Name: "",
   }
   private activeKey = "4"
   private fileId = ""

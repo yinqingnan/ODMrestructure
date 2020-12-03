@@ -109,7 +109,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column type="seq" width="50" align="center" title="序号"/>
             <vxe-table-column
               field="fileName"
               title="文件名称"
@@ -126,27 +126,44 @@
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptCode" title="执勤部门" align="center" width="100" />
-            <vxe-table-column field="userName" title="民警姓名" align="center" width="100" show-overflow />
-            <vxe-table-column field="userCode" title="民警警号" align="center"  width="100" />
-            <vxe-table-column field="fileType_Name" title="文件类型" width="100" align="center" />
-            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
-            <vxe-table-column field="relateCase" title="关联信息" show-overflow width="100" align="center">
+            <vxe-table-column
+              field="userName"
+              title="民警姓名"
+              align="center"
+              width="80"
+              show-overflow
+            />
+            <vxe-table-column field="userCode" title="民警警号" align="center" width="80" />
+            <vxe-table-column field="fileType_Name" title="文件类型" width="80" align="center" />
+            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" min-width="140" />
+            <vxe-table-column
+              field="relateCase"
+              title="关联信息"
+              show-overflow
+              width="100"
+              align="center"
+            >
               <template v-slot="{ row }">{{relateCase(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="score" title="考评结果" align="center" show-overflow>
+            <vxe-table-column field="score" title="考评结果" align="center" show-overflow min-width="130">
               <template v-slot="{ row }">
                 <span :style="{'color': (textcolor==true ? 'green':'#ff0000')}">{{score(row)}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="evaluateItems" title="扣分项" show-overflow align="center">
+            <vxe-table-column field="evaluateItems" title="扣分项" show-overflow align="center"  min-width="120">
               <template v-slot="{ row }">{{evaluateItems(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="evaluateName" title="考评人" show-overflow align="center">
+            <vxe-table-column field="evaluateName" title="考评人" show-overflow align="center" width="100">
               <template v-slot="{ row }">{{evaluateName(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="actions" title="操作" align="center" flexd="right">
+            <vxe-table-column field="actions" title="操作" align="center" fixed="right" width="100">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'fileEvaluate:evaluationRecord:look'">查看</span>
+                <span
+                  type="text"
+                  @click="tablebtn(row)"
+                  style="color:#0db8df;cursor: pointer;"
+                  v-isshow="'fileEvaluate:evaluationRecord:look'"
+                >查看</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -158,6 +175,7 @@
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
               @page-change="pagerchange"
             />
           </p>
@@ -442,7 +460,11 @@
         <template slot="footer">
           <!-- <a-button type @click="previous">上一个</a-button>
           <a-button type @click="next">下一个</a-button>-->
-          <a-button type @click="filedownload" v-isshow="'fileEvaluate:evaluationRecord:download'" >下载</a-button>
+          <a-button
+            type
+            @click="filedownload"
+            v-isshow="'fileEvaluate:evaluationRecord:download'"
+          >下载</a-button>
           <!-- <a-button type @click="moduleDlt">删除</a-button> -->
         </template>
       </a-modal>
@@ -482,11 +504,11 @@ export default class EvalRecord extends Vue {
   private layouts = layouts
   private tableData = []
   private formdata = {
-    contain!: "",
-    date!: [],
-    department!: "",
-    user!: "",
-    Evaluation!:""
+    contain: "",
+    date: [],
+    department: "",
+    user: "",
+    Evaluation: "",
   }
   private Evaluationlist = [
     { id: "1", value: "-1", title: "全部" },
@@ -522,6 +544,20 @@ export default class EvalRecord extends Vue {
   private visible = false
   private filedetails = {
     downloadPath: "",
+    fileName: "",
+    deptName: "",
+    deptCode: "",
+    userName: "",
+    userCode: "",
+    recordDate: "",
+    uploadDate: "",
+    fileSize_Name: "",
+    storageLocation_Name: "",
+    storageDays: "",
+    fileLevel: "",
+    categoryId: "",
+    marker: "",
+    fileType_Name: "",
   }
   private activeKey = "4"
   private fileId = ""
@@ -553,6 +589,7 @@ export default class EvalRecord extends Vue {
   // }
   private getdata() {
     this.DataM.getMenulist({}, true).then((res: any) => {
+      console.log(res)
       this.departmentData = res.data
     })
     this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
@@ -564,7 +601,7 @@ export default class EvalRecord extends Vue {
       ]
       this.gettabledata({
         page: 1,
-        limit: 15,
+        limit: 10,
         deptCode: "",
         user: "",
         isNormal: -1,
@@ -627,21 +664,28 @@ export default class EvalRecord extends Vue {
   }
   private evaluateItems(row) {
     let str = ""
-    row.evaluateItems.map((item) => {
-      str += item.name
-    })
-    return str
+    console.log(row)
+    if (row.evaluateItems != null) {
+      row.evaluateItems.map((item) => {
+        str += item.name
+      })
+      return str
+    } else {
+      str
+    }
   }
   private score(row) {
     let str = 0
-    row.evaluateItems.map((item) => {
-      str += item.score
-    })
-    if (str > 0) {
-      return `异常（扣${str}分）`
-    } else {
-      this.textcolor = true
-      return "正常"
+    if (row.evaluateItems != null) {
+      row.evaluateItems.map((item) => {
+        str += item.score
+      })
+      if (str > 0) {
+        return `异常（扣${str}分）`
+      } else {
+        this.textcolor = true
+        return "正常"
+      }
     }
   }
   private relateCase(row) {

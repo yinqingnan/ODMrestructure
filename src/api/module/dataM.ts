@@ -13,18 +13,15 @@ export class DataM {
     this.axios = new Interceptors().getInterceptors()
   }
   // todo 获取部门菜单数据
-  public getMenulist(params: object, jwt: boolean, flag: string) {
+  public getMenulist(params: object) {
     const url = "/api/uauth/base/dept/select/login";
     const body = {
       data: params,
-      tag: flag,
     };
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
-        // console.log(res)
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
         reject(err.message);
@@ -154,7 +151,6 @@ export class DataM {
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);

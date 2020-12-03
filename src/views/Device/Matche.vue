@@ -166,6 +166,7 @@
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
               @page-change="pagerchange"
             />
           </p>
@@ -500,6 +501,7 @@ import {
   textarealength,
   page,
   layouts,
+  pagesize
 } from "@/InterfaceVariable/variable"
 import moment from "moment"
 import axios from "axios"
@@ -512,6 +514,7 @@ export default class Matche extends Vue {
   public form!: any
   public form2!: any
   public form3!: any
+  public pagesize = pagesize
   public DataM = new this.$api.configInterface.DataM()
   public DeviceM = new this.$api.configInterface.DeviceM()
   private LimitInputlength = LimitInputlength
@@ -529,7 +532,7 @@ export default class Matche extends Vue {
   private filename = ""
   private errormsg = ""
   private tableColumn = [
-    { type: "checkbox", width: 60, fixed: null },
+    { type: "checkbox", width: 60, fixed: null,align:'center' },
     { field: "code", title: "产品序号" },
     { field: "deviceType", title: "设备类型", width: 80 },
     { field: "deptName", title: "所属部门" },
@@ -591,6 +594,8 @@ export default class Matche extends Vue {
     this.DeviceM.gettabledata(obj).then((res) => {
       this.page.totalResult = parseInt(res.count)
       this.tableData = res.data
+    }).catch(err => {
+      console.log(err)
     })
   }
   private popup() {

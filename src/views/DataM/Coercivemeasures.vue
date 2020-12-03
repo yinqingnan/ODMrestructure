@@ -155,6 +155,7 @@
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
               @page-change="pagerchange"
             />
           </p>
@@ -364,6 +365,7 @@
               align="right"
               size="mini"
               :layouts="layouts"
+              :page-size="[10, 20, 100, 200]"
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
@@ -378,7 +380,7 @@
 
 
 <script lang="ts">
-import { LimitInputlength, page } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page ,pagesize} from "@/InterfaceVariable/variable"
 
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
@@ -392,6 +394,7 @@ export default class Coercivemeasures extends Vue {
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private Height = ""
+  private pagesize = pagesize
   private tableData = []
   private formdata = {
     department: "",

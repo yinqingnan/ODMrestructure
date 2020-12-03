@@ -80,6 +80,7 @@
               align="right"
               size="mini"
               :layouts="layouts"
+              :page-sizes="[15, 50, 100, 200]"
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
@@ -88,7 +89,7 @@
           </p>
         </div>
       </div>
-      <a-modal v-model="visible" :title="str" @ok="handleOk">
+      <a-modal v-model="visible" :title="str" @ok="handleOk" >
         <a-form
           autocomplete="off"
           :form="form"
@@ -235,6 +236,7 @@ export default class Role extends Vue {
     this.str = "添加角色"
     this.visible = true
     this.status = "新增"
+    this.form.resetFields()
   }
   private gettabledata(obj?) {
     this.OrganizationM.getroletable(obj).then((res) => {

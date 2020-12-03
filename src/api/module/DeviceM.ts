@@ -15,13 +15,10 @@ export class DeviceM {
   // todo执法仪设备table数据
   public gettabledata(params: object, jwt=TextTrackCueList) {
     const url = "/api/mdm/device/matche/list";
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
-        // console.log(res)
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
         reject(err.message);
@@ -115,7 +112,6 @@ export class DeviceM {
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);

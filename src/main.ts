@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-03 14:02:48
+ * @LastEditTime: 2020-12-03 14:48:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\main.ts
@@ -83,7 +83,6 @@ Vue.prototype.$confirm = confirm;  // 挂载服务
 Vue.prototype.$message = message;  // 挂载服务
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
-
 //路由拦截
 router.beforeEach((to, from, next) => {
   NProgress.start();

@@ -14,14 +14,13 @@ export class Supervision {
 
   }
   // todo 获取考评记录table数据
-  public gettabledata(params: object, jwt=TextTrackCueList) {
+  public gettabledata(params: object) {
     const url = "/api/tpb/lawarchives/file-evaluate/already/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
-        // console.log(res)
+        console.log(res)
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
         reject(err.message);
@@ -30,13 +29,12 @@ export class Supervision {
   }
   // 
     // todo 获取考评记录table数据
-    public getDailytabledata(params: object, jwt=TextTrackCueList) {
+    public getDailytabledata(params: object) {
       const url = "/api/tpb/lawarchives/file-evaluate/no/list";
   
       return new Promise((resolve, reject) => {
         this.axios.get(url, {
           params: params,
-          headers: { isJwt: jwt },
         }).then((res: any) => {
           // console.log(res)
           this.resultHandle(res, resolve);
@@ -46,12 +44,11 @@ export class Supervision {
       });
     }
     // todo  随机抽查table数据
-    public getrandomtabledata(params: object, jwt=TextTrackCueList) {
+    public getrandomtabledata(params: object) {
       const url = "/api/tpb/lawarchives/file-evaluate/random/list";
       return new Promise((resolve, reject) => {
         this.axios.get(url, {
           params: params,
-          headers: { isJwt: jwt },
         }).then((res: any) => {
           // console.log(res)
           this.resultHandle(res, resolve);
@@ -63,12 +60,11 @@ export class Supervision {
 
 
     //todo 考评设置数据  
-    public getsettingdata(params: object, jwt=TextTrackCueList) {
+    public getsettingdata(params: object) {
       const url = "/api/tpb/lawarchives/dm-jfx/getAllList";
       return new Promise((resolve, reject) => {
         this.axios.get(url, {
           params: params,
-          headers: { isJwt: jwt },
         }).then((res: any) => {
           // console.log(res)
           this.resultHandle(res, resolve);

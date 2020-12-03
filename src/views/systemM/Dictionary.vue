@@ -9,8 +9,8 @@
         </div>
       </div>
       <!-- 内容 -->
-      <div class="content">
-        <a-table
+      <div class="content" :style="{height:Height}">
+        <!-- <a-table
           :columns="columns"
           :data-source="tabData"
           bordered
@@ -35,7 +35,66 @@
               </a-popconfirm>
             </div>
           </template>
-        </a-table>
+        </a-table>-->
+        <vxe-table
+          stripe
+          border
+          height="auto"
+          ref="logAdministration"
+          highlight-hover-row
+          class="mytable-scrollbar"
+          :row-class-name="tableRowClassName"
+          :data="tabData"
+        >
+          <vxe-table-column type="seq" width="50" align="center" title="序号" />
+          <vxe-table-column field="value" title="字典名" show-overflow align="center" minWidth="150" />
+          <vxe-table-column
+            field="dictKey"
+            title="字典值"
+            show-overflow
+            align="center"
+            minWidth="120"
+          />
+          <vxe-table-column
+            field="remark"
+            title="字典描述"
+            show-overflow
+            align="center"
+            minWidth="200"
+          />
+          <vxe-table-column
+            field="createTime"
+            title="创建时间"
+            show-overflow
+            align="center"
+            minWidth="200"
+          />
+          <vxe-table-column
+            field="createUserName"
+            title="创建人"
+            show-overflow
+            align="center"
+            minWidth="120"
+          />
+          <vxe-table-column title="操作" show-overflow align="center" minWidth="130">
+            <template v-slot="{ row }">
+              <span @click="edit(row)" v-isshow="'base:dict:update'" style="color:#4d96ca;cursor:pointer;margin-right:10px">编辑</span>
+               <span @click="remove(row.id)" style="color:#4d96ca;cursor:pointer;" v-isshow="'base:dict:delete'" >删除</span>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
+        <p>
+          <vxe-pager
+            align="right"
+            size="mini"
+            :layouts="layouts"
+            :current-page.sync="page.currentPage"
+            :page-size.sync="page.pageSize"
+            :total="page.totalResult"
+            :page-sizes="[15, 50, 100, 200]"
+            @page-change="pagerchange"
+          />
+        </p>
       </div>
       <!-- 弹窗 -->
       <a-modal
@@ -48,12 +107,7 @@
         okText="提交"
         @cancel="back"
       >
-        <a-form
-          :form="form2"
-          layout="inline"
-          :label-col="{ span: 4 }"
-          :wrapper-col="{ span: 20 }"
-        >
+        <a-form :form="form2" layout="inline" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-row :gutter="24">
             <a-col :span="24">
               <a-form-item label="字典类型" style="width: 100%">
@@ -82,9 +136,7 @@
                   ]"
                   placeholder="点击右方按钮生成"
                 />
-                <a-button type="primary" style="margin-left: 10px" @click="getK">
-                  自动生成
-                </a-button>
+                <a-button type="primary" style="margin-left: 10px" @click="getK">自动生成</a-button>
               </a-form-item>
             </a-col>
             <a-col :span="24">
@@ -101,12 +153,12 @@
               </a-form-item>
             </a-col>
             <a-col :span="24">
-              <a-form-item label="公告内容" style="width: 100%">
+              <a-form-item label="备注" style="width: 100%">
                 <a-textarea
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: true, message: '公告内容不能为空' }],
+                      rules: [{ required: true, message: '备注不能为空' }],
                     },
                   ]"
                   placeholder="请输入公告内容"
@@ -123,21 +175,32 @@
 
 <script lang="ts">
 // import { PropType } from "vue";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator"
+import {
+  layouts,
+  LimitInputlength,
+  page,
+  textarealength,
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
 export default class RightContent extends Vue {
-  [x: string]: any;
-  public getData = new this.$api.configInterface.Dictionary();
-  private form: any;
-  public tabData = [];
-  public isShow = true;
-  public seachKey = "all";
-  private form2: any;
-  public visible = false;
-  public myTitle = "添加公告";
-  public saveData = {};
+  [x: string]: any
+  public getData = new this.$api.configInterface.Dictionary()
+  private page = page
+  private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
+  private layouts = layouts
+  private form: any
+  private Height = ""
+  public tabData = []
+  public isShow = true
+  public seachKey = "all"
+  private form2: any
+  public visible = false
+  public myTitle = "添加字典项"
+  public saveData = {}
   public pagination = {
     pageSize: 10, // 默认每页显示数量
     current: 1, //显示当前页数
@@ -148,120 +211,100 @@ export default class RightContent extends Vue {
       `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
         total / this.pagination.pageSize
       )} 页`, // 显示总数
-  };
-  public columns = [
-    {
-      title: "序号",
-      className: "pd10",
-      width: 70,
-      dataIndex: "index",
-      fixed: "left",
-      scopedSlots: { customRender: "index" },
-    },
-    {
-      title: "字典名",
-      dataIndex: "value",
-      className: "pd10",
-      width: 380,
-    },
-    {
-      title: "字典值",
-      dataIndex: "dictKey",
-      className: "pd10",
-      width: 380,
-    },
-    {
-      title: "字典描述",
-      dataIndex: "remark",
-      className: "pd10",
-      width: 380,
-    },
-    {
-      title: "创建时间",
-      dataIndex: "createTime",
-      className: "pd10",
-      width: 210,
-    },
-    {
-      title: "创建人",
-      dataIndex: "createUserName",
-      className: "pd10",
-      width: 175,
-    },
-    {
-      title: "操作",
-      key: "operation",
-      scopedSlots: { customRender: "operation" },
-      className: "pd10",
-      width: 180,
-      fixed: "right",
-    },
-  ];
+  }
+  
   beforeCreate() {
-    this.form = this.$form.createForm(this);
-    this.form2 = this.$form.createForm(this);
+    this.form = this.$form.createForm(this)
+    this.form2 = this.$form.createForm(this)
   }
   created() {
     const val = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
-      // eslint-disable-next-line @typescript-eslint/camelcase
+      page: 1,
+      limit: 15,
       parentKey_equal: "position",
-    };
-    this.getList(val);
+    }
+    this.getList(val)
+  }
+  mounted() {
+    this.Height = `${document.documentElement.clientHeight - 240}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 240}px`
+    })
+  }
+  private pagerchange({ currentPage, pageSize }) {
+    const val = {
+      page: currentPage,
+      limit: pageSize,
+      parentKey_equal: "position",
+    }
+    this.getList(val)
   }
   private getList(val: any): void {
     this.getData.getList(val, true).then((res: any) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this.tabData = res.data;
-      this.pagination.total = res.pages * 1;
-    });
+      this.tabData = res.data
+      this.pagination.total = res.pages * 1
+    })
+  }
+  private tableRowClassName(record: any, index: number) {
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private getK() {
     const val = {
       parentKey: "position",
-    };
+    }
     this.getData.getKey(val, true).then((res: any) => {
       this.form2.setFieldsValue({
         dictKey: res.data,
-      });
-    });
+      })
+    })
   }
   private healthyTableChange(pagination: {
     pageSize: number
     current: number
   }) {
-    this.pagination.pageSize = pagination.pageSize;
-    this.pagination.current = pagination.current;
+    this.pagination.pageSize = pagination.pageSize
+    this.pagination.current = pagination.current
     const obj = {
       page: this.pagination.current,
       limit: this.pagination.pageSize,
       status: this.seachKey,
-    };
-    this.getList(obj);
+    }
+    this.getList(obj)
   }
   private add(): void {
-    this.visible = true;
-    this.myTitle = "添加公告";
+    this.visible = true
+    this.myTitle = "添加字典项"
   }
   private remove(val: string): void {
-    const DT = [val];
-    this.getData.removeItem(DT, true).then((res: any) => {
-      if (res.code == 0) {
-        const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          parentKey_equal: "position",
-        };
-        this.getList(val);
-      }
-    });
-    console.log(val);
+// eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    this.$confirm({
+        title: '提示',
+        content: '确认删除？',
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            const DT = [val]
+            _that.getData.removeItem(DT, true).then((res: any) => {
+            if (res.code == 0) {
+              let val = {
+                page: 1,
+                limit: 15,
+                parentKey_equal: "position",
+              }
+              _that.getList(val)
+            }
+          })
+          }).catch(() => console.log('Oops errors!'));
+        },
+      });
   }
   private edit(val: any): void {
-    this.visible = true;
-    this.myTitle = "编辑";
+    this.visible = true
+    this.myTitle = "编辑"
     // const that = this;
     this.$nextTick(() => {
       this.form2.setFieldsValue({
@@ -269,17 +312,17 @@ export default class RightContent extends Vue {
         parentKey: val.parentKey,
         remark: val.remark,
         name: val.value,
-      });
-    });
+      })
+    })
   }
   private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : "";
+    return index % 2 === 0 ? "bgF5" : ""
   }
   private back(): void {
-    this.form2.resetFields();
+    this.form2.resetFields()
   }
   private handleOk(e: any): void {
-    e.preventDefault();
+    e.preventDefault()
     this.form2.validateFields((err: any, values: any) => {
       if (!err) {
         const val = {
@@ -288,24 +331,24 @@ export default class RightContent extends Vue {
           parentKey: values.parentKey,
           remark: values.remark,
           value: values.name,
-        };
+        }
         this.getData.saveVal(val, true).then((res: any) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           if (res.code == 0) {
-            this.visible = !this.visible;
-            this.form2.resetFields();
+            this.visible = !this.visible
+            this.form2.resetFields()
             const val = {
               page: this.pagination.current,
               limit: this.pagination.pageSize,
               // eslint-disable-next-line @typescript-eslint/camelcase
               parentKey_equal: "position",
-            };
-            this.getList(val);
+            }
+            this.getList(val)
           }
-        });
-        console.log(values);
+        })
+        console.log(values)
       }
-    });
+    })
   }
 }
 </script>

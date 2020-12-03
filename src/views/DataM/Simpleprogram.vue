@@ -188,6 +188,7 @@
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
               @page-change="pagerchange"
             />
           </p>
@@ -428,7 +429,7 @@
 
 
 <script lang="ts">
-import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts ,pagesize} from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 import qs from "qs"
@@ -444,6 +445,7 @@ export default class Simpleprogram extends Vue {
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private Height = ""
+  private pagesize = pagesize
   private tableData = []
   private page = page
   private loading = false

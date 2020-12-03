@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-11-30 16:54:14
+ * @LastEditTime: 2020-12-03 17:15:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
@@ -21,6 +21,7 @@ export const page: Page = {
   pageSize: 15, //每页多少条
   totalResult: 200, //总数
 }
+export const pagesize = [10, 20, 100, 200]
 export const layouts: Array<string> = [
   "PrevJump",
   "PrevPage",

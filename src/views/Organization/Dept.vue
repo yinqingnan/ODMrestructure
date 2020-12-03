@@ -29,6 +29,7 @@
                 </a-form-item>
                 <a-form-item label="部门编号" style="width:100%">
                   <a-input
+                   
                     v-decorator="[
                       'code_like',
                       {
@@ -151,6 +152,7 @@
             <a-col :span="12">
               <a-form-item label="部门编号">
                 <a-input
+                 :disabled="Disable"
                   v-decorator="[
                     'code',
                     {
@@ -289,6 +291,7 @@ export default class Dept extends Vue {
   private errormsg = ""
   private filename = ""
   private errormsg = ""
+  private Disable = false
   //todo 生命周期
   beforeCreate() {
     this.form = this.$form.createForm(this)
@@ -366,21 +369,21 @@ export default class Dept extends Vue {
     })
   }
   private Export(e: any): void {
-    // let wb = XLSX.utils.table_to_book(document.querySelector(".bumen"))
-    // let wbout = XLSX.write(wb, {
-    //   bookType: "xlsx",
-    //   bookSST: true,
-    //   type: "array",
-    // })
-    // try {
-    //   FileSaver.saveAs(
-    //     new Blob([wbout], { type: "application/octet-stream" }),
-    //     "部门" + ".xlsx"
-    //   )
-    // }
-    // catch (e) {
-    //   if (typeof console !== "undefined") console.log(e, wbout)
-    // }
+    let wb = XLSX.utils.table_to_book(document.querySelector(".bumen"))
+    let wbout = XLSX.write(wb, {
+      bookType: "xlsx",
+      bookSST: true,
+      type: "array",
+    })
+    try {
+      FileSaver.saveAs(
+        new Blob([wbout], { type: "application/octet-stream" }),
+        "部门" + ".xlsx"
+      )
+    }
+    catch (e) {
+      if (typeof console !== "undefined") console.log(e, wbout)
+    }
   }
   private imports() {
     this.importshow = true
@@ -453,6 +456,7 @@ export default class Dept extends Vue {
   }
   private add(e: any): void {
     this.visible = true
+    this.Disable = false
     this.myTitle = "添加公告"
   }
   private handleOk(e: any) {
@@ -509,6 +513,7 @@ export default class Dept extends Vue {
   private edit(val: any): void {
     this.saveID = val.deptId
     this.visible = true
+    this.Disable = true
     this.myTitle = "编辑"
     if (val.parentCode == "0000-0000-0000-0000") {
       val.parentCode = "顶级部门"

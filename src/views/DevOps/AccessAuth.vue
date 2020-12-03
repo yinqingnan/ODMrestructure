@@ -57,6 +57,7 @@
               align="right"
               size="mini"
               :layouts="layouts"
+              :page-sizes="[15, 50, 100, 200]"
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
