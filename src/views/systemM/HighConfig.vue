@@ -8,25 +8,89 @@
       </div>
       <!-- 内容 -->
       <div class="content">
-        <a-table
-          :columns="columns"
-          :data-source="tabData"
-          bordered
-          :scroll="{ x: 1300 }"
-          :rowClassName="rowClassName"
-          :pagination="pagination"
-          @change="healthyTableChange"
-          rowKey="id"
-        >
-          <template slot="index" slot-scope="text, record, index">
-            {{ (pagination.current - 1) * pagination.pageSize + index + 1 }}
-          </template>
-          <template slot="operation" slot-scope="text, record">
-            <div class="linkBox">
-              <a-button type="link" block @click="edit(record)" v-isshow="'system:highConfig:update'">编辑</a-button>
-            </div>
-          </template>
-        </a-table>
+          <!-- <a-table
+            :columns="columns"
+            :data-source="tabData"
+            bordered
+            :scroll="{y: Height }"
+            :rowClassName="rowClassName"
+            :pagination="pagination"
+
+            @change="healthyTableChange"
+            rowKey="id"
+          >
+            <template
+              slot="index"
+              slot-scope="text, record, index"
+            >{{ (pagination.current - 1) * pagination.pageSize + index + 1 }}</template>
+            <template slot="operation" slot-scope="text, record">
+              <div class="linkBox">
+                <a-button
+                  type="link"
+                  block
+                  @click="edit(record)"
+                  v-isshow="'system:highConfig:update'"
+                >编辑</a-button>
+              </div>
+            </template>
+          </a-table> -->
+          <div class="Simpleprogrambody" :style="{height:Height}">
+          <vxe-table
+            stripe
+            border
+            height="auto"
+            ref="logAdministration"
+            highlight-hover-row
+            class="mytable-scrollbar"
+            :row-class-name="tableRowClassName"
+            :data="tabData"
+          >
+            <vxe-table-column type="seq" width="60" align="center" title="序号" />
+            <vxe-table-column
+              field="code"
+              title="配置值"
+              show-overflow
+              align="center"
+              minWidth="150"
+            />
+            <vxe-table-column
+              field="value"
+              title="配置内容"
+              show-overflow
+              align="center"
+              minWidth="150"
+            />
+            <vxe-table-column
+              field="remark"
+              title="配置说明"
+              show-overflow
+              align="center"
+              minWidth="240"
+            />
+            <vxe-table-column
+              field="createTime"
+              title="操作"
+              show-overflow
+              align="center"
+              minWidth="130"
+            >
+              <template v-slot="{ row }">
+                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;">编辑</span>
+              </template>
+            </vxe-table-column>
+          </vxe-table>
+          <p>
+            <vxe-pager
+              align="right"
+              size="mini"
+              :layouts="layouts"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              @page-change="pagerchange"
+            />
+          </p>
+        </div>
       </div>
       <!-- 弹窗 -->
       <a-modal
@@ -39,12 +103,7 @@
         okText="提交"
         @cancel="back"
       >
-        <a-form
-          :form="form"
-          layout="inline"
-          :label-col="{ span: 4 }"
-          :wrapper-col="{ span: 20 }"
-        >
+        <a-form :form="form" layout="inline" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
           <a-row :gutter="24">
             <a-col :span="24">
               <a-form-item label="配置值" style="width: 100%">
@@ -95,114 +154,112 @@
 
 <script lang="ts">
 // import { PropType } from "vue";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator"
+import {
+  layouts,
+  LimitInputlength,
+  page,
+  textarealength,
+} from "@/InterfaceVariable/variable"
 @Component({
   components: {},
 })
 export default class RightContent extends Vue {
-  [x: string]: any;
-  public getData = new this.$api.configInterface.HighConfig();
-  private form: any;
-  public tabData = [];
-  public visible = false;
-  public saveData = {};
-  public savaID: string;
-  public pagination = {
-    pageSize: 1000, // 默认每页显示数量
-    current: 1, //显示当前页数
-    total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页`, // 显示总数
-  };
-  public columns = [
-    {
-      title: "序号",
-      className: "pd10",
-      width: 65,
-      dataIndex: "index",
-      fixed: "left",
-      scopedSlots: { customRender: "index" },
-    },
-    {
-      title: "配置值",
-      dataIndex: "code",
-      className: "pd10",
-      width: 350,
-    },
-    {
-      title: "配置内容",
-      dataIndex: "value",
-      className: "pd10",
-      width: 350,
-    },
-    {
-      title: "配置说明",
-      dataIndex: "remark",
-      className: "pd10",
-      width: 820,
-    },
-    {
-      title: "操作",
-      key: "operation",
-      scopedSlots: { customRender: "operation" },
-      className: "pd10",
-      width: 200,
-      fixed: "right",
-    },
-  ];
+  [x: string]: any
+  public getData = new this.$api.configInterface.HighConfig()
+  private page = page
+  private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
+  private layouts = layouts
+  private form: any
+  public tabData = []
+  public visible = false
+  public saveData = {}
+  public savaID: string
+  public Height = ""
+  // public pagination = {
+  //   pageSize: 1000, // 默认每页显示数量
+  //   current: 1, //显示当前页数
+  //   total: 0,
+  //   showSizeChanger: false, // 显示可改变每页数量
+  //   showQuickJumper: false, //显示跳转到输入的那一页
+  //   showTotal: (total: number) =>
+  //     `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+  //       total / this.pagination.pageSize
+  //     )} 页`, // 显示总数
+  // }
   beforeCreate() {
-    this.form = this.$form.createForm(this);
+    this.form = this.$form.createForm(this)
+  }
+  mounted() {
+    this.Height = `${document.documentElement.clientHeight - 230}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    }) 
   }
   created() {
     const val = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
-    };
-    this.getList(val);
+      page: 1,
+      limit: 10,
+    }
+    this.getList(val)
+    this.Height = `${document.documentElement.clientHeight - 230}`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}`
+    })
   }
   private getList(val: any): void {
-    this.getData.getList(val, true).then((res: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this.tabData = res.data;
-      this.pagination.total = res.pages * 1;
-    });
+    this.getData.getList(val, true).then((res) => {
+      console.log(res)
+      this.tabData = res.data
+      this.page.totalResult= res.data.length
+    })
+  }
+   private pagerchange({ currentPage, pageSize }) {
+    let val = {
+      page: currentPage,
+      limit: pageSize,
+    }
+    this.getList(val)
+  }
+  private tableRowClassName(record: any, index: number) {
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private healthyTableChange(pagination: {
     pageSize: number
     current: number
   }) {
-    this.pagination.pageSize = pagination.pageSize;
-    this.pagination.current = pagination.current;
+    this.pagination.pageSize = pagination.pageSize
+    this.pagination.current = pagination.current
     const obj = {
       page: this.pagination.current,
       limit: this.pagination.pageSize,
-    };
-    this.getList(obj);
+    }
+    this.getList(obj)
   }
   private edit(val: any): void {
-    this.visible = true;
-    this.savaID = val.id;
-    // const that = this;
+    this.visible = true
+    this.savaID = val.id
     this.$nextTick(() => {
       this.form.setFieldsValue({
         code: val.code,
         value: val.value,
         remark: val.remark,
-      });
-    });
+      })
+    })
   }
   private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : "";
+    return index % 2 === 0 ? "bgF5" : ""
   }
   private back(): void {
-    this.form.resetFields();
+    this.form.resetFields()
   }
   private handleOk(e: any): void {
-    e.preventDefault();
+    e.preventDefault()
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
         const val = {
@@ -210,21 +267,21 @@ export default class RightContent extends Vue {
           value: values.value,
           remark: values.remark,
           id: this.savaID,
-        };
+        }
         this.getData.upData(val, true).then((res: any) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           if (res.code == 0) {
-            this.visible = !this.visible;
-            this.form.resetFields();
+            this.visible = !this.visible
+            this.form.resetFields()
             const val = {
               page: this.pagination.current,
               limit: this.pagination.pageSize,
-            };
-            this.getList(val);
+            }
+            this.getList(val)
           }
-        });
+        })
       }
-    });
+    })
   }
 }
 </script>

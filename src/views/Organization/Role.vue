@@ -7,6 +7,7 @@
           class="contaninerheader"
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
+          <div></div>
           <div class="btns">
             <a-button @click="add" type="primary" v-isshow="'role:save'">添加</a-button>
           </div>
@@ -319,6 +320,7 @@ export default class Role extends Vue {
               this.$message.success(res.msg)
               this.gettabledata({ page: 1, limit: 10 })
               this.visible = false
+              this.form.resetFields()
             } else {
               this.$message.error(res.msg)
             }
@@ -330,6 +332,7 @@ export default class Role extends Vue {
               this.$message.success(res.msg)
               this.gettabledata({ page: 1, limit: 10 })
               this.visible = false
+              this.form.resetFields()
             } else {
               this.$message.error(res.msg)
             }

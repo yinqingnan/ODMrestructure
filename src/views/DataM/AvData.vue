@@ -649,6 +649,11 @@ export default class AvData extends Vue {
     this.form3 = this.$form.createForm(this)
     this.getdata()
     this.Height = `${document.documentElement.clientHeight - 230}px`
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    })
   }
 
   private handleOk() {

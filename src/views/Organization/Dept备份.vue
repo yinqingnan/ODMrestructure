@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-12-03 10:24:43
+ * @LastEditTime: 2020-12-03 10:24:44
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ODMrestructure\src\views\Organization\Dept备份.vue
+-->
 <template>
   <div id="Dept">
     <div class="box">
@@ -53,47 +61,39 @@
         </div>
       </div>
       <!-- 内容 -->
-      <div class="content" :style="{height:Height}">
-          <vxe-table
-            border
-            class="mytable-scrollbar"
-            resizable
-            height="auto"
-            row-id="id"
-            :tree-config="{lazy: true, children: 'children', hasChild: 'haveChild', loadMethod: loadChildrenMethod}"
-            :data="tabData"
-          >
-            <vxe-table-column type="seq" title="序号" width="50" align="center" />
-            <vxe-table-column
-              field="name"
-              title="部门名称"
-              :tree-node="true"
-              show-overflow
-              align="center"
-              width="140" 
-            />
-            <vxe-table-column field="code" title="部门编号" align="center" show-overflow width="140" />
-            <vxe-table-column field="contact" title="联系人" align="center" show-overflow width="140" />
-            <vxe-table-column field="phone" title="联系电话" align="center" show-overflow width="140" />
-            <vxe-table-column field="remark" title="部门名称" align="center" width="140" show-overflow />
-            <vxe-table-column flxed="right" title="操作" align="center" min-width="180">
-              <template v-slot="{ row }">
-                <span
-                  type="text"
-                  @click="addS(row)"
-                  v-isshow="'base:dept:savelow'"
-                  style="color:#0db8df;cursor: pointer;margin-right:10px"
-                >添加子部门</span>
-                   <span
-                  type="text"
-                  @click="edit(row)"
-                  v-isshow="'base:dept:update'"
-                  style="color:#0db8df;cursor: pointer;margin-right:10px"
-                >编辑</span>
-                <span type="text" @click="remove(row.deptId)" style="color:#0db8df;cursor: pointer;" v-isshow="'base:dept:delete'">删除</span>
-              </template>
-            </vxe-table-column>
-          </vxe-table>
+      <div class="content">
+        <el-table
+          v-if="isNew"
+          :data="tabData"
+          style="width: 100%"
+          row-key="deptId"
+          max-height="700"
+          border
+          :height="Height"
+          lazy
+          
+          class="bumen"
+          :load="load"
+          :tree-props="{children: 'children', hasChildren: 'haveChild'}"
+        >
+          <el-table-column fixed="left" type="index" width="50" label="序号" align="center"/>
+          <el-table-column prop="name" label="部门名称" width="200" align="center"/>
+          <el-table-column prop="code" label="部门编号" width="120" align="center"/>
+          <el-table-column prop="contact" label="联系人" width="100" align="center" :show-overflow-tooltip="true"/>
+          <el-table-column prop="phone" label="联系电话" width="120" align="center" :show-overflow-tooltip="true"/>
+          <el-table-column prop="remark" label="部门描述" min-width="200" align="center" :show-overflow-tooltip="true"/>
+          <el-table-column fixed="right" label="操作" width="200" align="center">
+            <template slot-scope="scope">
+              <el-button @click="addS(scope.row)" type="text" v-isshow="'base:dept:savelow'">添加子部门</el-button>
+              <el-button @click="edit(scope.row)" type="text" v-isshow="'base:dept:update'">编辑</el-button>
+              <el-button
+                type="text"
+                @click="remove(scope.row.deptId)"
+                v-isshow="'base:dept:delete'"
+              >删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
       <!-- 弹出层 -->
       <a-modal
@@ -280,6 +280,50 @@ export default class Dept extends Vue {
       )} 页`, // 显示总数
   }
   public tabData = []
+  public columns = [
+    {
+      title: "序号",
+      className: "pd10",
+      width: 65,
+      field: "index",
+      fixed: "left",
+      scopedSlots: { customRender: "index" },
+    },
+    {
+      title: "部门名称",
+      field: "name",
+      className: "pd10",
+      treeNode: true,
+    },
+    {
+      title: "部门编号",
+      field: "code",
+      className: "pd10",
+    },
+    {
+      title: "联系人",
+      field: "contact",
+      className: "pd10",
+    },
+    {
+      title: "联系电话",
+      field: "phone",
+      className: "pd10",
+    },
+    {
+      title: "部门描述",
+      field: "remark",
+      className: "pd10",
+    },
+    {
+      title: "操作",
+      key: "operation",
+      scopedSlots: { customRender: "operation" },
+      className: "pd10",
+      width: 200,
+      fixed: "right",
+    },
+  ]
   public saveID = ""
   private form: any
   private form2: any
@@ -306,35 +350,34 @@ export default class Dept extends Vue {
     }
     this.getList(val)
     this.getSelect(obj)
-    this.Height = `${document.documentElement.clientHeight - 230}px`
+    this.Height = `${document.documentElement.clientHeight - 230}`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
-      _that.Height = `${document.documentElement.clientHeight - 230}px`
-    })
-  }
-  private loadChildrenMethod({ row }) {
-    console.log(row)
-    return new Promise((resolve, reject) => {
-      const val = {
-        parentCode: row.code,
-      }
-      this.getData.getList(val, true).then((res: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        resolve(res.data)
-      })
+      _that.Height = `${document.documentElement.clientHeight - 230}`
     })
   }
   private fillterFUN(searchVal: string, treeNode: any) {
     return treeNode.data.props.name.includes(searchVal)
   }
+  private load(tree, treeNode, resolve) {
+    // console.log(tree, treeNode, resolve)
+    const val = {
+      parentCode: tree.code,
+    }
+    this.getData.getList(val, true).then((res: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      resolve(res.data)
+    })
+  }
   private getList(val: any): void {
     this.getData.getList(val, true).then((res: any) => {
-      console.log(res)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       this.isNew = false
       setTimeout(() => {
         this.isNew = true
         this.tabData = res.data
+        this.pagination.total = res.pages * 1
       })
     })
   }
@@ -349,6 +392,7 @@ export default class Dept extends Vue {
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         const obj = {
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
           name_like: val.name_like,
           code_like: val.code_like,
         }
@@ -366,21 +410,20 @@ export default class Dept extends Vue {
     })
   }
   private Export(e: any): void {
-    // let wb = XLSX.utils.table_to_book(document.querySelector(".bumen"))
-    // let wbout = XLSX.write(wb, {
-    //   bookType: "xlsx",
-    //   bookSST: true,
-    //   type: "array",
-    // })
-    // try {
-    //   FileSaver.saveAs(
-    //     new Blob([wbout], { type: "application/octet-stream" }),
-    //     "部门" + ".xlsx"
-    //   )
-    // }
-    // catch (e) {
-    //   if (typeof console !== "undefined") console.log(e, wbout)
-    // }
+    let wb = XLSX.utils.table_to_book(document.querySelector(".bumen"))
+    let wbout = XLSX.write(wb, {
+      bookType: "xlsx",
+      bookSST: true,
+      type: "array",
+    })
+    try {
+      FileSaver.saveAs(
+        new Blob([wbout], { type: "application/octet-stream" }),
+        "部门" + ".xlsx"
+      )
+    } catch (e) {
+      if (typeof console !== "undefined") console.log(e, wbout)
+    }
   }
   private imports() {
     this.importshow = true
@@ -437,7 +480,6 @@ export default class Dept extends Vue {
   }
   private remove(id: string): void {
     this.getData.removeID({ id: id }).then((res) => {
-      console.log(res)
       if (res.code == 0) {
         this.$message.success(res.msg)
         const val = {
@@ -446,8 +488,6 @@ export default class Dept extends Vue {
           code_like: "",
         }
         this.getList(val)
-      }else{
-        this.$message.error(res.msg)
       }
     })
   }
@@ -524,7 +564,6 @@ export default class Dept extends Vue {
       })
     })
   }
-
 }
 </script>
 

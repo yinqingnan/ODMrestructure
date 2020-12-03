@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-01 17:17:55
+ * @LastEditTime: 2020-12-03 14:02:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ODMrestructure\src\main.ts
@@ -67,10 +67,10 @@ XEAjax.setup({
 })
 import NProgress from "nprogress"; // 引入进度条组件及css
 import "nprogress/css/nprogress.css";
-NProgress.inc(0.2);
+NProgress.inc(0.1);
 NProgress.configure({
   easing: "ease",
-  speed: 200,
+  speed: 100,
   showSpinner: false
 });
 Vue.use(NProgress);
@@ -90,10 +90,12 @@ router.beforeEach((to, from, next) => {
   // console.log(localStorage.getItem("lockpsd"));
   if (!localStorage.getItem("token")) {
     if (to.path !== "/login") {
+      NProgress.done();
       return next("/login");
     }
   } else if (localStorage.getItem("lockpsd")) {
     if (to.path !== "/lockscreen") {
+      NProgress.done();
       return next("/lockscreen");
     }
   } else {
@@ -106,13 +108,13 @@ router.beforeEach((to, from, next) => {
           ...to,
           replace: true
         });
-        NProgress.done();
       } else {
         next();
-        NProgress.done();
       }
+      NProgress.done();
     }
   }
+  NProgress.done();
   next();
 });
 

@@ -322,7 +322,7 @@ export default class RightContent extends Vue {
       className: "pd10",
       width: 180,
       fixed: "right",
-    },
+    }
   ]
   beforeCreate() {
     this.form = this.$form.createForm(this)

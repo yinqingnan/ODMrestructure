@@ -103,7 +103,6 @@ export default class Login extends Vue {
         } else {
           this.login(values)
           this.clearCookie()
-          this.login(values)
         }
       }
     })
@@ -111,8 +110,10 @@ export default class Login extends Vue {
   private handleChange(e: { target: { checked: boolean } }) {
     this.checkNick = e.target.checked
   }
-  private login = (data: object) => {
+  private login (data: object) {
     localStorage.clear();
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.Login.login(data, false).then((res: any) => {
       if (res.code == 0) {
         localStorage.setItem("token", res.data.accessToken)
@@ -129,6 +130,7 @@ export default class Login extends Vue {
           }
         })
       } else {
+       this.$message.error(res.msg)
         this.clearCookie()
         this.form.setFieldsValue({
           password: "",

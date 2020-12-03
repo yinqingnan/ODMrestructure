@@ -177,9 +177,9 @@ export default class OperationLog extends Vue {
   private module_equal = "-1"
   // todo 事件和生命周期
   private created() {
-    this.Height = `${document.documentElement.clientHeight - 230}px`
     this.form = this.$form.createForm(this)
     // this.getdata()
+    this.Height = `${document.documentElement.clientHeight - 230}px`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
