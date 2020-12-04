@@ -1,3 +1,10 @@
+<!--
+ * @Descripttion: 
+ * @Autor: yqn
+ * @Date: 2020-12-01 11:37:14
+ * @LastEditTime: 2020-12-04 15:30:02
+ * @FilePath: \src\components\HelloWorld.vue
+-->
 <template>
   <div class="hello">
     <!-- <h1>{{ msg }}</h1> -->
@@ -33,7 +40,6 @@ export default class HelloWorld extends Vue {
   @test.Mutation("add") //使用types内定义的变量进行解构
   numadd!: (num: number) => void;
   private btn = (): void => {
-    // console.log(typeof id);
     this.numadd(20);
   };
 }

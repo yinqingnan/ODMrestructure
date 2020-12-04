@@ -5,37 +5,11 @@
       <div class="header">
         <div class="select">岗位字典项</div>
         <div class="btnList">
-          <a-button class="upData" @click="add" v-isshow="'base:dict:save'">添加字典项</a-button>
+          <a-button type="primary" class="upData" @click="add" v-isshow="'base:dict:save'">添加字典项</a-button>
         </div>
       </div>
       <!-- 内容 -->
       <div class="content" :style="{height:Height}">
-        <!-- <a-table
-          :columns="columns"
-          :data-source="tabData"
-          bordered
-          :rowClassName="rowClassName"
-          :pagination="pagination"
-          @change="healthyTableChange"
-          rowKey="id"
-        >
-          <template slot="index" slot-scope="text, record, index">
-            {{ (pagination.current - 1) * pagination.pageSize + index + 1 }}
-          </template>
-          <template slot="operation" slot-scope="text, record">
-            <div class="linkBox">
-              <a-button type="link" block @click="edit(record)" v-isshow="'base:dict:update'">编辑</a-button>
-              <a-popconfirm
-                title="确定删除？"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="remove(record.id)"
-              >
-                <a-button type="link" block v-isshow="'base:dict:delete'">删除</a-button>
-              </a-popconfirm>
-            </div>
-          </template>
-        </a-table>-->
         <vxe-table
           stripe
           border
@@ -158,7 +132,7 @@
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: true, message: '备注不能为空' }],
+                      rules: [],
                     },
                   ]"
                   placeholder="请输入公告内容"

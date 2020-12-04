@@ -76,7 +76,7 @@
             <vxe-table-column field="code" title="部门编号" align="center" show-overflow width="140" />
             <vxe-table-column field="contact" title="联系人" align="center" show-overflow width="140" />
             <vxe-table-column field="phone" title="联系电话" align="center" show-overflow width="140" />
-            <vxe-table-column field="remark" title="部门名称" align="center" width="140" show-overflow />
+            <vxe-table-column field="remark" title="部门描述" align="center" width="140" show-overflow />
             <vxe-table-column flxed="right" title="操作" align="center" min-width="180">
               <template v-slot="{ row }">
                 <span
