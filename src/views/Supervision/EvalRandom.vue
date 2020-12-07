@@ -53,9 +53,7 @@
 
                     <a-form-item label="拍摄时间">
                       <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
+                        :allowClear="false"
                         v-decorator="[
                         'date',
                         {
@@ -97,7 +95,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-               <vxe-table-column type="seq" width="50" align="center" title="序号"/>
+            <vxe-table-column type="seq" width="50" align="center" title="序号" />
             <vxe-table-column
               field="fileName"
               title="文件名称"
@@ -130,7 +128,12 @@
             </vxe-table-column>
             <vxe-table-column field="actions" title="操作" align="center">
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'fileEvaluate:evaluationRandom:look'">评分</span>
+                <span
+                  type="text"
+                  @click="tablebtn(row)"
+                  style="color:#0db8df;cursor: pointer;"
+                  v-isshow="'fileEvaluate:evaluationRandom:look'"
+                >评分</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -146,7 +149,7 @@
       >
         <div class="filesee">
           <div class="filesee_left">
-            <div v-if="filedetails.fileType_Name == '图片'">
+            <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
               <!-- <img :src="filedetails.httpPath" alt /> -->
               <img
                 src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3868564487,3858491216&fm=26&gp=0.jpg"
@@ -403,7 +406,11 @@
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
-                    <a-button type="primary" html-type="submit" v-isshow="'fileEvaluate:evaluationRandom:saveEva'">保存</a-button>
+                    <a-button
+                      type="primary"
+                      html-type="submit"
+                      v-isshow="'fileEvaluate:evaluationRandom:saveEva'"
+                    >保存</a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -414,7 +421,11 @@
         <template slot="footer">
           <!-- <a-button type @click="previous">上一个</a-button>
           <a-button type @click="next">下一个</a-button>-->
-          <a-button type @click="filedownload" v-isshow="'fileEvaluate:evaluationRandom:download'">下载</a-button>
+          <a-button
+            type
+            @click="filedownload"
+            v-isshow="'fileEvaluate:evaluationRandom:download'"
+          >下载</a-button>
           <!-- <a-button type @click="moduleDlt">删除</a-button> -->
         </template>
       </a-modal>
@@ -793,6 +804,9 @@ export default class EvalRandom extends Vue {
     overflow: hidden;
     img {
       width: 100%;
+      height: auto;
+    }
+    div {
       height: auto;
     }
   }

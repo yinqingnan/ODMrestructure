@@ -72,9 +72,7 @@
                     </a-form-item>
                     <a-form-item label="拍摄时间">
                       <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
+                        :allowClear="false"
                         v-decorator="[
                         'date',
                         {

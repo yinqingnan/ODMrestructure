@@ -60,9 +60,7 @@
                     </a-form-item>
                     <a-form-item label="违法时间">
                       <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
+                        :allowClear="false"
                         v-decorator="[
                         'date',
                         {
@@ -345,9 +343,7 @@
                     </a-form-item>
                     <a-form-item label="拍摄时间">
                       <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
+                        :allowClear="false"
                         v-decorator="[
                         'date',
                         {
@@ -429,7 +425,12 @@
 
 
 <script lang="ts">
-import { LimitInputlength, page, layouts ,pagesize} from "@/InterfaceVariable/variable"
+import {
+  LimitInputlength,
+  page,
+  layouts,
+  pagesize,
+} from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 import qs from "qs"
@@ -510,7 +511,7 @@ export default class Simpleprogram extends Vue {
   private WithID = []
   private defaultone = {
     fileName: "",
-    fileType:""
+    fileType: "",
   }
   private Associatedfilestabledata = []
   private calculationdate = [
@@ -530,7 +531,7 @@ export default class Simpleprogram extends Vue {
     this.gettabledata({})
   }
   private Fileview = {
-    fileType:''
+    fileType: "",
   }
   private formdata = {
     department: "",
@@ -654,14 +655,13 @@ export default class Simpleprogram extends Vue {
     })
     this.DataM.MatchFiles(row.code).then((res) => {
       console.log(res)
-      if(res.data.length> 0){
+      if (res.data.length > 0) {
         this.MatchFiles = res.data
         this.defaultone = res.data[0]
-      }else{
-        this.defaultone.fileName=""
-        this.defaultone.fileType=""
+      } else {
+        this.defaultone.fileName = ""
+        this.defaultone.fileType = ""
       }
-      
     })
   }
   private pagerchange({ currentPage, pageSize }) {
@@ -827,7 +827,7 @@ export default class Simpleprogram extends Vue {
                   _that.defaultone = res.data[0]
                 } else {
                   _that.MatchFiles = []
-                  _that.defaultone.fileName =  "" 
+                  _that.defaultone.fileName = ""
                 }
                 setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
               })
@@ -1018,5 +1018,4 @@ export default class Simpleprogram extends Vue {
     }
   }
 }
-
 </style>

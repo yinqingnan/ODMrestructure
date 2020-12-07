@@ -68,9 +68,7 @@
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
+                        :allowClear="false"
                         v-decorator="[
                         'date',
                         {
@@ -216,7 +214,7 @@
       >
         <div class="filesee">
           <div class="filesee_left">
-            <div v-if="filedetails.fileType_Name == '图片'">
+            <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
               <img :src="filedetails.httpPath" />
             </div>
             <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
@@ -290,8 +288,10 @@
                   </a-form-item>
                   <a-form-item label="标记描述">
                     <a-textarea
-                      style="display: flex;height:120px !important;overflow-y:auto;resize: none;"
+                      :maxLength="textarealength"
+                      style="display: flex;height:77px !important;overflow-y:auto;resize: none;"
                       allowClear
+                      placeholder="请输入标记描述（200字符以内）"
                       v-decorator="[
                       'remark',
                       {
@@ -411,111 +411,114 @@
               <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
                   :form="form3"
-                  :label-col="{ span:4 }"
-                  :wrapper-col="{ span: 20 }"
+                  :label-col="{ span:6 }"
+                  :wrapper-col="{ span: 18 }"
                   @submit="pingjiaSubmit"
                 >
-                  <a-form-item label="评价总分">
-                    <a-input
-                      :disabled="true"
-                      v-decorator="[
+                  <el-scrollbar style="height:346px;padding-right: 10px">
+                    <a-form-item label="评价总分">
+                      <a-input
+                        :disabled="true"
+                        v-decorator="[
                         'Total',
                         {
                           initialValue: Total,
                           rules: []
                         }
                       ]"
-                    />
-                  </a-form-item>
-                  <a-form-item label="评分项">
-                    <a-checkbox-group
-                      :disabled="disabled"
-                      v-decorator="['Scoring', { initialValue: []}]"
-                      style="width: 100%;"
-                    >
-                      <el-scrollbar style="height:130px;" v-if="!disabled">
-                        <a-row>
-                          <a-col
-                            :span="24"
-                            v-for="(d) in options"
-                            :key="d.id"
-                            style="line-height: 30px;height: 30px;"
-                          >
-                            <a-checkbox
-                              style="letter-spacing: -0.5px;"
-                              @change="checkboxChange($event, d.jffz)"
-                              :value="d.jfbh"
-                            >{{d.jfmc}}(-{{d.jffz}}分)</a-checkbox>
-                          </a-col>
-                        </a-row>
-                      </el-scrollbar>
-                      <el-scrollbar style="height:130px;" v-else>
-                        <a-row>
-                          <a-col
-                            :span="24"
-                            v-for="(d) in options"
-                            :key="d.id"
-                            style="line-height: 30px;height: 30px;"
-                          >
-                            <a-checkbox
-                              style="letter-spacing: -0.5px;"
-                              @change="checkboxChange($event, d.jffz)"
-                              :value="d.code"
-                            >{{d.name}}(-{{d.score}}分)</a-checkbox>
-                          </a-col>
-                        </a-row>
-                      </el-scrollbar>
-                    </a-checkbox-group>
-                  </a-form-item>
-                  <a-form-item label="实际评分">
-                    <a-input
-                      :disabled="true"
-                      v-decorator="[
+                      />
+                    </a-form-item>
+                    <a-form-item label="评分项">
+                      <a-checkbox-group
+                        :disabled="disabled"
+                        v-decorator="['Scoring', { initialValue: []}]"
+                        style="width: 100%;"
+                      >
+                        <el-scrollbar style="height:130px;" v-if="!disabled">
+                          <a-row>
+                            <a-col
+                              :span="24"
+                              v-for="(d) in options"
+                              :key="d.id"
+                              style="line-height: 30px;height: 30px;"
+                            >
+                              <a-checkbox
+                                style="letter-spacing: -0.5px;"
+                                @change="checkboxChange($event, d.jffz)"
+                                :value="d.jfbh"
+                              >{{d.jfmc}}(-{{d.jffz}}分)</a-checkbox>
+                            </a-col>
+                          </a-row>
+                        </el-scrollbar>
+                        <el-scrollbar style="height:130px;" v-else>
+                          <a-row>
+                            <a-col
+                              :span="24"
+                              v-for="(d) in options"
+                              :key="d.id"
+                              style="line-height: 30px;height: 30px;"
+                            >
+                              <a-checkbox
+                                style="letter-spacing: -0.5px;"
+                                @change="checkboxChange($event, d.jffz)"
+                                :value="d.code"
+                              >{{d.name}}(-{{d.score}}分)</a-checkbox>
+                            </a-col>
+                          </a-row>
+                        </el-scrollbar>
+                      </a-checkbox-group>
+                    </a-form-item>
+                    <a-form-item label="实际评分">
+                      <a-input
+                        :disabled="true"
+                        v-decorator="[
                         'Actualscore',
                         {
                           initialValue:Actualscore,
                           rules: []
                         }
                       ]"
-                    />
-                  </a-form-item>
-                  <a-form-item label="评分说明">
-                    <a-textarea
-                      :disabled="disabled"
-                      style="display: flex;overflow-y:auto;resize: none;"
-                      allowClear
-                      v-decorator="[
+                      />
+                    </a-form-item>
+                    <a-form-item label="评分说明">
+                      <a-textarea
+                        :disabled="disabled"
+                        style="display: flex;overflow-y:auto;resize: none;"
+                        allowClear
+                        :maxLength="textarealength"
+                        v-decorator="[
                       'remark',
                       {
                         initialValue: filedetails.marker,
-                        rules: [],
+                        rules: [{ required: true, message: '必填项不能为空' }],
                       },
                     ]"
-                      :autoSize="{ minRows: 3, maxRows: 3 }"
-                    />
-                  </a-form-item>
-                  <a-form-item
-                    :wrapper-col="{ span: 12, offset: 5 }"
-                    v-if="!disabled"
-                    style="text-align:center"
-                  >
-                    <a-button
-                      v-isshow="'lawarchives:avDate:foreBtn'"
-                      type="primary"
-                      html-type="submit"
-                    >保存</a-button>
-                  </a-form-item>
+                        placeholder="请输入评分说明（200字符以内）"
+                        :autoSize="{ minRows: 3, maxRows: 3 }"
+                      />
+                    </a-form-item>
+                    <a-form-item
+                      :wrapper-col="{ span: 12, offset: 5 }"
+                      v-if="!disabled"
+                      style="text-align:center"
+                    >
+                      <a-button
+                        v-isshow="'lawarchives:avDate:foreBtn'"
+                        type="primary"
+                        html-type="submit"
+                      >保存</a-button>
+                    </a-form-item>
+                  </el-scrollbar>
                 </a-form>
               </a-tab-pane>
             </a-tabs>
           </div>
         </div>
-
         <template slot="footer">
-          <a-button type @click="previous">上一个</a-button>
-          <a-button type @click="next">下一个</a-button>
-          <a-button type @click="filedownload" v-isshow="'lawarchives:avDate:download'">下载</a-button>
-          <a-button type @click="moduleDlt">删除</a-button>
+          <a-button type="default" @click="previous" :disabled="PreviousDisabled">上一个</a-button>
+          <a-button type="default" @click="next" :disabled="NextDisabled">下一个</a-button>
+          <a-button type="default" @click="filedownload" v-isshow="'lawarchives:avDate:download'">下载</a-button>
+          <a-button type="default" @click="moduleDlt">删除</a-button>
         </template>
       </a-modal>
       <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear">
@@ -531,7 +534,12 @@
   </div>
 </template>
 <script lang="ts">
-import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
+import {
+  LimitInputlength,
+  page,
+  layouts,
+  textarealength,
+} from "@/InterfaceVariable/variable"
 
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
@@ -540,6 +548,7 @@ export default class AvData extends Vue {
   [x: string]: any
   public DataM = new this.$api.configInterface.DataM()
   private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
   public form!: any
   public form1!: any
   public form2!: any
@@ -555,6 +564,8 @@ export default class AvData extends Vue {
   private fileId = ""
   private Actualscore = 100
   private logshow = false
+  private PreviousDisabled = false
+  private NextDisabled = false
   private playerOptions = {
     playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
     autoplay: false, //如果true,浏览器准备好时开始回放。
@@ -655,7 +666,7 @@ export default class AvData extends Vue {
     //  this.DataM.roledataright().then((res) => {
     //    console.log(res)
     //   // if (res.data == 1) {
-    //   //   // 
+    //   //   //
     //   // }
     //  })
   }
@@ -668,7 +679,7 @@ export default class AvData extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
+        console.log(val.date[1])
         this.formdata = val
         let uploadDate_gt = val.date[0].format("YYYY-MM-DD HH:mm:ss")
         let uploadDate_lt = val.date[1].format("YYYY-MM-DD HH:mm:ss")
@@ -723,9 +734,7 @@ export default class AvData extends Vue {
         moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
-      console.log(
-        moment(res.data.myDate.split("~")[0]).format("YYYY-MM-DD HH:mm:ss")
-      )
+      // console.log(moment(res.data.myDate.split("~")[1]))
       let obj = {
         page: 1,
         limit: 15,
@@ -854,9 +863,9 @@ export default class AvData extends Vue {
               Total: res.data.total,
             })
           })
-          console.log("这是已经评价过的")
+          // console.log("这是已经评价过的")
         } else {
-          console.log("尚未评价")
+          // console.log("尚未评价")
           this.disabled = false
           this.DataM.lawarchives().then((res) => {
             console.log(res)
@@ -894,7 +903,7 @@ export default class AvData extends Vue {
           categoryId: val.category,
           fileLevel: val.lv,
           id: this.filedetails.id,
-          marker: val.marker,
+          marker: val.remark,
         }
         this.DataM.marksave(obj).then((res) => {
           // console.log(res)
@@ -1121,13 +1130,17 @@ export default class AvData extends Vue {
     this.form.resetFields()
     this.form2.resetFields()
     this.form3.resetFields()
+    this.PreviousDisabled = false
+    this.NextDisabled = false
   }
   private previous() {
-    console.log(this.Tablesubscript)
-    console.log(this.fileId)
+    // console.log(this.Tablesubscript)
+    // console.log(this.fileId)
+    this.NextDisabled = false
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == 0) {
       this.$message.info("已经是第一个了")
+      this.PreviousDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index - 1]
       console.log(this.fileId)
@@ -1142,9 +1155,11 @@ export default class AvData extends Vue {
     }
   }
   private next() {
+    this.PreviousDisabled = false
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == this.Tablesubscript.length - 1) {
       this.$message.info("已经是当前页面最后一个")
+      this.NextDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index + 1]
       console.log(this.fileId)
@@ -1297,7 +1312,8 @@ export default class AvData extends Vue {
     margin-right: 12px;
     overflow: hidden;
     div {
-      height: 100%;
+      // height: 100%;
+      height: auto;
     }
     img {
       width: 100%;

@@ -76,9 +76,7 @@
                     </a-form-item>
                     <a-form-item label="违法时间">
                       <a-range-picker
-                        :show-time="{
-                            hideDisabledOptions: true,
-                          }"
+                        :allowClear="false"
                         v-decorator="[
                         'date',
                         {
@@ -191,7 +189,7 @@
       >
         <div class="filesee">
           <div class="filesee_left">
-            <div v-if="filedetails.fileType_Name == '图片'">
+            <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
               <!-- <img :src="filedetails.httpPath" alt /> -->
               <img
                 src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3868564487,3858491216&fm=26&gp=0.jpg"
@@ -824,6 +822,9 @@ export default class EvalRecord extends Vue {
     overflow: hidden;
     img {
       width: 100%;
+      height: auto;
+    }
+    div{
       height: auto;
     }
   }
