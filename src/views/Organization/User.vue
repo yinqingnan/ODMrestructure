@@ -108,6 +108,7 @@
           <vxe-table
             stripe
             border
+            resizable
             height="auto"
             ref="usertable"
             highlight-hover-row

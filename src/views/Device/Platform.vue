@@ -84,19 +84,21 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             ref="Acquisitionstation"
             class="mytable-scrollbar"
             :data="tableData"
+            show-header-overflow
             highlight-hover-row
             :row-class-name="tableRowClassName"
           >
-            <vxe-table-column type="seq" width="60" align="center" title="序号" />
-            <vxe-table-column field="name" title="子平台名称" show-overflow width="140" align="center" />
-            <vxe-table-column field="code" title="子平台编号" show-overflow width="140" align="center" />
-            <vxe-table-column field="deptName" title="所属部门" show-overflow  width="140" align="center" />
-            <vxe-table-column field="ip" title="IP地址" show-overflow  width="140" align="center" />
-            <vxe-table-column field="storageShow" title="剩余容量（GB）" width="140" show-overflow align="center">
+            <vxe-table-column type="seq" width="50" align="center" title="序号" />
+            <vxe-table-column field="name" title="子平台名称" show-overflow min-width="120" align="center" />
+            <vxe-table-column field="code" title="子平台编号" show-overflow width="120" align="center" />
+            <vxe-table-column field="deptName" title="所属部门" show-overflow  width="100" align="center" />
+            <vxe-table-column field="ip" title="IP地址" show-overflow  width="120" align="center" />
+            <vxe-table-column field="storageShow" title="剩余容量（GB）" width="100" show-overflow align="center">
               <template v-slot="{ row }">
                 <span
                   v-if="row.storageRest/(1024*1024*1024) < 500"
@@ -105,19 +107,19 @@
                 <span v-else>{{row.storageShow}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="storageShow2" title="总容量（GB）" width="140" align="center">
+            <vxe-table-column field="storageShow2" title="总容量（GB）" width="100" align="center">
               <template v-slot="{ row }">
                 <span>{{row.storageShow.replace(/GB/g,"").split('/')[1]}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="isOline" title="在线状态" show-overflow align="center">
+            <vxe-table-column field="isOline" title="在线状态" show-overflow align="center" width="120">
               <template v-slot="{ row }">
                 <span style="color:red" v-if="row.isOline == '离线'">{{row.isOline}}</span>
                 <span style="color:red" v-else>{{row.isOline}}</span>
               </template>
             </vxe-table-column>
 
-            <vxe-table-column title="操作" align="center">
+            <vxe-table-column width="120" title="操作" align="center">
               <template v-slot="{ row }">
                 <span @click="dlt(row)" style="color:#4d96ca;cursor:pointer;" v-isshow="'device:platform:delete'">删除</span>
               </template>
@@ -262,7 +264,6 @@ export default class Platform extends Vue {
     })
   }
   private tableRowClassName(record: any, index: number) {
-     
     return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
 }

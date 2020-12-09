@@ -17,6 +17,8 @@
           <vxe-table
             stripe
             border
+            resizable
+            show-header-overflow
             height="auto"
             ref="Acquisitionstation"
             highlight-hover-row

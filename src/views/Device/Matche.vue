@@ -117,21 +117,31 @@
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table
+           <vxe-table
             border
+            resizable
             height="auto"
             :data="tableData"
+            header-align="center"
             ref="zhifayi"
+            show-header-overflow
             highlight-hover-row
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column
-              v-for="(config, index) in tableColumn"
-              show-overflow
-              :key="index"
-              v-bind="config"
-            />
+            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column field="code" title="产品序号" show-overflow width="120" align="center" />
+            <vxe-table-column field="deptName" title="所属部门" show-overflow width="120" align="center" />
+            <vxe-table-column field="userName" title="姓名/警号" show-overflow width="120" align="center">
+              <template v-slot="{ row }">
+                <span v-if="row.userCode">{{row.userName}}({{row.userCode}})</span>
+                <span v-else>{{row.userName}}</span>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="deviceStatusName" title="设备状态" show-overflow width="120" align="center" />
+            <vxe-table-column field="lastUploadTime" title="最后上传时间" show-overflow width="120" align="center" />
+            <vxe-table-column field="purchasingDate" title="购买日期" show-overflow width="120" align="center" />
+            <vxe-table-column field="warrantyDate" title="保修日期" show-overflow width="120" align="center" />
             <vxe-table-column field="actions" title="操作" align="center" flexd="right">
               <template v-slot="{ row }">
                 <span
@@ -815,7 +825,7 @@ export default class Matche extends Vue {
     })
   }
   private getSelectEvent1() {
-    let selectRecords = (this.$refs.xTable2 as any).getCheckboxRecords()
+    let selectRecords = (this.$refs.zhifayi as any).getCheckboxRecords()
     return selectRecords
   }
   private instrumentdlt(arr) {

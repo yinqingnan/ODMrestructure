@@ -13,9 +13,11 @@
         <vxe-table
           stripe
           border
+          resizable
           height="auto"
           ref="logAdministration"
           highlight-hover-row
+          show-header-overflow
           class="mytable-scrollbar"
           :row-class-name="tableRowClassName"
           :data="tabData"

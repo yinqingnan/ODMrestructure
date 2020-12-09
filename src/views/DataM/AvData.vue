@@ -142,6 +142,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             :row-class-name="tableRowClassName"
             height="auto"
             :data="tabledata"
@@ -319,104 +320,109 @@
                 </a-form>
               </a-tab-pane>
               <a-tab-pane key="3" tab="标注">
-                <a-form
-                  :form="form2"
-                  :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
-                  @submit="biaozhuSubmit"
-                >
-                  <el-scrollbar style="height:300px;padding-right:10px">
-                    <a-form-item label="标注类型">
-                      <a-select
-                        @change="labelTypeChange"
-                        placeholder="请选择标注类型"
-                        v-decorator="[
-                        'labelType',
-                        {
-                          initialValue: undefined,
-                          rules: [{ required: true, message: '必填项不能为空' }]
-                        }
-                      ]"
-                      >
-                        <a-select-option v-for="d in taggingselect1" :key="d.key">{{ d.value }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                    <a-form-item label="标注子类">
-                      <a-select
-                        placeholder="请选择标注子类"
-                        v-decorator="[
-                        'labelSubclass',
-                        {
-                          initialValue: undefined,
-                          rules: [{ required: true, message: '必填项不能为空' }]
-                        }
-                      ]"
-                      >
-                        <a-select-option v-for="d in taggingselect2" :key="d.key">{{ d.value }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                    <a-form-item label="车牌号码">
-                      <a-input
-                        :max-length="LimitInputlength"
-                        placeholder="没有车牌号，请填写无"
-                        v-decorator="[
-                        'plateNumber',
-                        {
-                          initialValue: '',
-                          rules: [{ required: true, message: '必填项不能为空' }]
-                        }
-                      ]"
-                      />
-                    </a-form-item>
-                    <a-form-item label="采集时间" class="biaozhu">
-                      <a-date-picker
-                        placeholder="请选择采集时间"
-                        v-decorator="[
-                        'gatheringTime',
+                <div v-if="!Emptystate">
+                    <a-form
+                    :form="form2"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 18 }"
+                    @submit="biaozhuSubmit"
+                  >
+                    <el-scrollbar style="height:300px;padding-right:10px">
+                      <a-form-item label="标注类型">
+                        <a-select
+                          @change="labelTypeChange"
+                          placeholder="请选择标注类型"
+                          v-decorator="[
+                          'labelType',
+                          {
+                            initialValue: undefined,
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                        >
+                          <a-select-option v-for="d in taggingselect1" :key="d.key">{{ d.value }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item label="标注子类">
+                        <a-select
+                          placeholder="请选择标注子类"
+                          v-decorator="[
+                          'labelSubclass',
+                          {
+                            initialValue: undefined,
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                        >
+                          <a-select-option v-for="d in taggingselect2" :key="d.key">{{ d.value }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item label="车牌号码">
+                        <a-input
+                          :max-length="LimitInputlength"
+                          placeholder="没有车牌号，请填写无"
+                          v-decorator="[
+                          'plateNumber',
+                          {
+                            initialValue: '',
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                        />
+                      </a-form-item>
+                      <a-form-item label="采集时间" class="biaozhu">
+                        <a-date-picker
+                          placeholder="请选择采集时间"
+                          v-decorator="[
+                          'gatheringTime',
+                          {
+                            initialValue:'',
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                        />
+                      </a-form-item>
+                      <a-form-item label="采集地址">
+                        <a-input
+                          :max-length="LimitInputlength"
+                          placeholder="请输入采集地址（30字符以内）"
+                          v-decorator="[
+                          'gatheringPlace',
+                          {
+                            initialValue: '',
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                        />
+                      </a-form-item>
+                      <a-form-item label="标注描述">
+                        <a-textarea
+                          placeholder="请输入标注描述（200字符以内）"
+                          style="display: flex;overflow-y:auto;resize: none;"
+                          allowClear
+                          :maxLength="textarealength"
+                          v-decorator="[
+                        'remark',
                         {
                           initialValue:'',
-                          rules: [{ required: true, message: '必填项不能为空' }]
-                        }
+                          rules: [{ required: true, message: '必填项不能为空' }],
+                        },
                       ]"
-                      />
-                    </a-form-item>
-                    <a-form-item label="采集地址">
-                      <a-input
-                        :max-length="LimitInputlength"
-                        placeholder="请输入采集地址（30字符以内）"
-                        v-decorator="[
-                        'gatheringPlace',
-                        {
-                          initialValue: '',
-                          rules: [{ required: true, message: '必填项不能为空' }]
-                        }
-                      ]"
-                      />
-                    </a-form-item>
-                    <a-form-item label="标注描述">
-                      <a-textarea
-                        placeholder="请输入标注描述（200字符以内）"
-                        style="display: flex;overflow-y:auto;resize: none;"
-                        allowClear
-                        :maxLength="textarealength"
-                        v-decorator="[
-                      'remark',
-                      {
-                        initialValue:'',
-                        rules: [{ required: true, message: '必填项不能为空' }],
-                      },
-                    ]"
-                        :autoSize="{ minRows: 3, maxRows: 3 }"
-                      />
-                    </a-form-item>
-                  </el-scrollbar>
-                </a-form>
-                <a-button
-                  v-isshow="'lawarchives:avDate:threeBtn'"
-                  type="primary"
-                  @click="biaozhuSubmit"
-                  style="margin-top: 14px;margin-left: 44%;"
-                >保存</a-button>
+                          :autoSize="{ minRows: 3, maxRows: 3 }"
+                        />
+                      </a-form-item>
+                    </el-scrollbar>
+                  </a-form>
+                  <a-button
+                    v-isshow="'lawarchives:avDate:threeBtn'"
+                    type="primary"
+                    @click="biaozhuSubmit"
+                    style="margin-top: 14px;margin-left: 44%;"
+                  >保存</a-button>
+                </div>
+                <a-empty v-else style="margin-top:94px">
+                  <span slot="description">没有标注信息</span>
+                </a-empty>
               </a-tab-pane>
               <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
@@ -627,6 +633,7 @@ export default class AvData extends Vue {
     moment("2012-06-06", "YYYY-MM-DD"),
     moment("2020-06-06", "YYYY-MM-DD"),
   ]
+  private Emptystate = false
   private filedetails: Filedetails = {
     fileName: "",
     deptName: "",
@@ -825,6 +832,7 @@ export default class AvData extends Vue {
       // 标注信息
       this.DataM.getfiletagging(this.fileCode).then((res) => {
         console.log(res.data)
+         this.Emptystate = true
         if (res.data) {
           this.labelType = res.data.labelType
           this.taggingmsg = res.data

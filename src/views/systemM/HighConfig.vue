@@ -12,6 +12,7 @@
           <vxe-table
             stripe
             border
+            resizable
             height="auto"
             ref="logAdministration"
             highlight-hover-row

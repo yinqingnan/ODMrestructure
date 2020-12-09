@@ -83,6 +83,7 @@
             stripe
             resizable
             height="auto"
+            show-header-overflow
             :columns="tableColumn"
             :data="tableData"
             class="mytable-scrollbar"
@@ -160,6 +161,7 @@ export default class VideoStatistics extends Vue {
     {
       title: "标注率（%）",
       align: "center",
+      width: "120",
       field: "linkRate",
     },
     {

@@ -7,7 +7,7 @@
           <h2>权限项</h2>
         </div>
         <div>
-          <div style="width:380px;">
+          <div style="width:320px;">
             <div>
               <el-scrollbar
                 class="boxscrollbar"
@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="rightsright">
-        <div class="Simpleprogrambody" :style="{height:(parseInt(Height)+31)+'px'}">
+        <div class="Simpleprogrambody editbody" :style="{height:(parseInt(Height)+42)+'px'}" style="padding:0">
           <div class="menuleft_header">
             <h2>菜单按钮</h2>
           </div>
@@ -278,12 +278,16 @@ export default class Right extends Vue {
 }
 .menuleft_header {
   background: #fff;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid #ececec;
   h2 {
     text-align: center;
+    margin: 0;
   }
 }
 .liststyle {
   display: flex;
+  cursor: pointer;
   justify-content: space-between;
   height: 48px;
   line-height: 48px;
@@ -294,5 +298,11 @@ export default class Right extends Vue {
     font-size: 14px;
     text-indent: 12px;
   }
+}
+.rightsright{
+  padding-left: 20px;
+}
+.editbody{
+  border: 1px solid #ececec;
 }
 </style>

@@ -94,6 +94,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             ref="caijizhan"
             class="mytable-scrollbar"

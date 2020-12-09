@@ -105,6 +105,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             :data="tableData"
             highlight-hover-row
@@ -131,12 +132,14 @@
             <vxe-table-column field="deptCode" title="执勤部门" align="center" width="100" />
             <vxe-table-column
               field="userName"
-              title="民警姓名"
+              title="姓名/警号"
               align="center"
-              width="80"
+              width="100"
               show-overflow
-            />
-            <vxe-table-column field="userCode" title="民警警号" align="center" width="80" />
+            >
+               <template v-slot="{ row }">{{row.userName}}({{row.userCode}})</template>
+            </vxe-table-column>
+         
             <vxe-table-column field="fileType_Name" title="文件类型" width="80" align="center" />
             <vxe-table-column
               field="recordDate"
@@ -694,7 +697,12 @@ export default class EvalRecord extends Vue {
     return
   }
   private evaluateName(row) {
-    return `${row.evaluateName}(${row.deptCode})`
+    if(row.evaluateName){
+      return `${row.evaluateName}(${row.deptCode})`
+    }else{
+      return `${row.deptCode}`
+    }
+    
   }
   private evaluateItems(row) {
     let str = ""
@@ -796,11 +804,11 @@ export default class EvalRecord extends Vue {
     if (activeKey == 3) {
       this.DataM.getfiletagging().then((res) => {
         console.log(res.data)
+          this.Emptystate = true
         if (res.data) {
           console.log("有值")
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
-          this.Emptystate = true
           this.DataM.taggingselect1().then((res) => {
             console.log(res.data)
             this.taggingselect1 = res.data
@@ -822,8 +830,6 @@ export default class EvalRecord extends Vue {
               })
             })
           })
-        } else {
-          this.Emptystate = true
         }
       })
     }

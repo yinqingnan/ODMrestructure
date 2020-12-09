@@ -57,6 +57,7 @@
           </div>
           <vxe-table
             stripe
+            resizable
             border
             height="auto"
             ref="usertable"

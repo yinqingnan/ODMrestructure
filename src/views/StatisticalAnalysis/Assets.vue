@@ -66,6 +66,7 @@
             border
             stripe
             resizable
+            show-header-overflow
             height="auto"
             :columns="tableColumn"
             :data="tableData"

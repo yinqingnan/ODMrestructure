@@ -6,6 +6,8 @@
     <div :style="{height:Height}" class="Recording">
       <vxe-table
         border
+        resizable
+        show-header-overflow
         height="auto"
         :data="tableData"
         highlight-hover-row

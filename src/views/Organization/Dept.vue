@@ -67,8 +67,8 @@
       <div class="content" :style="{height:Height}">
         <vxe-table
           border
-          class="mytable-scrollbar"
           resizable
+          class="mytable-scrollbar"
           ref="depttable"
           height="auto"
           row-id="id"

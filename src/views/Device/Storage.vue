@@ -63,6 +63,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             ref="Acquisition"
             class="mytable-scrollbar"
@@ -177,6 +178,7 @@
         <vxe-table
           style="margin-top:40px"
           border
+          resizable
           ref="Acquisition"
           highlight-hover-row
           max-height="200"

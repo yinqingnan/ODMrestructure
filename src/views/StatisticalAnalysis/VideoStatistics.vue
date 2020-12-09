@@ -110,7 +110,9 @@
             class="mytable-scrollbar"
             ref="shelutj"
             :row-class-name="tableRowClassName"
-          />
+          >
+            <template v-slot:nameslot="{ row }">{{row.policeName}}({{row.policeNum}})</template>
+          </vxe-grid>
         </div>
       </div>
     </div>
@@ -161,18 +163,19 @@ export default class VideoStatistics extends Vue {
     },
     {
       field: "policeName",
-      title: "民警姓名",
+      title: "姓名/警号",
       showOverflow: true,
       minWidth: 100,
       align: "center",
+      slots: { default: "nameslot" },
     },
-    {
-      field: "policeNum",
-      title: "民警警号",
-      showOverflow: true,
-      minWidth: 100,
-      align: "center",
-    },
+    // {
+    //   field: "policeNum",
+    //   title: "民警警号",
+    //   showOverflow: true,
+    //   minWidth: 100,
+    //   align: "center",
+    // },
     {
       title: "视频",
       align: "center",
@@ -352,8 +355,5 @@ export default class VideoStatistics extends Vue {
   button {
     margin-right: 8px;
   }
-}
-.ant-calendar-range-picker-input {
-  letter-spacing: 0.1px !important;
 }
 </style>

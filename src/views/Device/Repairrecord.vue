@@ -92,12 +92,15 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
+            header-align="center"
             height="auto"
             :data="tableData"
             ref="xTable2"
             highlight-hover-row
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
+            show-header-overflow
           >
             <vxe-table-column
               v-for="(config, index) in tableColumn"

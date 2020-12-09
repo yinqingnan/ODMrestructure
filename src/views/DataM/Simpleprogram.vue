@@ -116,6 +116,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             :data="tableData"
             highlight-hover-row
@@ -375,6 +376,7 @@
         <div class style="height:370px">
           <vxe-table
             border
+            resizable
             ref="glwj"
             height="auto"
             :data="Associatedfilestabledata"

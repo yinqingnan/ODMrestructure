@@ -93,6 +93,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             :data="tableData"
             highlight-hover-row
@@ -106,7 +107,7 @@
               align="left"
               header-align="center"
               show-overflow
-              width="350"
+              min-width="350"
             >
               <template v-slot="{ row }">
                 <span
@@ -116,19 +117,19 @@
                 <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deptCode" title="执勤部门" align="center" />
-            <vxe-table-column
+            <vxe-table-column field="deptCode" title="执勤部门" align="center" min-width="100"/>
+             <vxe-table-column
               field="userName"
-              title="民警姓名"
+              title="姓名/警号"
               align="center"
-              width="100"
+              width="120"
               show-overflow
-            />
-            <vxe-table-column field="userCode" title="民警警号" align="center" />
-            <!-- <vxe-table-column field="relateCase" title="关联信息" show-overflow align="center">
-              <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column>-->
-            <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
+            >
+             <template v-slot="{ row }">
+                {{row.userName}}({{row.userCode}})
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="fileType" title="文件类型" min-width="80" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
             </vxe-table-column>
             <!-- <vxe-table-column field="actions" title="操作" align="center">
@@ -710,11 +711,11 @@ export default class EvalRandom extends Vue {
   private tabchange(activeKey) {
     if (activeKey == 3) {
       this.DataM.getfiletagging().then((res) => {
+        this.Emptystate = true
         if (res.data) {
           console.log("有值")
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
-          this.Emptystate = true
           this.DataM.taggingselect1().then((res) => {
             console.log(res.data)
             this.taggingselect1 = res.data
@@ -736,8 +737,6 @@ export default class EvalRandom extends Vue {
               })
             })
           })
-        } else {
-          this.Emptystate = true
         }
       })
     }

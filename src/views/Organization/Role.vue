@@ -15,6 +15,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             stripe
+            resizable
             border
             height="auto"
             ref="usertable"

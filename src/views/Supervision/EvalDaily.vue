@@ -92,14 +92,16 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
+            resizable
             height="auto"
             :data="tableData"
             highlight-hover-row
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="50" align="center" title="序号" />
+            <vxe-table-column type="seq" width="50px" align="center" title="序号" />
             <vxe-table-column
+              resizable
               field="fileName"
               title="文件名称"
               align="left"
@@ -118,12 +120,15 @@
             <vxe-table-column field="deptCode" title="执勤部门" align="center" />
             <vxe-table-column
               field="userName"
-              title="民警姓名"
+              title="姓名/警号"
               align="center"
               width="100"
               show-overflow
-            />
-            <vxe-table-column field="userCode" title="民警警号" align="center" />
+            >
+             <template v-slot="{ row }">
+                {{row.userName}}({{row.userCode}})
+              </template>
+            </vxe-table-column>
             <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
             </vxe-table-column>
@@ -494,7 +499,7 @@ export default class EvalRecord extends Vue {
     department: "",
     user: "",
   }
-
+  
   private visible = false
   private filedetails = {
     downloadPath: "",
@@ -719,11 +724,11 @@ export default class EvalRecord extends Vue {
   private tabchange(activeKey) {
     if (activeKey == 3) {
       this.DataM.getfiletagging().then((res) => {
+         this.Emptystate = true
         if (res.data) {
           console.log("有值")
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
-          this.Emptystate = true
           this.DataM.taggingselect1().then((res) => {
             console.log(res.data)
             this.taggingselect1 = res.data
@@ -745,9 +750,7 @@ export default class EvalRecord extends Vue {
               })
             })
           })
-        } else {
-          this.Emptystate = true
-        }
+        } 
       })
     }
   }

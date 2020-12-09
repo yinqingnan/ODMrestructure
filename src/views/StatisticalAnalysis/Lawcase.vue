@@ -88,7 +88,9 @@
             class="mytable-scrollbar"
             ref="gltj"
             :row-class-name="tableRowClassName"
-          />
+          >
+            <!-- <template v-slot:nameslot="{ row }">{{row}}</template> -->
+          </vxe-grid>
         </div>
       </div>
     </div>

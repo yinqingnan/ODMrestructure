@@ -15,6 +15,7 @@
           <vxe-table
             stripe
             border
+            resizable
             height="auto"
             ref="Acquisitionstation"
             highlight-hover-row
@@ -22,7 +23,7 @@
             :row-class-name="tableRowClassName"
             :data="tableData"
           >
-            <vxe-table-column type="seq" width="60" align="center" title="序号" />
+            <vxe-table-column type="seq" width="50" align="center" title="序号" />
             <vxe-table-column
               field="upgradeType"
               title="升级类型"
@@ -46,21 +47,21 @@
               title="版本号"
               show-overflow
               align="center"
-              minWidth="290"
+              minWidth="80"
             />
             <vxe-table-column
               field="updateContent"
               title="更新内容"
               show-overflow
               align="center"
-              minWidth="350"
+              minWidth="280"
             />
             <vxe-table-column
               field="updateFile"
               title="更新文件名"
               show-overflow
               align="center"
-              minWidth="130"
+              minWidth="120"
             />
             <vxe-table-column
               field="updatePath"
