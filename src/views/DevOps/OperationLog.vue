@@ -57,6 +57,10 @@
                     <a-form-item label="操作时段">
                       <a-range-picker
                         :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {
@@ -304,12 +308,12 @@ export default class OperationLog extends Vue {
   width: 200px !important;
 }
 .btns button {
-    height: 30px;
-    line-height: 1;
-    color: #fff;
-    outline: none;
-    cursor: pointer;
-    border: 0;
-    margin-left: 10px;
+  height: 30px;
+  line-height: 1;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  border: 0;
+  margin-left: 10px;
 }
 </style>

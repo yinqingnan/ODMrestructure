@@ -116,7 +116,7 @@
                   allowClear
                   rows="3"
                   style="resize: none;"
-                  placeholder="最大支持输入字数200..."
+                  placeholder="请输入角色描述（200字符以内）"
                   v-decorator="[
                         'remark',
                         {

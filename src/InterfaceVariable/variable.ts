@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2020-12-03 17:15:30
+ * @LastEditTime: 2020-12-08 15:41:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\InterfaceVariable\variable.ts
+ * @FilePath: \src\InterfaceVariable\variable.ts
  */
 /**
  * @desc 定义全局变量
@@ -13,7 +13,7 @@ import { Page } from './interface'
 
 
 // 限制输入框最大输入个数
-export const LimitInputlength = 20;
+export const LimitInputlength = 30;
 export const textarealength = 200
 
 export const page: Page = {

@@ -19,14 +19,14 @@
                   @submit="handleSubmit"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="执勤部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         show-search
                         treeNodeFilterProp="title"
                         v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -55,11 +55,15 @@
                       <a-input
                         v-decorator="['party', { initialValue: '', rules: [] }]"
                         :max-length="LimitInputlength"
-                        placeholder="请输入当事人"
+                        placeholder="请输入当事人姓名"
                       >/></a-input>
                     </a-form-item>
                     <a-form-item label="违法时间">
                       <a-range-picker
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         :allowClear="false"
                         v-decorator="[
                         'date',
@@ -85,11 +89,11 @@
                         placeholder="请输入驾驶证号"
                       >/></a-input>
                     </a-form-item>
-                    <a-form-item label="号码号牌">
+                    <a-form-item label="号牌号码">
                       <a-input
                         v-decorator="['numcode', { initialValue: '', rules: [] }]"
                         :max-length="LimitInputlength"
-                        placeholder="请输入号码号牌"
+                        placeholder="请输入号牌号码"
                       >/></a-input>
                     </a-form-item>
                     <a-form-item label="违法地址">
@@ -120,20 +124,32 @@
           >
             <vxe-table-column type="seq" width="50" title="序号" align="center" />
             <vxe-table-column
-              field="deptName"
-              title="执勤部门"
-              align="center"
-              min-width="80"
-              show-overflow
-            />
-            <vxe-table-column field="userName" title="民警姓名" align="center" min-width="80" />
-            <vxe-table-column
               field="code"
               title="决定书编号"
               align="center"
               min-width="110"
               show-overflow
+            >
+              <template v-slot="{ row }">
+                <vxe-button type="text" @click="tablebtn(row)" style="color:#0db8df">{{row.code}}</vxe-button>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column
+              field="deptName"
+              title="部门"
+              align="center"
+              min-width="70"
+              show-overflow
             />
+            <vxe-table-column
+              field="userName"
+              title="姓名/警号"
+              width="90"
+              align="center"
+              show-overflow
+            >
+              <template v-slot="{ row }">{{row.userName}}({{row.userCode}})</template>
+            </vxe-table-column>
             <vxe-table-column field="litigant" title="当事人" align="center" min-width="80" />
             <vxe-table-column
               field="driverNum"
@@ -142,7 +158,7 @@
               show-overflow
               min-width="80"
             />
-            <vxe-table-column field="numberPlate" title="号码号牌" align="center" min-width="80" />
+            <vxe-table-column field="numberPlate" title="号牌号码" align="center" min-width="80" />
             <vxe-table-column
               field="hpzlText"
               title="号牌种类"
@@ -172,11 +188,6 @@
               min-width="80"
             />
             <vxe-table-column field="relatedInfo" title="关联信息" align="center" min-width="80" />
-            <vxe-table-column field="active" title="操作" align="center" min-width="80">
-              <template v-slot="{ row }">
-                <vxe-button type="text" @click="tablebtn(row)" style="color:#0db8df">查看</vxe-button>
-              </template>
-            </vxe-table-column>
           </vxe-table>
           <p>
             <vxe-pager
@@ -200,7 +211,8 @@
         class="Filedetails"
       >
         <div class="FileDetails_header">
-          <p>{{defaultone.fileName}}</p>
+          <!-- <p>{{defaultone.fileName}}</p> -->
+          <p>{{CaseDetails.typeName}}({{CaseDetails.code}})</p>
           <p>{{CaseDetails.deptName}} ({{CaseDetails.deptCode}}) - {{CaseDetails.userName}} ({{CaseDetails.userCode}})</p>
           <ul>
             <li>当事人：{{CaseDetails.litigant}}</li>
@@ -215,10 +227,7 @@
         <div class="FileDetails_footer">
           <div class="FileDetails_footer_left">
             <div v-if="defaultone.fileType == 'photo'">
-              <!-- <img :src="defaultone.httpPath" alt /> -->
-              <img
-                src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1763161944,1669057779&fm=11&gp=0.jpg"
-              />
+              <img :src="defaultone.httpPath" alt />
             </div>
             <div v-if="defaultone.fileType == 'video' " class="AvData fileAvData">
               <video-player
@@ -226,16 +235,11 @@
                 ref="videoPlayer"
                 :playsinline="true"
                 :options="playerOptions"
+                @ended="onPlayerEnded($event)"
               />
             </div>
             <div v-if="defaultone.fileType == 'audio'" class="audioconfig">
-              <!-- <audio ref="audio" :src="defaultone.httpPath"></audio> -->
-              <audio
-                src="http://m10.music.126.net/20201124144527/9382da6519dd5f44447214d831d04f02/ymusic/015d/0059/065e/67740c9f7a73955cd7f31461ad05f7e0.mp3"
-                @play="ready"
-                @pause="pause"
-                controls
-              ></audio>
+              <audio controls="controls" controlslist="nodownload" :src="defaultone.httpPath"></audio>
             </div>
           </div>
           <div class="FileDetails_footer_right">
@@ -292,7 +296,7 @@
                   @submit="FileSubmit"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="执勤部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         :disabled="Departmentdisabled"
                         show-search
@@ -344,6 +348,10 @@
                     <a-form-item label="拍摄时间">
                       <a-range-picker
                         :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {
@@ -376,18 +384,21 @@
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
           >
-            <vxe-table-column type="checkbox" width="60" align="center" />
-            <vxe-table-column field="fileName" title="文件名称" align="center" show-overflow />
-            <vxe-table-column field="deptName" title="执勤部门" align="center" />
-            <vxe-table-column field="userName" title="民警姓名" align="center" show-overflow />
+            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column field="fileName" title="文件名称" align="center"  min-width="150" show-overflow>
+              <template v-slot="{ row }">
+                <vxe-button type="text" @click="Playvideo(row)" style="color:#0db8df">{{row.fileName}}</vxe-button>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="deptName" title="部门" align="center" />
+            <vxe-table-column field="userName" title="姓名/警号" align="center" show-overflow >
+              <template v-slot="{ row }">
+               {{row.userName}}({{row.userCode}})
+              </template>
+            </vxe-table-column>
             <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
             <vxe-table-column field="recordDate" title="拍摄时间" align="center" show-overflow />
             <vxe-table-column field="fileDuration_Name" title="摄录时长" align="center" />
-            <vxe-table-column field="active" title="操作" align="center">
-              <template v-slot="{ row }">
-                <vxe-button type="text" @click="Playvideo(row)" style="color:#0db8df">查看</vxe-button>
-              </template>
-            </vxe-table-column>
           </vxe-table>
         </div>
       </a-modal>
@@ -395,27 +406,19 @@
       <a-modal v-model="visible3" title="文件查看" :footer="null">
         <div class="Filelist">
           <div v-if="Fileview.fileType == 'photo'">
-            <!-- <img :src="Fileview.httpPath" alt /> -->
-            <img
-              src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1763161944,1669057779&fm=11&gp=0.jpg"
-            />
+            <img :src="Fileview.httpPath" />
           </div>
           <div v-if="Fileview.fileType == 'video' " class="AvData Fileview">
             <video-player
               class="video-player vjs-custom-skin"
-              ref="videoPlayer"
+              ref="filevideo"
               :playsinline="true"
               :options="playerOptions"
+               @ended="filevideoEnded($event)"
             />
           </div>
           <div v-if="Fileview.fileType == 'audio'" class="audioconfig">
-            <!-- <audio ref="audio" :src="Fileview.httpPath"></audio> -->
-            <audio
-              src="http://m10.music.126.net/20201124144527/9382da6519dd5f44447214d831d04f02/ymusic/015d/0059/065e/67740c9f7a73955cd7f31461ad05f7e0.mp3"
-              @play="ready"
-              @pause="pause"
-              controls
-            ></audio>
+            <audio ref="audio" controls="controls" controlslist="nodownload" style="margin-left:20%" :src="Fileview.httpPath"></audio>
           </div>
         </div>
       </a-modal>
@@ -499,6 +502,8 @@ export default class Simpleprogram extends Vue {
     userName: "",
     userCode: "",
     driverNum: "",
+    typeName:"",
+    code:""
   }
   private filetype = [
     { id: 0, value: "请选择", title: "请选择" },
@@ -512,6 +517,7 @@ export default class Simpleprogram extends Vue {
   private defaultone = {
     fileName: "",
     fileType: "",
+    httpPath:""
   }
   private Associatedfilestabledata = []
   private calculationdate = [
@@ -528,10 +534,11 @@ export default class Simpleprogram extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-    this.gettabledata({})
+
   }
   private Fileview = {
     fileType: "",
+    httpPath:""
   }
   private formdata = {
     department: "",
@@ -569,7 +576,6 @@ export default class Simpleprogram extends Vue {
       if (!err) {
         console.log(val)
         this.formdata = val
-
         let obj = {
           page: 1,
           limit: 15,
@@ -593,10 +599,11 @@ export default class Simpleprogram extends Vue {
     e.preventDefault()
     this.form1.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val.date[0])
+        console.log(val.date[1])
         if (val.Filetype == undefined) {
           val.Filetype = ""
         }
-        console.log(val)
         if (val.Filetype == "请选择") {
           val.Filetype = ""
         }
@@ -610,14 +617,14 @@ export default class Simpleprogram extends Vue {
             val.date[1]
           ).format("YYYY-MM-DD")}`,
           notIds: JSON.stringify(this.WithID),
-          recordDate_gt: val.date[0].format("YYYY-MM-DD HH:mm:ss"),
-          recordDate_lt: val.date[1].format("YYYY-MM-DD HH:mm:ss"),
+          recordDate_gt: moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss"),
+          recordDate_lt: moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss"),
         }
         console.log(obj)
         this.DataM.Associatedfiles(obj).then((res) => {
           console.log(res)
           this.Associatedfilestabledata = res.data
-          this.page.totalResult = parseInt(res.count)
+          // this.page.totalResult = parseInt(res.count)
         })
       }
     })
@@ -632,6 +639,23 @@ export default class Simpleprogram extends Vue {
         moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
+      console.log(this.defaultdate[0].format('YYYY-MM-DD HH:mm:ss'))
+      let obj = {
+          page: 1,
+          limit: 15,
+          zqbm_equal: '', //部门id
+          mjxm: '', //警员
+          dsr_like: '', //当事人
+          wfsj: '',
+          jdsbh_like: '',
+          jszh_like: '',
+          hphm_like:'',
+          wfdz_like: '',
+          type: 1,
+          wfsj_gt: this.defaultdate[0].format('YYYY-MM-DD HH:mm:ss'), //必填  时间起
+          wfsj_lt: this.defaultdate[1].format('YYYY-MM-DD HH:mm:ss') //必填  时间止
+        }
+      this.gettabledata(obj)
     })
   }
   private gettabledata(obj: any) {
@@ -658,6 +682,7 @@ export default class Simpleprogram extends Vue {
       if (res.data.length > 0) {
         this.MatchFiles = res.data
         this.defaultone = res.data[0]
+          this.playerOptions["sources"][0]["src"] = res.data[0].httpPath //修改视频方法
       } else {
         this.defaultone.fileName = ""
         this.defaultone.fileType = ""
@@ -713,7 +738,7 @@ export default class Simpleprogram extends Vue {
         let obj = {
           page: 1,
           limit: 15,
-          deptCode_equal: "",
+          deptCode_equal: localStorage.getItem('deptCode'),
           userName: "",
           fileType_equal: "",
           recordDate: `${moment(this.calculationdate[0]).format(
@@ -743,9 +768,10 @@ export default class Simpleprogram extends Vue {
     this.num = index
     this.defaultone = item
     if (item.fileType == "video") {
-      // this.audioUrl = item.httpPath
+       this.playerOptions["sources"][0]["src"] = item.httpPath //修改视频方法
     } else if (item.fileType == "audio") {
       // this.$refs.audio.play() //播放方式
+
     }
   }
   private Filedetails() {
@@ -768,6 +794,12 @@ export default class Simpleprogram extends Vue {
     console.log(row)
     this.visible3 = true
     this.Fileview = row
+    if(row.fileType == 'audio'){
+     this.Fileview.httpPath= row.httpPath
+    }else if(row.fileType == 'video'){
+      this.playerOptions["sources"][0]["src"] = row.httpPath //修改视频方法
+    } 
+    
   }
   private Filedetailsok() {
     console.log(this.selectedRowKeys)
@@ -801,7 +833,7 @@ export default class Simpleprogram extends Vue {
     }
   }
   private Relatedownload(item) {
-    console.log("下载地址" + item.downloadPath)
+    window.open(item.downloadPath)
   }
   private deleteRelate(item) {
     let obj = {
@@ -815,7 +847,6 @@ export default class Simpleprogram extends Vue {
       title: "提示?",
       content: "确认解除该文件的关联吗？",
       onOk() {
-        return new Promise((resolve, reject) => {
           _that.DataM.deleteRelate(obj).then((res) => {
             console.log(res)
             if (res.code == 0) {
@@ -828,14 +859,19 @@ export default class Simpleprogram extends Vue {
                 } else {
                   _that.MatchFiles = []
                   _that.defaultone.fileName = ""
+                  _that.defaultone.fileType = ""
                 }
-                setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
               })
             }
           })
-        })
       },
     })
+  }
+  private onPlayerEnded(e){
+    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src); 
+  }
+  private filevideoEnded(e){
+    (this.$refs.filevideo as any).player.src(e.options_.sources[0].src); 
   }
 }
 </script>

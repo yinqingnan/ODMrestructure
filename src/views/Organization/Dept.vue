@@ -10,6 +10,7 @@
             </a>
             <a-menu slot="overlay" class="myW">
               <a-form
+                autocomplete="off"
                 :form="form"
                 :label-col="{ span: 6 }"
                 :wrapper-col="{ span: 16 }"
@@ -29,7 +30,6 @@
                 </a-form-item>
                 <a-form-item label="部门编号" style="width:100%">
                   <a-input
-                   
                     v-decorator="[
                       'code_like',
                       {
@@ -48,53 +48,87 @@
           </a-dropdown>
         </div>
         <div class="btnList">
-          <a-button class="upData mr10" @click="imports" v-isshow="'base:dept:import'">导入</a-button>
-          <a-button class="upData mr10" @click="Export" v-isshow="'base:dept:export'">导出</a-button>
-          <a-button class="upData" @click="add" v-isshow="'base:dept:save'">添加</a-button>
+          <a-button
+            type="primary"
+            class="upData mr10"
+            @click="imports"
+            v-isshow="'base:dept:import'"
+          >导入</a-button>
+          <a-button
+            type="primary"
+            class="upData mr10"
+            @click="Export"
+            v-isshow="'base:dept:export'"
+          >导出</a-button>
+          <a-button type="primary" class="upData" @click="add" v-isshow="'base:dept:save'">添加</a-button>
         </div>
       </div>
       <!-- 内容 -->
       <div class="content" :style="{height:Height}">
-          <vxe-table
-            border
-            class="mytable-scrollbar"
-            resizable
-            height="auto"
-            row-id="id"
-            :tree-config="{lazy: true, children: 'children', hasChild: 'haveChild', loadMethod: loadChildrenMethod}"
-            :data="tabData"
-          >
-            <vxe-table-column type="seq" title="序号" width="50" align="center" />
-            <vxe-table-column
-              field="name"
-              title="部门名称"
-              :tree-node="true"
-              show-overflow
-              align="center"
-              width="140" 
-            />
-            <vxe-table-column field="code" title="部门编号" align="center" show-overflow width="140" />
-            <vxe-table-column field="contact" title="联系人" align="center" show-overflow width="140" />
-            <vxe-table-column field="phone" title="联系电话" align="center" show-overflow width="140" />
-            <vxe-table-column field="remark" title="部门描述" align="center" width="140" show-overflow />
-            <vxe-table-column flxed="right" title="操作" align="center" min-width="180">
-              <template v-slot="{ row }">
-                <span
-                  type="text"
-                  @click="addS(row)"
-                  v-isshow="'base:dept:savelow'"
-                  style="color:#0db8df;cursor: pointer;margin-right:10px"
-                >添加子部门</span>
-                   <span
-                  type="text"
-                  @click="edit(row)"
-                  v-isshow="'base:dept:update'"
-                  style="color:#0db8df;cursor: pointer;margin-right:10px"
-                >编辑</span>
-                <span type="text" @click="remove(row.deptId)" style="color:#0db8df;cursor: pointer;" v-isshow="'base:dept:delete'">删除</span>
-              </template>
-            </vxe-table-column>
-          </vxe-table>
+        <vxe-table
+          border
+          class="mytable-scrollbar"
+          resizable
+          ref="depttable"
+          height="auto"
+          row-id="id"
+          :tree-config="{lazy: true, children: 'children', hasChild: 'haveChild', loadMethod: loadChildrenMethod}"
+          :data="tabData"
+        >
+          <vxe-table-column type="seq" title="序号" width="50" align="center" />
+          <vxe-table-column
+            field="name"
+            title="部门名称"
+            :tree-node="true"
+            show-overflow
+            align="center"
+            min-width="140"
+          />
+          <vxe-table-column field="code" title="部门编号" align="center" show-overflow min-width="140" />
+          <vxe-table-column
+            field="contact"
+            title="联系人"
+            align="center"
+            show-overflow
+            min-width="140"
+          />
+          <vxe-table-column
+            field="phone"
+            title="联系电话"
+            align="center"
+            show-overflow
+            min-width="140"
+          />
+          <vxe-table-column
+            field="remark"
+            title="部门描述"
+            align="center"
+            min-width="140"
+            show-overflow
+          />
+          <vxe-table-column flxed="right" title="操作" align="center" min-width="180">
+            <template v-slot="{ row }">
+              <span
+                type="text"
+                @click="addS(row)"
+                v-isshow="'base:dept:savelow'"
+                style="color:#0db8df;cursor: pointer;margin-right:10px"
+              >添加子部门</span>
+              <span
+                type="text"
+                @click="edit(row)"
+                v-isshow="'base:dept:update'"
+                style="color:#0db8df;cursor: pointer;margin-right:10px"
+              >编辑</span>
+              <span
+                type="text"
+                @click="remove(row.deptId)"
+                style="color:#0db8df;cursor: pointer;"
+                v-isshow="'base:dept:delete'"
+              >删除</span>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
       </div>
       <!-- 弹出层 -->
       <a-modal
@@ -107,7 +141,7 @@
         okText="提交"
         @cancel="back"
       >
-        <a-form :form="form2" @submit="handleSubmit" layout="inline">
+        <a-form :form="form2" @submit="handleSubmit" layout="inline" autocomplete="off">
           <a-row :gutter="24">
             <a-col :span="24">
               <a-form-item label="上级部门">
@@ -136,9 +170,13 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="12">
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="24">
               <a-form-item label="部门名称">
                 <a-input
+                  style="width: 479px"
+                  :max-length="LimitInputlength"
                   v-decorator="[
                     'name',
                     {
@@ -149,33 +187,44 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="12">
+          </a-row>
+          <a-row :gutter="24">
+            <a-col :span="24">
               <a-form-item label="部门编号">
                 <a-input
-                 :disabled="Disable"
+                  style="width: 479px"
+                  :disabled="Disable"
+                  :max-length="LimitInputlength"
                   v-decorator="[
                     'code',
                     {
-                      rules: [{ required: true, message: '请输入部门编号' }],
+                      rules: [{ required: true, message: '请输入部门编号' },
+                      { validator: (rule, val, callback) => {
+                var reg = new RegExp('^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{2,}$')
+                if (!reg.test(val)){
+                  callback('部门编号格式不正确,必须数字和字母组合');
+                }else {
+                  callback();
+                }
+                  callback();
+                },
+                }],
                     },
                   ]"
                   placeholder="请输入部门编号"
                 />
               </a-form-item>
             </a-col>
+          </a-row>
+          <a-row :gutter="24">
             <a-col :span="12">
-              <a-form-item
-                label="联系人"
-                style="margin-left:4px;"
-                :label-col="myTab.labelCol"
-                :wrapper-col="myTab.wrapperCol"
-              >
+              <a-form-item label="联系人" style="margin-left:26px">
                 <a-input
-                  style="width:175px;"
+                  :max-length="LimitInputlength"
                   v-decorator="[
                     'contact',
                     {
-                      rules: [{ required: false, message: '请输入联系人' }],
+                      rules: [],
                     },
                   ]"
                   placeholder="请输入联系人"
@@ -185,28 +234,41 @@
             <a-col :span="12">
               <a-form-item label="联系电话" style="margin-left:11px;">
                 <a-input
+                  :max-length="LimitInputlength"
                   v-decorator="[
                     'phone',
-                    {
-                      rules: [{ required: false, message: '请输入联系电话' }],
+                     {
+                      rules: [
+                      { validator: (rule, val, callback) => {
+                var reg = new RegExp('^[0-9]*$')
+                if (!reg.test(val)){
+                  callback('格式不正确,必须是数字');
+                }else {
+                  callback();
+                }
+                  callback();
+                },
+                }],
                     },
                   ]"
                   placeholder="请输入联系电话"
                 />
               </a-form-item>
             </a-col>
-
+          </a-row>
+          <a-row :gutter="24">
             <a-col :span="24">
-              <a-form-item label="公告内容" style="width: 100%;margin-left:11px;">
+              <a-form-item label="部门描述" style="width: 100%;margin-left:11px;">
                 <a-textarea
                   style="width: 479px"
+                  :max-length="textarealength"
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: false, message: '公告内容不能为空' }],
+                      rules: [],
                     },
                   ]"
-                  placeholder="请输入公告内容"
+                  placeholder="请输入部门描述"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
               </a-form-item>
@@ -250,6 +312,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import {
+  LimitInputlength,
+  textarealength,
+} from "../../InterfaceVariable/variable"
 import axios from "axios"
 import { http } from "../../api/interceptors"
 import FileSaver from "file-saver"
@@ -260,6 +326,8 @@ import XLSX from "xlsx"
 export default class Dept extends Vue {
   [x: string]: any
   public getData = new this.$api.configInterface.Dept()
+  private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
   public tableProxy = {}
   public myTitle = "添加"
   public visible = false
@@ -369,21 +437,11 @@ export default class Dept extends Vue {
     })
   }
   private Export(e: any): void {
-    let wb = XLSX.utils.table_to_book(document.querySelector(".bumen"))
-    let wbout = XLSX.write(wb, {
-      bookType: "xlsx",
-      bookSST: true,
-      type: "array",
+    (this.$refs.depttable as any).exportData({
+      filename: "部门管理",
+      sheetName: "Sheet1",
+      type: "xlsx",
     })
-    try {
-      FileSaver.saveAs(
-        new Blob([wbout], { type: "application/octet-stream" }),
-        "部门" + ".xlsx"
-      )
-    }
-    catch (e) {
-      if (typeof console !== "undefined") console.log(e, wbout)
-    }
   }
   private imports() {
     this.importshow = true
@@ -449,7 +507,7 @@ export default class Dept extends Vue {
           code_like: "",
         }
         this.getList(val)
-      }else{
+      } else {
         this.$message.error(res.msg)
       }
     })
@@ -457,12 +515,13 @@ export default class Dept extends Vue {
   private add(e: any): void {
     this.visible = true
     this.Disable = false
-    this.myTitle = "添加公告"
+    this.myTitle = "添加部门"
   }
   private handleOk(e: any) {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val)
         const obj = {
           code: val.code,
           contact: val.contact,
@@ -472,23 +531,24 @@ export default class Dept extends Vue {
           remark: val.remark,
           id: this.saveID,
         }
-        this.getData.saveVal(obj, true).then((res: any) => {
-          if (res.code == 0) {
-            this.visible = false
-            const val = {
-              parentCode: "parent_top",
-              name_like: "",
-              code_like: "",
-            }
-            const obj = {
-              isTop: true,
-              notPlatform: true,
-            }
-            this.getList(val)
-            this.getSelect(obj)
-            this.saveID = ""
-          }
-        })
+        // this.getData.saveVal(obj, true).then((res: any) => {
+        //   if (res.code == 0) {
+        //     this.visible = false
+        //     this.form2.resetFields()
+        //     const val = {
+        //       parentCode: "parent_top",
+        //       name_like: "",
+        //       code_like: "",
+        //     }
+        //     const obj = {
+        //       isTop: true,
+        //       notPlatform: true,
+        //     }
+        //     this.getList(val)
+        //     this.getSelect(obj)
+        //     this.saveID = ""
+        //   }
+        // })
       }
     })
   }
@@ -529,13 +589,11 @@ export default class Dept extends Vue {
       })
     })
   }
-
 }
 </script>
 
 <style lang="less" scope>
 #Dept {
-  // padding: 15px 0;
   width: 100%;
   height: calc(100% - 30px);
   background: #f5f5f5;
@@ -572,12 +630,10 @@ export default class Dept extends Vue {
 .mr10 {
   margin-right: 10px;
 }
-.upData,
-.upData:hover,
-.ant-btn:focus {
-  background: #0db8df;
-  color: #ffffff;
-}
+// .upData,.upData:hover,.ant-btn:focus {
+//   background: #0db8df;
+//   color: #ffffff;
+// }
 .myW {
   width: 347px;
 }
@@ -599,5 +655,18 @@ export default class Dept extends Vue {
 .el-table th > .cell {
   color: rgba(0, 0, 0, 0.85);
   font-weight: normal;
+}
+.myAM .ant-form-inline.ant-form-item {
+  display: flex;
+}
+.myAM .ant-form-inline .ant-form-item {
+  margin-bottom: 0;
+  height: 60px;
+}
+.myAM .ant-modal-body {
+  margin-bottom: 24px;
+}
+.mr10 {
+  margin-right: 10px;
 }
 </style>

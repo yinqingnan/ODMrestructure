@@ -73,6 +73,10 @@
                     <a-form-item label="拍摄时间">
                       <a-range-picker
                         :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {
@@ -152,24 +156,46 @@ export default class VideoStatistics extends Vue {
       field: "deptName",
       title: "执勤部门",
       showOverflow: true,
-      width: 150,
+      minWidth: 100,
+      align: "center",
+    },
+    {
+      field: "policeName",
+      title: "民警姓名",
+      showOverflow: true,
+      minWidth: 100,
+      align: "center",
+    },
+    {
+      field: "policeNum",
+      title: "民警警号",
+      showOverflow: true,
+      minWidth: 100,
       align: "center",
     },
     {
       title: "视频",
       align: "center",
       children: [
-        { field: "countVideo", title: "总个数", width: 120, align: "center" },
+        {
+          field: "countVideo",
+          title: "总个数",
+          minWidth: 80,
+          align: "center",
+          showOverflow: true,
+        },
         {
           field: "sumTimeVideoString",
           title: "时长（小时）",
-          width: 120,
+          minWidth: 120,
+          showOverflow: true,
           align: "center",
         },
         {
           field: "sumSizeVideoString",
           title: "大小（GB）",
-          width: 120,
+          minWidth: 100,
+          showOverflow: true,
           align: "center",
         },
       ],
@@ -178,17 +204,17 @@ export default class VideoStatistics extends Vue {
       title: "音频",
       align: "center",
       children: [
-        { field: "countAudio", title: "总个数", width: 120, align: "center" },
+        { field: "countAudio", title: "总个数", minWidth: 80, align: "center" },
         {
           field: "sumTimeAudioString",
           title: "时长（小时）",
-          width: 120,
+          minWidth: 120,
           align: "center",
         },
         {
           field: "sumSizeAudioString",
           title: "大小（GB）",
-          width: 120,
+          minWidth: 100,
           align: "center",
         },
       ],
@@ -197,11 +223,11 @@ export default class VideoStatistics extends Vue {
       title: "图片",
       align: "center",
       children: [
-        { field: "countPhoto", title: "总张数", width: 120, align: "center" },
+        { field: "countPhoto", title: "总张数", minWidth: 80, align: "center" },
         {
           field: "sumSizePhotoString",
           title: "大小（GB）",
-          width: 120,
+          minWidth: 100,
           align: "center",
         },
       ],
@@ -213,19 +239,19 @@ export default class VideoStatistics extends Vue {
         {
           field: "countInfor12",
           title: "12小时内",
-          width: 120,
+          minWidth: 100,
           align: "center",
         },
         {
           field: "countInfor12_48",
           title: "12-48小时内",
-          width: 120,
+          minWidth: 100,
           align: "center",
         },
         {
           field: "countInfo48",
           title: "超过48小时",
-          width: 120,
+          minWidth: 100,
           align: "center",
         },
       ],
@@ -330,5 +356,4 @@ export default class VideoStatistics extends Vue {
 .ant-calendar-range-picker-input {
   letter-spacing: 0.1px !important;
 }
-
 </style>

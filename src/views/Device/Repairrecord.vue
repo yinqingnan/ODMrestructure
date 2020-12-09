@@ -57,6 +57,10 @@
                     <a-form-item label="时间">
                       <a-range-picker
                         :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {

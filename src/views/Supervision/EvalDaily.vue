@@ -1,5 +1,5 @@
 <template>
-  <!-- 日常监督 -->
+  <!-- 日常考评 -->
   <div>
     <div id="EvalRecord" class="layoutcontainer">
       <div class="containers">
@@ -61,6 +61,10 @@
                     <a-form-item label="违法时间">
                       <a-range-picker
                         :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {
@@ -98,7 +102,8 @@
             <vxe-table-column
               field="fileName"
               title="文件名称"
-              align="center"
+              align="left"
+              header-align="center"
               show-overflow
               width="350"
             >
@@ -107,7 +112,7 @@
                   class="iconfont iconblock"
                   :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
                 ></span>
-                <span>{{row.fileName}}</span>
+                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptCode" title="执勤部门" align="center" />
@@ -132,7 +137,7 @@
             >
               <template v-slot="{ row }">{{relateCase(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="actions" title="操作" align="center" width="150">
+            <!-- <vxe-table-column field="actions" title="操作" align="center" width="150">
               <template v-slot="{ row }">
                 <span
                   type="text"
@@ -142,7 +147,7 @@
                   v-isshow="'fileEvaluate:evaluationDaily:look'"
                 >评分</span>
               </template>
-            </vxe-table-column>
+            </vxe-table-column>-->
           </vxe-table>
           <p>
             <vxe-pager
@@ -168,11 +173,11 @@
         <div class="filesee">
           <div class="filesee_left">
             <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
-              <!-- <img :src="filedetails.httpPath" alt /> -->
-              <img
+              <img :src="filedetails.httpPath" />
+              <!-- <img
                 src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3868564487,3858491216&fm=26&gp=0.jpg"
                 alt
-              />
+              />-->
             </div>
             <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
               <video-player
@@ -180,8 +185,12 @@
                 class="video-player vjs-custom-skin"
                 ref="videoPlayer"
                 :playsinline="true"
+                @ended="onPlayerEnded($event)"
                 :options="playerOptions"
               />
+            </div>
+            <div v-if="filedetails.fileType_Name == '音频'" class="audiofig">
+              <audio controls="controls" controlslist="nodownload" :src="filedetails.httpPath"></audio>
             </div>
           </div>
           <div class="filesee_right">
@@ -296,6 +305,7 @@
                     <a-form-item label="车牌号码">
                       <a-input
                         placeholder="没有车牌号，请填写无"
+                        :max-length="LimitInputlength"
                         v-decorator="[
                         'plateNumber',
                         {
@@ -319,6 +329,7 @@
                     </a-form-item>
                     <a-form-item label="采集地址">
                       <a-input
+                        :max-length="LimitInputlength"
                         placeholder="请输入采集地址（30字以内）"
                         v-decorator="[
                         'gatheringPlace',
@@ -501,6 +512,7 @@ export default class EvalRecord extends Vue {
     categoryId: "",
     marker: "",
     fileType_Name: "",
+    httpPath: "",
   }
   private activeKey = "4"
   private fileId = ""
@@ -631,6 +643,7 @@ export default class EvalRecord extends Vue {
     this.DataM.getfiledetails(this.fileId).then((res) => {
       console.log(res)
       this.filedetails = res.data
+      this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
     })
     this.DataM.lawarchives().then((res) => {
       console.log(res)
@@ -700,7 +713,7 @@ export default class EvalRecord extends Vue {
     //取消重置所有用到的表单
   }
   private filedownload() {
-    alert("当前下载" + this.filedetails.downloadPath)
+    window.open(this.filedetails.downloadPath)
     console.log(this.filedetails.downloadPath)
   }
   private tabchange(activeKey) {
@@ -740,7 +753,7 @@ export default class EvalRecord extends Vue {
   }
   public sum = 0
   private checkboxChange(e, val) {
-    console.log(e.target.checked)
+    // console.log(e.target.checked)
     if (e.target.checked) {
       this.sum += val
     } else {
@@ -794,6 +807,11 @@ export default class EvalRecord extends Vue {
       }
     })
   }
+  // 视频播完回调
+  private onPlayerEnded(e) {
+    // console.log(e);
+    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
+  }
 }
 </script>
 
@@ -812,12 +830,12 @@ export default class EvalRecord extends Vue {
     width: 560px;
     margin-right: 12px;
     overflow: hidden;
-    div{
+    div {
       height: auto;
     }
     img {
       width: 100%;
-      height: auto;
+      height: 100%;
     }
   }
   .filesee_right {

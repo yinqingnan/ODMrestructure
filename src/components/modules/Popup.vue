@@ -89,6 +89,10 @@
                     v-if="item.type == 'time'"
                   >
                     <a-range-picker
+                      :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                       v-decorator="[
                         [item.code],
                         {
@@ -108,7 +112,8 @@
                     :wrapperCol="wrapperCol"
                     v-if="item.type == 'year'"
                   >
-                    <a-range-picker v-decorator="[item.code]" class="timeP0" :format="item.format" />
+                    <a-range-picker v-decorator="[item.code]" class="timeP0" 
+                    :format="item.format" />
                   </a-form-item>
                   <!-- 日期选择 -->
                   <a-form-item

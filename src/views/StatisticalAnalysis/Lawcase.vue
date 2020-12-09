@@ -50,7 +50,11 @@
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
-                      :allowClear="false"
+                        :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {
@@ -137,7 +141,7 @@ export default class VideoStatistics extends Vue {
       title: "总体情况",
       align: "center",
       children: [
-        { field: "lawCaseTotal", title: "执法总数",  align: "center" },
+        { field: "lawCaseTotal", title: "执法总数", align: "center" },
         {
           field: "lawCaseRef",
           title: "关联数",
@@ -154,7 +158,7 @@ export default class VideoStatistics extends Vue {
       title: "简易流程",
       align: "center",
       children: [
-        { field: "summaryTotal", title: "执法总数",  align: "center" },
+        { field: "summaryTotal", title: "执法总数", align: "center" },
         {
           field: "summaryRef",
           title: "关联数",
@@ -171,7 +175,7 @@ export default class VideoStatistics extends Vue {
       title: "强制措施",
       align: "center",
       children: [
-        { field: "forceTotal", title: "执法总数",  align: "center" },
+        { field: "forceTotal", title: "执法总数", align: "center" },
         {
           field: "forceRef",
           title: "关联数",
@@ -184,7 +188,6 @@ export default class VideoStatistics extends Vue {
         },
       ],
     },
-    
   ]
   // todo 生命周期
   private created() {

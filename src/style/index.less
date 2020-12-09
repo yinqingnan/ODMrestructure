@@ -133,6 +133,7 @@ textarea{
   font-size: 12px;
 }
 .iconblock{
+  cursor: pointer;
   font-size:24px;
   vertical-align: middle;
   color:#a7a7a7;
@@ -178,6 +179,38 @@ textarea{
   width: 100% !important;
   overflow-x: hidden;
 }
+// 音频播放设置
+.audiofig {
+  audio {
+    margin-top: 36%;
+    margin-left: 19%;
+  }
+}
 audio{
   outline: none;
+}
+
+
+//视频播放器底部操作栏样式
+.vjs-custom-skin > .video-js .vjs-control-bar{
+  bottom: 14px;
+}
+.vjs-volume-level{
+  top: 0px !important;
+}
+
+// 取消日期选择器的选择时间按钮
+.ant-calendar-range.ant-calendar-time .ant-calendar-footer .ant-calendar-time-picker-btn{
+  display: none;
+}
+
+// 隐藏掉视频加载时的乱象
+.vjs-loading-spinner{
+  display: none !important;
+  opacity: 0;
+}
+
+// 兼容调整时间选择器的字间距
+.ant-calendar-range-picker-separator{
+  letter-spacing: 0.8px;
 }

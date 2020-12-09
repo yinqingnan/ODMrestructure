@@ -77,6 +77,10 @@
                     <a-form-item label="违法时间">
                       <a-range-picker
                         :allowClear="false"
+                        :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
                         v-decorator="[
                         'date',
                         {
@@ -107,11 +111,12 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="50" align="center" title="序号"/>
+            <vxe-table-column type="seq" width="50" align="center" title="序号" />
             <vxe-table-column
               field="fileName"
               title="文件名称"
-              align="center"
+              align="left"
+              header-align="center"
               show-overflow
               width="300"
             >
@@ -120,7 +125,7 @@
                   class="iconfont iconblock"
                   :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
                 ></span>
-                <span>{{row.fileName}}</span>
+                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptCode" title="执勤部门" align="center" width="100" />
@@ -133,7 +138,13 @@
             />
             <vxe-table-column field="userCode" title="民警警号" align="center" width="80" />
             <vxe-table-column field="fileType_Name" title="文件类型" width="80" align="center" />
-            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" min-width="140" />
+            <vxe-table-column
+              field="recordDate"
+              title="摄录时间"
+              show-overflow
+              align="center"
+              min-width="140"
+            />
             <vxe-table-column
               field="relateCase"
               title="关联信息"
@@ -143,18 +154,36 @@
             >
               <template v-slot="{ row }">{{relateCase(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="score" title="考评结果" align="center" show-overflow min-width="130">
+            <vxe-table-column
+              field="score"
+              title="考评结果"
+              align="center"
+              show-overflow
+              min-width="130"
+            >
               <template v-slot="{ row }">
                 <span :style="{'color': (textcolor==true ? 'green':'#ff0000')}">{{score(row)}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="evaluateItems" title="扣分项" show-overflow align="center"  min-width="120">
+            <vxe-table-column
+              field="evaluateItems"
+              title="扣分项"
+              show-overflow
+              align="center"
+              min-width="120"
+            >
               <template v-slot="{ row }">{{evaluateItems(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="evaluateName" title="考评人" show-overflow align="center" width="100">
+            <vxe-table-column
+              field="evaluateName"
+              title="考评人"
+              show-overflow
+              align="center"
+              width="100"
+            >
               <template v-slot="{ row }">{{evaluateName(row)}}</template>
             </vxe-table-column>
-            <vxe-table-column field="actions" title="操作" align="center" fixed="right" width="100">
+            <!-- <vxe-table-column field="actions" title="操作" align="center" fixed="right" width="100">
               <template v-slot="{ row }">
                 <span
                   type="text"
@@ -163,7 +192,7 @@
                   v-isshow="'fileEvaluate:evaluationRecord:look'"
                 >查看</span>
               </template>
-            </vxe-table-column>
+            </vxe-table-column>-->
           </vxe-table>
           <p>
             <vxe-pager
@@ -190,11 +219,11 @@
         <div class="filesee">
           <div class="filesee_left">
             <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
-              <!-- <img :src="filedetails.httpPath" alt /> -->
-              <img
+              <img :src="filedetails.httpPath" alt />
+              <!-- <img
                 src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3868564487,3858491216&fm=26&gp=0.jpg"
                 alt
-              />
+              />-->
             </div>
             <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
               <video-player
@@ -203,7 +232,11 @@
                 ref="videoPlayer"
                 :playsinline="true"
                 :options="playerOptions"
+                @ended="onPlayerEnded($event)"
               />
+            </div>
+            <div v-if="filedetails.fileType_Name == '音频'" class="audiofig">
+              <audio controls="controls" controlslist="nodownload" :src="filedetails.httpPath"></audio>
             </div>
           </div>
           <div class="filesee_right">
@@ -318,6 +351,7 @@
                     <a-form-item label="车牌号码">
                       <a-input
                         placeholder="没有车牌号，请填写无"
+                        :max-length="LimitInputlength"
                         v-decorator="[
                         'plateNumber',
                         {
@@ -342,6 +376,7 @@
                     <a-form-item label="采集地址">
                       <a-input
                         placeholder="请输入采集地址（30字以内）"
+                        :max-length="LimitInputlength"
                         v-decorator="[
                         'gatheringPlace',
                         {
@@ -556,6 +591,7 @@ export default class EvalRecord extends Vue {
     categoryId: "",
     marker: "",
     fileType_Name: "",
+    httpPath: "",
   }
   private activeKey = "4"
   private fileId = ""
@@ -662,7 +698,7 @@ export default class EvalRecord extends Vue {
   }
   private evaluateItems(row) {
     let str = ""
-    console.log(row)
+    // console.log(row)
     if (row.evaluateItems != null) {
       row.evaluateItems.map((item) => {
         str += item.name
@@ -736,6 +772,7 @@ export default class EvalRecord extends Vue {
     this.DataM.getfiledetails(this.fileId).then((res) => {
       console.log(res)
       this.filedetails = res.data
+      this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
     })
     this.DataM.evaluate(this.fileCode).then((res) => {
       console.log(res)
@@ -796,8 +833,12 @@ export default class EvalRecord extends Vue {
     //取消重置所有用到的表单
   }
   private filedownload() {
-    alert("当前下载" + this.filedetails.downloadPath)
     console.log(this.filedetails.downloadPath)
+    window.open(this.filedetails.downloadPath)
+  }
+  // 视频播完回调
+  private onPlayerEnded(e) {
+    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
   }
 }
 </script>
@@ -822,9 +863,9 @@ export default class EvalRecord extends Vue {
     overflow: hidden;
     img {
       width: 100%;
-      height: auto;
+      height: 100%;
     }
-    div{
+    div {
       height: auto;
     }
   }
