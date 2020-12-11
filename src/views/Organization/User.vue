@@ -29,7 +29,7 @@
                         v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -122,43 +122,43 @@
               title="民警姓名"
               show-overflow
               align="center"
-              minWidth="140"
+              minWidth="100"
             />
             <vxe-table-column
               field="code"
               title="民警警号"
               show-overflow
               align="center"
-              minWidth="140"
+              minWidth="100"
             />
             <vxe-table-column
               field="deptName"
               title="所属部门"
               show-overflow
               align="center"
-              minWidth="140"
+              minWidth="100"
             />
-            <vxe-table-column field="gender" title="性别" show-overflow align="center" minWidth="85" />
+            <vxe-table-column field="gender" title="性别" show-overflow align="center" minWidth="60" />
             <vxe-table-column
               field="roleName"
               title="用户角色"
               show-overflow
               align="center"
-              minWidth="170"
+              minWidth="100"
             />
             <vxe-table-column
               field="positionName"
               title="岗位"
               show-overflow
               align="center"
-              minWidth="160"
+              minWidth="80"
             />
             <vxe-table-column
               field="commonName"
               title="4G账号"
               show-overflow
               align="center"
-              minWidth="190"
+              minWidth="100"
             >
               <template v-slot="{ row }">
                 <div v-if="row.commDeviceCode" style="display:flex;" v-isshow="'base:user:4glist'">
@@ -181,23 +181,23 @@
               title="身份证号"
               show-overflow
               align="center"
-              minWidth="190"
+              minWidth="100"
             />
             <vxe-table-column
               field="phone"
               title="联系电话"
               show-overflow
               align="center"
-              minWidth="160"
+              minWidth="120"
             />
             <vxe-table-column
               field="remark"
               title="备注"
               show-overflow
               align="center"
-              minWidth="220"
+              minWidth="120"
             />
-            <vxe-table-column title="操作" show-overflow align="center" fixed="right" minWidth="100">
+            <vxe-table-column title="操作" show-overflow align="center"  minWidth="80" fixed="right">
               <template v-slot="{ row }">
                 <span type="text" @click="edit(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'base:user:update'">编辑</span>
               </template>
@@ -247,7 +247,23 @@
             <a-col :span="12">
               <a-form-item label="警号">
                 <a-input
-                  v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  :disabled = "codedisabled"
+                  v-decorator="['code', { initialValue: '',
+                  rules: [
+                    { required: true, message: '必填项不能为空' },{ required: true, message: '请输入部门编号' },
+                      { validator: (rule, val, callback) => {
+                      var reg = new RegExp('[\u4E00-\u9FA5]+');
+                      if (reg.test(val)){
+                        callback('警号格式不正确,必须数字或字母');
+                      }else {
+                        callback();
+                      }
+                        callback();
+                      },
+                      }
+                  ] 
+                  }
+                  ]"
                   :max-length="LimitInputlength"
                   placeholder="请输入民警警号"
                 >/></a-input>
@@ -263,7 +279,7 @@
                   v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
@@ -328,7 +344,9 @@
             <a-col :span="12">
               <a-form-item label="身份证号">
                 <a-input
-                  v-decorator="['identity', { initialValue: '',  rules: [] }]"
+                  v-decorator="['identity', { initialValue: '',  rules: [
+                    {validator:validatorID}
+                  ] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入身份证号"
                 >/></a-input>
@@ -350,9 +368,9 @@
             <a-col :span="12">
               <a-form-item label="联系电话">
                 <a-input
-                  v-decorator="['phone', { initialValue: '',  rules: [] }]"
+                  v-decorator="['phone', { initialValue: '',  rules: [ {validator: phonevalidator}] }]"
                   :max-length="LimitInputlength"
-                  placeholder="请输入受影响的民警警号"
+                  placeholder="请输入联系电话"
                 >/></a-input>
               </a-form-item>
             </a-col>
@@ -469,6 +487,7 @@ export default class User extends Vue {
   private popup() {
     return
   }
+  private codedisabled = false
   private status = ""
   private id = ""
   private importshow = false
@@ -553,15 +572,15 @@ export default class User extends Vue {
       if (!err) {
         this.deptCode = val.department
         this.name = val.username
-        this.code = val.usercide
+        this.code = val.usercode
         this.type = val.Account
         let obj = {
           page: 1,
           limit: 15,
-          deptCode: "",
-          name: this.name,
-          code: this.code,
-          type: this.type,
+          deptCode: val.department,
+          name: val.username,
+          code: val.usercode,
+          type: val.Account,
         }
         this.gettabledata(obj)
       }
@@ -573,15 +592,6 @@ export default class User extends Vue {
     this.code = ""
     this.type = ""
     this.form.resetFields()
-    let obj = {
-      page: 1,
-      limit: 15,
-      deptCode: "",
-      name: "",
-      code: "",
-      type: "全部",
-    }
-    this.gettabledata(obj)
   }
   // 获取选中
   private getSelectEvent1() {
@@ -591,9 +601,12 @@ export default class User extends Vue {
 
   // 添加
   private add() {
+    console.log(123)
     this.str = "添加用户"
     this.visible = true
     this.status = "新增"
+    this.codedisabled = false
+    this.form1.resetFields()
   }
   // 分配调度台账号
   private distributionddt() {
@@ -701,6 +714,10 @@ export default class User extends Vue {
       filename: "用户管理",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
+      columnFilterMethod ({ column }) {
+        return ['name','code','deptName','gender','roleName','positionName','commonName','identity','phone','remark'].includes(column.property)
+      }
     })
   }
   // 删除
@@ -807,7 +824,6 @@ export default class User extends Vue {
             if (res.code == 0) {
               this.$message.success(res.msg)
               this.visible = false
-              this.form.resetFields()
               this.gettabledata({
                 page: 1,
                 limit: 15,
@@ -873,6 +889,7 @@ export default class User extends Vue {
   private edit(row) {
     console.log(row)
     this.id = row.id
+    this.codedisabled = true
     this.visible = true
     this.str = "编辑"
     this.status = "编辑"
@@ -982,8 +999,30 @@ export default class User extends Vue {
     this.fileList = []
     this.iserror = false
   }
+  private phonevalidator (rule,value,callback){
+    let reg = new RegExp('^[0-9]*$')
+    if(!value){
+      callback()
+    }else if(reg.test(value)){
+      callback()
+    }else{
+      callback('必须为数字')
+    }
+  }
+  private validatorID(rule,value,callback) {
+    let reg= new RegExp(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/)
+    if(!value){
+      callback()
+    }else if(value.length==18 && reg.test(value)){
+      callback()
+    }else{
+      callback('身份证格式不对')
+    }
+  }
 }
 </script>
+
+
 
 <style lang="less" scope>
 .el-scrollbar__wrap {

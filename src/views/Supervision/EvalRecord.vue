@@ -19,14 +19,14 @@
                   @submit="handleSubmit"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="执勤部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         show-search
                         treeNodeFilterProp="title"
                         v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -63,7 +63,7 @@
                         v-decorator="[
                         'Evaluation',
                         {
-                          initialValue: '',
+                          initialValue: [],
                           rules: []
                         }
                       ]"
@@ -74,7 +74,7 @@
                         <a-select-option v-for="d in Evaluationlist" :key="d.value">{{ d.title }}</a-select-option>
                       </a-select>
                     </a-form-item>
-                    <a-form-item label="违法时间">
+                    <a-form-item label="摄录时间">
                       <a-range-picker
                         :allowClear="false"
                         :show-time="{
@@ -112,7 +112,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="50" align="center" title="序号" />
+            <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
               field="fileName"
               title="文件名称"
@@ -126,21 +126,26 @@
                   class="iconfont iconblock"
                   :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
                 ></span>
+                <span
+                  style="cursor: pointer;text-align:center"
+                  class="textblock"
+                  :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
+                >{{fileLevel(row.fileLevel)}}</span>
                 <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deptCode" title="执勤部门" align="center" width="100" />
+            <vxe-table-column field="deptName" title="部门" align="center" width="100" />
             <vxe-table-column
               field="userName"
               title="姓名/警号"
               align="center"
-              width="100"
+              min-width="110"
               show-overflow
             >
                <template v-slot="{ row }">{{row.userName}}({{row.userCode}})</template>
             </vxe-table-column>
          
-            <vxe-table-column field="fileType_Name" title="文件类型" width="80" align="center" />
+            <vxe-table-column field="fileType_Name" title="文件类型" width="100" align="center" />
             <vxe-table-column
               field="recordDate"
               title="摄录时间"
@@ -149,14 +154,19 @@
               min-width="140"
             />
             <vxe-table-column
-              field="relateCase"
-              title="关联信息"
+              field="fileDuration_Name"
+              title="摄录时长"
               show-overflow
-              width="100"
               align="center"
-            >
-              <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column>
+              min-width="140"
+            />
+            <vxe-table-column
+              field="uploadDate"
+              title="导入时间"
+              show-overflow
+              align="center"
+              min-width="140"
+            />
             <vxe-table-column
               field="score"
               title="考评结果"
@@ -165,7 +175,7 @@
               min-width="130"
             >
               <template v-slot="{ row }">
-                <span :style="{'color': (textcolor==true ? 'green':'#ff0000')}">{{score(row)}}</span>
+                <span :style="{'color': (score(row)=='通过' ? 'green':'#ff0000')}">{{score(row)}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column
@@ -213,7 +223,7 @@
       </div>
       <a-modal
         v-model="visible"
-        title="视频查看"
+        title="媒体文件查看"
         @ok="handleOk"
         :width="1000"
         @cancel="tccancel"
@@ -409,11 +419,6 @@
                 <a-empty v-else style="margin-top:94px">
                   <span slot="description">没有标注信息</span>
                 </a-empty>
-                <!-- <a-button
-                  type="primary"
-                  @click="biaozhuSubmit"
-                  style="margin-top: 14px;margin-left: 44%;"
-                >保存</a-button>-->
               </a-tab-pane>
               <a-tab-pane key="4" tab="评价">
                 <a-form :form="form3" :label-col="{ span:4 }" :wrapper-col="{ span: 20 }">
@@ -531,7 +536,7 @@ export default class EvalRecord extends Vue {
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
-    { field: "deptCode", title: "执勤部门", width: 120 },
+    { field: "deptCode", title: "部门", width: 120 },
     { field: "userName", title: "民警姓名" },
     { field: "userCode", title: "民警警号" },
     { field: "fileType_Name", title: "文件类型" },
@@ -723,11 +728,11 @@ export default class EvalRecord extends Vue {
         str += item.score
       })
       if (str > 0) {
+        this.textcolor = false
         return `异常（扣${str}分）`
-      } else {
-        this.textcolor = true
-        return "正常"
-      }
+      } 
+    }else {
+        return "通过"
     }
   }
   private relateCase(row) {
@@ -845,6 +850,23 @@ export default class EvalRecord extends Vue {
   // 视频播完回调
   private onPlayerEnded(e) {
     (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
+  }
+  private fileLevel(val) {
+    let str = ''
+   switch (val) {
+     case 1:
+      str='低'
+       break;
+    case 2:
+      str= '中'
+       break;
+    case 3:
+      str= '高'
+       break;
+     default:
+       break;
+   }
+   return str
   }
 }
 </script>

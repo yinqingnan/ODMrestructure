@@ -123,12 +123,12 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="50" title="序号" align="center" />
+            <vxe-table-column type="seq" width="60" title="序号" align="center" />
             <vxe-table-column
               field="code"
               title="决定书编号"
               align="center"
-              min-width="110"
+              min-width="130"
               show-overflow
             >
               <template v-slot="{ row }">
@@ -379,6 +379,7 @@
             resizable
             ref="glwj"
             height="auto"
+            show-header-overflow
             :data="Associatedfilestabledata"
             highlight-hover-row
             :row-class-name="tableRowClassName"
@@ -386,7 +387,7 @@
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
           >
-            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column type="checkbox" width="60" align="center" />
             <vxe-table-column field="fileName" title="文件名称" align="center"  min-width="150" show-overflow>
               <template v-slot="{ row }">
                 <vxe-button type="text" @click="Playvideo(row)" style="color:#0db8df">{{row.fileName}}</vxe-button>

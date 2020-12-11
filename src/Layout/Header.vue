@@ -12,9 +12,9 @@
             </a-badge>
           </div>
         </div>
-        <div class="headportrait hidden-sm-and-down">
+        <!-- <div class="headportrait hidden-sm-and-down">
           <img src="../assets/image/user/123123.png" alt />
-        </div>
+        </div> -->
         <div class="Menuss">
           <a-dropdown :trigger="['click']">
             <span>
@@ -187,6 +187,7 @@ export default class Header extends Vue {
       localStorage.setItem("deptCode", res.data.deptCode)
     })
     this.Login.getNotice().then((res) => {
+      console.log(res)
       if(res.data.length>0){
         this.isshow = true
       }else{
@@ -197,6 +198,7 @@ export default class Header extends Vue {
   private getNotice() {
     this.Noticeshow = true
     this.Login.getNotice().then((res) => {
+      console.log(res)
       if (res.data) {
         this.blank = true
       } else {
@@ -253,6 +255,7 @@ img {
 }
 .Menuss {
   cursor: pointer;
+  margin-left: 16px;
   margin-right: 16px;
 
   span {

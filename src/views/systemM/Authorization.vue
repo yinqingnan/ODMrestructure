@@ -72,7 +72,7 @@ export default class RightContent extends Vue {
     {
       title: "序号",
       className: "pd10",
-      width: 65,
+      width: 60,
       dataIndex: "index",
       scopedSlots: { customRender: "index" }
     },

@@ -19,14 +19,14 @@
                   @submit="handleSubmit"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="执勤部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         show-search
                         treeNodeFilterProp="title"
                         v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -58,7 +58,7 @@
                         placeholder="请输入姓名/警号"
                       >/></a-input>
                     </a-form-item>
-                    <a-form-item label="违法时间">
+                    <a-form-item label="摄录时间">
                       <a-range-picker
                         :allowClear="false"
                         :show-time="{
@@ -99,7 +99,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="50px" align="center" title="序号" />
+            <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
               resizable
               field="fileName"
@@ -107,41 +107,51 @@
               align="left"
               header-align="center"
               show-overflow
-              width="350"
+              width="25%"
             >
               <template v-slot="{ row }">
                 <span
                   class="iconfont iconblock"
-                  :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
+                  :class="{'iconpicture': row.fileType === 'photo', 'iconshiping': row.fileType=='video', 'iconmusic': row.fileType=='audio'}"
                 ></span>
+                <span
+                  style="cursor: pointer;text-align:center"
+                  class="textblock"
+                  :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
+                >{{fileLevel(row.fileLevel)}}</span>
                 <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deptCode" title="执勤部门" align="center" />
+            <vxe-table-column field="deptName" title="部门" align="center" min-width="15%" />
             <vxe-table-column
               field="userName"
               title="姓名/警号"
               align="center"
-              width="100"
+              width="10%"
               show-overflow
             >
              <template v-slot="{ row }">
                 {{row.userName}}({{row.userCode}})
               </template>
             </vxe-table-column>
-            <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
+            <!-- <vxe-table-column field="fileType" title="文件类型" show-overflow align="center">
               <template v-slot="{ row }">{{fileType(row)}}</template>
-            </vxe-table-column>
-            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
+            </vxe-table-column> -->
+            <vxe-table-column field="recordDate" title="摄录时间" show-overflow width="15%" align="center" />
             <vxe-table-column
-              field="relateCase"
-              title="关联信息"
+              field="fileDuration_Name"
+              title="摄录时长"
               show-overflow
-              width="100"
               align="center"
-            >
-              <template v-slot="{ row }">{{relateCase(row)}}</template>
-            </vxe-table-column>
+              width="15%"
+            />
+            <vxe-table-column
+              field="uploadDate"
+              title="导入时间"
+              show-overflow
+              align="center"
+              width="15%"
+            />
             <!-- <vxe-table-column field="actions" title="操作" align="center" width="150">
               <template v-slot="{ row }">
                 <span
@@ -170,7 +180,7 @@
       </div>
       <a-modal
         v-model="visible"
-        title="视频查看"
+        title="媒体文件查看"
         :width="1000"
         @cancel="tccancel"
         :maskClosable="false"
@@ -486,7 +496,7 @@ export default class EvalRecord extends Vue {
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
     { field: "fileName", width: 200, title: "文件名" },
-    { field: "deptCode", title: "执勤部门", width: 120 },
+    { field: "deptCode", title: "部门", width: 120 },
     { field: "userName", title: "民警姓名" },
     { field: "userCode", title: "民警警号" },
     { field: "recordDate", title: "摄录时间" },
@@ -814,6 +824,23 @@ export default class EvalRecord extends Vue {
   private onPlayerEnded(e) {
     // console.log(e);
     (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
+  }
+  private fileLevel(val) {
+    let str = ''
+   switch (val) {
+     case 1:
+      str='低'
+       break;
+    case 2:
+      str= '中'
+       break;
+    case 3:
+      str= '高'
+       break;
+     default:
+       break;
+   }
+   return str
   }
 }
 </script>

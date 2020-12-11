@@ -23,7 +23,7 @@
             :row-class-name="tableRowClassName"
             :data="tableData"
           >
-            <vxe-table-column type="seq" width="50" align="center" title="序号" />
+            <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
               field="upgradeType"
               title="升级类型"

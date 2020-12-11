@@ -264,6 +264,7 @@ export default class OperationLog extends Vue {
       filename: "日志管理",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
   private getdata() {

@@ -143,6 +143,7 @@
           <vxe-table
             border
             resizable
+            show-header-overflow
             :row-class-name="tableRowClassName"
             height="auto"
             :data="tabledata"
@@ -153,39 +154,37 @@
             @checkbox-change="selectChangeEvent"
           >
             >
-            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column type="checkbox" width="60" align="center" />
             <vxe-table-column
               header-align="center"
               field="fileName"
               title="文件名称"
               align="left"
               show-overflow
-              width="240"
+              width="30%"
             >
               <template v-slot="{ row }">
-                <span
-                  style="cursor: pointer;"
+                     <span
                   class="iconfont iconblock"
-                  :class="{'iconpicture': row.fileType_Name === '图片', 'iconshiping': row.fileType_Name=='视频', 'iconmusic': row.fileType_Name=='音频'}"
+                  :class="{'iconpicture': row.fileType === 'photo', 'iconshiping': row.fileType=='video', 'iconmusic': row.fileType=='audio'}"
                 ></span>
-                <span
+                 <span
                   style="cursor: pointer;text-align:center"
                   class="textblock"
-                  :class="{'gao': row.fileLevel_Name === '高', 'zhong': row.fileLevel_Name=='中', 'di': row.fileLevel_Name=='低'}"
-                >{{row.fileLevel_Name}}</span>
+                  :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
+                >{{fileLevel(row.fileLevel)}}</span>
                 <span style="cursor: pointer;color:#0db8df"  @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deptCode" title="部门" align="center" width="100" />
-            <vxe-table-column field="userName" title="姓名/警号" align="center" show-overflow >
+            <vxe-table-column field="deptName" title="部门" align="center" width="10%" />
+            <vxe-table-column field="userName" title="姓名/警号" align="center" show-overflow width="10%">
               <template v-slot="{ row }">
-               <span>{{row.userName}}({{row.deptCode}})</span>
+               <span>{{row.userName}}({{row.userCode}})</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
-            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" />
-             <vxe-table-column field="fileDuration_Name" title="摄录时长" show-overflow align="center" />
-            <vxe-table-column field="uploadDate"  title="导入时间" show-overflow align="center" />
+            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" width="10%"/>
+             <vxe-table-column field="fileDuration_Name" title="摄录时长" show-overflow align="center" width="10%"/>
+            <vxe-table-column field="uploadDate"  title="导入时间" show-overflow align="center" width="10%"/>
             <!-- <vxe-table-column field="action" title="操作" align="center" fixed="right">
               <template v-slot="{ row }">
                 <span
@@ -320,7 +319,7 @@
                 </a-form>
               </a-tab-pane>
               <a-tab-pane key="3" tab="标注">
-                <div v-if="!Emptystate">
+                <!-- <div v-if="!Emptystate"> -->
                     <a-form
                     :form="form2"
                     :label-col="{ span: 6 }"
@@ -419,10 +418,10 @@
                     @click="biaozhuSubmit"
                     style="margin-top: 14px;margin-left: 44%;"
                   >保存</a-button>
-                </div>
-                <a-empty v-else style="margin-top:94px">
+                <!-- </div> -->
+                <!-- <a-empty v-else style="margin-top:94px">
                   <span slot="description">没有标注信息</span>
-                </a-empty>
+                </a-empty> -->
               </a-tab-pane>
               <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
@@ -858,6 +857,17 @@ export default class AvData extends Vue {
               })
             })
           })
+        }else{
+          // 标注下拉数据1
+           this.DataM.taggingselect1().then((res) => {
+            console.log(res.data)
+            this.taggingselect1 = res.data
+          })
+          // 标注下拉数据2
+          this.DataM.taggingselect2(this.labelType).then((res) => {
+            console.log(res.data)
+            this.taggingselect2 = res.data
+          })
         }
       })
     } else if (activeKey == 4) {
@@ -1034,17 +1044,19 @@ export default class AvData extends Vue {
         title: "提示",
         content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿如果浏览器未出现下载提示，请您在浏览器地址栏右侧，点击‘已拦截的弹窗’，选择‘始终允许显示本站点的弹出式窗口`,
         onOk() {
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-            _that.selectedRowKeys.map((item) => {
-              const link = document.createElement("a")
-              link.setAttribute("download", item.fileName) //下载的文件名
-              link.href = item.downloadPath //文件url
-              link.click()
-            })
-            _that.selectedRowKeys = []
-            ;(_that.$refs.xTable1 as any).clearCheckboxRow()
-          }).catch(() => console.log("下载失败"))
+          let num = 0
+          _that.selectedRowKeys.forEach((item) => {
+            window.open(item.downloadPath)
+            // let link = document.createElement("a")   // 创建a标签
+            // let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
+            // e.initEvent('click', false, false)
+            // link.setAttribute("download", item.fileName) //下载的文件名
+            // link.href = item.downloadPath //文件url
+            // link.dispatchEvent(e)
+            // link.remove
+          })
+          _that.selectedRowKeys = [];
+          (_that.$refs.xTable1 as any).clearCheckboxRow()
         },
       })
     } else {
@@ -1256,6 +1268,23 @@ export default class AvData extends Vue {
   // 视频播完回调
   private onPlayerEnded(e) {
     (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src); // 重置视频进度条
+  }
+  private fileLevel(val) {
+    let str = ''
+   switch (val) {
+     case 1:
+      str='低'
+       break;
+    case 2:
+      str= '中'
+       break;
+    case 3:
+      str= '高'
+       break;
+     default:
+       break;
+   }
+   return str
   }
 }
 </script>

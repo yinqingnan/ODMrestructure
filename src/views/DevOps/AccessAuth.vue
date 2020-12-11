@@ -27,13 +27,13 @@
             :data="tableData"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
-            <vxe-table-column field="secretKey" title="接入秘钥" show-overflow align="center" />
+            <vxe-table-column field="secretKey" title="接入秘钥" show-overflow align="center" width="15%" />
             <vxe-table-column field="isEnabled" title="状态" show-overflow align="center" >
               <template  v-slot="{ row }">
                 {{isEnabled(row.isEnabled)}}
               </template>
             </vxe-table-column>
-            <vxe-table-column field="isUse" title="使用状态" show-overflow align="center">
+            <vxe-table-column field="isUse" title="使用状态" show-overflow align="center" width="10%" >
                 <template  v-slot="{ row }">
                 {{isEnabled(isuse(row.isUse))}}
               </template>

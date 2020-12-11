@@ -22,7 +22,7 @@
           :row-class-name="tableRowClassName"
           :data="tabData"
         >
-          <vxe-table-column type="seq" width="50" align="center" title="序号" />
+          <vxe-table-column type="seq" width="60" align="center" title="序号" />
           <vxe-table-column field="value" title="字典名" show-overflow align="center" minWidth="150" />
           <vxe-table-column
             field="dictKey"

@@ -29,7 +29,7 @@
                         v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -59,7 +59,7 @@
                         v-decorator="[
                         'deviceStatus',
                         {
-                          initialValue: '',
+                          initialValue: 'all',
                           rules: []
                         }
                       ]"
@@ -82,7 +82,7 @@
                         v-decorator="[
                         'deviceStatusName',
                         {
-                          initialValue: '',
+                          initialValue: 'all',
                           rules: []
                         }
                       ]"
@@ -129,20 +129,22 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="checkbox" width="50" align="center" />
-            <vxe-table-column field="code" title="产品序号" show-overflow width="120" align="center" />
-            <vxe-table-column field="deptName" title="所属部门" show-overflow width="120" align="center" />
-            <vxe-table-column field="userName" title="姓名/警号" show-overflow width="120" align="center">
+            <vxe-table-column type="checkbox" width="60" align="center" />
+            <vxe-table-column field="code" title="产品序号" show-overflow width="10%" align="center" />
+             <vxe-table-column field="deviceType" title="设备类型" show-overflow width="11%" align="center" />
+            
+            <vxe-table-column field="deptName" title="所属部门" show-overflow width="10%" align="center" />
+            <vxe-table-column field="userName" title="姓名/警号" show-overflow width="10%" align="center">
               <template v-slot="{ row }">
                 <span v-if="row.userCode">{{row.userName}}({{row.userCode}})</span>
                 <span v-else>{{row.userName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deviceStatusName" title="设备状态" show-overflow width="120" align="center" />
-            <vxe-table-column field="lastUploadTime" title="最后上传时间" show-overflow width="120" align="center" />
-            <vxe-table-column field="purchasingDate" title="购买日期" show-overflow width="120" align="center" />
-            <vxe-table-column field="warrantyDate" title="保修日期" show-overflow width="120" align="center" />
-            <vxe-table-column field="actions" title="操作" align="center" flexd="right">
+            <vxe-table-column field="deviceStatusName" title="设备状态" show-overflow width="10%" align="center" />
+            <vxe-table-column field="lastUploadTime" title="最后上传时间" show-overflow width="10%" align="center" />
+            <vxe-table-column field="purchasingDate" title="购买日期" show-overflow width="10%" align="center" />
+            <vxe-table-column field="warrantyDate" title="保修日期" show-overflow width="10%" align="center" />
+            <vxe-table-column field="actions" title="操作" align="center" flexd="right" width="10%">
               <template v-slot="{ row }">
                 <span
                   v-isshow="'device:matche:update'"
@@ -822,6 +824,10 @@ export default class Matche extends Vue {
       filename: "执法仪",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
+      columnFilterMethod ({ column }) {
+        return ['code','deviceType','deviceType','deptName','userName','deviceStatusName','lastUploadTime','purchasingDate','warrantyDate'].includes(column.property)
+      }
     })
   }
   private getSelectEvent1() {

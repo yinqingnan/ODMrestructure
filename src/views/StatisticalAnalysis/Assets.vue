@@ -114,7 +114,7 @@ export default class VideoStatistics extends Vue {
   private deptCode: null | string = null
   private defaultdate = []
   private tableColumn = [
-    { type: "seq", width: 50, title: "序号", align: "center", fixed: "left" },
+    { type: "seq", width: 60, title: "序号", align: "center", fixed: "left" },
     {
       field: "deptName",
       title: "部门",
@@ -249,6 +249,7 @@ export default class VideoStatistics extends Vue {
       filename: "资产统计",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
 }

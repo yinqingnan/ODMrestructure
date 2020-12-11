@@ -124,7 +124,7 @@ export default class Login extends Vue {
             localStorage.setItem("navlist", JSON.stringify(arr))
             this.addmenu(concatrouter())
             resetRouter(); //重置路由
-            router.options.routes =concatrouter()
+            router.options.routes = concatrouter()
             router.addRoutes(concatrouter())
             this.$router.push({ name: "Homes" }) //成功后跳转
           }

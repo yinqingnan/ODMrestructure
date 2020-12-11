@@ -141,12 +141,12 @@ export default class RightContent extends Vue {
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private layouts = layouts
+  public Height = ""
   private form: any
   public tabData = []
   public visible = false
   public saveData = {}
   public savaID: string
-  public Height = ""
   // public pagination = {
   //   pageSize: 1000, // 默认每页显示数量
   //   current: 1, //显示当前页数

@@ -23,7 +23,7 @@
                   @submit="handle"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="所属部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         show-search
                         treeNodeFilterProp="title"
@@ -130,10 +130,10 @@ export default class VideoStatistics extends Vue {
   private deptCode: null | string = null
   private defaultdate = []
   private tableColumn = [
-    { type: "seq", width: 50, title: "序号", align: "center", fixed: "left" },
+    { type: "seq", width: 60, title: "序号", align: "center", fixed: "left" },
     {
       field: "deptName",
-      title: "执勤部门",
+      title: "部门",
       showOverflow: true,
       width: 150,
       align: "center",
@@ -223,9 +223,7 @@ export default class VideoStatistics extends Vue {
     return
   }
   public reset() {
-    this.deptCode = null
     this.form.resetFields()
-    this.getdata()
   }
   public handle(e: MouseEvent) {
     e.preventDefault()
@@ -250,6 +248,7 @@ export default class VideoStatistics extends Vue {
       filename: "考评统计",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
 }

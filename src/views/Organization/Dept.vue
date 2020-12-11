@@ -75,7 +75,7 @@
           :tree-config="{lazy: true, children: 'children', hasChild: 'haveChild', loadMethod: loadChildrenMethod}"
           :data="tabData"
         >
-          <vxe-table-column type="seq" title="序号" width="50" align="center" />
+          <vxe-table-column type="seq" title="序号" width="60" align="center" />
           <vxe-table-column
             field="name"
             title="部门名称"
@@ -122,7 +122,7 @@
               >编辑</span>
               <span
                 type="text"
-                @click="remove(row.deptId)"
+                @click="remove(row)"
                 style="color:#0db8df;cursor: pointer;"
                 v-isshow="'base:dept:delete'"
               >删除</span>
@@ -200,14 +200,14 @@
                     {
                       rules: [{ required: true, message: '请输入部门编号' },
                       { validator: (rule, val, callback) => {
-                var reg = new RegExp('^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]{2,}$')
-                if (!reg.test(val)){
-                  callback('部门编号格式不正确,必须数字和字母组合');
+                var reg = new RegExp('[\u4E00-\u9FA5]+');
+                if (reg.test(val)){
+                  callback('部门编号格式不正确,必须数字或字母');
                 }else {
                   callback();
                 }
                   callback();
-                },
+                }
                 }],
                     },
                   ]"
@@ -239,16 +239,8 @@
                     'phone',
                      {
                       rules: [
-                      { validator: (rule, val, callback) => {
-                var reg = new RegExp('^[0-9]*$')
-                if (!reg.test(val)){
-                  callback('格式不正确,必须是数字');
-                }else {
-                  callback();
-                }
-                  callback();
-                },
-                }],
+                        {validator: phonevalidator}
+                      ],
                     },
                   ]"
                   placeholder="请输入联系电话"
@@ -268,7 +260,7 @@
                       rules: [],
                     },
                   ]"
-                  placeholder="请输入部门描述"
+                  placeholder="请输入部门描述（200字符以内）"
                   :auto-size="{ minRows: 3, maxRows: 5 }"
                 />
               </a-form-item>
@@ -441,6 +433,7 @@ export default class Dept extends Vue {
       filename: "部门管理",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
   private imports() {
@@ -496,33 +489,53 @@ export default class Dept extends Vue {
       this.$message.error("未选择文件")
     }
   }
-  private remove(id: string): void {
-    this.getData.removeID({ id: id }).then((res) => {
-      console.log(res)
-      if (res.code == 0) {
-        this.$message.success(res.msg)
-        const val = {
-          parentCode: "parent_top",
-          name_like: "",
-          code_like: "",
+  private remove(row): void {
+    console.log(row)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    this.$confirm({
+        title: '提示',
+        content: `部门删除后无法恢复，确认要删除部门${row.name}吗`,
+        onOk() {
+          _that.getData.removeID({ id: row.deptId }).then((res) => {
+            console.log(res)
+            if (res.code == 0) {
+              _that.$message.success(res.msg)
+              const val = {
+                parentCode: "parent_top",
+                name_like: "",
+                code_like: "",
+              }
+              _that.getList(val)
+            } else {
+              _that.$message.error(res.msg)
+            }
+          })
         }
-        this.getList(val)
-      } else {
-        this.$message.error(res.msg)
-      }
-    })
+      });
+   
   }
   private add(e: any): void {
     this.visible = true
     this.Disable = false
     this.myTitle = "添加部门"
   }
+  private phonevalidator (rule,value,callback){
+    let reg = new RegExp('^[0-9]*$')
+    if(!value){
+      callback()
+    }else if(reg.test(value)){
+      callback()
+    }else{
+      callback('必须为数字')
+    }
+  }
   private handleOk(e: any) {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
-        const obj = {
+        //   var reg = new RegExp('^[0-9]*$')
+        let obj = {
           code: val.code,
           contact: val.contact,
           name: val.name,
@@ -531,24 +544,27 @@ export default class Dept extends Vue {
           remark: val.remark,
           id: this.saveID,
         }
-        // this.getData.saveVal(obj, true).then((res: any) => {
-        //   if (res.code == 0) {
-        //     this.visible = false
-        //     this.form2.resetFields()
-        //     const val = {
-        //       parentCode: "parent_top",
-        //       name_like: "",
-        //       code_like: "",
-        //     }
-        //     const obj = {
-        //       isTop: true,
-        //       notPlatform: true,
-        //     }
-        //     this.getList(val)
-        //     this.getSelect(obj)
-        //     this.saveID = ""
-        //   }
-        // })
+        this.getData.saveVal(obj, true).then((res: any) => {
+          if (res.code == 0) {
+            this.visible = false
+            this.form2.resetFields()
+            const val = {
+              parentCode: "parent_top",
+              name_like: "",
+              code_like: "",
+            }
+            const obj = {
+              isTop: true,
+              notPlatform: true,
+            }
+            this.getList(val)
+            this.getSelect(obj)
+            this.saveID = ""
+          }else{
+            this.$message.error(res.msg)
+          }
+        })
+        
       }
     })
   }

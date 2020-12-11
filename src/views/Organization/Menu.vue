@@ -71,30 +71,30 @@
               title="按钮名称"
               show-overflow
               align="center"
-              minWidth="100"
+              width="10%"
             />
             <vxe-table-column
               field="permission"
               title="按钮关键字"
               show-overflow
               align="center"
-              minWidth="140"
+              width="20%"
             />
             <vxe-table-column
               field="createUser"
               title="创建人"
               show-overflow
               align="center"
-              minWidth="100"
+              width="10%"
             />
             <vxe-table-column
               field="createTime"
               title="创建时间"
               show-overflow
               align="center"
-              minWidth="180"
+              width="15%"
             />
-            <vxe-table-column title="操作" show-overflow align="center" fixed="right" minWidth="100">
+            <vxe-table-column title="操作" show-overflow align="center" fixed="right" width="10%">
               <template v-slot="{ row }">
                 <span
                   type="text"
@@ -105,7 +105,7 @@
               </template>
             </vxe-table-column>
           </vxe-table>
-          <p>
+          <p class="pbg">
             <vxe-pager
               align="right"
               size="mini"
@@ -723,10 +723,10 @@ export default class Menu extends Vue {
     width: 280px;
     // background: pink;
     .menuleft_header {
-      height: 43px;
+      height: 41px;
       line-height: 1;
       background: #fff;
-      border-bottom: 1px solid #999;
+      border-bottom: 1px solid #e8eaec;
       button {
         margin-top: 5px;
         margin-left: 20px;
@@ -740,6 +740,7 @@ export default class Menu extends Vue {
     // background: skyblue;
     div:nth-of-type(1) {
       padding: 0;
+      // margin: 0 26px
     }
   }
 }
@@ -754,13 +755,10 @@ export default class Menu extends Vue {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   // height 90px
 }
-#Tree .tree_menu button {
-  // border 0;
-  // height 30px;
-}
-#Tree .tree_menu ul {
-  // margin: 0;
-  // padding 0;
+.pbg{
+  div{
+    background: #fff;
+  }
 }
 .gzms /deep/ .ant-form-item-label {
   width: 100px;

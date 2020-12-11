@@ -104,7 +104,7 @@
                 <a-input
                   v-decorator="['name', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                   :max-length="LimitInputlength"
-                  placeholder="请输入民警姓名"
+                  placeholder="请输入角色名称"
                 >/></a-input>
               </a-form-item>
             </a-col>
@@ -274,6 +274,7 @@ export default class Role extends Vue {
   }
   private edit(row) {
     this.status = "编辑"
+    this.str = "编辑"
     this.id = row.id
     this.visible = true
     this.$nextTick(() => {

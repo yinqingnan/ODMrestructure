@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-04 10:37:06
+ * @LastEditTime: 2020-12-11 14:12:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\main.ts
+ * @FilePath: \src\main.ts
  */
 // 使用命令行打开浏览器
 // C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chrome.exe 
@@ -115,6 +115,9 @@ router.beforeEach((to, from, next) => {
     }
   }
   NProgress.done();
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
   next();
 });
 

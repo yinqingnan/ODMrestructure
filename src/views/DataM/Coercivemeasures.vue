@@ -127,12 +127,12 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
           >
-            <vxe-table-column type="seq" width="50" title="序号" align="center" />
+            <vxe-table-column type="seq" width="60" title="序号" align="center" />
             <vxe-table-column
               field="code"
               title="凭证编号"
               align="center"
-              min-width="100"
+              min-width="130"
               show-overflow
             >
               <template v-slot="{ row }">
@@ -394,7 +394,7 @@
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
           >
-            <vxe-table-column type="checkbox" width="50" align="center" />
+            <vxe-table-column type="checkbox" width="60" align="center" />
             <vxe-table-column field="fileName" title="文件名称" align="center"  min-width="150" show-overflow>
               <template v-slot="{ row }">
                 <vxe-button type="text" @click="Playvideo(row)" style="color:#0db8df">{{row.fileName}}</vxe-button>
@@ -580,6 +580,7 @@ export default class Coercivemeasures extends Vue {
   }
   private reset() {
     this.form.resetFields()
+    this.form1.resetFields()
   }
   private onChange(date: any, dateString: any): void {
     this.selectdata = dateString
@@ -807,7 +808,6 @@ export default class Coercivemeasures extends Vue {
         if (val.Filetype == undefined) {
           val.Filetype = ""
         }
-        console.log(val)
         if (val.Filetype == "请选择") {
           val.Filetype = ""
         }
@@ -821,8 +821,8 @@ export default class Coercivemeasures extends Vue {
             val.date[1]
           ).format("YYYY-MM-DD")}`,
           notIds: JSON.stringify(this.WithID),
-          recordDate_gt: val.date[0].format("YYYY-MM-DD HH:mm:ss"),
-          recordDate_lt: val.date[1].format("YYYY-MM-DD HH:mm:ss"),
+          recordDate_gt: moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss"),
+          recordDate_lt: moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss"),
         }
         console.log(obj)
         this.DataM.Associatedfiles(obj).then((res) => {

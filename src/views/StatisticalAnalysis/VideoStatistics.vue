@@ -22,7 +22,7 @@
                   @submit="handle"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="所属部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         show-search
                         treeNodeFilterProp="title"
@@ -153,10 +153,10 @@ export default class VideoStatistics extends Vue {
   private deptCode: null | string = null
   private defaultdate = []
   private tableColumn = [
-    { type: "seq", width: 50, title: "序号", align: "center", fixed: "left" },
+    { type: "seq", width: 60, title: "序号", align: "center", fixed: "left" },
     {
       field: "deptName",
-      title: "执勤部门",
+      title: "部门",
       showOverflow: true,
       minWidth: 100,
       align: "center",
@@ -169,13 +169,6 @@ export default class VideoStatistics extends Vue {
       align: "center",
       slots: { default: "nameslot" },
     },
-    // {
-    //   field: "policeNum",
-    //   title: "民警警号",
-    //   showOverflow: true,
-    //   minWidth: 100,
-    //   align: "center",
-    // },
     {
       title: "视频",
       align: "center",
@@ -308,14 +301,14 @@ export default class VideoStatistics extends Vue {
     return
   }
   public reset() {
-    this.deptCode = null
+    // this.deptCode = null
     this.form.resetFields()
-    this.getdata()
   }
   public handle(e: MouseEvent) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val)
         let date =
           val.date[0].format("YYYY-MM-DD") +
           "~" +
@@ -323,6 +316,7 @@ export default class VideoStatistics extends Vue {
         let obj = {
           page: 1,
           limit: 15,
+          policeName:val.name,
           deptCode: val.department,
           level: val.deviceStatus,
           dateRange: date,
@@ -336,6 +330,7 @@ export default class VideoStatistics extends Vue {
       filename: "摄录统计",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
 }

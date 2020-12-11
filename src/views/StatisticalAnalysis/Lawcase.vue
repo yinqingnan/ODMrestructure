@@ -23,7 +23,7 @@
                   @submit="handle"
                 >
                   <el-scrollbar class="screen">
-                    <a-form-item label="所属部门">
+                    <a-form-item label="部门">
                       <a-tree-select
                         show-search
                         treeNodeFilterProp="title"
@@ -80,6 +80,7 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-grid
             border
+            show-header-overflow
             stripe
             resizable
             height="auto"
@@ -88,6 +89,7 @@
             class="mytable-scrollbar"
             ref="gltj"
             :row-class-name="tableRowClassName"
+            :export-config="{}"
           >
             <!-- <template v-slot:nameslot="{ row }">{{row}}</template> -->
           </vxe-grid>
@@ -131,10 +133,10 @@ export default class VideoStatistics extends Vue {
   private deptCode: null | string = null
   private defaultdate = []
   private tableColumn = [
-    { type: "seq", width: 50, title: "序号", align: "center", fixed: "left" },
+    { type: "seq", width: 60, title: "序号", align: "center", fixed: "left" },
     {
       field: "deptName",
-      title: "执勤部门",
+      title: "部门",
       showOverflow: true,
       width: 150,
       align: "center",
@@ -157,7 +159,7 @@ export default class VideoStatistics extends Vue {
       ],
     },
     {
-      title: "简易流程",
+      title: "简易程序",
       align: "center",
       children: [
         { field: "summaryTotal", title: "执法总数", align: "center" },
@@ -201,7 +203,7 @@ export default class VideoStatistics extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     this.deptCode = localStorage.getItem("deptCode")
-    console.log(this.deptCode)
+    // console.log(this.deptCode)
   }
   private mounted() {
     this.getdata()
@@ -239,9 +241,7 @@ export default class VideoStatistics extends Vue {
     return
   }
   public reset() {
-    this.deptCode = null
     this.form.resetFields()
-    this.getdata()
   }
   public handle(e: MouseEvent) {
     e.preventDefault()
@@ -267,8 +267,10 @@ export default class VideoStatistics extends Vue {
       filename: "关联统计",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
+
 }
 </script>
 

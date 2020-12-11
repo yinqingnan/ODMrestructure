@@ -29,7 +29,7 @@
                         v-decorator="[
                         'department',
                         {
-                          initialValue: '',
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -54,7 +54,7 @@
                         placeholder="请输入姓名/警号"
                       >/></a-input>
                     </a-form-item>
-                    <a-form-item label="时间">
+                    <a-form-item label="报修时间">
                       <a-range-picker
                         :allowClear="false"
                         :show-time="{
@@ -154,15 +154,15 @@ export default class Repairrecord extends Vue {
   private layouts = layouts
   private tableColumn = [
     { width: 60, fixed: null, title: "序号", align: "center", type: "seq" },
-    { field: "reportUserCode", title: "报修人" },
-    { field: "matcheCode", title: "产品序号", width: 80 },
-    { field: "deviceType", title: "设备类型" },
-    { field: "deptName", title: "所属部门" },
-    { field: "affectUserNames", title: "影响民警(警号)" },
-    { field: "createTime", title: "保修时间" },
-    { field: "reportTime", title: "故障开始时间" },
-    { field: "activeTime", title: "启用时间" },
-    { field: "repairsDesc", title: "故障描述" },
+    { field: "reportUserCode", title: "报修人" , width:'10%', align: "center"},
+    { field: "matcheCode", title: "产品序号", width:'10%' , align: "center"},
+    { field: "deviceType", title: "设备类型" , width:'10%', align: "center"},
+    { field: "deptName", title: "所属部门", width:'10%', align: "center" },
+    { field: "affectUserNames", title: "影响民警(警号)" , width:'10%', align: "center"},
+    { field: "createTime", title: "保修时间" , width:'10%', align: "center"},
+    { field: "reportTime", title: "故障开始时间", width:'10%' , align: "center"},
+    { field: "activeTime", title: "启用时间" , width:'10%', align: "center"},
+    { field: "repairsDesc", title: "故障描述" , width:'10%', align: "center"},
   ]
   // todo 生命周期
   private created() {

@@ -454,6 +454,7 @@ export default class Stations extends Vue {
       filename: "采集站",
       sheetName: "Sheet1",
       type: "xlsx",
+      message:false,
     })
   }
 }

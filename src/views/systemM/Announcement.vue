@@ -49,29 +49,111 @@
       </div>
       <!-- 内容 -->
       <div class="content">
-        <a-table
-          :columns="columns"
-          :data-source="tabData"
-          bordered
-          :scroll="{ x: 1300 }"
-          :rowClassName="rowClassName"
-          :pagination="pagination"
-          @change="healthyTableChange"
-          rowKey="id"
-        >
-          <template
-            slot="index"
-            slot-scope="text, record, index"
-          >{{ (pagination.current - 1) * pagination.pageSize + index + 1 }}</template>
-          <template slot="operation" slot-scope="text, record">
-            <div class="linkBox">
-              <a-button type="link" block @click="edit(record)" v-isshow="'system:notice:update'">编辑</a-button>
-              <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="remove(record.id)">
-                <a-button type="link" block v-isshow="'system:notice:delete'">删除</a-button>
-              </a-popconfirm>
-            </div>
-          </template>
-        </a-table>
+        <div class :style="{height:Height}">
+          <vxe-table
+            stripe
+            border
+            height="auto"
+            ref="logAdministration"
+            highlight-hover-row
+            class="mytable-scrollbar"
+            show-header-overflow
+            :row-class-name="tableRowClassName"
+            :data="tabData"
+          >
+            <vxe-table-column type="seq" width="60" align="center" title="序号" />
+            <vxe-table-column
+              field="title"
+              title="公告标题"
+              show-overflow
+              align="center"
+              minWidth="120"
+            />
+            <vxe-table-column field="type" title="公告类型" show-overflow align="center" minWidth="80" />
+            <vxe-table-column
+              field="createTime"
+              title="创建时间"
+              show-overflow
+              align="center"
+              minWidth="150"
+            />
+            <vxe-table-column
+              field="sendTime"
+              title="发送时间"
+              show-overflow
+              align="center"
+              minWidth="150"
+            />
+            <vxe-table-column
+              field="endTime"
+              title="截止时间"
+              show-overflow
+              align="center"
+              minWidth="150"
+            />
+            <vxe-table-column
+              field="sendUserName"
+              title="发布民警姓名"
+              show-overflow
+              align="center"
+              minWidth="120"
+            />
+            <vxe-table-column
+              field="sendUserCode"
+              title="发布民警警号"
+              show-overflow
+              align="center"
+              minWidth="120"
+            />
+            <vxe-table-column
+              field="acceptDeptNames"
+              title="接收部门"
+              show-overflow
+              align="center"
+              minWidth="100"
+            />
+            <vxe-table-column
+              field="content"
+              title="公告内容"
+              show-overflow
+              align="center"
+              minWidth="150"
+            />
+            <vxe-table-column
+              field=""
+              title="操作"
+              align="center"
+              minWidth="120"
+              fixed="right"
+            >
+              <template v-slot="{ row }">
+                <div class="linkBox">
+                  <a-button
+                    type="link"
+                    block
+                    @click="edit(row)"
+                    v-isshow="'system:notice:update'"
+                  >编辑</a-button>
+                  <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="remove(row.id)">
+                    <a-button type="link" block v-isshow="'system:notice:delete'">删除</a-button>
+                  </a-popconfirm>
+                </div>
+              </template>
+            </vxe-table-column>
+          </vxe-table>
+          <p>
+            <vxe-pager
+              align="right"
+              size="mini"
+              :layouts="layouts"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              :page-sizes="[15, 50, 100, 200]"
+              @page-change="pagerchange"
+            />
+          </p>
+        </div>
       </div>
       <!-- 弹出层 -->
       <a-modal
@@ -221,6 +303,12 @@
 // import { PropType } from "vue";
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
+import {
+  layouts,
+  LimitInputlength,
+  page,
+  textarealength,
+} from "@/InterfaceVariable/variable"
 import { http } from "../../api/interceptors"
 @Component({
   components: {},
@@ -233,6 +321,11 @@ export default class RightContent extends Vue {
     labelCol: { span: 7 },
     wrapperCol: { span: 15 },
   }
+  private page = page
+  private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
+  private layouts = layouts
+  public Height = ""
   public myTitle = "添加公告"
   private form: any
   public treeData = []
@@ -256,7 +349,7 @@ export default class RightContent extends Vue {
     {
       title: "序号",
       className: "pd10",
-      width: 70,
+      width: 60,
       dataIndex: "index",
       fixed: "left",
       scopedSlots: { customRender: "index" },
@@ -322,7 +415,7 @@ export default class RightContent extends Vue {
       className: "pd10",
       width: 180,
       fixed: "right",
-    }
+    },
   ]
   beforeCreate() {
     this.form = this.$form.createForm(this)
@@ -337,11 +430,22 @@ export default class RightContent extends Vue {
     this.getList(val)
     this.getSL()
   }
+  mounted() {
+     this.Height = `${document.documentElement.clientHeight - 230}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    }) 
+  }
   private getList(val: any) {
     this.getData.getNotices(val, true).then((res: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      this.tabData = res.data
-      this.pagination.total = res.pages * 1
+      console.log(res)
+      if(res.data){
+        this.tabData = res.data
+        this.page.totalResult =parseInt(res.count) 
+      }
+      
     })
   }
 
@@ -482,9 +586,15 @@ export default class RightContent extends Vue {
     const data = `status=${this.seachKey}`
     window.open(http + "api/pconfig/system/notice/export?" + data)
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private rowClassName(record: any, index: number): string {
-    return index % 2 === 0 ? "bgF5" : ""
+  private pagerchange({ currentPage, pageSize }) {
+    // let val = {
+    //   page: currentPage,
+    //   limit: pageSize,
+    // }
+    // this.getList(val)
+  }
+  private tableRowClassName(record: any, index: number) {
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
 }
 </script>
