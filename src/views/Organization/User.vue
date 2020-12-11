@@ -248,25 +248,17 @@
               <a-form-item label="警号">
                 <a-input
                   :disabled = "codedisabled"
-                  v-decorator="['code', { initialValue: '',
-                  rules: [
-                    { required: true, message: '必填项不能为空' },{ required: true, message: '请输入部门编号' },
-                      { validator: (rule, val, callback) => {
-                      var reg = new RegExp('[\u4E00-\u9FA5]+');
-                      if (reg.test(val)){
-                        callback('警号格式不正确,必须数字或字母');
-                      }else {
-                        callback();
-                      }
-                        callback();
-                      },
-                      }
-                  ] 
+                  v-decorator="['code', 
+                  { initialValue: '',
+                    rules: [
+                    { required: true, message: '请输入部门编号' },
+                    { validator: codevalidator}
+                    ]
                   }
                   ]"
                   :max-length="LimitInputlength"
                   placeholder="请输入民警警号"
-                >/></a-input>
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -404,7 +396,6 @@
           <div class="qrcode" ref="qrCodeUrl"></div>
         </div>
       </a-modal>
-
       <a-modal
         v-model="importshow"
         title="用户导入"
@@ -437,6 +428,7 @@
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
@@ -1019,11 +1011,16 @@ export default class User extends Vue {
       callback('身份证格式不对')
     }
   }
+  private codevalidator(rule, value, callback) {
+    let reg = new RegExp('[\u4E00-\u9FA5]+')
+    if(!reg.test(value)){
+      callback()
+    }else{
+      callback('警号格式不对，必须是数字或字母')
+    }
+  }
 }
 </script>
-
-
-
 <style lang="less" scope>
 .el-scrollbar__wrap {
   width: 100%;
@@ -1060,5 +1057,8 @@ export default class User extends Vue {
   img {
     margin: 0 auto;
   }
+}
+.col--checkbox{
+  margin: 0 atuo;
 }
 </style>
