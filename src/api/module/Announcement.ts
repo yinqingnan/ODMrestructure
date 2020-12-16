@@ -74,7 +74,6 @@ export class Announcement {
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -82,7 +81,18 @@ export class Announcement {
       });
     });
   }
-
+  public editVal(params: object) {
+    const url = "/api/pconfig/system/notice/update";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
   public removeItem(params: object, jwt: boolean, flag: string) {
     const url = "/api/pconfig/system/notice/delete";
     const body = params

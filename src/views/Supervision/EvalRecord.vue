@@ -111,6 +111,7 @@
             highlight-hover-row
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
+            show-header-overflow
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
@@ -144,8 +145,6 @@
             >
                <template v-slot="{ row }">{{row.userName}}({{row.userCode}})</template>
             </vxe-table-column>
-         
-            <vxe-table-column field="fileType_Name" title="文件类型" width="100" align="center" />
             <vxe-table-column
               field="recordDate"
               title="摄录时间"
@@ -329,12 +328,13 @@
                 <a-form
                   :form="form2"
                   :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
+                  :wrapper-col="{ span: 16 }"
                   v-if="!Emptystate"
                 >
                   <el-scrollbar style="height:300px;width: 397px;">
                     <a-form-item label="标注类型">
                       <a-select
+                        disabled
                         placeholder="请选择标注类型"
                         v-decorator="[
                         'labelType',
@@ -342,6 +342,7 @@
                           initialValue: undefined,
                           rules: [{ required: true, message: '必填项不能为空' }]
                         }
+
                       ]"
                       >
                         <a-select-option v-for="d in taggingselect1" :key="d.key">{{ d.value }}</a-select-option>
@@ -349,6 +350,7 @@
                     </a-form-item>
                     <a-form-item label="标注子类">
                       <a-select
+                        disabled  
                         placeholder="请选择标注子类"
                         v-decorator="[
                         'labelSubclass',
@@ -363,6 +365,7 @@
                     </a-form-item>
                     <a-form-item label="车牌号码">
                       <a-input
+                        disabled
                         placeholder="没有车牌号，请填写无"
                         :max-length="LimitInputlength"
                         v-decorator="[
@@ -376,6 +379,8 @@
                     </a-form-item>
                     <a-form-item label="采集时间" class="biaozhu">
                       <a-date-picker
+                        disabled
+                        style="width：200px"
                         placeholder="请选择采集时间"
                         v-decorator="[
                         'gatheringTime',
@@ -388,6 +393,7 @@
                     </a-form-item>
                     <a-form-item label="采集地址">
                       <a-input
+                        disabled
                         placeholder="请输入采集地址（30字以内）"
                         :max-length="LimitInputlength"
                         v-decorator="[
@@ -401,6 +407,7 @@
                     </a-form-item>
                     <a-form-item label="标注描述">
                       <a-textarea
+                        disabled
                         placeholder="请输入标注描述（200字以内）"
                         style="display: flex;overflow-y:auto;resize: none;"
                         allowClear
@@ -807,11 +814,10 @@ export default class EvalRecord extends Vue {
 
   private tabchange(activeKey) {
     if (activeKey == 3) {
-      this.DataM.getfiletagging().then((res) => {
-        console.log(res.data)
-          this.Emptystate = true
+      this.DataM.getfiletagging(this.fileCode).then((res) => {
         if (res.data) {
-          console.log("有值")
+           console.log("有值")
+          this.Emptystate = false
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
           this.DataM.taggingselect1().then((res) => {
@@ -835,6 +841,8 @@ export default class EvalRecord extends Vue {
               })
             })
           })
+        }else{
+          this.Emptystate = true
         }
       })
     }
@@ -924,6 +932,12 @@ export default class EvalRecord extends Vue {
 .AvData {
   .vjs-custom-skin > .video-js {
     height: 423px;
+  }
+}
+.biaozhu {
+   .ant-calendar-picker {
+     width: 100% !important;
+    // width: 276px !important;
   }
 }
 </style>

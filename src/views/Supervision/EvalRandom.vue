@@ -70,9 +70,10 @@
                     </a-form-item>
                     <a-form-item label="生成条数">
                       <a-input
+                        :max-length="LimitInputlength"
                         v-decorator="['count', {
                           initialValue: '',
-                          rules: []
+                          rules:  [{validator: phonevalidator}]
                         }]"
                         placeholder="请输入查询条数"
                       />
@@ -100,6 +101,7 @@
             highlight-hover-row
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
+            show-header-overflow
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
@@ -108,7 +110,7 @@
               align="left"
               header-align="center"
               show-overflow
-              width="25%"
+              width="20%"
             >
               <template v-slot="{ row }">
                  <span
@@ -123,7 +125,7 @@
                 <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="deptName" title="部门" align="center" min-width="15%"/>
+            <vxe-table-column field="deptName" title="部门" align="center" min-width="10%"/>
              <vxe-table-column
               field="userName"
               title="姓名/警号"
@@ -262,12 +264,13 @@
                 <a-form
                   :form="form2"
                   :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
+                  :wrapper-col="{ span: 16 }"
                   v-if="!Emptystate"
                 >
                   <el-scrollbar style="height:300px;width: 397px;">
                     <a-form-item label="标注类型">
                       <a-select
+                        disabled
                         placeholder="请选择标注类型"
                         v-decorator="[
                         'labelType',
@@ -282,6 +285,7 @@
                     </a-form-item>
                     <a-form-item label="标注子类">
                       <a-select
+                        disabled
                         placeholder="请选择标注子类"
                         v-decorator="[
                         'labelSubclass',
@@ -296,6 +300,7 @@
                     </a-form-item>
                     <a-form-item label="车牌号码">
                       <a-input
+                        disabled
                         :max-length="LimitInputlength"
                         placeholder="没有车牌号，请填写无"
                         v-decorator="[
@@ -309,6 +314,7 @@
                     </a-form-item>
                     <a-form-item label="采集时间" class="biaozhu">
                       <a-date-picker
+                        disabled
                         placeholder="请选择采集时间"
                         v-decorator="[
                         'gatheringTime',
@@ -321,6 +327,7 @@
                     </a-form-item>
                     <a-form-item label="采集地址">
                       <a-input
+                        disabled
                         placeholder="请输入采集地址（30字以内）"
                         :max-length="LimitInputlength"
                         v-decorator="[
@@ -334,6 +341,7 @@
                     </a-form-item>
                     <a-form-item label="标记描述">
                       <a-textarea
+                        disabled
                         placeholder="请输入标注描述（200字以内）"
                         style="display: flex;overflow-y:auto;resize: none;"
                         allowClear
@@ -361,9 +369,10 @@
               <a-tab-pane key="4" tab="评价">
                 <a-form
                   :form="form3"
-                  :label-col="{ span:4 }"
-                  :wrapper-col="{ span: 20 }"
+                  :label-col="{ span:6 }"
+                  :wrapper-col="{ span: 18 }"
                   @submit="pingjiaSubmit"
+                  class="pingjia"
                 >
                   <a-form-item label="评价总分">
                     <a-input
@@ -414,16 +423,18 @@
                   </a-form-item>
                   <a-form-item label="评分说明">
                     <a-textarea
+                     :max-length="textarealength"
                       style="display: flex;overflow-y:auto;resize: none;"
                       allowClear
                       v-decorator="[
                       'remarks',
                       {
                         initialValue: '',
-                        rules: [],
+                        rules: [{ required: true, message: '必填项不能为空' }],
                       },
                     ]"
                       :autoSize="{ minRows: 3, maxRows: 3 }"
+                      placeholder="请输入评分说明（200字符以内）"
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
@@ -456,7 +467,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts ,textarealength} from "@/InterfaceVariable/variable"
 import moment from "moment"
 @Component({
   components: {},
@@ -470,6 +481,7 @@ export default class EvalRandom extends Vue {
   public DataM = new this.$api.configInterface.DataM()
   public Supervision = new this.$api.configInterface.Supervision()
   private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
   private departmentData = []
   private defaultdate = []
   private page = page
@@ -580,7 +592,6 @@ export default class EvalRandom extends Vue {
   }
   private reset() {
     this.form.resetFields()
-    this.getdata()
   }
   private onChange(date: any, dateString: any): void {
     this.selectdata = dateString
@@ -589,11 +600,12 @@ export default class EvalRandom extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       console.log(val)
-      if (val.count == "") {
-        this.$message.warning("请输入需要随机抽查的条数。")
-      } else if (val.department == "") {
+     
+      if (val.department == "" || val.department == null) {
         this.$message.warning("请选择需要抽查的部门")
-      } else {
+      } else if (val.count == "") {
+        this.$message.warning("请输入需要随机抽查的条数。")
+      }else {
         console.log(val)
       }
       this.formdata = val
@@ -718,10 +730,10 @@ export default class EvalRandom extends Vue {
 
   private tabchange(activeKey) {
     if (activeKey == 3) {
-      this.DataM.getfiletagging().then((res) => {
-        this.Emptystate = true
+      this.DataM.getfiletagging(this.fileCode).then((res) => {
         if (res.data) {
           console.log("有值")
+          this.Emptystate = false
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
           this.DataM.taggingselect1().then((res) => {
@@ -745,6 +757,8 @@ export default class EvalRandom extends Vue {
               })
             })
           })
+        }else{
+          this.Emptystate = true
         }
       })
     }
@@ -830,6 +844,16 @@ export default class EvalRandom extends Vue {
    }
    return str
   }
+  private phonevalidator (rule,value,callback){
+    let reg = new RegExp('^[0-9]*$')
+    if(!value){
+      callback()
+    }else if(reg.test(value)){
+      callback()
+    }else{
+      callback('必须为数字')
+    }
+  }
 }
 </script>
 
@@ -884,6 +908,17 @@ export default class EvalRandom extends Vue {
 .AvData {
   .vjs-custom-skin > .video-js {
     height: 423px;
+  }
+}
+.pingjia{
+  .ant-form-item{
+    margin-bottom:6px
+  }
+}
+.biaozhu {
+   .ant-calendar-picker {
+     width: 100% !important;
+    // width: 276px !important;
   }
 }
 </style>

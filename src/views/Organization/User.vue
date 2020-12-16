@@ -329,7 +329,7 @@
                   style="width: 100%"
                   placeholder="请选择岗位..."
                 >
-                  <a-select-option v-for="d in postlist" :key="d.dictKey">{{ d.remark }}</a-select-option>
+                  <a-select-option v-for="d in postlist" :key="d.dictKey">{{ d.value }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -377,7 +377,7 @@
                 allowClear
                 rows="3"
                 style="resize: none;"
-                placeholder="最大支持输入字数200..."
+                placeholder="请输入备注（200字符以内）"
                 v-decorator="[
                         'remarks',
                         {
@@ -516,6 +516,8 @@ export default class User extends Vue {
   }
   private gettabledata(obj) {
     this.OrganizationM.getusertable(obj).then((res) => {
+      console.log(res);
+      
       this.tableData = res.data
       this.page.totalResult = parseInt(res.count)
     })
@@ -540,18 +542,17 @@ export default class User extends Vue {
       this.departmentData = res.data
     })
     this.OrganizationM.userroleselect().then((res) => {
-      console.log(res)
       this.userroleData = res.data
     })
     this.OrganizationM.userdeptCodeselect({ notPlatform: true }).then((res) => {
       this.deptCodeData = res.data
     })
-    //
     this.OrganizationM.userpostlistselect({ parentKey: "position" }).then(
       (res) => {
+        console.log(res)
         let obj = {
           dictKey: "请选择岗位",
-          remark: "请选择岗位",
+          value: "请选择岗位",
         }
         this.postlist = res.data
         this.postlist.unshift(obj)
@@ -590,10 +591,8 @@ export default class User extends Vue {
     let selectRecords = (this.$refs.usertable as any).getCheckboxRecords()
     return selectRecords
   }
-
   // 添加
   private add() {
-    console.log(123)
     this.str = "添加用户"
     this.visible = true
     this.status = "新增"
@@ -683,11 +682,8 @@ export default class User extends Vue {
           title: "提示",
           content: `您确定要重置用户${arr[0].name}(警号${arr[0].code})的密码为111111吗？`,
           onOk() {
-            return new Promise((resolve, reject) => {
-              setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
               _that.OrganizationM.userresetpwd(newarr).then((res) => {
                 _that.$message.info(res.msg)
-              })
             }).catch(() => console.log("Oops errors!"))
           },
         })
@@ -972,11 +968,13 @@ export default class User extends Vue {
           },
         })
         .then((res: any) => {
-          if (res == "ok") {
+          if (res.data == "ok") {
             this.importshow = false
             this.iserror = false
             this.fileList = []
             this.filename = ""
+            this.$message.success('导入成功')
+
           } else {
             this.iserror = true
             this.errormsg = res.data

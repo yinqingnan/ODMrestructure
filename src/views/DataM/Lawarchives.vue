@@ -1,3 +1,10 @@
+<!--
+ * @Descripttion: 
+ * @Autor: yqn
+ * @Date: 2020-12-01 11:37:14
+ * @LastEditTime: 2020-12-15 15:28:40
+ * @FilePath: \src\views\DataM\Lawarchives.vue
+-->
 
 <template>
   <div class="layoutcontainer">
@@ -7,13 +14,13 @@
       </div>
       <div  class="lawarchives" >
         <div class="lawarchivescontent">
-          视频关联档案：前
+          视音频关联案件违法时间范围：前
           <a-input placeholder v-model="time1" @blur="inputchange"/>
           分钟，后
           <a-input placeholder v-model="time2" @blur="inputchange"/>
           分钟。
         </div>
-        <p>示例：假设案件违法时间为10:00,自动关联的视频排石时间范围为9:15 - 10:30</p>
+        <p>示例：假设案件违法时间为10:00,自动关联的视频拍摄时间范围为{{inputContent}}</p>
       </div>
     </div>
   </div>
@@ -22,6 +29,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
 import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
+import { set } from "xe-utils/methods"
+import moment from "moment"
 @Component({})
 export default class Lawarchives extends Vue {
   //
@@ -40,6 +49,17 @@ export default class Lawarchives extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
   }
+  
+// private timecompute(time1? , time2?){
+//   let str = '123'
+//   return str
+// }
+  get inputContent() {
+    // moment(m2 - m1).format('HH时mm分ss秒');
+    console.log()
+    console.log()
+    return `${moment('10:00','hh:mm').subtract(parseInt(this.time1), "minutes").format('hh:mm')} ~ ${moment('10:00','hh:mm').add(parseInt(this.time2), "minutes").format('hh:mm')}`;
+  }
   private getdata() {
     this.DataM.getrelationdata({}).then((res: any) => {
       console.log(res)
@@ -48,16 +68,28 @@ export default class Lawarchives extends Vue {
     })
   }
   private inputchange(){
-    this.DataM.relationsave({
-      match_floor: this.time2,
-      match_limit: this.time1,
-    }).then((res) => {
-      console.log(res)
-      if (res.code == 0) {
-        this.$message.success(res.msg)
-        this.getdata()
+    let reg: any = new RegExp((/(^[1-9]\d*$)/))
+    if(reg.test(this.time1) && reg.test(this.time2)){
+      if(parseInt(this.time1)  <= 180 && parseInt(this.time2)  <= 180){
+        this.DataM.relationsave({
+            match_floor: this.time2,
+            match_limit: this.time1,
+        }).then((res) => {
+            if (res.code == 0) {
+              this.$message.success(res.msg)
+              this.getdata()
+            }
+        })
+      }else{
+      this.$message.error("偏移时间输入不正确，请输入0到180之间的整数")
       }
-    })
+    }else{
+      this.$message.error("偏移时间输入不正确，请输入0到180之间的整数")
+    }
+    
+   
+
+   
   }
 }
 </script>

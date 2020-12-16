@@ -475,11 +475,12 @@ export default class Dept extends Vue {
           },
         })
         .then((res: any) => {
-          if (res == "ok") {
+          if (res.data == "ok") {
             this.importshow = false
             this.iserror = false
             this.fileList = []
             this.filename = ""
+            this.$message.success('导入成功')
           } else {
             this.iserror = true
             this.errormsg = res.data

@@ -369,7 +369,7 @@
                         ]"
                         />
                       </a-form-item>
-                      <a-form-item label="采集时间" class="biaozhu">
+                      <a-form-item label="采集时间" class="biaozhus">
                         <a-date-picker
                           placeholder="请选择采集时间"
                           v-decorator="[
@@ -814,6 +814,7 @@ export default class AvData extends Vue {
     } else {
       // 弹窗文件信息
       this.DataM.getfiledetails(row.id).then((res) => {
+        
         this.visible = true
         this.fileCode = row.code
         this.fileId = row.id
@@ -1430,7 +1431,7 @@ export default class AvData extends Vue {
     height: 423px;
   }
 }
-.biaozhu {
+.biaozhus {
   .ant-calendar-picker {
     width: 276px !important;
   }

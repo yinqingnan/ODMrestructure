@@ -19,8 +19,8 @@
               style="display:flex;flex-wrap:wrap"
               autocomplete="off"
               :form="form"
-              :label-col="{ span: 4 }"
-              :wrapper-col="{ span: 18 }"
+              :label-col="{ span: 6 }"
+              :wrapper-col="{ span: 16 }"
               @submit="handleSubmit"
             >
               <a-col style="width:33%" v-for="(item,index) in list" :key="index">
@@ -38,10 +38,7 @@
                     :maxLength="LimitInputlength"
                     v-decorator="['Points'+index, {
                           initialValue: item.jffz,
-                          rules: [],
-                          getValueFromEvent: (event) => {
-                return event.target.value.replace(/[\u4E00-\u9FA5]/g,'')
-            }
+                          rules: [{validator: phonevalidator}],
                         }]"
                   />
                 </a-form-item>
@@ -102,37 +99,50 @@ export default class EvalSet extends Vue {
       if (res.code == 0) {
         this.$message.success(res.msg)
         this.getdata()
+      } else {
+        this.$message.error(res.msg)
       }
     })
   }
   public handleSubmit(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
-      let arr = [],
-        val2 = [],
-        vals = []
-      vals = Object.values(val)
-
-      for (var i = 0; i < vals.length; i += 3) {
-        val2.push(vals.slice(i, i + 3))
+      if (!err) {
+        let arr = [],
+          val2 = [],
+          vals = []
+        vals = Object.values(val)
+        for (var i = 0; i < vals.length; i += 3) {
+          val2.push(vals.slice(i, i + 3))
+        }
+        val2.map((item) => {
+          let obj = {
+            jfmc: item[0],
+            jfbh: item[2],
+            jffz: parseInt(item[1]),
+          }
+          arr.push(obj)
+        })
+        let arr2 = []
+        arr.map((item) => {
+          if (item.jfmc != "") {
+            arr2.push(item)
+          }
+        })
+        console.log(arr2)
+        this.EvaluationSave(arr2)
       }
-      val2.map((item) => {
-        let obj = {
-          jfmc: item[0],
-          jfbh: item[2],
-          jffz: parseInt(item[1]),
-        }
-        arr.push(obj)
-      })
-      let arr2 = []
-      arr.map((item) => {
-        if (item.jfmc != "") {
-          arr2.push(item)
-        }
-      })
-      console.log(arr2)
-      this.EvaluationSave(arr2)
     })
+  }
+  private phonevalidator(rule, value, callback) {
+    let reg = new RegExp("^[0-9]*$")
+    if (!value) {
+      callback()
+    } else if (reg.test(value)) {
+      callback()
+    } else {
+      callback("必须为数字")
+    }
   }
   public add() {
     let len = this.list.length

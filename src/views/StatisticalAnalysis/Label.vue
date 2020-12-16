@@ -30,7 +30,7 @@
                         v-decorator="[
                         'department',
                         {
-                          initialValue: deptCode,
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -45,8 +45,15 @@
                         value: 'value',
                         title: 'name',
                       }"
-                        placeholder="请选择所属部门"
+                        placeholder="请选择..."
                       />
+                    </a-form-item>
+                    <a-form-item label="姓名/警号">
+                      <a-input
+                        v-decorator="['user', { initialValue: '', rules: [] }]"
+                        :max-length="LimitInputlength"
+                        placeholder="请输入姓名/警号"
+                      >/></a-input>
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
@@ -89,7 +96,21 @@
             class="mytable-scrollbar"
             ref="kptj"
             :row-class-name="tableRowClassName"
-          />
+          >
+            <template v-slot:nameslot="{ row }">{{row.policeName}}({{row.policeNum}})</template>
+          </vxe-grid>
+          <p>
+            <vxe-pager
+              align="right"
+              size="mini"
+              :layouts="layouts"
+              :page-sizes="[15, 50, 100, 200]"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              @page-change="pagerchange"
+            />
+          </p>
         </div>
       </div>
     </div>
@@ -139,27 +160,39 @@ export default class VideoStatistics extends Vue {
       align: "center",
     },
     {
+      title: "姓名/警号",
+      align: "center",
+      showOverflow: true,
+      field: "policeName",
+      slots: { default: "nameslot" },
+    },
+    {
       title: "视频数",
+      showOverflow: true,
       align: "center",
       field: "countInforVideo",
     },
     {
       title: "音频数",
+      showOverflow: true,
       align: "center",
       field: "countInfoAudio",
     },
     {
       title: "图片数",
+      showOverflow: true,
       align: "center",
       field: "countInfoPhoto",
     },
     {
       title: "标注数",
+      showOverflow: true,
       align: "center",
       field: "countLink",
     },
     {
       title: "标注率（%）",
+      showOverflow: true,
       align: "center",
       width: "120",
       field: "linkRate",
@@ -167,11 +200,13 @@ export default class VideoStatistics extends Vue {
     {
       title: "考评个数",
       align: "center",
+      showOverflow: true,
       field: "countEval",
     },
     {
       title: "考评率（%)",
       align: "center",
+      showOverflow: true,
       field: "evalRate",
     },
   ]
@@ -195,6 +230,7 @@ export default class VideoStatistics extends Vue {
     this.Statistics.getlabeltable(obj).then((res) => {
       console.log(res)
       this.tableData = res.data
+      this.page.totalResult = parseInt(res.count)
     })
   }
   public getdata() {
@@ -205,7 +241,8 @@ export default class VideoStatistics extends Vue {
       let obj = {
         page: 1,
         limit: 15,
-        deptCode: localStorage.getItem("deptCode"),
+        deptCode: "",
+        policeName: "",
         dateRange: res.data.myDate,
       }
       this.gettabledata(obj)
@@ -236,6 +273,7 @@ export default class VideoStatistics extends Vue {
         let obj = {
           page: 1,
           limit: 15,
+          policeName: val.user,
           deptCode: val.department,
           dateRange: date,
         }
@@ -243,12 +281,24 @@ export default class VideoStatistics extends Vue {
       }
     })
   }
+   private pagerchange({ currentPage, pageSize }) {
+     this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
+      let obj = {
+        page: currentPage,
+        limit: pageSize,
+        deptCode: "",
+        policeName: "",
+        dateRange: res.data.myDate,
+      }
+      this.gettabledata(obj)
+    })
+   }
   public daochu() {
     (this.$refs.kptj as any).exportData({
       filename: "考评统计",
       sheetName: "Sheet1",
       type: "xlsx",
-      message:false,
+      message: false,
     })
   }
 }

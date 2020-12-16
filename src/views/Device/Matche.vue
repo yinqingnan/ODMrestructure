@@ -130,6 +130,7 @@
             class="mytable-scrollbar"
           >
             <vxe-table-column type="checkbox" width="60" align="center" />
+            
             <vxe-table-column field="code" title="产品序号" show-overflow width="10%" align="center" />
              <vxe-table-column field="deviceType" title="设备类型" show-overflow width="11%" align="center" />
             
@@ -207,7 +208,7 @@
               <a-form-item label="产品序号">
                 <a-input
                   :disabled="Disabled"
-                  v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
+                  v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }, { validator: codevalidator}] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入产品序号"
                 >/></a-input>
@@ -415,7 +416,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警1">
                 <a-input
-                  v-decorator="['Influencer1', { initialValue: '',  rules: [] }]"
+                  v-decorator="['Influencer1', { initialValue: '',  rules: [{validator:uservalidator}]}]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -424,7 +425,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警2">
                 <a-input
-                  v-decorator="['Influencer2', { initialValue: '',  rules: [] }]"
+                  v-decorator="['Influencer2', { initialValue: '',  rules: [{validator:uservalidator}] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -435,7 +436,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警3">
                 <a-input
-                  v-decorator="['Influencer3', { initialValue: '',  rules: [] }]"
+                  v-decorator="['Influencer3', { initialValue: '',  rules: [{validator:uservalidator}] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -444,7 +445,7 @@
             <a-col :span="12">
               <a-form-item label="影响民警4">
                 <a-input
-                  v-decorator="['Influencer4', { initialValue: '',  rules: [] }]"
+                  v-decorator="['Influencer4', { initialValue: '',  rules: [{validator:uservalidator}] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入受影响的民警警号"
                 >/></a-input>
@@ -461,7 +462,7 @@
                 allowClear
                 rows="3"
                 style="resize: none;"
-                placeholder="最大支持输入字数200..."
+                placeholder="请输入故障描述（200字符以内）"
                 v-decorator="[
                         'describe',
                         {
@@ -559,7 +560,7 @@ export default class Matche extends Vue {
   private bindingstatus = [
     { id: "0", value: "all", title: "全部" },
     { id: "1", value: "1", title: "已绑定" },
-    { id: "2", value: "2", title: "未绑定" },
+    { id: "2", value: "0", title: "未绑定" },
   ]
   private equipmentstatus = [
     { id: "0", value: "all", title: "全部" },
@@ -627,21 +628,30 @@ export default class Matche extends Vue {
   private reset() {
     this.form.resetFields()
     this.form2.resetFields()
-    this.getdata()
+  }
+  private Sval = {
+    code:"",
+    department:"",
+    user:"",
+    deviceStatus:"",
+    deviceType:"",
+    deviceStatusName:"",
   }
   private handle(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val)
+        this.Sval = val
         this.gettable({
           page: 1,
           limit: 15,
+          code:val.code,
           deptCode: val.department,
           userCode: val.user,
-          isBinding: val.deviceStatusName,
+          isBinding: val.deviceStatus,
           deviceType: val.deviceType,
-          deviceStatus: val.deviceStatus,
+          deviceStatus: val.deviceStatusName,
         })
       }
     })
@@ -651,7 +661,7 @@ export default class Matche extends Vue {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       this.formdata = val
-      console.log(this.state)
+      console.log(val)
       if (!err) {
         if (this.state == "添加") {
           this.Policepersonnelsave({
@@ -665,7 +675,8 @@ export default class Matche extends Vue {
             warrantyDate: moment(val.Warrantydate, "YYYY-MM-DD"),
           })
         } else if (this.state === "编辑") {
-          console.log(123123)
+          console.log(val.deviceStatusName)
+          // console.log(str)
           this.Policepersonnelsave({
             code: val.code,
             deptCode: val.department,
@@ -724,7 +735,16 @@ export default class Matche extends Vue {
   }
   private pagerchange({ currentPage, pageSize }) {
     console.log(currentPage, pageSize)
-    this.gettable({ page: currentPage, limit: pageSize })
+    this.gettable({ 
+      page: currentPage, 
+      limit: pageSize ,
+      code:this.Sval.code,
+      deptCode: this.Sval.department,
+      userCode: this.Sval.user,
+      isBinding: this.Sval.deviceStatus,
+      deviceType: this.Sval.deviceType,
+      deviceStatus: this.Sval.deviceStatusName,
+    })
   }
   private departmentchange(value) {
     console.log(value)
@@ -747,7 +767,7 @@ export default class Matche extends Vue {
       matcheCode: row.code,
     }).then((res) => {
       if (res.code == 0) {
-        this.$message.success(res.msg)
+        this.$message.success(`设备${row.code}启动成功`)
         this.gettable({
           page: 1,
           limit: 15,
@@ -759,11 +779,27 @@ export default class Matche extends Vue {
   }
   private dlt() {
     let arr = this.getSelectEvent1()
-    let dltarr = []
-    arr.map((item) => {
-      dltarr.push(item.id)
-    })
-    this.instrumentdlt(dltarr)
+    if(arr.length > 0 ){
+       let dltarr = []
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      let _that = this
+      arr.map((item) => {
+        dltarr.push(item.id)
+      })
+      console.log(dltarr);
+      this.$confirm({
+        title: "提示",
+        content: `确定要删除选中的执法仪吗？`,
+          onOk() {
+            _that.instrumentdlt(dltarr)
+          }
+        })
+    }else{
+      this.$message.error("请选择需要删除的执法仪")
+    }
+   
+   
+
   }
   private importben() {
     if(this.fileList.length>0){
@@ -777,11 +813,13 @@ export default class Matche extends Vue {
               },
             })
             .then((res: any) => {
-              if(res == 'ok'){
+              console.log(res)
+              if(res.data == 'ok'){
                 this.importshow = false
                 this.iserror = false
                 this.fileList = []
                 this.filename =""
+                this.$message.success('导入成功')
               }else{
                 this.iserror = true
                 this.errormsg = res.data
@@ -835,25 +873,27 @@ export default class Matche extends Vue {
     return selectRecords
   }
   private instrumentdlt(arr) {
-    if (arr.length > 0) {
-      this.DeviceM.instrumentdlt(arr).then((res) => {
-        if (res.code == 0) {
-          this.$message.success(res.msg)
-          this.gettable({
-            page: 1,
-            limit: 15,
-          })
-        }
-      })
-    }
+    this.DeviceM.instrumentdlt(arr).then((res) => {
+      if (res.code == 0) {
+        this.$message.success(res.msg)
+        this.gettable({
+          page: 1,
+          limit: 15,
+          code:this.Sval.code,
+          deptCode: this.Sval.department,
+          userCode: this.Sval.user,
+          isBinding: this.Sval.deviceStatus,
+          deviceType: this.Sval.deviceType,
+          deviceStatus: this.Sval.deviceStatusName,
+        })
+      }
+    })
   }
   private Policepersonnelsave(obj) {
     this.DeviceM.Policepersonnelsave(obj).then((res) => {
       console.log(res)
       if (res.code == 0) {
-        setTimeout(() => {
           this.visible = false
-        }, 1000)
         this.gettable({
           page: 1,
           limit: 15,
@@ -883,17 +923,23 @@ export default class Matche extends Vue {
           deptCode: val.department,
           matcheCode: val.code,
           repairsDesc: val.describe,
-          reportTime: moment(val.statrdate).format("YYYY-MM-DD HH:mm:ss"),
+          reportTime: moment(val.startdate).format("YYYY-MM-DD HH:mm:ss"),
           reportUserCode: val.Sendrepair,
         }).then((res) => {
           console.log(res)
           if (res.code == 0) {
             this.$message.success(res.msg)
-            this.repairshow = true
+            this.repairCancel()
             this.form3.resetFields()
             this.gettable({
               page: 1,
               limit: 15,
+              code:this.Sval.code,
+              deptCode: this.Sval.department,
+              userCode: this.Sval.user,
+              isBinding: this.Sval.deviceStatus,
+              deviceType: this.Sval.deviceType,
+              deviceStatus: this.Sval.deviceStatusName,
             })
           } else {
             this.$message.error(res.msg)
@@ -904,6 +950,34 @@ export default class Matche extends Vue {
   }
   private repairCancel() {
     this.repairshow = false
+    this.form3.resetFields()
+  }
+  private codevalidator(rule, value, callback) {
+  let reg = new RegExp('[\u4E00-\u9FA5]+')
+  if(!reg.test(value)){
+    callback()
+  }else{
+    callback('格式不正确，必须是数字或字母')
+  }
+  }
+  private uservalidator(rule , value, callback){
+    console.log(value)
+    let obj = this.form3.getFieldsValue(['Influencer1','Influencer2','Influencer3','Influencer4'])
+    let ary = [obj.Influencer1,obj.Influencer2,obj.Influencer3,obj.Influencer4]
+    let nary=ary.sort();
+    let state = true
+    for(var i=0;i<ary.length;i++){
+        if (nary[i] && nary[i+1] && nary[i]==nary[i+1]){
+          state= false
+        }
+    }
+    if(!state){
+      callback('警员信息重复')
+    }else{
+      callback()
+    }
+    state = true
+
   }
 }
 </script>

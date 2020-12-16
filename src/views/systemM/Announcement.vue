@@ -35,7 +35,7 @@
                   </a-select>
                 </a-form-item>
                 <a-form-item class="btnBox">
-                  <a-button class="reset">重置</a-button>
+                  <a-button class="reset" @click="reset">重置</a-button>
                   <a-button html-type="submit" class="upData">查询</a-button>
                 </a-form-item>
               </a-form>
@@ -43,8 +43,8 @@
           </a-dropdown>
         </div>
         <div class="btnList">
-          <a-button class="upData mr10" @click="Export" v-isshow="'system:notice:export'">导出</a-button>
-          <a-button class="upData" @click="add" v-isshow="'system:notice:save'">添加</a-button>
+          <a-button class="upData mr10" @click="Export"  type="primary" v-isshow="'system:notice:export'">导出</a-button>
+          <a-button  type="primary" class="upData" @click="add" v-isshow="'system:notice:save'">添加</a-button>
         </div>
       </div>
       <!-- 内容 -->
@@ -67,77 +67,74 @@
               title="公告标题"
               show-overflow
               align="center"
-              minWidth="120"
+              width="10%"
             />
-            <vxe-table-column field="type" title="公告类型" show-overflow align="center" minWidth="80" />
+            <vxe-table-column field="type" title="公告类型" show-overflow align="center"  width="10%" />
             <vxe-table-column
               field="createTime"
               title="创建时间"
               show-overflow
               align="center"
-              minWidth="150"
+              width="10%"
             />
             <vxe-table-column
               field="sendTime"
               title="发送时间"
               show-overflow
               align="center"
-              minWidth="150"
+              width="10%"
             />
             <vxe-table-column
               field="endTime"
               title="截止时间"
               show-overflow
               align="center"
-              minWidth="150"
+              width="10%"
             />
             <vxe-table-column
               field="sendUserName"
               title="发布民警姓名"
               show-overflow
               align="center"
-              minWidth="120"
+               width="8%"
             />
             <vxe-table-column
               field="sendUserCode"
               title="发布民警警号"
               show-overflow
               align="center"
-              minWidth="120"
+              width="6%"
             />
             <vxe-table-column
               field="acceptDeptNames"
               title="接收部门"
               show-overflow
               align="center"
-              minWidth="100"
+              width="8%"
             />
             <vxe-table-column
               field="content"
               title="公告内容"
               show-overflow
               align="center"
-              minWidth="150"
+              width="10%"
             />
             <vxe-table-column
-              field=""
               title="操作"
               align="center"
-              minWidth="120"
+              width="10%"
               fixed="right"
             >
-              <template v-slot="{ row }">
-                <div class="linkBox">
-                  <a-button
-                    type="link"
-                    block
+              <template v-slot="{ row }" style="display:flex">
+                  <span
+                    style="color: rgb(13, 184, 223);cursor: pointer;margin-right: 10px;"
                     @click="edit(row)"
                     v-isshow="'system:notice:update'"
-                  >编辑</a-button>
-                  <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="remove(row.id)">
-                    <a-button type="link" block v-isshow="'system:notice:delete'">删除</a-button>
-                  </a-popconfirm>
-                </div>
+                  >编辑</span>
+                  <!-- <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="remove(row.id)"> -->
+                    <span  style="color: rgb(13, 184, 223);cursor: pointer;"  v-isshow="'system:notice:delete'" @click="remove(row)">删除</span>
+                  <!-- </a-popconfirm>
+                   -->
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -166,7 +163,7 @@
         okText="提交"
         @cancel="back"
       >
-        <a-form :form="form2" @submit="handleSubmit" layout="inline">
+        <a-form :form="form2" @submit="handleSubmit" layout="inline"  autocomplete="off">
           <a-row :gutter="24">
             <a-col :span="12">
               <a-form-item label="公告标题" style="display:flex">
@@ -198,8 +195,8 @@
                   ]"
                   placeholder="请选择"
                 >
-                  <a-select-option value="1">通知</a-select-option>
-                  <a-select-option value="2">系统升级</a-select-option>
+                  <a-select-option key="1">通知</a-select-option>
+                  <a-select-option key="2">系统升级</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -345,78 +342,7 @@ export default class RightContent extends Vue {
         total / this.pagination.pageSize
       )} 页`, // 显示总数
   }
-  private columns = [
-    {
-      title: "序号",
-      className: "pd10",
-      width: 60,
-      dataIndex: "index",
-      fixed: "left",
-      scopedSlots: { customRender: "index" },
-    },
-    {
-      title: "公告标题",
-      dataIndex: "title",
-      className: "pd10",
-      width: 170,
-    },
-    {
-      title: "公告类型",
-      dataIndex: "type",
-      className: "pd10",
-      width: 95,
-    },
-    {
-      title: "创建时间",
-      dataIndex: "createTime",
-      className: "pd10",
-      width: 175,
-    },
-    {
-      title: "发送时间",
-      dataIndex: "sendTime",
-      className: "pd10",
-      width: 175,
-    },
-    {
-      title: "截止时间",
-      dataIndex: "endTime",
-      className: "pd10",
-      width: 175,
-    },
-    {
-      title: "发布民警姓名",
-      dataIndex: "sendUserName",
-      className: "pd10",
-      width: 140,
-    },
-    {
-      title: "发布民警警号",
-      dataIndex: "sendUserCode",
-      className: "pd10",
-      width: 140,
-    },
-    {
-      title: "接收部门",
-      dataIndex: "acceptDeptNames",
-      className: "pd10",
-      width: 140,
-    },
-    {
-      title: "公告内容",
-      dataIndex: "content",
-      className: "pd10",
-      width: 360,
-    },
-    {
-      title: "操作",
-      key: "operation",
-      scopedSlots: { customRender: "operation" },
-      className: "pd10",
-      width: 180,
-      fixed: "right",
-    },
-  ]
+  
   beforeCreate() {
     this.form = this.$form.createForm(this)
     this.form2 = this.$form.createForm(this)
@@ -440,12 +366,14 @@ export default class RightContent extends Vue {
   }
   private getList(val: any) {
     this.getData.getNotices(val, true).then((res: any) => {
-      console.log(res)
       if(res.data){
+        res.data.map(item => {
+        if(item.type == "1") item.type= '通知'
+        else if(item.type == '2') item.type=  '系统升级'
+      })
         this.tabData = res.data
         this.page.totalResult =parseInt(res.count) 
       }
-      
     })
   }
 
@@ -489,24 +417,34 @@ export default class RightContent extends Vue {
     this.visible = true
     this.myTitle = "添加公告"
   }
-  private remove(val: string): void {
-    const DT = [val]
-    this.getData.removeItem(DT, true).then((res: any) => {
-      if (res.code == 0) {
-        const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
-          status: this.seachKey,
-        }
-        this.getList(val)
-      }
-    })
+  private remove(val): void {
     console.log(val)
+    const DT = [val.id]
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    this.$confirm({
+        title: "提示",
+        content: `公告删除后无法恢复，确认要删除公告${val.title}吗？`,
+        onOk() {
+          _that.getData.removeItem(DT, true).then((res: any) => {
+            if (res.code == 0) {
+              const val = {
+                page: _that.pagination.current,
+                limit: _that.pagination.pageSize,
+                status: _that.seachKey,
+              }
+              _that.getList(val)
+            }
+          })
+        },
+      })
+    
   }
   private edit(val: any): void {
     console.log(val)
     this.visible = true
     this.myTitle = "编辑"
+    this.id = val.id
     if (val.acceptDeptCode == "ALL") {
       val.acceptDeptCode = undefined
       val.isALL = ["isALL"]
@@ -515,11 +453,11 @@ export default class RightContent extends Vue {
       val.isALL = undefined
       this.isShow = true
     }
-    // const that = this;
+   
     this.$nextTick(() => {
       this.form2.setFieldsValue({
         title: val.title,
-        type: val.type,
+        type: val.type + '',
         sendTime: val.sendTime,
         endTime: val.endTime,
         acceptDeptCode: val.acceptDeptCode,
@@ -528,6 +466,7 @@ export default class RightContent extends Vue {
       })
     })
   }
+  private id = ''
   private handleOk(e: any): void {
     e.preventDefault()
     this.form2.validateFields((err: any, values: any) => {
@@ -540,7 +479,7 @@ export default class RightContent extends Vue {
             sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
             title: values.title,
             type: values.type,
-            id: "",
+            id: this.id,
             isALL: "on",
           }
         } else {
@@ -551,15 +490,22 @@ export default class RightContent extends Vue {
             sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
             title: values.title,
             type: values.type,
-            id: "",
+            id: this.id,
           }
         }
-        this.saveVal(this.saveData)
+        if(this.myTitle == '添加公告'){
+          this.saveVal(this.saveData)
+        }else{
+           this.editVal(this.saveData)
+        }
       }
     })
   }
   private back(): void {
     this.form2.resetFields()
+  }
+  private reset(){
+    this.form.resetFields()
   }
   private ckChange(e: any): void {
     if (e.length > 0) {
@@ -567,6 +513,23 @@ export default class RightContent extends Vue {
     } else {
       this.isShow = true
     }
+  }
+    private editVal(val: any) {
+    this.getData.editVal(val, true).then((res: any) => {
+      if (res.code == 0) {
+        this.$message.success(res.msg)
+        this.visible = !this.visible
+        this.form2.resetFields()
+        const val = {
+          page: this.pagination.current,
+          limit: this.pagination.pageSize,
+          status: this.seachKey,
+        }
+        this.getList(val)
+      }else{
+        this.$message.error(res.msg)
+      }
+    })
   }
   private saveVal(val: any) {
     this.getData.saveVal(val, true).then((res: any) => {
@@ -579,23 +542,33 @@ export default class RightContent extends Vue {
           status: this.seachKey,
         }
         this.getList(val)
+      }else{
+        this.$message.error(res.msg)
       }
     })
   }
-  private Export(): void {
-    const data = `status=${this.seachKey}`
-    window.open(http + "api/pconfig/system/notice/export?" + data)
+  private Export(e: any): void {
+    (this.$refs.logAdministration as any).exportData({
+      filename: "公告管理",
+      sheetName: "Sheet1",
+      type: "xlsx",
+      message:false,
+    })
   }
   private pagerchange({ currentPage, pageSize }) {
-    // let val = {
-    //   page: currentPage,
-    //   limit: pageSize,
-    // }
-    // this.getList(val)
+    let val = {
+      page: currentPage,
+      limit: pageSize,
+    }
+    this.getList(val)
   }
   private tableRowClassName(record: any, index: number) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
+  // private ggtype(val){
+  //   if(val == "1") return '通知'
+  //   else if(val == '2') return '系统升级'
+  // } 
 }
 </script>
 

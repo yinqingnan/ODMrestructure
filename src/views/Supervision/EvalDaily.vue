@@ -95,6 +95,7 @@
             resizable
             height="auto"
             :data="tableData"
+            show-header-overflow
             highlight-hover-row
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
@@ -107,7 +108,7 @@
               align="left"
               header-align="center"
               show-overflow
-              width="25%"
+              width="20%"
             >
               <template v-slot="{ row }">
                 <span
@@ -152,17 +153,6 @@
               align="center"
               width="15%"
             />
-            <!-- <vxe-table-column field="actions" title="操作" align="center" width="150">
-              <template v-slot="{ row }">
-                <span
-                  type="text"
-                  @click="tablebtn(row)"
-                  style="color:#0db8df;
-                cursor: pointer;"
-                  v-isshow="'fileEvaluate:evaluationDaily:look'"
-                >评分</span>
-              </template>
-            </vxe-table-column>-->
           </vxe-table>
           <p>
             <vxe-pager
@@ -285,12 +275,13 @@
                 <a-form
                   :form="form2"
                   :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
+                  :wrapper-col="{ span: 16 }"
                   v-if="!Emptystate"
                 >
                   <el-scrollbar style="height:300px;width: 397px;">
                     <a-form-item label="标注类型">
                       <a-select
+                        disabled
                         placeholder="请选择标注类型"
                         v-decorator="[
                         'labelType',
@@ -305,6 +296,7 @@
                     </a-form-item>
                     <a-form-item label="标注子类">
                       <a-select
+                        disabled
                         placeholder="请选择标注子类"
                         v-decorator="[
                         'labelSubclass',
@@ -319,6 +311,7 @@
                     </a-form-item>
                     <a-form-item label="车牌号码">
                       <a-input
+                        disabled
                         placeholder="没有车牌号，请填写无"
                         :max-length="LimitInputlength"
                         v-decorator="[
@@ -332,6 +325,7 @@
                     </a-form-item>
                     <a-form-item label="采集时间" class="biaozhu">
                       <a-date-picker
+                        disabled
                         placeholder="请选择采集时间"
                         v-decorator="[
                         'gatheringTime',
@@ -344,6 +338,7 @@
                     </a-form-item>
                     <a-form-item label="采集地址">
                       <a-input
+                        disabled
                         :max-length="LimitInputlength"
                         placeholder="请输入采集地址（30字以内）"
                         v-decorator="[
@@ -357,6 +352,7 @@
                     </a-form-item>
                     <a-form-item label="标记描述">
                       <a-textarea
+                        disabled
                         placeholder="请输入标注描述（200字以内）"
                         style="display: flex;overflow-y:auto;resize: none;"
                         allowClear
@@ -384,9 +380,10 @@
               <a-tab-pane key="4" tab="评价">
                 <a-form
                   :form="form3"
-                  :label-col="{ span:4 }"
-                  :wrapper-col="{ span: 20 }"
+                  :label-col="{ span:6 }"
+                  :wrapper-col="{ span: 18 }"
                   @submit="pingjiaSubmit"
+                  class="pingjia"
                 >
                   <a-form-item label="评价总分">
                     <a-input
@@ -439,14 +436,16 @@
                     <a-textarea
                       style="display: flex;overflow-y:auto;resize: none;"
                       allowClear
+                      :max-length="textarealength"
                       v-decorator="[
                       'remarks',
                       {
                         initialValue: '',
-                        rules: [],
+                        rules: [{ required: true, message: '必填项不能为空' }],
                       },
                     ]"
                       :autoSize="{ minRows: 3, maxRows: 3 }"
+                      placeholder="请输入评分说明（200字符以内）"
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
@@ -474,7 +473,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength, page, layouts } from "@/InterfaceVariable/variable"
+import { LimitInputlength, page, layouts, textarealength} from "@/InterfaceVariable/variable"
 
 import moment from "moment"
 @Component({
@@ -489,6 +488,7 @@ export default class EvalRecord extends Vue {
   public DataM = new this.$api.configInterface.DataM()
   public Supervision = new this.$api.configInterface.Supervision()
   private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
   private departmentData = []
   private defaultdate = [moment("2010-10-20"), moment("2020-10-20")]
   private page = page
@@ -733,10 +733,10 @@ export default class EvalRecord extends Vue {
   }
   private tabchange(activeKey) {
     if (activeKey == 3) {
-      this.DataM.getfiletagging().then((res) => {
-         this.Emptystate = true
+      this.DataM.getfiletagging(this.fileCode).then((res) => {
         if (res.data) {
           console.log("有值")
+          this.Emptystate = false
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
           this.DataM.taggingselect1().then((res) => {
@@ -760,7 +760,9 @@ export default class EvalRecord extends Vue {
               })
             })
           })
-        } 
+        }else{
+            this.Emptystate = true
+        }
       })
     }
   }
@@ -895,6 +897,17 @@ export default class EvalRecord extends Vue {
 .AvData {
   .vjs-custom-skin > .video-js {
     height: 423px;
+  }
+}
+.pingjia{
+  .ant-form-item{
+    margin-bottom:6px
+  }
+}
+.biaozhu {
+   .ant-calendar-picker {
+     width: 100% !important;
+    // width: 276px !important;
   }
 }
 </style>

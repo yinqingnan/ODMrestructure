@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 14:08:12
- * @LastEditTime: 2020-12-03 16:28:59
+ * @LastEditTime: 2020-12-14 14:54:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\api\module\Statistics.ts
+ * @FilePath: \src\api\module\Statistics.ts
  */
 import { Interceptors } from '../interceptors';
 import { message, Modal } from 'ant-design-vue';   // 弹吐司
@@ -74,7 +74,7 @@ export class Statistics {
   }
   // todo  考评统计表格 
   public getlabeltable(params: EventListenerObject) {
-    const url = "/api/tpb/report/label/unit";
+    const url = "/api/tpb/report/label/user";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,

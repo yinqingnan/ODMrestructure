@@ -92,22 +92,15 @@
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
             border
-            resizable
-            header-align="center"
+            class="mytable-scrollbar"
+            :row-class-name="tableRowClassName"
+            highlight-hover-row
+            highlight-current-row
+            show-header-overflow
             height="auto"
             :data="tableData"
-            ref="xTable2"
-            highlight-hover-row
-            :row-class-name="tableRowClassName"
-            class="mytable-scrollbar"
-            show-header-overflow
-          >
-            <vxe-table-column
-              v-for="(config, index) in tableColumn"
-              show-overflow
-              :key="index"
-              v-bind="config"
-            />
+            >
+            <vxe-table-column v-for=" (config, index) in tableColumn" :key="index" v-bind="config" />
           </vxe-table>
           <p>
             <vxe-pager
@@ -124,6 +117,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -152,17 +146,18 @@ export default class Repairrecord extends Vue {
   private tableData = []
   private Date = []
   private layouts = layouts
+
   private tableColumn = [
     { width: 60, fixed: null, title: "序号", align: "center", type: "seq" },
-    { field: "reportUserCode", title: "报修人" , width:'10%', align: "center"},
-    { field: "matcheCode", title: "产品序号", width:'10%' , align: "center"},
-    { field: "deviceType", title: "设备类型" , width:'10%', align: "center"},
-    { field: "deptName", title: "所属部门", width:'10%', align: "center" },
-    { field: "affectUserNames", title: "影响民警(警号)" , width:'10%', align: "center"},
-    { field: "createTime", title: "保修时间" , width:'10%', align: "center"},
-    { field: "reportTime", title: "故障开始时间", width:'10%' , align: "center"},
-    { field: "activeTime", title: "启用时间" , width:'10%', align: "center"},
-    { field: "repairsDesc", title: "故障描述" , width:'10%', align: "center"},
+    { field: "reportUserCode", title: "报修人" , width:'10%', align: "center",showOverflow:true },
+    { field: "matcheCode", title: "产品序号", width:'10%' , align: "center",showOverflow:true},
+    { field: "deviceType", title: "设备类型" , width:'10%', align: "center",showOverflow:true},
+    { field: "deptName", title: "所属部门", width:'10%', align: "center" ,showOverflow:true},
+    { field: "affectUserNames",type:'html', title: "影响民警(警号)" , width:'10%', align: "center", showOverflow:true,formatter:this.formatRole},
+    { field: "createTime", title: "保修时间" , width:'10%', align: "center",showOverflow:true},
+    { field: "reportTime", title: "故障开始时间", width:'10%' , align: "center",showOverflow:true},
+    { field: "activeTime", title: "启用时间" , width:'10%', align: "center",showOverflow:true},
+    { field: "repairsDesc", title: "故障描述" , width:'10%', align: "center",showOverflow:true},
   ]
   // todo 生命周期
   private created() {
@@ -234,15 +229,6 @@ export default class Repairrecord extends Vue {
   }
   private reset() {
     this.form.resetFields()
-    this.getdata()
-    this.gettabledata({
-      page: 1,
-      limit: 15,
-      deptCode: "",
-      reportUserName: "",
-      reportTimes: "",
-      matcheCode: "",
-    })
   }
   private popup() {
     return
@@ -266,6 +252,9 @@ export default class Repairrecord extends Vue {
         this.$message.error(res.msg)
       }
     })
+  }
+  private formatRole({ cellValue }){
+    return cellValue
   }
 }
 </script>

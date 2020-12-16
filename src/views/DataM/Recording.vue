@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="Recordingheader">
-      <a-button v-isshow="'lawarchives:storageCategory:save'" @click="Recordingadd">添加</a-button>
+      <a-button
+        type="primary"
+        v-isshow="'lawarchives:storageCategory:save'"
+        @click="Recordingadd"
+      >添加</a-button>
     </div>
     <div :style="{height:Height}" class="Recording">
       <vxe-table
@@ -16,18 +20,17 @@
       >
         <vxe-table-column type="seq" width="60" title="序号" align="center" />
         <vxe-table-column field="name" title="类别名称" align="center" min-width="180px" />
-        <vxe-table-column
-          field="storageTime"
-          title="已上传文件存储时间(天)"
-          min-width="120px"
-          align="center"
-        />
+        <vxe-table-column field="storageTime" title="已上传文件存储时间(天)" min-width="120px" align="center">
+          <template v-slot="{ row }">{{filetime(row.storageTime)}}</template>
+        </vxe-table-column>
         <vxe-table-column
           field="stationStorageTime"
           title="采集站文件存储时间(天)"
           min-width="120px"
           align="center"
-        />
+        >
+          <template v-slot="{ row }">{{caijizhantime(row.stationStorageTime)}}</template>
+        </vxe-table-column>
         <vxe-table-column field="remark" title="备注" align="center" min-width="200px" />
         <vxe-table-column
           field="isDefault"
@@ -65,8 +68,8 @@
     </div>
     <a-modal
       v-model="visible"
-      title="添加"
-      ok-text="确认"
+      :title="title"
+      ok-text="提交"
       cancel-text="取消"
       @ok="hideModal"
       @cancel="reset"
@@ -98,7 +101,7 @@
                           rules: [{
                       required: true,
                       message: '必填项不能为空！',
-                    }]
+                    },{validator:timeselect}]
                         }
                       ]"
             :allow-clear="true"
@@ -108,7 +111,7 @@
             <a-select-option v-for="d in storageTime" :key="d.value">{{ d.title }}</a-select-option>
           </a-select>
         </a-form-item>
-
+        <!-- 添加 mode="combobox"   ，即可对下拉框进行搜索  -->
         <a-form-item label="采集站文件存储时间">
           <a-select
             mode="combobox"
@@ -119,7 +122,7 @@
                           rules: [{
                       required: true,
                       message: '必填项不能为空！',
-                    }]
+                    },{validator:timeselect}]
                         }
                       ]"
             :allow-clear="true"
@@ -136,7 +139,7 @@
             allowClear
             rows="4"
             style="resize: none;"
-            placeholder="最大支持输入字数200..."
+            placeholder="请输入备注（200字符以内）"
             v-decorator="[
                         'remarks',
                         {
@@ -155,7 +158,8 @@
 import {
   LimitInputlength,
   textarealength,
-  page,pagesize
+  page,
+  pagesize,
 } from "@/InterfaceVariable/variable"
 import { Component, Vue } from "vue-property-decorator"
 @Component({})
@@ -169,14 +173,15 @@ export default class Recording extends Vue {
   private pagesize = pagesize
   private tableData = []
   public form!: any
+  public title = ""
   private visible = false
   private page = page
   private storageTime = [
-    { id: 1, value: "0", title: "永久保存" },
-    { id: 1, value: "30", title: "30" },
-    { id: 1, value: "90", title: "90" },
-    { id: 1, value: "180", title: "180" },
-    { id: 1, value: "365", title: "365" },
+    { id: '0', value: "0", title: "永久保存" },
+    { id: '30', value: "30", title: "30" },
+    { id: '90', value: "90", title: "90" },
+    { id: '180', value: "180", title: "180" },
+    { id: '365', value: "365", title: "365" },
   ]
   private created() {
     this.form = this.$form.createForm(this)
@@ -204,7 +209,10 @@ export default class Recording extends Vue {
     this.form.resetFields()
   }
   private tablebtn(row) {
+    console.log(row)
+    this.id = row.id
     this.visible = true
+    this.title = "编辑"
     this.$nextTick(() => {
       this.form.setFieldsValue({
         user: row.name,
@@ -237,43 +245,78 @@ export default class Recording extends Vue {
   }
   private hideModal(e) {
     e.preventDefault()
-    // console.log("tijiao")
-    // this.form.validateFields((err: any, val: any) => {
-    //   if (!err) {
-    //     console.log(val)
-    //   }
-    // })
     this.handleSubmit()
   }
   private Recordingadd() {
     this.visible = true
+    this.title = "添加"
+    this.id = ''
   }
+  public id = ''
   private handleSubmit() {
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
-        this.DataM.storetypesave({
-          id: "",
-          name: val.user,
-          stationStorageTime: val.stationStorageTime,
-          storageTime: val.storageTime,
-          remark: val.remarks,
-        }).then((res) => {
-          console.log(res)
-          if (res.code == 1) {
-            this.$message.error(res.msg)
-          } else if (res.code == 0) {
-            this.$message.success(res.msg)
-            this.visible = false
-            this.reset()
-            this.getdata()
-          }
-        })
+        let obj = {
+            id: this.id,
+            name: val.user,
+            stationStorageTime: val.stationStorageTime,
+            storageTime: val.storageTime,
+            remark: val.remarks,
+        }
+        if (this.title == "添加") {
+          this.DataM.storetypesave(obj).then((res) => {
+            if (res.code == 0) {
+              this.$message.success(res.msg)
+              this.visible = false
+              this.reset()
+              this.getdata()
+            }else{
+              this.$message.error(res.msg)
+            }
+          })
+        }else{
+          this.DataM.storetypedeit(obj).then(res=>{
+            if (res.code == 0) {
+              this.$message.success(res.msg)
+              this.visible = false
+              this.reset()
+              this.getdata()
+            }else{
+              this.$message.error(res.msg)
+            }
+          })
+        }
       }
     })
   }
+  private timeselect(rule , value, callback){
+    let reg = new RegExp((/(^[0-9]\d*$)/))
+    console.log(value)
+    console.log(reg.test(value))
+    if(!reg.test(value)){
+      callback("只能输入（0-9999之间）整数")
+    }else if(parseInt(value) > 9999){
+      callback("只能输入（0-9999之间）整数")
+    }else{
+      callback()
+    }
+  }
   private tableRowClassName(record: any, index: number) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
+  private filetime(val) {
+    if (val == 0) {
+      return "永久保存"
+    } else {
+      return val
+    }
+  }
+  private caijizhantime(val) {
+    if (val == 0) {
+      return "永久保存"
+    } else {
+      return val
+    }
   }
 }
 </script>

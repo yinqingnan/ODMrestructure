@@ -174,6 +174,20 @@ export class DataM {
       });
     });
   }
+  //todo  存储类别编辑保存接口
+  public storetypedeit(params: object, jwt = true) {
+    const url = "/api/file/filedata/storageCategory/update";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+        headers: { isJwt: jwt },
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
   //todo存储类型删除
 
   public storetypedlt(params: object, jwt = true) {
@@ -192,12 +206,12 @@ export class DataM {
 
 
   // todo 弹窗数据获取 
-  public getfiledetails(params: object, jwt = true) {
+  public getfiledetails(params: object) {
     const url = "/api/file/filedata/file/info/" + params;
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -207,12 +221,11 @@ export class DataM {
     });
   }
   // 标注信息
-  public getfiletagging(params: object, jwt = true) {
+  public getfiletagging(params: object) {
     const url = "/api/tpb/lawarchives/file-label/info/" + params;
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -222,12 +235,11 @@ export class DataM {
     });
   }
   //todo 弹窗标记下拉数据 
-  public getfileselect(params: object, jwt = true) {
+  public getfileselect(params: object) {
     const url = "/api/file/filedata/storageCategory/getAll";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -238,12 +250,11 @@ export class DataM {
   }
 
   // todo 标记保存 
-  public marksave(params: object, jwt = true) {
+  public marksave(params: object) {
     const url = "/api/file/filedata/file/mark";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
