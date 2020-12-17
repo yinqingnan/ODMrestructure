@@ -20,6 +20,7 @@
           show-header-overflow
           class="mytable-scrollbar"
           :row-class-name="tableRowClassName"
+          :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           :data="tabData"
         >
           <vxe-table-column type="seq" width="60" align="center" title="序号" />
@@ -167,7 +168,11 @@ import {
 export default class RightContent extends Vue {
   [x: string]: any
   public getData = new this.$api.configInterface.Dictionary()
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private layouts = layouts
@@ -198,8 +203,8 @@ export default class RightContent extends Vue {
   }
   created() {
     const val = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       parentKey_equal: "position",
     }
     this.getList(val)
@@ -213,6 +218,8 @@ export default class RightContent extends Vue {
     })
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     const val = {
       page: currentPage,
       limit: pageSize,
@@ -222,9 +229,8 @@ export default class RightContent extends Vue {
   }
   private getList(val: any): void {
     this.getData.getList(val, true).then((res: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       this.tabData = res.data
-      this.pagination.total = res.pages * 1
+      this.page.totalResult =parseInt(res.count)
     })
   }
   private tableRowClassName(record: any, index: number) {
@@ -271,8 +277,8 @@ export default class RightContent extends Vue {
             _that.getData.removeItem(DT, true).then((res: any) => {
             if (res.code == 0) {
               let val = {
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
                 parentKey_equal: "position",
               }
               _that.getList(val)

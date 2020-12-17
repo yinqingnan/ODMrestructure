@@ -108,7 +108,11 @@ export default class VideoStatistics extends Vue {
     { id: "3", value: "1", title: "低" },
   ]
   private tableData = []
-  private page = page
+    private page= {
+  currentPage: 1, //当前页数
+  pageSize: 15, //每页多少条
+  totalResult: 200, //总数
+  }
   private departmentData = []
   private layouts = layouts
   private deptCode: null | string = null

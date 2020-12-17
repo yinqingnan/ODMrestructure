@@ -468,7 +468,7 @@ export default class Dept extends Vue {
       let formData = new FormData() //保存文件后再保存
       formData.append("file", this.fileList[0])
       axios
-        .post(http + "api/mdm/device/matche/import", formData, {
+        .post(http + "api/uauth/base/dept/import", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Token: localStorage.getItem("token"),

@@ -71,6 +71,7 @@
             highlight-hover-row
             :row-class-name="tableRowClassName"
             :checkbox-config="{ checkMethod: checCheckboxkMethod2}"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           >
             <vxe-table-column type="checkbox" width="60" align="center" />
             <vxe-table-column field="name" title="服务器名称" show-overflow align="center" />
@@ -296,7 +297,11 @@ export default class Storage extends Vue {
   ]
   private tableData = []
   private ftptable = []
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private departmentData = []
   private layouts = layouts
 
@@ -314,8 +319,8 @@ export default class Storage extends Vue {
   }
   private mounted() {
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }
     this.getdata()
     this.gettabledata(obj)
@@ -327,8 +332,8 @@ export default class Storage extends Vue {
   private reset() {
     this.form.resetFields()
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }
     this.gettabledata(obj)
   }
@@ -337,8 +342,8 @@ export default class Storage extends Vue {
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           name_like: val.name,
           isOline: val.deviceStatus,
         }
@@ -362,8 +367,8 @@ export default class Storage extends Vue {
             this.$message.success(res.msg)
             this.visible = false
             let obj = {
-              page: 1,
-              limit: 15,
+              page: this.page.currentPage,
+              limit: this.page.pageSize,
             }
             this.gettabledata(obj)
           } else {
@@ -392,6 +397,8 @@ export default class Storage extends Vue {
     return row.source < 3
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -427,8 +434,8 @@ export default class Storage extends Vue {
             if (res.code == 0) {
               that.$message.success(res.msg)
               let obj = {
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
               }
               that.gettabledata(obj)
               return new Promise((resolve, reject) => {
@@ -456,7 +463,8 @@ export default class Storage extends Vue {
   private async FTPconfig(row) {
     this.IP = row.ip
     this.FTPvisible = true
-    let obj = { storageIp_equal: row.ip, page: 1, limit: 10 }
+    let obj = { storageIp_equal: row.ip, page: this.page.currentPage,
+              limit: this.page.pageSize, }
     // await this.getftptable(obj)
     console.log()
     axios
@@ -537,8 +545,8 @@ export default class Storage extends Vue {
         this.$message.success(res.msg)
         this.DeviceM.ftptable({
           storageIp_equal: row.ip,
-          page: 1,
-          limit: 10,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
         }).then((res) => {
           this.ftptable = res.data
         })

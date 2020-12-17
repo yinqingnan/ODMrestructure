@@ -5,7 +5,7 @@
       <div class="containers">
         <div class="evalSet">
           <div>
-            <h2>被考评人总分为{{count}}分，请合理设置单个考评项的扣分分值。</h2>
+            <h2 style="font-weight:600">被考评人总分为{{count}}分，请合理设置单个考评项的扣分分值。</h2>
           </div>
           <div>
             <a-button type="primary" @click="add" v-isshow="'fileEvaluate:evSet:add'">添加</a-button>
@@ -17,7 +17,7 @@
               <li v-for="(item,index) in list" :key="index" class="listyle">
                 <div style="display:flex;justify-content: space-between" class="listyleheader">
                   <div style="display:flex;">
-                    <h2>扣分分值：</h2>
+                    <h2 style="font-weight:600">扣分分值：</h2>
                     <h2 v-if="item.isEnabled" style="line-height: 32px;">{{item.jffz}}分</h2>
                     <a-input v-else v-model="item.jffz" placeholder="请输入分值" style="width:100px"/>
                   </div>
@@ -27,7 +27,7 @@
                   </div>
                 </div>
                 <div class="listylefooter">
-                    <h2>扣分说明：</h2>
+                    <h2 style="font-weight:600">扣分说明：</h2>
                     <h2 v-if="item.isEnabled" class="textwidth">
                       <a-tooltip>
                         <template slot="title">

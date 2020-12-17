@@ -24,18 +24,19 @@
             highlight-hover-row
             class="mytable-scrollbar"
             :row-class-name="tableRowClassName"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :data="tableData"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column field="secretKey" title="接入秘钥" show-overflow align="center" width="15%" />
-            <vxe-table-column field="isEnabled" title="状态" show-overflow align="center" >
+            <vxe-table-column field="isEnabled" title="秘钥状态" show-overflow align="center" >
               <template  v-slot="{ row }">
                 {{isEnabled(row.isEnabled)}}
               </template>
             </vxe-table-column>
             <vxe-table-column field="isUse" title="使用状态" show-overflow align="center" width="10%" >
                 <template  v-slot="{ row }">
-                {{isEnabled(isuse(row.isUse))}}
+                {{isuse(row.isUse)}}
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="所属部门" show-overflow align="center" />
@@ -302,7 +303,11 @@ export default class AccessAuth extends Vue {
   private tableData = []
   private visible = false //子平台接入框
   private collection = false //采集站接入框
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private caijizhanid = ""
   private zipingtaiid = ""
   // todo 生命周期
@@ -318,8 +323,8 @@ export default class AccessAuth extends Vue {
   }
   private mounted() {
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }
     this.gettabledata(obj)
     this.getdata()
@@ -327,6 +332,8 @@ export default class AccessAuth extends Vue {
  
   // todo事件
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -359,8 +366,8 @@ export default class AccessAuth extends Vue {
             this.visible = false
             this.form.resetFields()
             this.gettabledata({
-              page: 1,
-              limit: 15,
+              page: this.page.currentPage,
+              limit: this.page.pageSize,
             })
           } else {
             this.$message.error(res.msg)
@@ -389,8 +396,8 @@ export default class AccessAuth extends Vue {
             this.collection = false
             this.form2.resetFields()
             this.gettabledata({
-              page: 1,
-              limit: 15,
+              page: this.page.currentPage,
+              limit: this.page.pageSize,
             })
           } else {
             this.$message.error(res.msg)
@@ -425,9 +432,9 @@ export default class AccessAuth extends Vue {
   }
   private isEnabled(status){
     if(status==1){
-      return "已使用"
+      return "启用"
     }else{
-      return "未使用"
+      return "禁用"
     }
   }
   private isuse(status){
@@ -488,8 +495,8 @@ export default class AccessAuth extends Vue {
           _that.Luckmanagement.accessauthdlt([row]).then(res=>{
             if(res.code == 0){
               _that.gettabledata({
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
               })
               _that.$message.success(res.msg)
             }else{
@@ -503,8 +510,9 @@ export default class AccessAuth extends Vue {
   // todo 数据请求
   private gettabledata(obj) {
     this.Luckmanagement.getIncomingtabledata(obj).then((res) => {
+      console.log(res)
       this.tableData = res.data
-      this.page.totalResult = res.length
+      this.page.totalResult = parseInt(res.count)
     })
   }
   private getdata() {
@@ -513,7 +521,6 @@ export default class AccessAuth extends Vue {
     })
   }
   private tableRowClassName(record: any, index: number) {
-     
     return record.rowIndex % 2 === 0 ? "bgF5" : "";
   }
 }

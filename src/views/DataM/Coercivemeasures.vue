@@ -122,6 +122,7 @@
             border
             resizable
             height="auto"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :data="tableData"
             highlight-hover-row
             :row-class-name="tableRowClassName"
@@ -515,7 +516,11 @@ export default class Coercivemeasures extends Vue {
     { id: 2, value: "audio", title: "音频" },
     { id: 3, value: "photo", title: "图片" },
   ]
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private defaultdate = [
     moment("2010-06-06", "YYYY-MM-DD"),
     moment("2020-06-06", "YYYY-MM-DD"),
@@ -592,8 +597,8 @@ export default class Coercivemeasures extends Vue {
         this.formdata = val
         console.log(val)
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           zqbm_equal: val.department, //部门id
           mjxm: val.user, //警员
           dsr_like: val.party, //当事人
@@ -621,8 +626,8 @@ export default class Coercivemeasures extends Vue {
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
        let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           zqbm_equal: '', //部门id
           mjxm: '', //警员
           dsr_like: '', //当事人
@@ -642,6 +647,7 @@ export default class Coercivemeasures extends Vue {
     this.DataM.getCoercivemeasuresTable(obj, true).then((res: any) => {
       console.log(res)
       this.tableData = res.data
+      this.page.totalResult = parseInt(res.count)
     })
   }
   private tablebtn(row) {
@@ -668,6 +674,8 @@ export default class Coercivemeasures extends Vue {
     })
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -727,8 +735,8 @@ export default class Coercivemeasures extends Vue {
           ),
         ]
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode_equal: localStorage.getItem('deptCode'),
           userName: "",
           fileType_equal: "",
@@ -812,8 +820,8 @@ export default class Coercivemeasures extends Vue {
           val.Filetype = ""
         }
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode_equal: val.department,
           userName: val.user,
           fileType_equal: val.Filetype,

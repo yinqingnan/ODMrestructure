@@ -127,6 +127,7 @@
             show-header-overflow
             highlight-hover-row
             :row-class-name="tableRowClassName"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             class="mytable-scrollbar"
           >
             <vxe-table-column type="checkbox" width="60" align="center" />
@@ -165,8 +166,7 @@
                   type="text"
                   @click="Report(row)"
                   style="color:#0db8df;cursor: pointer;"
-                  v-if="row.deviceStatusName != '报废' "
-                  v-show="row.deviceStatusName != '维修'"
+                  v-if="row.deviceStatusName == '启用'"
                 >报修</span>
               </template>
             </vxe-table-column>
@@ -176,6 +176,7 @@
               align="right"
               size="mini"
               :layouts="layouts"
+              :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
               :current-page.sync="page.currentPage"
               :page-size.sync="page.pageSize"
               :total="page.totalResult"
@@ -511,7 +512,6 @@ import { Component, Vue } from "vue-property-decorator"
 import {
   LimitInputlength,
   textarealength,
-  page,
   layouts,
   pagesize
 } from "@/InterfaceVariable/variable"
@@ -533,7 +533,11 @@ export default class Matche extends Vue {
   private textarealength = textarealength
   private state = ""
   private Title = ""
-  private page = page
+  private page= {
+  currentPage: 1, //当前页数
+  pageSize: 15, //每页多少条
+  totalResult: 200, //总数
+  }
   private repairshow = false
   private namelist = []
   private departmentData = []
@@ -597,8 +601,8 @@ export default class Matche extends Vue {
       this.departmentData = res.data
     })
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }
     this.gettable(obj)
   }
@@ -641,10 +645,12 @@ export default class Matche extends Vue {
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val)
+        console.log(this.page.currentPage);
+        console.log(this.page.pageSize);
         this.Sval = val
         this.gettable({
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           code:val.code,
           deptCode: val.department,
           userCode: val.user,
@@ -663,7 +669,8 @@ export default class Matche extends Vue {
       console.log(val)
       if (!err) {
         if (this.state == "添加") {
-          console.log(val.deviceStatusName)
+          console.log(this.page.currentPage);
+          console.log(this.page.pageSize);
           this.Policepersonnelsave({
             code: val.code,
             deptCode: val.department,
@@ -675,7 +682,6 @@ export default class Matche extends Vue {
             warrantyDate: moment(val.Warrantydate, "YYYY-MM-DD"),
           })
         } else if (this.state === "编辑") {
-          console.log(val.deviceStatusName)
           let str = ''
           if(val.deviceStatusName == '启用'){
             str = '1'
@@ -686,7 +692,6 @@ export default class Matche extends Vue {
           }else{
             str = val.deviceStatusName
           }
-          // console.log(str)
           this.Policepersonnelsave({
             code: val.code,
             deptCode: val.department,
@@ -744,7 +749,8 @@ export default class Matche extends Vue {
     })
   }
   private pagerchange({ currentPage, pageSize }) {
-    console.log(currentPage, pageSize)
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     this.gettable({ 
       page: currentPage, 
       limit: pageSize ,
@@ -889,8 +895,8 @@ export default class Matche extends Vue {
       if (res.code == 0) {
         this.$message.success(res.msg)
         this.gettable({
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           code:this.Sval.code,
           deptCode: this.Sval.department,
           userCode: this.Sval.user,
@@ -907,8 +913,8 @@ export default class Matche extends Vue {
       if (res.code == 0) {
           this.visible = false
         this.gettable({
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
         })
         this.$message.success(res.msg)
         this.reset()

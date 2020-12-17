@@ -175,7 +175,11 @@ export default class OperationLog extends Vue {
   [x: string]: any
   public form!: any
   public Luckmanagement = new this.$api.configInterface.Luckmanagement()
-  private page = page
+    private page= {
+  currentPage: 1, //当前页数
+  pageSize: 15, //每页多少条
+  totalResult: 200, //总数
+  }
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private tableData = []

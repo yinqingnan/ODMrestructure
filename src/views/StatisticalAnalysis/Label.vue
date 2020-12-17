@@ -95,6 +95,7 @@
             :data="tableData"
             class="mytable-scrollbar"
             ref="kptj"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :row-class-name="tableRowClassName"
           >
             <template v-slot:nameslot="{ row }">{{row.policeName}}({{row.policeNum}})</template>
@@ -145,7 +146,11 @@ export default class VideoStatistics extends Vue {
     { id: "3", value: "1", title: "低" },
   ]
   private tableData = []
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private departmentData = []
   private layouts = layouts
   private deptCode: null | string = null
@@ -210,6 +215,9 @@ export default class VideoStatistics extends Vue {
       field: "evalRate",
     },
   ]
+  private deptCode = ""
+  private policeName = ""
+  private dateRange = ""
   // todo 生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -239,8 +247,8 @@ export default class VideoStatistics extends Vue {
     })
     this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
       let obj = {
-        page: 1,
-        limit: 15,
+        page: this.page.currentPage,
+        limit: this.page.pageSize,
         deptCode: "",
         policeName: "",
         dateRange: res.data.myDate,
@@ -266,13 +274,17 @@ export default class VideoStatistics extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+       
         let date =
           val.date[0].format("YYYY-MM-DD") +
           "~" +
           val.date[1].format("YYYY-MM-DD")
+        this.deptCode = val.department
+        this.policeName = val.user
+        this.dateRange = date
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           policeName: val.user,
           deptCode: val.department,
           dateRange: date,
@@ -281,17 +293,18 @@ export default class VideoStatistics extends Vue {
       }
     })
   }
+
    private pagerchange({ currentPage, pageSize }) {
-     this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
-      let obj = {
-        page: currentPage,
-        limit: pageSize,
-        deptCode: "",
-        policeName: "",
-        dateRange: res.data.myDate,
-      }
-      this.gettabledata(obj)
-    })
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
+    let obj = {
+      page: currentPage,
+      limit: pageSize,
+      deptCode: this.deptCode,
+      policeName: this.policeName,
+      dateRange: this.dateRange,
+    }
+    this.gettabledata(obj)
    }
   public daochu() {
     (this.$refs.kptj as any).exportData({

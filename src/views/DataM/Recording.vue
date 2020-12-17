@@ -55,7 +55,7 @@
           </template>
         </vxe-table-column>
       </vxe-table>
-      <p>
+      <!-- <p>
         <vxe-pager
           align="right"
           size="mini"
@@ -63,8 +63,9 @@
           :current-page.sync="page.currentPage"
           :page-size.sync="page.pageSize"
           :total="page.totalResult"
+          @page-change="pagerchange"
         />
-      </p>
+      </p> -->
     </div>
     <a-modal
       v-model="visible"
@@ -175,7 +176,11 @@ export default class Recording extends Vue {
   public form!: any
   public title = ""
   private visible = false
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private storageTime = [
     { id: '0', value: "0", title: "永久保存" },
     { id: '30', value: "30", title: "30" },
@@ -187,18 +192,18 @@ export default class Recording extends Vue {
     this.form = this.$form.createForm(this)
   }
   private mounted() {
-    this.Height = `${document.documentElement.clientHeight - 230}px`
+    this.Height = `${document.documentElement.clientHeight - 200}px`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
-      _that.Height = `${document.documentElement.clientHeight - 230}px`
+      _that.Height = `${document.documentElement.clientHeight - 200}px`
     })
     this.getdata()
   }
   public getdata() {
     this.DataM.getStoragetable({
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }).then((res) => {
       console.log(res)
       this.tableData = res.data
@@ -318,6 +323,11 @@ export default class Recording extends Vue {
       return val
     }
   }
+  //   private pagerchange({ currentPage, pageSize }) {
+  //   this.page.currentPage = currentPage
+  //   this.page.pageSize = pageSize
+  //   this.getdata()
+  // }
 }
 </script>
 

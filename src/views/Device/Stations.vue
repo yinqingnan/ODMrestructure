@@ -101,6 +101,7 @@
             highlight-hover-row
             :row-class-name="tableRowClassName"
             :data="tableData"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :checkbox-config="{ checkMethod: checCheckboxkMethod2}"
           >
             <vxe-table-column type="checkbox" width="60" align="center" />
@@ -191,7 +192,11 @@ export default class Stations extends Vue {
     { id: "2", value: "0", title: "离线" },
   ]
   private tableData = []
-  private page = page
+    private page= {
+  currentPage: 1, //当前页数
+  pageSize: 15, //每页多少条
+  totalResult: 200, //总数
+  }
   private departmentData = []
   private layouts = layouts
   // todo 生命周期
@@ -206,8 +211,8 @@ export default class Stations extends Vue {
   }
   private mounted() {
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       type_notequal: 3,
     }
     this.gettabledata(obj)
@@ -220,8 +225,8 @@ export default class Stations extends Vue {
   private reset() {
     this.form.resetFields()
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       type_notequal: 3,
     }
     this.gettabledata(obj)
@@ -231,8 +236,8 @@ export default class Stations extends Vue {
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           type_notequal: 3,
           deptCode_equal: val.department,
           name_like: val.name,
@@ -261,6 +266,8 @@ export default class Stations extends Vue {
     return row.source < 3
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -283,8 +290,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)
@@ -308,8 +315,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)
@@ -333,8 +340,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)
@@ -358,8 +365,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)
@@ -383,8 +390,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)
@@ -408,8 +415,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)
@@ -436,8 +443,8 @@ export default class Stations extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             type_notequal: 3,
           }
           this.gettabledata(obj)

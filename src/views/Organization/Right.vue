@@ -19,7 +19,8 @@
                     v-for="(item,index) in tableData"
                     :key="index"
                     class="liststyle"
-                    @click="listbtn(item)"
+                    :class="{'active' : num == index}"
+                    @click="listbtn(item,index)"
                   >
                     <div>
                       <h2 v-if="item.isEnabled">{{item.name}}</h2>
@@ -103,7 +104,6 @@ export default class Right extends Vue {
   public checkedKeys = [] //默认选中的
   public selectKeys = []
   public onExpand(expandedKeys) {
-    // console.log("onExpand", expandedKeys)
     this.expandedKeys = expandedKeys
     this.autoExpandParent = false
   }
@@ -143,8 +143,6 @@ export default class Right extends Vue {
   }
   private treesave() {
     if (this.selectKeys.length != 0) {
-      console.log()
-      console.log()
       this.OrganizationM.rightsTreesave({
         menuIds: this.selectKeys,
         rightId: this.id,
@@ -230,7 +228,11 @@ export default class Right extends Vue {
       row.isEnabled = 1
     }
   }
-  private listbtn(row) {
+  private num = null
+  private listbtn(row,index) {
+    console.log(row)
+    this.expandedKeys = []
+    this.num = index
     this.id = row.id
     this.gettreedata({ rightId: row.id })
   }
@@ -243,17 +245,31 @@ export default class Right extends Vue {
   }
   private gettreedata(obj) {
     this.OrganizationM.rightsTree(obj).then((res) => {
+      this.expandedKeys = []
       this.treeData = res.data
       // 筛选需要选中的值
       if (res.data) {
         let arr = []
-        let obj = res.data.filter((item) => {
-          return item.checkArr.checked == 1
+        res.data.map((item) => {
+          if(item.checkArr.checked == 1){
+            arr.push(item.code)
+          }
+          if(item.children){
+              item.children.map(el => {
+                if(el.checkArr.checked == 1){
+                  arr.push(el.code)
+                }
+                if(el.children){
+                  el.children.map(st => {
+                    if(st.checkArr.checked == 1){
+                      arr.push(st.code)
+                    }
+                  })
+                }
+              })
+            }
         })
-        obj.map((el) => {
-          arr.push(el.code)
-        })
-        this.checkedKeys = arr
+        this.checkedKeys = arr 
       }
     })
   }
@@ -307,5 +323,8 @@ export default class Right extends Vue {
 }
 .editbody{
   border: 1px solid #ececec;
+}
+.active{
+  background: #ececec;
 }
 </style>

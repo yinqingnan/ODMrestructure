@@ -102,6 +102,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
             show-header-overflow
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
@@ -467,7 +468,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { LimitInputlength, page, layouts ,textarealength} from "@/InterfaceVariable/variable"
+import { LimitInputlength,  layouts ,textarealength} from "@/InterfaceVariable/variable"
 import moment from "moment"
 @Component({
   components: {},
@@ -484,7 +485,11 @@ export default class EvalRandom extends Vue {
   private textarealength = textarealength
   private departmentData = []
   private defaultdate = []
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private layouts = layouts
   private Height = ""
   private textcolor = false

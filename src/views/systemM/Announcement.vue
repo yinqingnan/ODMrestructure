@@ -60,6 +60,7 @@
             show-header-overflow
             :row-class-name="tableRowClassName"
             :data="tabData"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
@@ -190,13 +191,13 @@
                     'type',
                     {
                       rules: [{ required: true, message: '公告类型不能为空' }],
-                      initialValue: '1',
+                      initialValue: 1,
                     },
                   ]"
                   placeholder="请选择"
                 >
-                  <a-select-option key="1">通知</a-select-option>
-                  <a-select-option key="2">系统升级</a-select-option>
+                  <a-select-option :key="1">通知</a-select-option>
+                  <a-select-option :key="2">系统升级</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -318,7 +319,11 @@ export default class RightContent extends Vue {
     labelCol: { span: 7 },
     wrapperCol: { span: 15 },
   }
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private layouts = layouts
@@ -349,8 +354,8 @@ export default class RightContent extends Vue {
   }
   created() {
     const val = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       status: this.seachKey,
     }
     this.getList(val)
@@ -392,8 +397,8 @@ export default class RightContent extends Vue {
       if (!err) {
         this.seachKey = values.select
         const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           status: this.seachKey,
         }
         this.getList(val)
@@ -407,8 +412,8 @@ export default class RightContent extends Vue {
     this.pagination.pageSize = pagination.pageSize
     this.pagination.current = pagination.current
     const obj = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       status: this.seachKey,
     }
     this.getList(obj)
@@ -429,8 +434,8 @@ export default class RightContent extends Vue {
           _that.getData.removeItem(DT, true).then((res: any) => {
             if (res.code == 0) {
               const val = {
-                page: _that.pagination.current,
-                limit: _that.pagination.pageSize,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
                 status: _that.seachKey,
               }
               _that.getList(val)
@@ -483,13 +488,18 @@ export default class RightContent extends Vue {
             isALL: "on",
           }
         } else {
+          console.log(values.type)
+          let str = ''
+          if(values.type == '通知') str = '1'
+          else if(values.type == '系统升级') str = '2'
+          else str = values.type
           this.saveData = {
             acceptDeptCode: values.acceptDeptCode,
             content: values.remark,
             endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
             sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
             title: values.title,
-            type: values.type,
+            type: str,
             id: this.id,
           }
         }
@@ -521,8 +531,8 @@ export default class RightContent extends Vue {
         this.visible = !this.visible
         this.form2.resetFields()
         const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           status: this.seachKey,
         }
         this.getList(val)
@@ -537,8 +547,8 @@ export default class RightContent extends Vue {
         this.visible = !this.visible
         this.form2.resetFields()
         const val = {
-          page: this.pagination.current,
-          limit: this.pagination.pageSize,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           status: this.seachKey,
         }
         this.getList(val)
@@ -556,6 +566,8 @@ export default class RightContent extends Vue {
     })
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let val = {
       page: currentPage,
       limit: pageSize,

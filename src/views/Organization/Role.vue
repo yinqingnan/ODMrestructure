@@ -199,7 +199,11 @@ export default class Role extends Vue {
   public str = ""
   public visible = false
   public OrganizationM = new this.$api.configInterface.OrganizationM()
-  private page = page
+    private page= {
+  currentPage: 1, //当前页数
+  pageSize: 15, //每页多少条
+  totalResult: 200, //总数
+  }
   private options = []
   private selectarr = []
   private configshow = false

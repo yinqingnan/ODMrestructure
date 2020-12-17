@@ -112,6 +112,7 @@
             :row-class-name="tableRowClassName"
             class="mytable-scrollbar"
             show-header-overflow
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
@@ -538,7 +539,11 @@ export default class EvalRecord extends Vue {
   private LimitInputlength = LimitInputlength
   private departmentData = []
   private defaultdate = [moment("2010-10-20"), moment("2020-10-20")]
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private textcolor = false
   private tableColumn = [
     { type: "seq", width: 60, fixed: null, title: "序号", align: "center" },
@@ -649,8 +654,8 @@ export default class EvalRecord extends Vue {
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
       this.gettabledata({
-        page: 1,
-        limit: 10,
+        page: this.page.currentPage,
+        limit: this.page.pageSize,
         deptCode: "",
         user: "",
         isNormal: -1,
@@ -684,8 +689,8 @@ export default class EvalRecord extends Vue {
           val.date[1]
         ).format("YYYY-MM-DD")}`
         this.gettabledata({
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode: val.department,
           user: val.user,
           isNormal: val.Evaluation,
@@ -759,7 +764,8 @@ export default class EvalRecord extends Vue {
     }
   }
   private pagerchange({ currentPage, pageSize }) {
-    console.log(currentPage, pageSize)
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let str = 0
     if (this.formdata.contain) {
       str = 1

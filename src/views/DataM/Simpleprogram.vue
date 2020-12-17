@@ -118,6 +118,7 @@
             border
             resizable
             height="auto"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :data="tableData"
             highlight-hover-row
             :row-class-name="tableRowClassName"
@@ -151,7 +152,7 @@
             >
               <template v-slot="{ row }">{{row.userName}}({{row.userCode}})</template>
             </vxe-table-column>
-            <vxe-table-column field="litigant" title="当事人" align="center" min-width="80" />
+            <vxe-table-column field="litigant" title="当事人" align="center" min-width="70" />
             <vxe-table-column
               field="driverNum"
               title="驾驶证号"
@@ -159,7 +160,7 @@
               show-overflow
               min-width="80"
             />
-            <vxe-table-column field="numberPlate" title="号牌号码" align="center" min-width="80" />
+            <vxe-table-column field="numberPlate" title="号牌号码" align="center" min-width="90" />
             <vxe-table-column
               field="hpzlText"
               title="号牌种类"
@@ -454,7 +455,11 @@ export default class Simpleprogram extends Vue {
   private Height = ""
   private pagesize = pagesize
   private tableData = []
-  private page = page
+  private page= {
+  currentPage: 1, //当前页数
+  pageSize: 15, //每页多少条
+  totalResult: 200, //总数
+  }
   private loading = false
   private layouts = layouts
   private defaultdate = [
@@ -580,8 +585,8 @@ export default class Simpleprogram extends Vue {
         console.log(val)
         this.formdata = val
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           zqbm_equal: val.department, //部门id
           mjxm: val.user, //警员
           dsr_like: val.party, //当事人
@@ -611,8 +616,8 @@ export default class Simpleprogram extends Vue {
           val.Filetype = ""
         }
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode_equal: val.department,
           userName: val.user,
           fileType_equal: val.Filetype,
@@ -644,8 +649,8 @@ export default class Simpleprogram extends Vue {
       ]
       console.log(this.defaultdate[0].format('YYYY-MM-DD HH:mm:ss'))
       let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           zqbm_equal: '', //部门id
           mjxm: '', //警员
           dsr_like: '', //当事人
@@ -693,6 +698,8 @@ export default class Simpleprogram extends Vue {
     })
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -739,8 +746,8 @@ export default class Simpleprogram extends Vue {
           ),
         ]
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode_equal: localStorage.getItem('deptCode'),
           userName: "",
           fileType_equal: "",

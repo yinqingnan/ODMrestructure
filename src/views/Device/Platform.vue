@@ -91,6 +91,7 @@
             :data="tableData"
             show-header-overflow
             highlight-hover-row
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :row-class-name="tableRowClassName"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
@@ -160,7 +161,11 @@ export default class Platform extends Vue {
   public DeviceM = new this.$api.configInterface.DeviceM()
   public LimitInputlength = LimitInputlength
   public textarealength = textarealength
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private tableData = []
   private departmentData = []
   private layouts = layouts
@@ -181,8 +186,8 @@ export default class Platform extends Vue {
   }
   private mounted() {
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       type_equal: 3,
     }
     this.gettabledata(obj)
@@ -207,6 +212,8 @@ export default class Platform extends Vue {
     })
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -217,8 +224,8 @@ export default class Platform extends Vue {
   private reset() {
     this.form.resetFields()
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       type_equal: 3,
     }
     this.gettabledata(obj)
@@ -229,8 +236,8 @@ export default class Platform extends Vue {
       if (!err) {
         console.log(val)
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           type_equal: 3,
           deptCode_equal: val.department,
           name_like: val.name,
@@ -252,8 +259,8 @@ export default class Platform extends Vue {
           if (res.code == 0) {
             that.$message.success(res.msg)
             that.gettabledata({
-              page: 1,
-              limit: 15,
+              page: this.page.currentPage,
+              limit: this.page.pageSize,
               type_equal: 3,
             })
           } else {

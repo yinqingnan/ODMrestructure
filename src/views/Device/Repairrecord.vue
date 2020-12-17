@@ -112,6 +112,7 @@
             :data="tableData"
             class="mytable-scrollbar"
             ref="kptj"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :row-class-name="tableRowClassName"
           >
             <template v-slot:nameslot="{ row }">
@@ -160,7 +161,11 @@ export default class Repairrecord extends Vue {
   public DeviceM = new this.$api.configInterface.DeviceM()
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private departmentData = []
   private tableData = []
   private Date = []
@@ -190,8 +195,8 @@ export default class Repairrecord extends Vue {
   }
   private mounted() {
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       deptCode: "",
       reportUserName: "",
       reportTimes: "",
@@ -205,6 +210,8 @@ export default class Repairrecord extends Vue {
   // todo 事件
 
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -222,8 +229,8 @@ export default class Repairrecord extends Vue {
         console.log(val.date.length)
         if (val.date.length > 0) {
           this.gettabledata({
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode: val.department,
             reportUserName: val.user,
             reportTimes: `${moment(val.date[0]).format("YYYY-MM-DD")}~${moment(
@@ -233,8 +240,8 @@ export default class Repairrecord extends Vue {
           })
         } else {
           this.gettabledata({
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode: val.department,
             reportUserName: val.user,
             reportTimes: "",
@@ -284,8 +291,8 @@ export default class Repairrecord extends Vue {
       if (res.code == 0) {
         this.$message.success(`设备${row.matcheCode}启动成功`)
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode: "",
             reportUserName: "",
             reportTimes: "",

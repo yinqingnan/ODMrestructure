@@ -22,6 +22,7 @@
             class="mytable-scrollbar"
             :row-class-name="tableRowClassName"
             :data="tableData"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
@@ -255,7 +256,11 @@ export default class Upgrade extends Vue {
 
   private layouts = layouts
   private visible = false
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private filename = ""
   private fileList = []
   private id = ""
@@ -272,8 +277,8 @@ export default class Upgrade extends Vue {
   }
   private mounted() {
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }
     this.gettabledata(obj)
     // this.getdata()
@@ -286,8 +291,8 @@ export default class Upgrade extends Vue {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private pagerchange({ currentPage, pageSize }) {
-    console.log(currentPage, pageSize)
-
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -352,8 +357,8 @@ export default class Upgrade extends Vue {
             if (res.code == 0) {
               _that.$message.success(res.msg)
               let obj = {
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
               }
               _that.gettabledata(obj)
             } else {
@@ -418,8 +423,8 @@ export default class Upgrade extends Vue {
                   this.form.resetFields()
                   this.visible = false
                   let obj = {
-                    page: 1,
-                    limit: 15,
+                    page: this.page.currentPage,
+                    limit: this.page.pageSize,
                   }
                   this.gettabledata(obj)
                 } else {
@@ -446,8 +451,8 @@ export default class Upgrade extends Vue {
               this.form.resetFields()
               this.visible = false
               let obj = {
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
               }
               this.gettabledata(obj)
             } else {

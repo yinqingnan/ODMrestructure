@@ -115,6 +115,7 @@
             class="mytable-scrollbar"
             :row-class-name="tableRowClassName"
             :data="tableData"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
           >
             <vxe-table-column type="checkbox" width="60" align="center" fixed="left" />
             <vxe-table-column
@@ -462,7 +463,11 @@ export default class User extends Vue {
   private maxTagTextLength = 2
   private visible = false
   private str = ""
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private tableData = []
@@ -501,8 +506,8 @@ export default class User extends Vue {
     })
     this.getdata()
     let obj = {
-      page: 1,
-      limit: 15,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
       deptCode: "",
       name: "",
       code: "",
@@ -524,6 +529,8 @@ export default class User extends Vue {
   }
 
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       limit: pageSize,
@@ -568,8 +575,8 @@ export default class User extends Vue {
         this.code = val.usercode
         this.type = val.Account
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode: val.department,
           name: val.username,
           code: val.usercode,
@@ -611,8 +618,8 @@ export default class User extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           this.gettabledata({
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode: "",
             name: "",
             code: "",
@@ -638,8 +645,8 @@ export default class User extends Vue {
         if (res.code == 0) {
           this.$message.success(res.msg)
           this.gettabledata({
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode: "",
             name: "",
             code: "",
@@ -730,8 +737,8 @@ export default class User extends Vue {
                   _that.$message.success(res.msg)
 
                   _that.gettabledata({
-                    page: 1,
-                    limit: 15,
+                    page: this.page.currentPage,
+                    limit: this.page.pageSize,
                     deptCode: "",
                     name: "",
                     code: "",
@@ -756,8 +763,8 @@ export default class User extends Vue {
                   _that.$message.success(res.msg)
 
                   _that.gettabledata({
-                    page: 1,
-                    limit: 15,
+                    page: this.page.currentPage,
+                    limit: this.page.pageSize,
                     deptCode: "",
                     name: "",
                     code: "",
@@ -813,8 +820,8 @@ export default class User extends Vue {
               this.$message.success(res.msg)
               this.visible = false
               this.gettabledata({
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
                 deptCode: "",
                 name: "",
                 code: "",
@@ -859,8 +866,8 @@ export default class User extends Vue {
               this.visible = false
               this.form.resetFields()
               this.gettabledata({
-                page: 1,
-                limit: 15,
+                page: this.page.currentPage,
+                limit: this.page.pageSize,
                 deptCode: "",
                 name: "",
                 code: "",
@@ -961,7 +968,7 @@ export default class User extends Vue {
       let formData = new FormData() //保存文件后再保存
       formData.append("file", this.fileList[0])
       axios
-        .post(http + "api/mdm/device/matche/import", formData, {
+        .post(http + "api/uauth/base/user/import", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Token: localStorage.getItem("token"),

@@ -150,6 +150,7 @@
             class="mytable-scrollbar"
             highlight-hover-row
             ref="xTable1"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
           >
@@ -575,7 +576,11 @@ export default class AvData extends Vue {
   public form2!: any
   public form3!: any
   private departmentData = []
-  private page = page
+  private page= {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
   private activeKey = "1"
   private tcselect = []
   private visible = false
@@ -700,8 +705,8 @@ export default class AvData extends Vue {
         let uploadDate_lt = val.date[1].format("YYYY-MM-DD HH:mm:ss")
         if (val.TimeData == "uploadDate") {
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode_equal: val.department, //部门id
             userName: val.user, //警员
             timeType: val.TimeData, //时间类型
@@ -714,8 +719,8 @@ export default class AvData extends Vue {
           this.gettabledata(obj)
         } else if (val.TimeData == "recordDate") {
           let obj = {
-            page: 1,
-            limit: 15,
+            page: this.page.currentPage,
+            limit: this.page.pageSize,
             deptCode_equal: val.department, //部门id
             userName: val.user, //警员
             timeType: val.TimeData, //时间类型
@@ -751,8 +756,8 @@ export default class AvData extends Vue {
       ]
       // console.log(moment(res.data.myDate.split("~")[1]))
       let obj = {
-        page: 1,
-        limit: 15,
+        page: this.page.currentPage,
+        limit: this.page.pageSize,
         deptCode_equal: "", //部门id
         userName: "", //警员
         timeType: "uploadDate", //时间类型
@@ -1113,7 +1118,8 @@ export default class AvData extends Vue {
     }
   }
   public pagerchange({ currentPage, pageSize }) {
-    // console.log(this.formdata.date.length)
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     console.log(this.defaultdate[0].format(
           "YYYY-MM-DD HH:mm:ss"
         ))
@@ -1247,8 +1253,8 @@ export default class AvData extends Vue {
       if (res.code == 0) {
         this.$message.success(res.msg)
         let obj = {
-          page: 1,
-          limit: 15,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode_equal: this.formdata.department, //部门id
           userName: this.formdata.user, //警员
           timeType: this.formdata.TimeData, //时间类型
