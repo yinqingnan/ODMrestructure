@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2020-12-01 11:37:14
- * @LastEditTime: 2020-12-15 15:28:40
+ * @LastEditTime: 2020-12-16 16:54:31
  * @FilePath: \src\views\DataM\Lawarchives.vue
 -->
 
@@ -17,7 +17,7 @@
           视音频关联案件违法时间范围：前
           <a-input placeholder v-model="time1" @blur="inputchange"/>
           分钟，后
-          <a-input placeholder v-model="time2" @blur="inputchange"/>
+          <a-input placeholder v-model="time2" @blur="inputchange" ref="input2"/>
           分钟。
         </div>
         <p>示例：假设案件违法时间为10:00,自动关联的视频拍摄时间范围为{{inputContent}}</p>
@@ -56,13 +56,10 @@ export default class Lawarchives extends Vue {
 // }
   get inputContent() {
     // moment(m2 - m1).format('HH时mm分ss秒');
-    console.log()
-    console.log()
-    return `${moment('10:00','hh:mm').subtract(parseInt(this.time1), "minutes").format('hh:mm')} ~ ${moment('10:00','hh:mm').add(parseInt(this.time2), "minutes").format('hh:mm')}`;
+    return `${moment('10:00','hh:mm').subtract(parseInt(this.time1), "minutes").format('HH:mm')} ~ ${moment('10:00','hh:mm').add(parseInt(this.time2), "minutes").format('HH:mm')}`;
   }
   private getdata() {
     this.DataM.getrelationdata({}).then((res: any) => {
-      console.log(res)
       this.time1 = res.data[0].value
       this.time2 = res.data[1].value
     })
@@ -81,15 +78,15 @@ export default class Lawarchives extends Vue {
             }
         })
       }else{
-      this.$message.error("偏移时间输入不正确，请输入0到180之间的整数")
+        this.$message.error("偏移时间输入不正确，请输入0到180之间的整数")
+        this.DataM.getrelationdata({}).then((res: any) => {
+          this.time1 = res.data[0].value
+          this.time2 = res.data[1].value
+        })
       }
     }else{
       this.$message.error("偏移时间输入不正确，请输入0到180之间的整数")
     }
-    
-   
-
-   
   }
 }
 </script>

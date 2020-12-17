@@ -332,15 +332,15 @@ export default class RightContent extends Vue {
   public seachKey = "all"
   public saveData = {}
   public pagination = {
-    pageSize: 10, // 默认每页显示数量
+    pageSize: 15, // 默认每页显示数量
     current: 1, //显示当前页数
     total: 0,
-    showSizeChanger: false, // 显示可改变每页数量
-    showQuickJumper: false, //显示跳转到输入的那一页
-    showTotal: (total: number) =>
-      `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-        total / this.pagination.pageSize
-      )} 页`, // 显示总数
+    // showSizeChanger: false, // 显示可改变每页数量
+    // showQuickJumper: false, //显示跳转到输入的那一页
+    // showTotal: (total: number) =>
+    //   `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
+    //     total / this.pagination.pageSize
+    //   )} 页`, // 显示总数
   }
   
   beforeCreate() {
@@ -514,7 +514,7 @@ export default class RightContent extends Vue {
       this.isShow = true
     }
   }
-    private editVal(val: any) {
+  private editVal(val: any) {
     this.getData.editVal(val, true).then((res: any) => {
       if (res.code == 0) {
         this.$message.success(res.msg)

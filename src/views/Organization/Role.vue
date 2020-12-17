@@ -68,7 +68,7 @@
                   style="color:#0db8df;margin-right:8px;cursor: pointer;"
                 >删除</span>
                 <span
-                 v-isshow="'role:refright,role:right'"
+                 v-isshow="'role:refright'"
                   type="text"
                   @click="configure(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:8px;"

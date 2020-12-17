@@ -50,10 +50,8 @@
       </div>
       <div class="menuright">
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <div style="height:40px;padding-top:5px;display: flex;
-    justify-content: flex-end;"
->
-            <a-button type="primary" @click="addbtn" v-isshow="'menu:save'">添加按钮</a-button>
+          <div style="height:40px;padding-top:5px;display: flex;    justify-content: flex-end;margin-bottom:10px">
+            <a-button style="margin-top:5px" type="primary" @click="addbtn" v-isshow="'menu:save'">添加按钮</a-button>
           </div>
           <vxe-table
             stripe
@@ -66,26 +64,20 @@
             :row-class-name="tableRowClassName"
             :data="tableData"
           >
-            <vxe-table-column
-              field="name"
-              title="按钮名称"
-              show-overflow
-              align="center"
-              width="10%"
-            />
+            <vxe-table-column field="name" title="按钮名称" show-overflow align="center" width="20%" />
             <vxe-table-column
               field="permission"
               title="按钮关键字"
               show-overflow
               align="center"
-              width="20%"
+              width="30%"
             />
             <vxe-table-column
               field="createUser"
               title="创建人"
               show-overflow
               align="center"
-              width="10%"
+              width="20%"
             />
             <vxe-table-column
               field="createTime"
@@ -94,14 +86,19 @@
               align="center"
               width="15%"
             />
-            <vxe-table-column title="操作" show-overflow align="center" fixed="right" width="10%">
+            <vxe-table-column title="操作" show-overflow align="center" fixed="right" width="15%">
               <template v-slot="{ row }">
                 <span
                   type="text"
                   @click="tableedit(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
                 >编辑</span>
-                <span type="text" @click="tableDlt(row)" style="color:#0db8df;cursor: pointer;" v-isshow="'menu:delete'">删除</span>
+                <span
+                  type="text"
+                  @click="tableDlt(row)"
+                  style="color:#0db8df;cursor: pointer;"
+                  v-isshow="'menu:delete'"
+                >删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -169,16 +166,7 @@
           <a-col :span="12">
             <a-form-item label="排序">
               <a-input
-                v-decorator="['sort', { initialValue: '',  rules: [{ validator: (rule, val, callback) => {
-                var pattern = new RegExp( /^\d+$|^\d+[.]?\d+$/)
-                if (!pattern.test(val)){
-                callback('只能输入数字');
-                }else {
-                  callback();
-                }
-                  callback();
-                },
-                }] }]"
+                v-decorator="['sort', { initialValue: '',  rules: [{validator:menusort}] }]"
                 :max-length="LimitInputlength"
                 placeholder="请输入数字，不接受英文字母及汉字"
               >/></a-input>
@@ -400,7 +388,6 @@ export default class Menu extends Vue {
   // todo事件
 
   private rightClick(e) {
-    
     this.tmDisplay = true
     this.id = e.node.dataRef.code
     this.parentid = e.node.dataRef.parentCode
@@ -619,7 +606,7 @@ export default class Menu extends Vue {
           component: val.component,
           permission: val.permission,
           remark: res.data.remark,
-          isDisable: val.isEnabled +"" ,
+          isDisable: val.isEnabled + "",
           route: val.route + "",
           isHide: val.hidden + "",
           isKeepAlive: val.keepAlive + "",
@@ -712,6 +699,15 @@ export default class Menu extends Vue {
       this.treedata = res.data
     })
   }
+  private menusort (rule, val, callback){
+    let pattern = new RegExp( /^\d+$|^\d+[.]?\d+$/)
+      if (!pattern.test(val)){
+        callback('只能输入数字');
+      }else {
+        callback();
+      }
+        callback();
+  }
 }
 </script>
 
@@ -723,12 +719,12 @@ export default class Menu extends Vue {
     width: 280px;
     // background: pink;
     .menuleft_header {
-      height: 41px;
+      height: 51px;
       line-height: 1;
       background: #fff;
       border-bottom: 1px solid #e8eaec;
       button {
-        margin-top: 5px;
+        margin-top: 10px;
         margin-left: 20px;
         line-height: 1;
       }
@@ -755,8 +751,8 @@ export default class Menu extends Vue {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   // height 90px
 }
-.pbg{
-  div{
+.pbg {
+  div {
     background: #fff;
   }
 }

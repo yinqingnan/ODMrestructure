@@ -494,8 +494,7 @@
               <a-divider orientation="left" style="color:#919AA6;font-size:12px">
                 失败原因
               </a-divider>
-              <p style="padding:0 36px 0 30px">
-                {{errormsg}}
+              <p style="padding:0 36px 0 30px" v-html="errormsg">
               </p>
            </div>
          </div>
@@ -664,6 +663,7 @@ export default class Matche extends Vue {
       console.log(val)
       if (!err) {
         if (this.state == "添加") {
+          console.log(val.deviceStatusName)
           this.Policepersonnelsave({
             code: val.code,
             deptCode: val.department,
@@ -676,11 +676,21 @@ export default class Matche extends Vue {
           })
         } else if (this.state === "编辑") {
           console.log(val.deviceStatusName)
+          let str = ''
+          if(val.deviceStatusName == '启用'){
+            str = '1'
+          }else if(val.deviceStatusName == '禁用'){
+            str = '2'
+          }else if(val.deviceStatusName == '报废'){
+            str = '3'
+          }else{
+            str = val.deviceStatusName
+          }
           // console.log(str)
           this.Policepersonnelsave({
             code: val.code,
             deptCode: val.department,
-            deviceStatus: val.deviceStatusName,
+            deviceStatus: str,
             deviceType: val.deviceType,
             id: this.editId,
             purchasingDate: moment(val.purchasedate, "YYYY-MM-DD"),
@@ -813,7 +823,9 @@ export default class Matche extends Vue {
               },
             })
             .then((res: any) => {
-              console.log(res)
+              let str,str1 = ''
+              str = res.data.replace(/%n1/g,"&nbsp;")
+              str1 = str.replace(/%n2/g,"<br/>")
               if(res.data == 'ok'){
                 this.importshow = false
                 this.iserror = false
@@ -822,7 +834,7 @@ export default class Matche extends Vue {
                 this.$message.success('导入成功')
               }else{
                 this.iserror = true
-                this.errormsg = res.data
+                this.errormsg = str1
               }
             })
     }else{
@@ -1020,5 +1032,7 @@ export default class Matche extends Vue {
 .gzms /deep/ .ant-form-item-control-wrapper {
   width: 524px;
 }
-
+.textareatext{
+  display: flex;
+}
 </style>

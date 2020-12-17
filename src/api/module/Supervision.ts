@@ -75,8 +75,37 @@ export class Supervision {
     }
     // todo 考评设置保存按钮
     
+    // public EvaluationsettingsSave(params: object, jwt= true) {
+    //   const url = "/api/tpb/lawarchives/dm-jfx/saveList";
+    //   const body = params
+    //   return new Promise((resolve, reject) => {
+    //     this.axios.post(url, body, {
+    //       headers: { isJwt: jwt },
+    //     }).then((res: any) => {
+    //       this.resultHandle(res, resolve);
+    //     }).catch((err: { message: any }) => {
+    //       reject(err.message);
+    //     });
+    //   });
+    // }
+
+    // todo 考评设置 删除 /api/tpb/lawarchives/dm-jfx/delete/{id}
+    public Evaluationsetdlt(params: string) {
+      const url = "/api/tpb/lawarchives/dm-jfx/delete/" + params;
+      return new Promise((resolve, reject) => {
+        this.axios.get(url, {
+          params: params,
+        }).then((res: any) => {
+          this.resultHandle(res, resolve);
+        }).catch((err: { message: any }) => {
+          reject(err.message);
+        });
+      });
+    }
+    // todo 考评设置单个保存
+    
     public EvaluationsettingsSave(params: object, jwt= true) {
-      const url = "/api/tpb/lawarchives/dm-jfx/saveList";
+      const url = "/api/tpb/lawarchives/dm-jfx/save";
       const body = params
       return new Promise((resolve, reject) => {
         this.axios.post(url, body, {
@@ -88,11 +117,6 @@ export class Supervision {
         });
       });
     }
-
-
-
-
-
 
 
 

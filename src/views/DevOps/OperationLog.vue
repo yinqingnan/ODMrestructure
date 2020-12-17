@@ -90,6 +90,7 @@
             border
             resizable
             height="auto"
+            show-header-overflow
             ref="logAdministration"
             highlight-hover-row
             class="mytable-scrollbar"
@@ -102,35 +103,42 @@
               title="日志类型"
               show-overflow
               align="center"
-              minWidth="160"
+              width="15%"
             />
             <vxe-table-column
               field="module"
               title="功能模块"
               show-overflow
               align="center"
-              minWidth="160"
+              width="15%"
             />
             <vxe-table-column
               field="department"
               title="所属部门（部门编号）"
               show-overflow
               align="center"
-              minWidth="240"
+              width="15%"
             />
             <vxe-table-column
               field="operator"
               title="操作人员（警号）"
               show-overflow
               align="center"
-              minWidth="240"
+              width="15%"
+            />
+            <vxe-table-column
+              field="content"
+              title="日志内容"
+              show-overflow
+              align="center"
+              width="15%"
             />
             <vxe-table-column
               field="createTime"
               title="操作时间"
               show-overflow
               align="center"
-              minWidth="130"
+              width="15%"
             />
           </vxe-table>
           <p>
@@ -211,7 +219,6 @@ export default class OperationLog extends Vue {
       module_equal: this.module_equal,
       createTime: this.defaultdate,
     }
-    console.log(obj)
     this.Luckmanagement.getlogtable(obj).then((res) => {
       this.tableData = res.data
       this.page.totalResult = parseInt(res.count)
@@ -224,14 +231,6 @@ export default class OperationLog extends Vue {
     this.type_equal = "-1"
     this.module_equal = "-1"
     this.form.resetFields()
-    let obj = {
-      page: 1,
-      size: 15,
-      type_equal: this.type_equal,
-      module_equal: this.module_equal,
-      createTime: this.defaultdate,
-    }
-    this.gettabledata(obj)
   }
   private handle(e) {
     e.preventDefault()
@@ -243,18 +242,14 @@ export default class OperationLog extends Vue {
         this.defaultdate = `${val.date[0].format(
           "YYYY-MM-DD"
         )} ~ ${val.date[1].format("YYYY-MM-DD")}`
-        console.log(this.module_equal)
-        console.log(this.type_equal)
-        console.log(this.defaultdate)
-
         this.gettabledata({
           page: 1,
-          limit: 15,
-          type_equal: this.type_equal,
-          module_equal: this.module_equal,
+          size: 15,
+          type_equal: val.module_equal,
+          module_equal: val.type_equal,
           createTime: `${val.date[0].format(
-            "YYYY-MM-DD"
-          )} ~ ${val.date[1].format("YYYY-MM-DD")}`,
+          "YYYY-MM-DD"
+        )} ~ ${val.date[1].format("YYYY-MM-DD")}`,
         })
       }
     })
@@ -287,6 +282,7 @@ export default class OperationLog extends Vue {
     })
   }
   private gettabledata(obj) {
+    console.log(obj)
     this.Luckmanagement.getlogtable(obj).then((res) => {
       this.tableData = res.data
       this.page.totalResult = parseInt(res.count)

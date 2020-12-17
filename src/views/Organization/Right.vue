@@ -7,7 +7,7 @@
           <h2>权限项</h2>
         </div>
         <div>
-          <div style="width:320px;">
+          <div style="width:366px;">
             <div>
               <el-scrollbar
                 class="boxscrollbar"
@@ -27,7 +27,8 @@
                     </div>
                     <div>
                       <template v-if="item.isEnabled">
-                        <a-button style="margin-right:8px" @click="edit(item)" v-isshow="'right:update,right:refmenu'">编辑</a-button>
+                        <!-- <a-button style="margin-right:8px" @click="edit(item)" v-isshow="'right:update,right:refmenu'">编辑</a-button> -->
+                        <a-button style="margin-right:8px" @click="edit(item)" >编辑</a-button>
                         <a-button @click="dlt(item)" type="primary" v-isshow="'right:delete'">删除</a-button>
                       </template>
                       <template v-else>
@@ -54,7 +55,8 @@
           <div class="menuleft_header">
             <h2>菜单按钮</h2>
           </div>
-          <div>
+          <div style="padding-left:30px;" :style="{height:(parseInt(Height))+'px'}">
+            <el-scrollbar style="height:100%">
             <a-tree
               v-model="checkedKeys"
               checkable
@@ -70,6 +72,7 @@
                 }"
               @expand="onExpand"
             />
+          </el-scrollbar>
           </div>
         </div>
         <div class="rightfooter">

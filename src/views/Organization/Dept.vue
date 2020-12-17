@@ -291,7 +291,8 @@
         <div class="importfooter">
           <div v-if="iserror">
             <a-divider orientation="left" style="color:#919AA6;font-size:12px">失败原因</a-divider>
-            <p style="padding:0 36px 0 30px">{{errormsg}}</p>
+            <p style="padding:0 36px 0 30px" v-html="errormsg">
+            </p>
           </div>
         </div>
         <template slot="footer">
@@ -350,7 +351,6 @@ export default class Dept extends Vue {
   private iserror = false
   private errormsg = ""
   private filename = ""
-  private errormsg = ""
   private Disable = false
   //todo 生命周期
   beforeCreate() {
@@ -475,6 +475,9 @@ export default class Dept extends Vue {
           },
         })
         .then((res: any) => {
+           let str,str1 = ''
+              str = res.data.replace(/%n1/g,"&nbsp;")
+              str1 = str.replace(/%n2/g,"<br/>")
           if (res.data == "ok") {
             this.importshow = false
             this.iserror = false
@@ -483,7 +486,7 @@ export default class Dept extends Vue {
             this.$message.success('导入成功')
           } else {
             this.iserror = true
-            this.errormsg = res.data
+            this.errormsg = str1
           }
         })
     } else {

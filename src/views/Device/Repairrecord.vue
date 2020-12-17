@@ -90,7 +90,7 @@
           </template>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
-          <vxe-table
+          <!-- <vxe-table
             border
             class="mytable-scrollbar"
             :row-class-name="tableRowClassName"
@@ -101,7 +101,26 @@
             :data="tableData"
             >
             <vxe-table-column v-for=" (config, index) in tableColumn" :key="index" v-bind="config" />
-          </vxe-table>
+          </vxe-table> -->
+           <vxe-grid
+            border
+            stripe
+            resizable
+            height="auto"
+            show-header-overflow
+            :columns="tableColumn"
+            :data="tableData"
+            class="mytable-scrollbar"
+            ref="kptj"
+            :row-class-name="tableRowClassName"
+          >
+            <template v-slot:nameslot="{ row }">
+              <span v-if="row.activeTime">{{row.activeTime}}</span>
+              <span v-else style="cursor: pointer;color:#0dc6eb" @click="qybtn(row)">
+                启用
+              </span>
+            </template>
+          </vxe-grid>
           <p>
             <vxe-pager
               align="right"
@@ -153,10 +172,10 @@ export default class Repairrecord extends Vue {
     { field: "matcheCode", title: "产品序号", width:'10%' , align: "center",showOverflow:true},
     { field: "deviceType", title: "设备类型" , width:'10%', align: "center",showOverflow:true},
     { field: "deptName", title: "所属部门", width:'10%', align: "center" ,showOverflow:true},
-    { field: "affectUserNames",type:'html', title: "影响民警(警号)" , width:'10%', align: "center", showOverflow:true,formatter:this.formatRole},
+    { field: "affectUserNames",type:'html', title: "影响民警(警号)" , width:'10%', align: "center", showOverflow:true, formatter:this.formatRole},
     { field: "createTime", title: "保修时间" , width:'10%', align: "center",showOverflow:true},
     { field: "reportTime", title: "故障开始时间", width:'10%' , align: "center",showOverflow:true},
-    { field: "activeTime", title: "启用时间" , width:'10%', align: "center",showOverflow:true},
+    { field: "activeTime", title: "启用时间" ,type:'html', width:'10%', align: "center",showOverflow:true,slots: { default: "nameslot" },},
     { field: "repairsDesc", title: "故障描述" , width:'10%', align: "center",showOverflow:true},
   ]
   // todo 生命周期
@@ -178,8 +197,9 @@ export default class Repairrecord extends Vue {
       reportTimes: "",
       matcheCode: "",
     }
-    this.getdata()
     this.gettabledata(obj)
+    this.getdata()
+
   }
 
   // todo 事件
@@ -236,7 +256,6 @@ export default class Repairrecord extends Vue {
   private dateChange(date: any, dateString: any): void {
     this.selectdata = dateString
   }
-
   //  todo 数据请求
   private getdata() {
     this.DataM.getMenulist({}, true).then((res: any) => {
@@ -255,6 +274,28 @@ export default class Repairrecord extends Vue {
   }
   private formatRole({ cellValue }){
     return cellValue
+  }
+
+  private qybtn(row){
+    console.log(row)
+    this.DeviceM.Enable({
+      matcheCode: row.matcheCode,
+    }).then((res) => {
+      if (res.code == 0) {
+        this.$message.success(`设备${row.matcheCode}启动成功`)
+          let obj = {
+            page: 1,
+            limit: 15,
+            deptCode: "",
+            reportUserName: "",
+            reportTimes: "",
+            matcheCode: "",
+          }
+          this.gettabledata(obj)
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
   }
 }
 </script>
