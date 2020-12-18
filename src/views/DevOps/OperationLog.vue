@@ -103,14 +103,14 @@
               title="日志类型"
               show-overflow
               align="center"
-              width="15%"
+              width="10%"
             />
             <vxe-table-column
               field="module"
               title="功能模块"
               show-overflow
               align="center"
-              width="15%"
+              width="10%"
             />
             <vxe-table-column
               field="department"
@@ -131,7 +131,7 @@
               title="日志内容"
               show-overflow
               align="center"
-              width="15%"
+              width="25%"
             />
             <vxe-table-column
               field="createTime"
