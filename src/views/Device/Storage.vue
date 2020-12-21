@@ -219,7 +219,6 @@
               <a-col :span="12">
                 <a-form-item label="FTP账号">
                   <a-input
-                    :disabled="ftpdisabled"
                     v-decorator="['name', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                     :max-length="LimitInputlength"
                     placeholder="请输入FTP账号"
@@ -229,7 +228,6 @@
               <a-col :span="12">
                 <a-form-item label="FTP密码">
                   <a-input
-                    :disabled="isDisable"
                     v-decorator="['passwd', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                     :max-length="LimitInputlength"
                     placeholder="请输入服务器IP"
@@ -411,6 +409,7 @@ export default class Storage extends Vue {
   }
   private add() {
     this.visible = true
+    this.text = '添加'
     this.form2.resetFields()
     this.isDisable = false
   }
@@ -463,10 +462,9 @@ export default class Storage extends Vue {
   private async FTPconfig(row) {
     this.IP = row.ip
     this.FTPvisible = true
-    let obj = { storageIp_equal: row.ip, page: this.page.currentPage,
-              limit: this.page.pageSize, }
-    // await this.getftptable(obj)
-    console.log()
+    let obj = { storageIp_equal: row.ip, 
+    page: this.page.currentPage,
+    limit: this.page.pageSize, }
     axios
       .get(
         `${window.gurl.SERVICE_CONTEXT_PATH}api/mdm/device/storage-ftp/list`,
@@ -482,8 +480,8 @@ export default class Storage extends Vue {
   private edit(row) {
     this.visible = true
     this.isDisable = true
+    this.text = '编辑'
     this.id = row.id
-    console.log(this.id)
     this.$nextTick(() => {
       this.form2.setFieldsValue({
         name: row.name,
@@ -508,6 +506,22 @@ export default class Storage extends Vue {
             this.addshow = false
             this.$message.success(res.msg)
             this.form3.resetFields()
+            let obj = { 
+              storageIp_equal: this.IP, 
+              page: this.page.currentPage,
+              limit: this.page.pageSize, 
+            }
+            axios
+              .get(
+                `${window.gurl.SERVICE_CONTEXT_PATH}api/mdm/device/storage-ftp/list`,
+                {
+                  params: obj,
+                  headers: { Token: localStorage.getItem("token") },
+                }
+              )
+              .then((res: any) => {
+                this.ftptable = res.data.data
+              })
           } else {
             this.$message.error(res.msg)
           }

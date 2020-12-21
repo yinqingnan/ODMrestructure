@@ -175,6 +175,7 @@ import {
   page,
   layouts,
 } from "@/InterfaceVariable/variable"
+import axios from 'axios'
 @Component({
   components: {},
 })
@@ -197,6 +198,11 @@ export default class Stations extends Vue {
   pageSize: 15, //每页多少条
   totalResult: 200, //总数
   }
+  private deptCode_equal = ''
+  private name_like = ''
+  private stationStatus = ''
+
+
   private departmentData = []
   private layouts = layouts
   // todo 生命周期
@@ -213,7 +219,7 @@ export default class Stations extends Vue {
     let obj = {
       page: this.page.currentPage,
       limit: this.page.pageSize,
-      type_notequal: 3,
+      type_notequal: '3',
     }
     this.gettabledata(obj)
     this.getdata()
@@ -224,6 +230,9 @@ export default class Stations extends Vue {
   }
   private reset() {
     this.form.resetFields()
+    this.deptCode_equal = ''
+    this.name_like = ''
+    this.stationStatus = ''
     let obj = {
       page: this.page.currentPage,
       limit: this.page.pageSize,
@@ -235,6 +244,9 @@ export default class Stations extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+        this.deptCode_equal = val.department
+        this.name_like = val.name
+        this.stationStatus =  val.deviceStatus
         let obj = {
           page: this.page.currentPage,
           limit: this.page.pageSize,
@@ -457,12 +469,35 @@ export default class Stations extends Vue {
     }
   }
   public daochu() {
-    (this.$refs.caijizhan as any).exportData({
-      filename: "采集站",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
-    })
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    const obj = {
+        // name_like:  this.nameLike,
+        // code_like: this.codeLike,
+        type_notequal: 3,
+          deptCode_equal: this.deptCode_equal,
+          name_like: this.name_like,
+          stationStatus: this.stationStatus,
+    }
+    axios.get(`${url}api/mdm/device/stations/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        console.log(res)
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '采集站' + '.xls')
+        aLink.click()
+      })
+    // (this.$refs.caijizhan as any).exportData({
+    //   filename: "采集站",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    // })
   }
 }
 </script>

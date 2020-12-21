@@ -12,17 +12,14 @@ export class Authorization {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  public getData(params: object, jwt: boolean, flag: string,) {
+  public getData(params: object) {
     const url = "";
     const body = {
       data: params,
-      tag: flag,
     };
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);

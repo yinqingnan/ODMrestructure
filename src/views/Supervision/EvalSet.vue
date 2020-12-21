@@ -36,7 +36,7 @@
                         <h2>{{item.jfmc}}</h2>
                       </a-tooltip>
                     </h2>
-                    <a-textarea v-else placeholder="请输入扣分说明" v-model="item.jfmc" :rows="2"  style="width: 216px;height: 44px;"/>
+                    <a-textarea maxLength="30" v-else placeholder="请输入扣分说明" v-model="item.jfmc" :rows="2"  style="width: 216px;height: 44px;"/>
                 </div>
               </li>
             </ul>
@@ -189,7 +189,7 @@ export default class EvalSet extends Vue {
     }else{
       val.jffz = ""
       val.isEnabled = false
-      this.$message.error('分值参数错误，不能汉字或字母')
+      this.$message.error('分值各式错误，请输入0~100的整数')
     }
   }
   private dlt(val){

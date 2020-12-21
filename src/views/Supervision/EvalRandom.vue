@@ -123,7 +123,8 @@
                   class="textblock"
                   :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
                 >{{fileLevel(row.fileLevel)}}</span>
-                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
+                <span style="cursor: pointer;" :class="[row.isEdit ? 'Editable' : 'Nonediting']" @click="tablebtn(row)">{{row.fileName}}</span>
+                <!-- <span :class="[row.isEdit ? 'Nonediting' : 'Editable']" @click="tablebtn(row)">{{row.fileName}}</span> -->
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="部门" align="center" min-width="10%"/>
@@ -390,7 +391,7 @@
                   <a-form-item label="评分项">
                     <a-checkbox-group
                       v-decorator="['Scoring', { initialValue: []}]"
-                      style="width: 100%;"
+                      style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
                     >
                       <el-scrollbar style="height:120px;">
                         <a-row>
@@ -559,6 +560,10 @@ export default class EvalRandom extends Vue {
   }
   private Actualscore = 100
   private options = []
+  private deptCode = ''
+  private dateRange = ''
+  private isDown = 0
+  private length = '0'
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 210}px`
@@ -567,7 +572,6 @@ export default class EvalRandom extends Vue {
     this.form2 = this.$form.createForm(this)
     this.form3 = this.$form.createForm(this)
     this.getdata()
-
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
@@ -586,17 +590,21 @@ export default class EvalRandom extends Vue {
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
       this.getDailytabledata({
-        page: 1,
-        limit: 10,
-        deptCode: "",
+        page: this.page.currentPage,
+        limit: this.page.pageSize,
+        deptCode: this.deptCode,
         dateRange: res.data.myDate,
-        isDown: 0,
-        length: "",
+        isDown: this.isDown,
+        length: this.length,
       })
     })
   }
   private reset() {
     this.form.resetFields()
+    this.deptCode = ''
+    this.dateRange = ''
+    this.isDown = 0
+    this.length = ''
   }
   private onChange(date: any, dateString: any): void {
     this.selectdata = dateString
@@ -605,13 +613,11 @@ export default class EvalRandom extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       console.log(val)
-     
+    
       if (val.department == "" || val.department == null) {
         this.$message.warning("请选择需要抽查的部门")
       } else if (val.count == "") {
         this.$message.warning("请输入需要随机抽查的条数。")
-      }else {
-        console.log(val)
       }
       this.formdata = val
       if (!err) {
@@ -621,12 +627,14 @@ export default class EvalRandom extends Vue {
         } else {
           str = 0
         }
-        let date = `${moment(val.date[0]).format("YYYY-MM-DD")} ~ ${moment(
-          val.date[1]
-        ).format("YYYY-MM-DD")}`
+        let date = `${moment(val.date[0]).format("YYYY-MM-DD")} ~ ${moment(val.date[1]).format("YYYY-MM-DD")}`
+        this.deptCode = val.department
+        this. dateRange = date
+        this.isDown = str
+        this.length = val.count
         this.getDailytabledata({
-          page: 1,
-          limit: 10,
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
           deptCode: val.department,
           dateRange: date,
           length: val.count,
@@ -640,7 +648,10 @@ export default class EvalRandom extends Vue {
   }
   private getDailytabledata(obj) {
     this.Supervision.getrandomtabledata(obj).then((res) => {
-      console.log(res)
+      console.log(res.data)
+      res.data.map(item => {
+        item.isEdit = true
+      })
       this.tableData = res.data
       // this.page.totalResult = parseInt(res.count)
     })
@@ -649,26 +660,31 @@ export default class EvalRandom extends Vue {
     // console.log(1)
   }
   private tablebtn(row) {
-    console.log(row)
-    this.visible = true
-    this.fileId = row.id
-    this.fileCode = row.code
-    this.DataM.getfiledetails(this.fileId).then((res) => {
-      console.log(res)
-      this.filedetails = res.data
-      this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
-    })
-    this.DataM.lawarchives().then((res) => {
-      console.log(res)
-      this.$nextTick(() => {
-        this.form3.setFieldsValue({
-          Total: res.data.total,
-          Scoring: [],
-        })
+    console.log(row.isEdit)
+    if(row.isEdit){
+      this.visible = true
+      this.fileId = row.id
+      this.fileCode = row.code
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        console.log(res)
+        this.filedetails = res.data
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
       })
-      this.Total = res.data.total
-      this.options = res.data.list
-    })
+        this.DataM.lawarchives().then((res) => {
+          console.log(res)
+          this.$nextTick(() => {
+            this.form3.setFieldsValue({
+              Total: res.data.total,
+              Scoring: [],
+            })
+          })
+          this.Total = res.data.total
+          this.options = res.data.list
+      })
+    }else{
+      return false
+    }
+    
   }
 
   private relateCase(row) {
@@ -687,19 +703,7 @@ export default class EvalRandom extends Vue {
       return "未关联"
     }
   }
-  private fileType(x) {
-    if (x.fileType == "photo") {
-      return "图片"
-    } else if (x.fileType == "log") {
-      return "日志"
-    } else if (x.fileType == "video") {
-      return "视频"
-    } else if (x.fileType == "audio") {
-      return "音频"
-    } else {
-      return ""
-    }
-  }
+ 
   private pagerchange({ currentPage, pageSize }) {
     console.log(currentPage, pageSize)
     let str = 0
@@ -784,6 +788,7 @@ export default class EvalRandom extends Vue {
       if (!err) {
         // console.log(this.fileCode)
         console.log(val)
+        console.log(this.fileCode);
         let arr = val.Scoring
         let newarr = []
         arr.map((item) => {
@@ -811,12 +816,24 @@ export default class EvalRandom extends Vue {
           remark: val.remarks,
         }
         this.DataM.pfsave(obj).then((res) => {
-          console.log(res)
           if (res.code == 0) {
             this.$message.success(res.msg)
             this.sum = 0
             this.visible = false
-            this.getdata()
+            this.tableData.map(item => {
+            if(item.code === this.fileCode){
+              item.isEdit = false
+            }
+            })
+             this.form3.resetFields()
+            // this.getDailytabledata({
+            //   page: this.page.currentPage,
+            //   limit: this.page.pageSize,
+            //   deptCode: this.deptCode,
+            //   dateRange: this.dateRange,
+            //   isDown: this.isDown,
+            //   length: this.length,
+            // })
           } else {
             this.$message.error(res.msg)
           }
@@ -926,4 +943,13 @@ export default class EvalRandom extends Vue {
     // width: 276px !important;
   }
 }
+.Editable{
+  color:#0db8df;
+  cursor: pointer;
+}
+.Nonediting{
+  cursor: not-allowed;
+  color:#666;
+}
+
 </style>

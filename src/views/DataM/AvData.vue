@@ -565,6 +565,7 @@ import {
   PlayerOptions,
 } from "../../InterfaceVariable/interface"
 import moment from "moment"
+import axios from 'axios'
 @Component({})
 export default class AvData extends Vue {
   [x: string]: any
@@ -663,12 +664,28 @@ export default class AvData extends Vue {
   private Height = ""
   private tabledata = []
   private formdata = {
+    page:1,
+    limit:15,
     department: "",
-    user: "",
+    userName: "",
     TimeData: "",
     Filetype: "",
     levelData: "",
     date: [],
+  }
+  private formDatelist = {
+    page: this.page.currentPage,
+    limit: this.page.pageSize,
+    deptCode_equal: "", //部门id
+    userName: "", //警员
+    timeType: "uploadDate", //时间类型
+    timeRange: [],
+    fileType_equal: "",
+    fileLevel_equal: "",
+    uploadDate_gt: null, //必填  时间起
+    uploadDate_lt: null, //必填  时间止
+    recordDate_gt:null,
+    recordDate_lt:null
   }
   private logmsg = []
   private taggingselect1 = []
@@ -683,54 +700,58 @@ export default class AvData extends Vue {
     this.form1 = this.$form.createForm(this)
     this.form2 = this.$form.createForm(this)
     this.form3 = this.$form.createForm(this)
-    this.getdata()
     this.Height = `${document.documentElement.clientHeight - 230}px`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-  }
+    this.getdata()
 
+  }
   private handleOk() {
     return
   }
-
-  private handleSubmit(e: any): void {
+  private handleSubmit(e?: any): void {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         this.formdata = val
-        let uploadDate_gt = val.date[0].format("YYYY-MM-DD HH:mm:ss")
-        let uploadDate_lt = val.date[1].format("YYYY-MM-DD HH:mm:ss")
+        this.page.currentPage = 1
+        let Date_gt = val.date[0].format("YYYY-MM-DD HH:mm:ss")
+        let Date_lt = val.date[1].format("YYYY-MM-DD HH:mm:ss")
         if (val.TimeData == "uploadDate") {
-          let obj = {
-            page: this.page.currentPage,
-            limit: this.page.pageSize,
+          this.formDatelist = {
+            page: 1,
+            limit: 15,
             deptCode_equal: val.department, //部门id
             userName: val.user, //警员
             timeType: val.TimeData, //时间类型
             timeRange: this.myDate,
             fileType_equal: val.Filetype,
             fileLevel_equal: val.levelData,
-            uploadDate_gt: uploadDate_gt, //必填  时间起
-            uploadDate_lt: uploadDate_lt, //必填  时间止
+            uploadDate_gt: Date_gt, //必填  时间起
+            uploadDate_lt: Date_lt, //必填  时间止
+            recordDate_gt: '',
+            recordDate_lt: '',
           }
-          this.gettabledata(obj)
+          this.gettabledata(this.formDatelist)
         } else if (val.TimeData == "recordDate") {
-          let obj = {
-            page: this.page.currentPage,
-            limit: this.page.pageSize,
+          this.formDatelist= {
+            page: 1,
+            limit: 15,
             deptCode_equal: val.department, //部门id
             userName: val.user, //警员
             timeType: val.TimeData, //时间类型
             timeRange: this.myDate,
             fileType_equal: val.Filetype,
             fileLevel_equal: val.levelData,
-            recordDate_gt: uploadDate_gt,
-            recordDate_lt: uploadDate_lt,
+            recordDate_gt: Date_gt,
+            recordDate_lt: Date_lt,
+            uploadDate_gt:'',
+            uploadDate_lt:''
           }
-          this.gettabledata(obj)
+          this.gettabledata(this.formDatelist)
         }
       }
     })
@@ -744,7 +765,6 @@ export default class AvData extends Vue {
     })
     // 标记下拉数据
     this.DataM.getfileselect().then((res) => {
-      // console.log(res.data)
       this.tcselect = res.data
     })
     this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
@@ -754,25 +774,29 @@ export default class AvData extends Vue {
         moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
-      // console.log(moment(res.data.myDate.split("~")[1]))
-      let obj = {
+      console.log(this.defaultdate);
+   
+      let date0 = res.data.myDate.split('~')[0].replace(/(^\s*)|(\s*$)/g,"")
+      let date1 = res.data.myDate.split('~')[1].replace(/(^\s*)|(\s*$)/g,"")
+      this.formDatelist = {
         page: this.page.currentPage,
         limit: this.page.pageSize,
         deptCode_equal: "", //部门id
         userName: "", //警员
         timeType: "uploadDate", //时间类型
-        timeRange: "2020-10-06 ~ 2020-11-06",
+        timeRange: [],
         fileType_equal: "",
         fileLevel_equal: "",
-        uploadDate_gt: moment(res.data.myDate.split("~")[0]).format(
+        uploadDate_gt: moment(date0).format(
           "YYYY-MM-DD HH:mm:ss"
         ), //必填  时间起
-        uploadDate_lt: moment(res.data.myDate.split("~")[1]).format(
+        uploadDate_lt: moment(date1).format(
           "YYYY-MM-DD HH:mm:ss"
         ), //必填  时间止
         recordDate_gt: "",
+        recordDate_lt: "",
       }
-      this.gettabledata(obj)
+        this.gettabledata(this.formDatelist)
     })
   }
   private gettabledata(obj): void {
@@ -819,7 +843,6 @@ export default class AvData extends Vue {
     } else {
       // 弹窗文件信息
       this.DataM.getfiledetails(row.id).then((res) => {
-        
         this.visible = true
         this.fileCode = row.code
         this.fileId = row.id
@@ -940,8 +963,7 @@ export default class AvData extends Vue {
           marker: val.remark,
         }
         this.DataM.marksave(obj).then((res) => {
-          // console.log(res)
-          this.$message.info(res.msg)
+          this.$message.success(res.msg)
         })
       }
     })
@@ -950,8 +972,6 @@ export default class AvData extends Vue {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(moment(val.gatheringTime).format("YYYY-MM-DD HH:mm:ss"))
-        console.log(this.fileCode)
         let obj = {
           fileCode: this.fileCode,
           gatheringPlace: val.gatheringPlace,
@@ -1053,13 +1073,6 @@ export default class AvData extends Vue {
           let num = 0
           _that.selectedRowKeys.forEach((item) => {
             window.open(item.downloadPath)
-            // let link = document.createElement("a")   // 创建a标签
-            // let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
-            // e.initEvent('click', false, false)
-            // link.setAttribute("download", item.fileName) //下载的文件名
-            // link.href = item.downloadPath //文件url
-            // link.dispatchEvent(e)
-            // link.remove
           })
           _that.selectedRowKeys = [];
           (_that.$refs.xTable1 as any).clearCheckboxRow()
@@ -1087,21 +1100,22 @@ export default class AvData extends Vue {
               if (res.code == 0) {
                 _that.$message.success(res.msg)
                 let obj = {
-                  page: 1,
-                  limit: 15,
+                  page: this.pager.currentPage,
+                  limit: this.page.pageSize,
                   deptCode_equal: _that.formdata.department, //部门id
-                  userName: _that.formdata.user, //警员
+                  userName: _that.formdata.userName, //警员
                   timeType: _that.formdata.TimeData, //时间类型
                   timeRange: _that.myDate,
                   fileType_equal: _that.formdata.Filetype,
                   fileLevel_equal: _that.formdata.levelData,
-                  uploadDate_gt: _that.formdata.date[0].format(
+                  uploadDate_gt:moment(_that.formdata.date[0]).format(
                     "YYYY-MM-DD HH:mm:ss"
                   ), //必填  时间起
-                  uploadDate_lt: _that.formdata.date[1].format(
+                  uploadDate_lt: moment(_that.formdata.date[1]).format(
                     "YYYY-MM-DD HH:mm:ss"
                   ), //必填  时间止
                   recordDate_gt: "",
+                  recordDate_lt: "",
                 }
                 _that.gettabledata(obj)
                 _that.selectedRowKeys = []
@@ -1140,14 +1154,17 @@ export default class AvData extends Vue {
           "YYYY-MM-DD HH:mm:ss"
         ), //必填  时间止
         recordDate_gt: "",
+        recordDate_lt: ""
       }
+      console.log(this.formDatelist);
+      
       this.gettabledata(obj)
     }else{
       let obj = {
         page: currentPage,
         limit: pageSize,
         deptCode_equal: this.formdata.department, //部门id
-        userName: this.formdata.user, //警员
+        userName: this.formdata.userName, //警员
         timeType: this.formdata.TimeData, //时间类型
         timeRange: this.myDate,
         fileType_equal: this.formdata.Filetype,
@@ -1155,6 +1172,7 @@ export default class AvData extends Vue {
         uploadDate_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
         uploadDate_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
         recordDate_gt: "",
+        recordDate_lt: ""
       }
       this.gettabledata(obj)
     }
@@ -1252,20 +1270,8 @@ export default class AvData extends Vue {
     this.DataM.bumendlt([this.fileId]).then((res) => {
       if (res.code == 0) {
         this.$message.success(res.msg)
-        let obj = {
-          page: this.page.currentPage,
-          limit: this.page.pageSize,
-          deptCode_equal: this.formdata.department, //部门id
-          userName: this.formdata.user, //警员
-          timeType: this.formdata.TimeData, //时间类型
-          timeRange: this.myDate,
-          fileType_equal: this.formdata.Filetype,
-          fileLevel_equal: this.formdata.levelData,
-          uploadDate_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
-          uploadDate_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
-          recordDate_gt: "",
-        }
-        this.gettabledata(obj)
+        console.log(this.formDatelist);
+        this.gettabledata(this.formDatelist)
         this.visible = false
       } else {
         this.$message.error(res.msg)

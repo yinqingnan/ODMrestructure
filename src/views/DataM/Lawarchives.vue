@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2020-12-01 11:37:14
- * @LastEditTime: 2020-12-16 16:54:31
+ * @LastEditTime: 2020-12-18 16:45:52
  * @FilePath: \src\views\DataM\Lawarchives.vue
 -->
 
@@ -65,7 +65,7 @@ export default class Lawarchives extends Vue {
     })
   }
   private inputchange(){
-    let reg: any = new RegExp((/(^[1-9]\d*$)/))
+    let reg: any = new RegExp((/(^[0-9]\d*$)/))
     if(reg.test(this.time1) && reg.test(this.time2)){
       if(parseInt(this.time1)  <= 180 && parseInt(this.time2)  <= 180){
         this.DataM.relationsave({

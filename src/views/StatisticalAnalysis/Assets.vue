@@ -90,6 +90,7 @@ import {
   layouts,
 } from "@/InterfaceVariable/variable"
 import moment from "moment"
+import axios from 'axios'
 @Component({
   components: {},
 })
@@ -238,7 +239,7 @@ export default class VideoStatistics extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        
+        this.deptCode = val.department
         let obj = {
           page: 1,
           limit: 15,
@@ -249,12 +250,29 @@ export default class VideoStatistics extends Vue {
     })
   }
   public daochu() {
-    (this.$refs.gltj as any).exportData({
-      filename: "资产统计",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    let obj = {
+      deptCode:this.deptCode
+    }
+    axios.get(`${url}api/tpb/report/assets/unit/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+    }).then(res => {
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '资产统计' + '.xls')
+        aLink.click()
     })
+    // (this.$refs.gltj as any).exportData({
+    //   filename: "资产统计",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    // })
   }
 }
 </script>

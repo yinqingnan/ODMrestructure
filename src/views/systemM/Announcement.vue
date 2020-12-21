@@ -301,6 +301,7 @@
 // import { PropType } from "vue";
 import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
+import axios from 'axios'
 import {
   layouts,
   LimitInputlength,
@@ -395,6 +396,7 @@ export default class RightContent extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
+        console.log(values)
         this.seachKey = values.select
         const val = {
           page: this.page.currentPage,
@@ -434,8 +436,8 @@ export default class RightContent extends Vue {
           _that.getData.removeItem(DT, true).then((res: any) => {
             if (res.code == 0) {
               const val = {
-                page: this.page.currentPage,
-                limit: this.page.pageSize,
+                page: _that.page.currentPage,
+                limit: _that.page.pageSize,
                 status: _that.seachKey,
               }
               _that.getList(val)
@@ -446,7 +448,6 @@ export default class RightContent extends Vue {
     
   }
   private edit(val: any): void {
-    console.log(val)
     this.visible = true
     this.myTitle = "编辑"
     this.id = val.id
@@ -458,7 +459,6 @@ export default class RightContent extends Vue {
       val.isALL = undefined
       this.isShow = true
     }
-   
     this.$nextTick(() => {
       this.form2.setFieldsValue({
         title: val.title,
@@ -475,7 +475,16 @@ export default class RightContent extends Vue {
   private handleOk(e: any): void {
     e.preventDefault()
     this.form2.validateFields((err: any, values: any) => {
+      console.log(values)
       if (!err) {
+          let str = ''
+          if(values.type == '通知'){
+            str = '1' 
+          }else if(values.type == '系统升级'){
+            str = '2'
+          }else{
+            str = values.type
+          }
         if (this.isShow == false) {
           this.saveData = {
             acceptDeptCode: "ALL",
@@ -483,16 +492,11 @@ export default class RightContent extends Vue {
             endTime: moment(values.endTime).format("YYYY-MM-DD HH:mm:ss"),
             sendTime: moment(values.sendTime).format("YYYY-MM-DD HH:mm:ss"),
             title: values.title,
-            type: values.type,
+            type: str,
             id: this.id,
             isALL: "on",
           }
         } else {
-          console.log(values.type)
-          let str = ''
-          if(values.type == '通知') str = '1'
-          else if(values.type == '系统升级') str = '2'
-          else str = values.type
           this.saveData = {
             acceptDeptCode: values.acceptDeptCode,
             content: values.remark,
@@ -558,12 +562,30 @@ export default class RightContent extends Vue {
     })
   }
   private Export(e: any): void {
-    (this.$refs.logAdministration as any).exportData({
-      filename: "公告管理",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
+  let url = window.gurl.SERVICE_CONTEXT_PATH
+  let obj = {
+    status: this.seachKey, 
+  }
+  axios.get(`${url}api/pconfig/system/notice/export`,{
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
+    }).then(res => {
+      console.log(res)
+      const aLink = document.createElement("a");
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      aLink.href = URL.createObjectURL(blob)
+      aLink.setAttribute('download', '公告管理' + '.xls')
+      aLink.click()
     })
+    // (this.$refs.logAdministration as any).exportData({
+    //   filename: "公告管理",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    // })
   }
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage

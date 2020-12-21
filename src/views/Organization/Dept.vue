@@ -40,7 +40,7 @@
                   />
                 </a-form-item>
                 <a-form-item class="btnBox">
-                  <a-button class="reset">重置</a-button>
+                  <a-button class="reset" @click="reset">重置</a-button>
                   <a-button html-type="submit" class="upData">查询</a-button>
                 </a-form-item>
               </a-form>
@@ -352,6 +352,8 @@ export default class Dept extends Vue {
   private errormsg = ""
   private filename = ""
   private Disable = false
+  private nameLike = ''
+  private codeLike = ''
   //todo 生命周期
   beforeCreate() {
     this.form = this.$form.createForm(this)
@@ -393,12 +395,7 @@ export default class Dept extends Vue {
   }
   private getList(val: any): void {
     this.getData.getList(val, true).then((res: any) => {
-      console.log(res)
-      this.isNew = false
-      setTimeout(() => {
-        this.isNew = true
-        this.tabData = res.data
-      })
+      this.tabData = res.data
     })
   }
   private getSelect(val: any) {
@@ -411,6 +408,9 @@ export default class Dept extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val)
+        this.nameLike = val.name_like
+        this.codeLike = val.code_like
         const obj = {
           name_like: val.name_like,
           code_like: val.code_like,
@@ -418,6 +418,11 @@ export default class Dept extends Vue {
         this.getList(obj)
       }
     })
+  }
+  private reset(){
+    this.form.resetFields()
+    this.nameLike = ''
+    this.codeLike = ''
   }
   private addS(val: any) {
     this.visible = true
@@ -429,12 +434,32 @@ export default class Dept extends Vue {
     })
   }
   private Export(e: any): void {
-    (this.$refs.depttable as any).exportData({
-      filename: "部门管理",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
-    })
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    const obj = {
+        name_like:  this.nameLike,
+        code_like: this.codeLike,
+    }
+    
+    axios.get(`${url}api/uauth/base/dept/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        console.log(res)
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '部门管理' + '.xls')
+        aLink.click()
+      })
+    // (this.$refs.depttable as any).exportData({
+    //   filename: "部门管理",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    // })
   }
   private imports() {
     this.importshow = true

@@ -493,6 +493,14 @@ export default class User extends Vue {
   private iserror = false
   private errormsg = ""
   private filename = ""
+  private formdatalist = {
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
+      deptCode: "",
+      name: "",
+      code: "",
+      type: "全部",
+  }
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -505,15 +513,7 @@ export default class User extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     this.getdata()
-    let obj = {
-      page: this.page.currentPage,
-      limit: this.page.pageSize,
-      deptCode: "",
-      name: "",
-      code: "",
-      type: "全部",
-    }
-    this.gettabledata(obj)
+    this.gettabledata(this.formdatalist)
   }
   // todo事件
   private tableRowClassName(record: any) {
@@ -522,7 +522,6 @@ export default class User extends Vue {
   private gettabledata(obj) {
     this.OrganizationM.getusertable(obj).then((res) => {
       console.log(res);
-      
       this.tableData = res.data
       this.page.totalResult = parseInt(res.count)
     })
@@ -705,15 +704,38 @@ export default class User extends Vue {
   }
   // 导出
   private exports() {
-    (this.$refs.usertable as any).exportData({
-      filename: "用户管理",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
-      columnFilterMethod ({ column }) {
-        return ['name','code','deptName','gender','roleName','positionName','commonName','identity','phone','remark'].includes(column.property)
-      }
+   let url = window.gurl.SERVICE_CONTEXT_PATH
+   let obj = {
+      deptCode:  this.deptCode,
+      name:this.name,
+      code: this.code,
+      type: this.type,
+    }
+    axios.get(`${url}api/uauth/base/user/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+    }).then(res => {
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '用户管理' + '.xls')
+        aLink.click()
     })
+
+
+
+    // (this.$refs.usertable as any).exportData({
+    //   filename: "用户管理",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    //   columnFilterMethod ({ column }) {
+    //     return ['name','code','deptName','gender','roleName','positionName','commonName','identity','phone','remark'].includes(column.property)
+    //   }
+    // })
   }
   // 删除
   private dlt() {
@@ -763,8 +785,8 @@ export default class User extends Vue {
                   _that.$message.success(res.msg)
 
                   _that.gettabledata({
-                    page: this.page.currentPage,
-                    limit: this.page.pageSize,
+                    page: _that.page.currentPage,
+                    limit: _that.page.pageSize,
                     deptCode: "",
                     name: "",
                     code: "",

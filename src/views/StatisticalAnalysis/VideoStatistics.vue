@@ -122,6 +122,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
+import axios from 'axios'
 import {
   LimitInputlength,
   textarealength,
@@ -257,6 +258,10 @@ export default class VideoStatistics extends Vue {
       ],
     },
   ]
+  private policeName =''
+  private deptCode =''
+  private level =''
+  private dateRange = ''
   // todo 生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -283,6 +288,8 @@ export default class VideoStatistics extends Vue {
       this.departmentData = res.data
     })
     this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
+      console.log(res);
+      
       let obj = {
         page: 1,
         limit: 15,
@@ -307,16 +314,26 @@ export default class VideoStatistics extends Vue {
   public reset() {
     // this.deptCode = null
     this.form.resetFields()
+    this.deptCode = ''
+    this.level = ''
+    this.dateRange = ''
   }
+
+
+
+
   public handle(e: MouseEvent) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
         let date =
           val.date[0].format("YYYY-MM-DD") +
           "~" +
           val.date[1].format("YYYY-MM-DD")
+        this.policeName = val.name
+        this.deptCode = val.department
+        this.level = val.deviceStatus
+        this.dateRange = date
         let obj = {
           page: 1,
           limit: 15,
@@ -330,12 +347,33 @@ export default class VideoStatistics extends Vue {
     })
   }
   public daochu() {
-    (this.$refs.shelutj as any).exportData({
-      filename: "摄录统计",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
-    })
+    // (this.$refs.shelutj as any).exportData({
+    //   filename: "摄录统计",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    // })
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    const obj = {
+      type_notequal: 3,
+      deptCode:this.deptCode,
+      level:this.level,
+      dateRange:this.dateRange
+    }
+    axios.get(`${url}api/tpb/report/recording/information/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        console.log(res)
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '摄录统计' + '.xls')
+        aLink.click()
+      })
   }
 }
 </script>

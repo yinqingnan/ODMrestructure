@@ -28,8 +28,8 @@
             :data="tableData"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
-            <vxe-table-column field="secretKey" title="接入秘钥" show-overflow align="center" width="15%" />
-            <vxe-table-column field="isEnabled" title="秘钥状态" show-overflow align="center" >
+            <vxe-table-column field="secretKey" title="接入密钥" show-overflow align="center" width="15%" />
+            <vxe-table-column field="isEnabled" title="密钥状态" show-overflow align="center" >
               <template  v-slot="{ row }">
                 {{isEnabled(row.isEnabled)}}
               </template>
@@ -79,20 +79,20 @@
         >
           <a-row :gutter="24" class="Access">
             <a-col :span="24">
-              <a-form-item label="接入秘钥">
+              <a-form-item label="接入密钥">
                 <a-button class="createKey" @click="createKey">自动生成</a-button>
                 <a-input
                   :disabled="true"
                   v-decorator="['Sendrepair', { initialValue: '',  rules:  [{ required: true, message: '必填项不能为空' }] }]"
                   :max-length="LimitInputlength"
-                  placeholder="点击生成秘钥"
+                  placeholder="点击生成密钥"
                 >/></a-input>
               </a-form-item>
             </a-col>
           </a-row>
           <a-row :gutter="24">
             <a-col :span="24">
-              <a-form-item label="秘钥状态">
+              <a-form-item label="密钥状态">
                 <a-select
                   v-decorator="[
                         'deviceStatus',
@@ -151,20 +151,20 @@
         >
           <a-row :gutter="24" class="Access">
             <a-col :span="24">
-              <a-form-item label="接入秘钥">
+              <a-form-item label="接入密钥">
                 <a-button class="createKey" @click="createKey">自动生成</a-button>
                 <a-input
                   :disabled="true"
                   v-decorator="['Sendrepair', { initialValue: '',  rules:  [{ required: true, message: '必填项不能为空' }] }]"
                   :max-length="LimitInputlength"
-                  placeholder="点击生成秘钥"
+                  placeholder="点击生成密钥"
                 >/></a-input>
               </a-form-item>
             </a-col>
           </a-row>
           <a-row :gutter="24">
             <a-col :span="24">
-              <a-form-item label="秘钥状态">
+              <a-form-item label="密钥状态">
                 <a-select
                   v-decorator="[
                         'deviceStatus',
@@ -488,7 +488,7 @@ export default class AccessAuth extends Vue {
     let _that = this
     this.$confirm({
       title: '提示',
-      content: '确定要删除该秘钥吗？',
+      content: '确定要删除该密钥吗？',
       onOk() {
         return new Promise((resolve, reject) => {
           setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);

@@ -28,13 +28,14 @@ export class DataM {
       });
     });
   }
+
   //todo 部门删除 
-  public bumendlt(params: object, jwt = true) {
+  public bumendlt(params: object) {
     const url = "/api/file/filedata/file/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -42,21 +43,15 @@ export class DataM {
       });
     });
   }
-
-
-
-
   // todo 获取默认时间范围
-  public gettimeframe(params: object, jwt: boolean, flag: string) {
+  public gettimeframe(params: object) {
     const url = "/api/uauth/my/dateDept";
     const body = {
       data: params,
-      tag: flag,
     };
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -66,14 +61,11 @@ export class DataM {
     });
   }
   // todo 初始化请求表格数据
-
-  public gettabledata(params: object, jwt: boolean, flag: string) {
+  public gettabledata(params: object) {
     const url = "/api/file/filedata/file/list";
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -83,12 +75,11 @@ export class DataM {
     });
   }
   // todo 简易流程table数据
-  public getprogramTable(params: object, jwt: boolean, flag: string) {
+  public getprogramTable(params: object) {
     const url = "/api/tpb/lawarchives/case/lllegalDatalist";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -99,12 +90,11 @@ export class DataM {
   }
   // todo 强制措施table数据
 
-  public getCoercivemeasuresTable(params: object, jwt: boolean, flag: string) {
+  public getCoercivemeasuresTable(params: object) {
     const url = "/api/tpb/lawarchives/case/lllegalDatalist";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -114,12 +104,11 @@ export class DataM {
     });
   }
   // todo 关联设置接口   /api/tpb/lawarchives/config/matchConfig
-  public getrelationdata(params: object, jwt: boolean, flag: string) {
+  public getrelationdata(params: object) {
     const url = "/api/tpb/lawarchives/config/matchConfig";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -129,12 +118,12 @@ export class DataM {
     });
   }
   //   todo 关联数据保存
-  public relationsave(params: object, jwt = true) {
+  public relationsave(params: object) {
     const url = "/api/tpb/lawarchives/config/matchConfig/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -146,7 +135,7 @@ export class DataM {
 
   // todo 存储类别表格接口
   // 
-  public getStoragetable(params: object, jwt = true) {
+  public getStoragetable(params: object) {
     const url = "/api/file/filedata/storageCategory/getAllList";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
@@ -161,12 +150,11 @@ export class DataM {
   }
 
   //todo  存储类别添加保存接口
-  public storetypesave(params: object, jwt = true) {
+  public storetypesave(params: object) {
     const url = "/api/file/filedata/storageCategory/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -175,12 +163,11 @@ export class DataM {
     });
   }
   //todo  存储类别编辑保存接口
-  public storetypedeit(params: object, jwt = true) {
+  public storetypedeit(params: object) {
     const url = "/api/file/filedata/storageCategory/update";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -190,12 +177,11 @@ export class DataM {
   }
   //todo存储类型删除
 
-  public storetypedlt(params: object, jwt = true) {
+  public storetypedlt(params: object) {
     const url = "/api/file/filedata/storageCategory/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -211,7 +197,6 @@ export class DataM {
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -263,12 +248,11 @@ export class DataM {
     });
   }
   // todo  标注下拉 1    
-  private taggingselect1(params: object, jwt = true) {
+  private taggingselect1(params: object) {
     const url = "/api/tpb/lawarchives/dic-label/select";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -278,12 +262,11 @@ export class DataM {
     });
   }
   // todo  标注下拉 2
-  private taggingselect2(params: object, jwt = true) {
+  private taggingselect2(params: object) {
     const url = "/api/tpb/lawarchives/dic-child-label/select/" + params;
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -294,12 +277,11 @@ export class DataM {
   }
 
   // todo 标注修改保存 
-  public taggingsave(params: object, jwt = true) {
+  public taggingsave(params: object) {
     const url = "/api/tpb/lawarchives/file-label/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -308,12 +290,11 @@ export class DataM {
     });
   }
   // todo 评价打分  
-  private evaluate(params: object, jwt = true) {
+  private evaluate(params: object) {
     const url = "/api/tpb/lawarchives/file-evaluate/info/" + params;
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -325,12 +306,11 @@ export class DataM {
 
 
   //todo 扣分项目 
-  private lawarchives(params: object, jwt = true) {
+  private lawarchives(params: object) {
     const url = "/api/tpb/lawarchives/dm-jfx/getAll";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -341,12 +321,11 @@ export class DataM {
   }
 
   // todo 評分baocun 
-  public pfsave(params: object, jwt = true) {
+  public pfsave(params: object) {
     const url = "/api/tpb/lawarchives/file-evaluate/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -356,12 +335,11 @@ export class DataM {
   }
 
   //todo  查看案件详情 
-  private CaseDetails(params: object, jwt = true) {
+  private CaseDetails(params: object) {
     const url = "/api/tpb/lawarchives/case/info";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -372,12 +350,11 @@ export class DataM {
   }
 
   //todo 案件关联信息 /api/tpb/lawarchives/match/files/
-  private MatchFiles(params: object, jwt = true) {
+  private MatchFiles(params: object) {
     const url = "/api/tpb/lawarchives/match/files/" + params;
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -387,12 +364,11 @@ export class DataM {
     });
   }
   // todo是否可以查看其他部门信息接口  
-  private roledataright(params: object, jwt = true) {
+  private roledataright(params: object) {
     const url = "/api/uauth/base/role/data/right";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -402,13 +378,12 @@ export class DataM {
     });
   }
   // todo 关联文件table查询 
-  private Associatedfiles(params: object, jwt = true) {
+  private Associatedfiles(params: object) {
     const url = "/api/file/filedata/file/caseList";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params:params,
         headers: {
-          isJwt: jwt,
           'Accept-Language': 'zh-CN,zh;q=0.9'
         },
       }).then((res: any) => {
@@ -421,12 +396,11 @@ export class DataM {
   }
 
 // todo 关联案件 
-public saveRelate(params: object, jwt = true) {
+public saveRelate(params: object) {
   const url = "/api/tpb/lawarchives/match/saveRelate";
   const body = params
   return new Promise((resolve, reject) => {
     this.axios.post(url, body, {
-      headers: { isJwt: jwt },
     }).then((res: any) => {
       this.resultHandle(res, resolve);
     }).catch((err: { message: any }) => {
@@ -435,12 +409,11 @@ public saveRelate(params: object, jwt = true) {
   });
 }
 // todo 删除关联 
-public deleteRelate(params: object, jwt = true) {
+public deleteRelate(params: object) {
   const url = "/api/tpb/lawarchives/match/deleteRelate";
   const body = params
   return new Promise((resolve, reject) => {
     this.axios.post(url, body, {
-      headers: { isJwt: jwt },
     }).then((res: any) => {
       this.resultHandle(res, resolve);
     }).catch((err: { message: any }) => {
@@ -454,7 +427,6 @@ public deleteRelate(params: object, jwt = true) {
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         // params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);

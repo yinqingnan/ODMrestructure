@@ -25,7 +25,7 @@
                     <a-form-item label="日志类型">
                       <a-select
                         v-decorator="[
-                        'type_equal',
+                        'module_equal',
                         {
                           initialValue: '-1',
                           rules: []
@@ -41,7 +41,7 @@
                     <a-form-item label="功能模块">
                       <a-select
                         v-decorator="[
-                        'module_equal',
+                        'type_equal',
                         {
                           initialValue: '-1',
                           rules: []
@@ -80,7 +80,7 @@
               </a-menu>
             </a-dropdown>
           </template>
-          <div class="btns">
+          <div style="line-height: 1;">
             <a-button @click="exports" type="primary" v-isshow="'base:log:export'">导出</a-button>
           </div>
         </div>
@@ -95,6 +95,7 @@
             highlight-hover-row
             class="mytable-scrollbar"
             :row-class-name="tableRowClassName"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :data="tableData"
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
@@ -168,6 +169,7 @@ import {
   page,
   textarealength,
 } from "@/InterfaceVariable/variable"
+import axios from 'axios'
 @Component({
   components: {},
 })
@@ -189,8 +191,8 @@ export default class OperationLog extends Vue {
   private funmodule = []
   private date = []
   private defaultdate = ""
-  private type_equal = "-1"
-  private module_equal = "-1"
+  private type_equal = "-1"    //功能模块
+  private module_equal = "-1"   //日志类型
   // todo 事件和生命周期
   private created() {
     this.form = this.$form.createForm(this)
@@ -203,10 +205,10 @@ export default class OperationLog extends Vue {
     })
     this.getdata()
     let obj = {
-      page: 1,
-      size: 15,
-      type_equal: this.type_equal,
-      module_equal: this.module_equal,
+      page: this.page.currentPage,
+      size: this.page.pageSize,
+      module_equal: this.type_equal,
+      type_equal: this.module_equal,
       createTime: this.defaultdate,
     }
     this.gettabledata(obj)
@@ -216,6 +218,8 @@ export default class OperationLog extends Vue {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
       size: pageSize,
@@ -232,6 +236,13 @@ export default class OperationLog extends Vue {
     return
   }
   private reset() {
+    this.Luckmanagement.getlogdate({}).then((res) => {
+    this.defaultdate = res.data
+    this.date = [
+      moment(res.data.split("~")[0].replace(/\s*/g, ""), "YYYY-MM-DD"),
+      moment(res.data.split("~")[1].replace(/\s*/g, ""), "YYYY-MM-DD"),
+    ]
+    })
     this.type_equal = "-1"
     this.module_equal = "-1"
     this.form.resetFields()
@@ -240,17 +251,18 @@ export default class OperationLog extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
-        this.module_equal = val.module_equal
-        this.type_equal = val.type_equal
+        this.page.currentPage = 1
+        this.type_equal = val.module_equal
+        this.module_equal = val.type_equal
         this.defaultdate = `${val.date[0].format(
           "YYYY-MM-DD"
         )} ~ ${val.date[1].format("YYYY-MM-DD")}`
+        console.log(val)
         this.gettabledata({
-          page: 1,
-          size: 15,
-          type_equal: val.module_equal,
+          page: this.page.currentPage,
+          size: this.page.pageSize,
           module_equal: val.type_equal,
+          type_equal: val.module_equal,
           createTime: `${val.date[0].format(
           "YYYY-MM-DD"
         )} ~ ${val.date[1].format("YYYY-MM-DD")}`,
@@ -259,11 +271,24 @@ export default class OperationLog extends Vue {
     })
   }
   private exports() {
-    (this.$refs.logAdministration as any).exportData({
-      filename: "日志管理",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    let obj = {
+      module_equal: this.type_equal,
+      type_equal: this.module_equal,
+      createTime: this.defaultdate,
+    }
+    axios.get(`${url}api/pconfig/base/log/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        responseType: 'arraybuffer'
+      }).then(res => {
+      const aLink = document.createElement("a");
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      aLink.href = URL.createObjectURL(blob)
+      aLink.setAttribute('download', '日志管理' + '.xls') // 设置下载文件名称
+      aLink.click()
     })
   }
   private getdata() {

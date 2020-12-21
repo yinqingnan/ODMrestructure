@@ -1,12 +1,15 @@
 <template>
   <div id="Setting">
+    <el-scrollbar :style="{height:Height}">
     <div class="box">
+
       <a-row>
         <a-col :span="24">
           <h3 class="fwB">配置信息</h3>
         </a-col>
         <a-col :span="16">
           <a-form
+            autocomplete="off"
             :form="form"
             layout="inline"
             :label-col="{ span: 12 }"
@@ -20,11 +23,11 @@
                     v-decorator="[
                       'code',
                       {
-                        rules: [{ required: true, message: '请输入字典类型' }]
+                        rules: [{ required: true, message: '请输入平台编号' }]
                       }
                     ]"
                     disabled
-                    placeholder="请输入公告标题"
+                    placeholder="请输入平台编号"
                   />
                 </a-form-item>
               </a-col>
@@ -35,10 +38,10 @@
                     v-decorator="[
                       'name',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入平台名称' }]
                       }
                     ]"
-                    placeholder="点击右方按钮生成"
+                    placeholder="请输入平台名称"
                   />
                 </a-form-item>
               </a-col>
@@ -48,10 +51,10 @@
                     v-decorator="[
                       'address',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入平台地址' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入平台地址"
                   />
                 </a-form-item>
               </a-col>
@@ -61,10 +64,10 @@
                     v-decorator="[
                       'manager',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入管理员' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入管理员"
                   />
                 </a-form-item>
               </a-col>
@@ -74,10 +77,10 @@
                     v-decorator="[
                       'phone',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入联系电话' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入联系电话"
                   />
                 </a-form-item>
               </a-col>
@@ -99,23 +102,23 @@
                     v-decorator="[
                       'accesDpetCode',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入部门编号' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入部门编号"
                   />
                 </a-form-item>
               </a-col>
               <a-col :span="24" v-if="openC">
-                <a-form-item label="接入秘钥" style="width:100%">
+                <a-form-item label="接入密钥" style="width:100%">
                   <a-input
                     v-decorator="[
                       'accessKey',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入接入密钥' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入接入密钥"
                   />
                 </a-form-item>
               </a-col>
@@ -125,10 +128,10 @@
                     v-decorator="[
                       'accessCloudIp',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入上级平台IP' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入上级平台IP"
                   />
                 </a-form-item>
               </a-col>
@@ -138,10 +141,10 @@
                     v-decorator="[
                       'accessCloudProt',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入上级平台端口号' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入上级平台端口号"
                   />
                 </a-form-item>
               </a-col>
@@ -163,10 +166,10 @@
                     v-decorator="[
                       'ftpIp',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入FTP服务器IP' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入FTP服务器IP"
                   />
                 </a-form-item>
               </a-col>
@@ -176,10 +179,10 @@
                     v-decorator="[
                       'ftpPort',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入FTP服务器端口号' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入FTP服务器端口号"
                   />
                 </a-form-item>
               </a-col>
@@ -189,10 +192,10 @@
                     v-decorator="[
                       'ftpUser',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入FTP账号' }]
                       }
                     ]"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入FTP账号"
                   />
                 </a-form-item>
               </a-col>
@@ -202,11 +205,11 @@
                     v-decorator="[
                       'ftpPasswd',
                       {
-                        rules: [{ required: true, message: '请输入字典值' }]
+                        rules: [{ required: true, message: '请输入FTP密码' }]
                       }
                     ]"
                     type="password"
-                    placeholder="请输入字典名称，用于实际显示"
+                    placeholder="请输入FTP密码"
                   />
                 </a-form-item>
               </a-col>
@@ -222,6 +225,7 @@
         </a-col>
       </a-row>
     </div>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -241,6 +245,7 @@ export default class RightContent extends Vue {
   public showN: string[];
   public saveData: any;
   public saveID: string;
+  public Height= ''
   beforeCreate() {
     this.form = this.$form.createForm(this);
     this.showN = ["1"];
@@ -248,6 +253,12 @@ export default class RightContent extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   created() {
     this.getSet();
+    this.Height = `${document.documentElement.clientHeight - 160}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 160}px`
+    })
   }
   private ckChange(e: any, val: string): void {
     const len: number = e.length;

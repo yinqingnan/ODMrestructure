@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-30 17:47:06
- * @LastEditors: your name
+ * @LastEditTime: 2020-12-18 10:32:32
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\router\index.ts
+ * @FilePath: \src\router\index.ts
  */
 
 import Vue from "vue";
@@ -14,6 +14,13 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
+    meta: {
+      key: "0001",
+      title: "登录",
+      icon: ";",
+      keepAlive: false,
+      permission: null,
+    },
     component: () =>
       import("@/views/Login.vue")
   },

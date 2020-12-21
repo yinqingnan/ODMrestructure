@@ -127,6 +127,7 @@ import {
   page,
   layouts,
 } from "@/InterfaceVariable/variable"
+import axios from 'axios'
 import moment from "moment"
 @Component({
   components: {},
@@ -227,8 +228,7 @@ export default class VideoStatistics extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-    this.deptCode = localStorage.getItem("deptCode")
-    console.log(this.deptCode)
+    // this.deptCode = localStorage.getItem("deptCode")
   }
   private mounted() {
     this.getdata()
@@ -246,6 +246,7 @@ export default class VideoStatistics extends Vue {
       this.departmentData = res.data
     })
     this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
+      this.dateRange = res.data.myDate
       let obj = {
         page: this.page.currentPage,
         limit: this.page.pageSize,
@@ -269,12 +270,22 @@ export default class VideoStatistics extends Vue {
   }
   public reset() {
     this.form.resetFields()
+    this.deptCode = ""
+    this.policeName = ""
+    this.dateRange = ""
+    this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
+      this.dateRange = res.data.myDate
+      let date = res.data.myDate
+      this.defaultdate = [
+        moment(date.split("~")[0].trim(), "YYYY-MM-DD"),
+        moment(date.split("~")[1].trim(), "YYYY-MM-DD"),
+      ]
+    })
   }
   public handle(e: MouseEvent) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-       
         let date =
           val.date[0].format("YYYY-MM-DD") +
           "~" +
@@ -307,12 +318,32 @@ export default class VideoStatistics extends Vue {
     this.gettabledata(obj)
    }
   public daochu() {
-    (this.$refs.kptj as any).exportData({
-      filename: "考评统计",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message: false,
-    })
+    // (this.$refs.kptj as any).exportData({
+    //   filename: "考评统计",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message: false,
+    // })
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    let obj = {
+      deptCode: this.deptCode,
+      policeName: this.policeName,
+      dateRange: this.dateRange,
+    }
+    axios.get(`${url}api/tpb/report/label/user/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        console.log(res)
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '考评统计' + '.xls')
+        aLink.click()
+      })
   }
 }
 </script>

@@ -102,6 +102,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
+import axios from 'axios'
 import {
   LimitInputlength,
   textarealength,
@@ -246,20 +247,33 @@ export default class VideoStatistics extends Vue {
   }
   public reset() {
     this.form.resetFields()
+    this.deptCode = localStorage.getItem("deptCode")
+    this.Statistics.getdate({ type: "THIS_MONTH" }).then((res) => {
+      this.dateRange = res.data.myDate
+      let date = res.data.myDate
+      this.defaultdate = [
+        moment(date.split("~")[0].trim(), "YYYY-MM-DD"),
+        moment(date.split("~")[1].trim(), "YYYY-MM-DD"),
+      ]
+    })
   }
+  private deptCode = localStorage.getItem("deptCode")
+  private dateRange = ''
   public handle(e: MouseEvent) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val)
         let date =
           val.date[0].format("YYYY-MM-DD") +
           "~" +
           val.date[1].format("YYYY-MM-DD")
+          this.deptCode = val.department
+          this.dateRange = date
         let obj = {
           page: 1,
           limit: 15,
           deptCode: val.department,
-          level: val.deviceStatus,
           dateRange: date,
         }
         this.gettabledata(obj)
@@ -267,12 +281,31 @@ export default class VideoStatistics extends Vue {
     })
   }
   public daochu() {
-    (this.$refs.gltj as any).exportData({
-      filename: "关联统计",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
-    })
+    // (this.$refs.gltj as any).exportData({
+    //   filename: "关联统计",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    // })
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    const obj = {
+      deptCode: this.deptCode,
+      dateRange: this.dateRange,
+    }
+    axios.get(`${url}api/tpb/report/lawcase/unit/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        console.log(res)
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '关联统计' + '.xls')
+        aLink.click()
+      })
   }
 
 }

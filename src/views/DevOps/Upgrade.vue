@@ -74,8 +74,16 @@
             <vxe-table-column field="modifyTime" title="上传时间" align="center" width="180" />
             <vxe-table-column title="操作" align="center" fixed="right" width="180">
               <template v-slot="{ row }">
-                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;margin-right:8px" v-isshow="'system:upgrade:update'">编辑</span>
-                <span @click="dlt(row.id)" style="color:#4d96ca;cursor:pointer;" v-isshow="'system:upgrade:delete'">删除</span>
+                <span
+                  @click="edit(row)"
+                  style="color:#4d96ca;cursor:pointer;margin-right:8px"
+                  v-isshow="'system:upgrade:update'"
+                >编辑</span>
+                <span
+                  @click="dlt(row.id)"
+                  style="color:#4d96ca;cursor:pointer;"
+                  v-isshow="'system:upgrade:delete'"
+                >删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -111,7 +119,7 @@
         >
           <a-row :gutter="24">
             <a-col :span="12">
-              <a-form-item label="升级类型">
+              <a-form-item label="升级类型" class="sjlx">
                 <a-select
                   v-decorator="[
                         'upgradeType',
@@ -156,16 +164,7 @@
                 {
                 initialValue: '',
                 rules: [{ required: true, message: '必填项不能为空' },
-                { validator: (rule, val, callback) => {
-                var pattern = new RegExp(/\d/)
-                if (!pattern.test(val)){
-                callback('必须包含数字');
-                }else {
-                  callback();
-                }
-                  callback();
-                },
-                }]
+                { validator: versionvalidator }]
                 }
                 ]"
                   :allow-clear="true"
@@ -203,7 +202,7 @@
                   v-decorator="[
                         'file',
                         {
-                          initialValue: this.fileList,
+                          initialValue: fileList,
                           rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
@@ -212,7 +211,7 @@
                     <a-icon type="upload" />选择文件上传
                   </a-button>
                 </a-upload>
-                <h2 class="filename">{{filename}}</h2>
+                <h2 class="filename" :title="filename">{{filename}}</h2>
               </a-form-item>
             </a-col>
           </a-row>
@@ -256,7 +255,7 @@ export default class Upgrade extends Vue {
 
   private layouts = layouts
   private visible = false
-  private page= {
+  private page = {
     currentPage: 1, //当前页数
     pageSize: 15, //每页多少条
     totalResult: 200, //总数
@@ -286,6 +285,7 @@ export default class Upgrade extends Vue {
   // todo 事件
   private Uploadpackage() {
     this.visible = true
+    this.form.resetFields()
   }
   private tableRowClassName(record: any) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
@@ -319,7 +319,6 @@ export default class Upgrade extends Vue {
     }
   }
   private edit(row) {
-    console.log(row)
     this.visible = true
     this.id = row.id
     this.status = false
@@ -357,8 +356,8 @@ export default class Upgrade extends Vue {
             if (res.code == 0) {
               _that.$message.success(res.msg)
               let obj = {
-                page: this.page.currentPage,
-                limit: this.page.pageSize,
+                page: _that.page.currentPage,
+                limit: _that.page.pageSize,
               }
               _that.gettabledata(obj)
             } else {
@@ -369,15 +368,22 @@ export default class Upgrade extends Vue {
       },
     })
   }
+  private filestatus = false
   private beforeUpload(file) {
     console.log(file)
     this.fileList = []
-    if (file.type == "application/zip") {
+    if (
+      file.type == "application/zip" ||
+      file.type == "application/x-zip-compressed"
+    ) {
       this.fileList = [file]
       this.filename = file.name
+      this.filestatus = true
     } else {
-      this.$message.error("文件类型错误")
+      this.$message.error("文件类型错误!")
       this.fileList = []
+      this.filename = ""
+      this.filestatus = false
     }
     return false
   }
@@ -394,46 +400,56 @@ export default class Upgrade extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val.file)
+        console.log(val.file.file)
+        console.log(this.fileList)
+
         if (this.status) {
-          // eslint-disable-next-line no-irregular-whitespace
-          let formData = new FormData() //保存文件后再保存
-          formData.append("file", val.file.file)
-          axios
-            .post(this.http + "api/mdm/system/upgrade/uploadFile", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Token: localStorage.getItem("token"),
-              },
-            })
-            .then((res) => {
-              let path = res.data
-              let obj = {
-                id: this.id,
-                path: path,
-                softwareType: val.softwareType,
-                updateContent: val.updateContent,
-                upgradeType: val.upgradeType,
-                version: val.version,
-              }
-              this.Luckmanagement.Uploadsave(obj).then((res) => {
-                if (res.code == 0) {
-                  this.$message.success(res.msg)
-                  this.filename = ""
-                  this.form.resetFields()
-                  this.visible = false
+          if (this.filestatus) {
+            // eslint-disable-next-line no-irregular-whitespace
+            let formData = new FormData() //保存文件后再保存
+            formData.append("file", this.fileList[0])
+            axios
+              .post(this.http + "api/mdm/system/upgrade/uploadFile", formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  Token: localStorage.getItem("token"),
+                },
+              })
+              .then((res) => {
+                console.log(res)
+                if (res.data.code == 0) {
+                  let path = res.data
                   let obj = {
-                    page: this.page.currentPage,
-                    limit: this.page.pageSize,
+                    id: this.id,
+                    path: path,
+                    softwareType: val.softwareType,
+                    updateContent: val.updateContent,
+                    upgradeType: val.upgradeType,
+                    version: val.version,
                   }
-                  this.gettabledata(obj)
+                  this.Luckmanagement.Uploadsave(obj).then((res) => {
+                    if (res.code == 0) {
+                      this.$message.success(res.msg)
+                      this.filename = ""
+                      this.form.resetFields()
+                      this.visible = false
+                      let obj = {
+                        page: this.page.currentPage,
+                        limit: this.page.pageSize,
+                      }
+                      this.gettabledata(obj)
+                    } else {
+                      this.$message.error(res.msg)
+                    }
+                  })
                 } else {
-                  this.$message.error(res.msg)
+                  this.$message.error(res.data.msg)
                 }
               })
-            })
+          } else {
+            this.$message.error("上传文件格式错误！请重新选择！")
+          }
         } else {
-          console.log("编辑保存")
           let obj = {
             id: this.id,
             path: this.path,
@@ -442,8 +458,6 @@ export default class Upgrade extends Vue {
             upgradeType: val.upgradeType,
             version: val.version,
           }
-          console.log(obj)
-
           this.Luckmanagement.Uploadsave(obj).then((res) => {
             if (res.code == 0) {
               this.$message.success(res.msg)
@@ -464,10 +478,19 @@ export default class Upgrade extends Vue {
     })
   }
   private handleCancel() {
+    this.form.resetFields()
     this.filename = ""
   }
   private filebtn() {
     this.status = true
+  }
+  private versionvalidator(rule, val, callback){
+    let pattern = new RegExp(/\d/)
+    if(!pattern.test(val)){
+      callback('必须包含数字');
+    }else{
+      callback();
+    }
   }
 
   // todo 数据请求
@@ -507,5 +530,14 @@ export default class Upgrade extends Vue {
   top: -12px;
   right: -220px;
   font-size: 14px;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sjlx {
+  .ant-form-item-label {
+    width: 90px;
+  }
 }
 </style>

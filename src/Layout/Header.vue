@@ -49,7 +49,7 @@
             v-decorator="[
               'oldPassword',
               {
-                rules: [{ required: true, message: 'Please input your note!' }]
+                rules: [{ required: true, message: '请输入原密码！' },{ validator: codevalidator}]
               }
             ]"
           />
@@ -60,7 +60,7 @@
             v-decorator="[
               'newPassword',
               {
-                rules: [{ required: true, message: 'Please input your note!' }]
+                rules: [{ required: true, message: '请输入新密码！' },{ validator: codevalidator}]
               }
             ]"
           />
@@ -71,7 +71,7 @@
             v-decorator="[
               'newRePassword',
               {
-                rules: [{ required: true, message: 'Please input your note!' }]
+                rules: [{ required: true, message: '请再次输入新密码！' },{ validator: codevalidator}]
               }
             ]"
           />
@@ -205,6 +205,22 @@ export default class Header extends Vue {
         this.blank = false
       }
     })
+  }
+  private codevalidator(rule, value, callback) {
+    let reg = new RegExp('[\u4E00-\u9FA5]+')
+    if(!reg.test(value)){
+      callback()
+    }else{
+      callback('密码格式不正确，必须是数字或字母')
+    }
+  }
+   private zhdator(rule, value, callback) {
+    let reg = new RegExp('[\u4E00-\u9FA5]+')
+    if(!reg.test(value)){
+      callback()
+    }else{
+      callback('密码格式不正确，必须是数字或字母')
+    }
   }
 }
 </script>

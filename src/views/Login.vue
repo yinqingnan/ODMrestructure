@@ -16,7 +16,11 @@
                 v-decorator="[
                   'username',
                   {
-                    rules: [{ required: true, message: '必填项请输入' }]
+                    rules: [{ required: true, message: '请输入账号' },
+                    {
+                      validator: checkData, 
+                      trigger: 'blur'
+                    }]
                   }
                 ]"
                 placeholder="请输入账号信息"
@@ -34,7 +38,11 @@
                     rules: [
                       {
                         required: true,
-                        message: '密码为必填项'
+                        message: '请输入密码'
+                      },
+                      {
+                         validator: checkData, 
+                         trigger: 'blur'
                       }
                     ]
                   }
@@ -44,7 +52,7 @@
                 <a-icon slot="prefix" type="unlock" />
               </a-input-password>
             </a-form-item>
-           
+
             <a-form-item>
               <a-checkbox :checked="checkNick" @change="handleChange">记住密码</a-checkbox>
             </a-form-item>
@@ -110,8 +118,8 @@ export default class Login extends Vue {
   private handleChange(e: { target: { checked: boolean } }) {
     this.checkNick = e.target.checked
   }
-  private login (data: object) {
-    localStorage.clear();
+  private login(data: object) {
+    localStorage.clear()
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.Login.login(data, false).then((res: any) => {
@@ -119,18 +127,18 @@ export default class Login extends Vue {
         localStorage.setItem("token", res.data.accessToken)
         this.Login.getMenudata().then((res) => {
           if (res.code == 0) {
-             let arr = res.data   //菜单数据
+            let arr = res.data //菜单数据
             // let arr = list //菜单数据
             localStorage.setItem("navlist", JSON.stringify(arr))
             this.addmenu(concatrouter())
-            resetRouter(); //重置路由
+            resetRouter() //重置路由
             router.options.routes = concatrouter()
             router.addRoutes(concatrouter())
             this.$router.push({ name: "Homes" }) //成功后跳转
           }
         })
       } else {
-       this.$message.error(res.msg)
+        this.$message.error(res.msg)
         this.clearCookie()
         this.form.setFieldsValue({
           password: "",
@@ -184,6 +192,16 @@ export default class Login extends Vue {
   //清除cookie
   private clearCookie = () => {
     this.setCookie("", "", -1) //修改2值都为空，天数为负1天就好了
+  }
+  private checkData(rule, value, callback) {
+    if (value) {
+      if (/[\u4E00-\u9FA5]/g.test(value)) {
+        callback(new Error("帐号格式错误，请重新输入"))
+      } else {
+        callback()
+      }
+    }
+    callback()
   }
 }
 </script>

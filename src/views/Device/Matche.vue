@@ -636,18 +636,16 @@ export default class Matche extends Vue {
     code:"",
     department:"",
     user:"",
-    deviceStatus:"",
+    deviceStatus:"all",
     deviceType:"",
-    deviceStatusName:"",
+    deviceStatusName:"all",
   }
   private handle(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
-        console.log(this.page.currentPage);
-        console.log(this.page.pageSize);
         this.Sval = val
+        console.log(this.Sval)
         this.gettable({
           page: this.page.currentPage,
           limit: this.page.pageSize,
@@ -876,15 +874,39 @@ export default class Matche extends Vue {
     }
   }
   private exports() {
-    (this.$refs.zhifayi as any).exportData({
-      filename: "执法仪",
-      sheetName: "Sheet1",
-      type: "xlsx",
-      message:false,
-      columnFilterMethod ({ column }) {
-        return ['code','deviceType','deviceType','deptName','userName','deviceStatusName','lastUploadTime','purchasingDate','warrantyDate'].includes(column.property)
-      }
-    })
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    console.log(this.Sval)
+    let obj = {
+          code:this.Sval.code,
+          deptCode: this.Sval.department,
+          userCode: this.Sval.user,
+          isBinding: this.Sval.deviceStatus,
+          deviceType: this.Sval.deviceType,
+          deviceStatus: this.Sval.deviceStatusName,
+    }
+    axios.get(`${url}api/mdm/device/matche/export`,{
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        console.log(res)
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '执法仪' + '.xls')
+        aLink.click()
+      })
+    // (this.$refs.zhifayi as any).exportData({
+    //   filename: "执法仪",
+    //   sheetName: "Sheet1",
+    //   type: "xlsx",
+    //   message:false,
+    //   columnFilterMethod ({ column }) {
+    //     return ['code','deviceType','deviceType','deptName','userName','deviceStatusName','lastUploadTime','purchasingDate','warrantyDate'].includes(column.property)
+    //   }
+    // })
   }
   private getSelectEvent1() {
     let selectRecords = (this.$refs.zhifayi as any).getCheckboxRecords()
@@ -971,12 +993,12 @@ export default class Matche extends Vue {
     this.form3.resetFields()
   }
   private codevalidator(rule, value, callback) {
-  let reg = new RegExp('[\u4E00-\u9FA5]+')
-  if(!reg.test(value)){
-    callback()
-  }else{
-    callback('格式不正确，必须是数字或字母')
-  }
+    let reg = new RegExp('[\u4E00-\u9FA5]+')
+    if(!reg.test(value)){
+      callback()
+    }else{
+      callback('格式不正确，必须是数字或字母')
+    }
   }
   private uservalidator(rule , value, callback){
     console.log(value)

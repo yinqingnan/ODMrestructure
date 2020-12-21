@@ -12,17 +12,14 @@ export class Dept {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  public getData(params: object, jwt: boolean, flag: string,) {
+  public getData(params: object,) {
     const url = "";
     const body = {
       data: params,
-      tag: flag,
     };
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -39,13 +36,12 @@ export class Dept {
   * @param jwt   是否token校验
   * @param flag          标记
   */
-  public getList(params: object, jwt: boolean, flag: string) {
+  public getList(params: object) {
     const url = "/api/uauth/base/dept/queryAll";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -55,13 +51,12 @@ export class Dept {
     });
   }
 
-  public getSelect(params: object, jwt: boolean, flag: string) {
+  public getSelect(params: object) {
     const url = "/api/uauth/base/dept/select";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -70,31 +65,12 @@ export class Dept {
       });
     });
   }
-
-  // public removeID(params, jwt: boolean, flag: string) {
-  //   const url = "/api/uauth/base/dept/delete";
-  //   const body = JSON.stringify({ params })
-  //   console.log(body)
-  //   return new Promise((resolve, reject) => {
-  //     this.axios
-  //       .post(url, params, {
-  //         headers: { isJwt: jwt },
-  //       })
-  //       .then(res => {
-  //         this.resultHandle(res, resolve);
-  //       })
-  //       .catch(err => {
-  //         reject(err.message);
-  //       });
-  //   });
-  // }
-  public removeID(params: object, jwt=true) {
+  public removeID(params: object) {
     const url = "/api/uauth/base/dept/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -104,12 +80,11 @@ export class Dept {
     });
   }
 
-  public saveVal(params: object, jwt: boolean, flag: string) {
+  public saveVal(params: object) {
     const url = "/api/uauth/base/dept/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -117,21 +92,6 @@ export class Dept {
       });
     });
   }
-
-  // public deptdlt(params: object, jwt=true) {
-  //   const url = "/api/uauth/base/dept/delete";
-  //   const body = params
-  //   return new Promise((resolve, reject) => {
-  //     this.axios.post(url, body, {
-  //       headers: { isJwt: jwt },
-  //     }).then((res: any) => {
-  //       this.resultHandle(res, resolve);
-  //     }).catch((err: { message: any }) => {
-  //       reject(err.message);
-  //     });
-  //   });
-  // }
-
   /**
  * @param res
  * @param resolve
