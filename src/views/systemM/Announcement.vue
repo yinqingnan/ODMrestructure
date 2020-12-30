@@ -44,7 +44,7 @@
         </div>
         <div class="btnList">
           <a-button class="upData mr10" @click="Export"  type="primary" v-isshow="'system:notice:export'">导出</a-button>
-          <a-button  type="primary" class="upData" @click="add" v-isshow="'system:notice:save'">添加</a-button>
+            <a-button  type="primary" class="upData" @click="add" v-isshow="'system:notice:save'">添加</a-button>
         </div>
       </div>
       <!-- 内容 -->
@@ -132,10 +132,7 @@
                     @click="edit(row)"
                     v-isshow="'system:notice:update'"
                   >编辑</span>
-                  <!-- <a-popconfirm title="确定删除？" ok-text="是" cancel-text="否" @confirm="remove(row.id)"> -->
-                    <span  style="color: rgb(13, 184, 223);cursor: pointer;"  v-isshow="'system:notice:delete'" @click="remove(row)">删除</span>
-                  <!-- </a-popconfirm>
-                   -->
+                  <span  style="color: rgb(13, 184, 223);cursor: pointer;"  v-isshow="'system:notice:delete'" @click="remove(row)">删除</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -242,10 +239,10 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :span="12" v-show="isShow">
-              <a-form-item label="接收部门">
+            <a-col :span="12" >
+              <a-form-item label="接收部门" class="jsbm">
                 <a-tree-select
-                  v-show="isShow"
+                  :disabled = '!isShow'
                   style="min-width: 175px"
                   :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                   :tree-data="treeData"
@@ -270,7 +267,7 @@
             </a-col>
             <a-col :span="12">
               <a-form-item label>
-                <a-checkbox-group v-decorator="['organization']" @change="ckChange">
+                <a-checkbox-group  v-decorator="['organization']" @change="ckChange">
                   <a-checkbox value="isALL">全部部门</a-checkbox>
                 </a-checkbox-group>
               </a-form-item>
@@ -421,6 +418,7 @@ export default class RightContent extends Vue {
     this.getList(obj)
   }
   private add(): void {
+    this.isShow = true
     this.visible = true
     this.myTitle = "添加公告"
   }
@@ -690,6 +688,11 @@ export default class RightContent extends Vue {
   .ant-calendar-picker {
     min-width: 0 !important;
     width: 175px;
+  }
+}
+.jsbm {
+  .ant-form-item-label{
+    width: 80px;
   }
 }
 </style>

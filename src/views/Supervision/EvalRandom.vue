@@ -123,8 +123,7 @@
                   class="textblock"
                   :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
                 >{{fileLevel(row.fileLevel)}}</span>
-                <span style="cursor: pointer;" :class="[row.isEdit ? 'Editable' : 'Nonediting']" @click="tablebtn(row)">{{row.fileName}}</span>
-                <!-- <span :class="[row.isEdit ? 'Nonediting' : 'Editable']" @click="tablebtn(row)">{{row.fileName}}</span> -->
+                <span  :class="[row.isEdit ? 'Editable' : 'Nonediting']" @click="tablebtn(row)" ref="sjccright" v-right="'fileEvaluate:evaluationRandom:look'">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="部门" align="center" min-width="10%"/>
@@ -660,31 +659,31 @@ export default class EvalRandom extends Vue {
     // console.log(1)
   }
   private tablebtn(row) {
-    console.log(row.isEdit)
-    if(row.isEdit){
-      this.visible = true
-      this.fileId = row.id
-      this.fileCode = row.code
-      this.DataM.getfiledetails(this.fileId).then((res) => {
-        console.log(res)
-        this.filedetails = res.data
-        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
-      })
-        this.DataM.lawarchives().then((res) => {
-          console.log(res)
-          this.$nextTick(() => {
-            this.form3.setFieldsValue({
-              Total: res.data.total,
-              Scoring: [],
-            })
+     if((this.$refs.sjccright as HTMLElement).style.cursor !== 'not-allowed'){
+          if(row.isEdit){
+          this.visible = true
+          this.fileId = row.id
+          this.fileCode = row.code
+          this.DataM.getfiledetails(this.fileId).then((res) => {
+            console.log(res)
+            this.filedetails = res.data
+            this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
           })
-          this.Total = res.data.total
-          this.options = res.data.list
-      })
-    }else{
-      return false
-    }
-    
+            this.DataM.lawarchives().then((res) => {
+              console.log(res)
+              this.$nextTick(() => {
+                this.form3.setFieldsValue({
+                  Total: res.data.total,
+                  Scoring: [],
+                })
+              })
+              this.Total = res.data.total
+              this.options = res.data.list
+          })
+        }else{
+          return false
+        }
+     }
   }
 
   private relateCase(row) {

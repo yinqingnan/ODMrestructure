@@ -68,7 +68,7 @@
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
-                      :show-time="{
+                        :show-time="{
                         hideDisabledOptions: true,
                         defaultValue: [],
                       }"
@@ -150,6 +150,7 @@
             class="mytable-scrollbar"
             highlight-hover-row
             ref="xTable1"
+            @cell-click='onRowClick'
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
@@ -164,38 +165,57 @@
               show-overflow
               width="30%"
             >
-              <template v-slot="{ row }">
-                     <span
+              <template v-slot="{ row }" >
+                <span
                   class="iconfont iconblock"
                   :class="{'iconpicture': row.fileType === 'photo', 'iconshiping': row.fileType=='video', 'iconmusic': row.fileType=='audio'}"
                 ></span>
-                 <span
+                <span
                   style="cursor: pointer;text-align:center"
                   class="textblock"
                   :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
                 >{{fileLevel(row.fileLevel)}}</span>
-                <span style="cursor: pointer;color:#0db8df"  @click="tablebtn(row)">{{row.fileName}}</span>
+                <span
+                  style="cursor: pointer;color:#0db8df"
+                  v-right="'lawarchives:avDate:look'"
+                  ref="avdataright"
+                  class="filenames"
+                >{{row.fileName}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="部门" align="center" width="10%" />
-            <vxe-table-column field="userName" title="姓名/警号" align="center" show-overflow width="10%">
+            <vxe-table-column
+              field="userName"
+              title="姓名/警号"
+              align="center"
+              show-overflow
+              width="10%"
+            >
               <template v-slot="{ row }">
-               <span>{{row.userName}}({{row.userCode}})</span>
+                <span>{{row.userName}}({{row.userCode}})</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column field="recordDate" title="摄录时间" show-overflow align="center" width="10%"/>
-             <vxe-table-column field="fileDuration_Name" title="摄录时长" show-overflow align="center" width="10%"/>
-            <vxe-table-column field="uploadDate"  title="导入时间" show-overflow align="center" width="10%"/>
-            <!-- <vxe-table-column field="action" title="操作" align="center" fixed="right">
-              <template v-slot="{ row }">
-                <span
-                  type="text"
-                  @click="tablebtn(row)"
-                  style="color:#0db8df;cursor: pointer;"
-                  v-isshow="'lawarchives:avDate:look'"
-                >查看</span>
-              </template>
-            </vxe-table-column> -->
+            <vxe-table-column
+              field="recordDate"
+              title="摄录时间"
+              show-overflow
+              align="center"
+              width="10%"
+            />
+            <vxe-table-column
+              field="fileDuration_Name"
+              title="摄录时长"
+              show-overflow
+              align="center"
+              width="10%"
+            />
+            <vxe-table-column
+              field="uploadDate"
+              title="导入时间"
+              show-overflow
+              align="center"
+              width="10%"
+            />
           </vxe-table>
           <p>
             <vxe-pager
@@ -321,108 +341,108 @@
               </a-tab-pane>
               <a-tab-pane key="3" tab="标注">
                 <!-- <div v-if="!Emptystate"> -->
-                    <a-form
-                    :form="form2"
-                    :label-col="{ span: 6 }"
-                    :wrapper-col="{ span: 18 }"
-                    @submit="biaozhuSubmit"
-                  >
-                    <el-scrollbar style="height:300px;padding-right:10px">
-                      <a-form-item label="标注类型">
-                        <a-select
-                          @change="labelTypeChange"
-                          placeholder="请选择标注类型"
-                          v-decorator="[
+                <a-form
+                  :form="form2"
+                  :label-col="{ span: 6 }"
+                  :wrapper-col="{ span: 18 }"
+                  @submit="biaozhuSubmit"
+                >
+                  <el-scrollbar style="height:300px;padding-right:10px">
+                    <a-form-item label="标注类型">
+                      <a-select
+                        @change="labelTypeChange"
+                        placeholder="请选择标注类型"
+                        v-decorator="[
                           'labelType',
                           {
                             initialValue: undefined,
                             rules: [{ required: true, message: '必填项不能为空' }]
                           }
                         ]"
-                        >
-                          <a-select-option v-for="d in taggingselect1" :key="d.key">{{ d.value }}</a-select-option>
-                        </a-select>
-                      </a-form-item>
-                      <a-form-item label="标注子类">
-                        <a-select
-                          placeholder="请选择标注子类"
-                          v-decorator="[
+                      >
+                        <a-select-option v-for="d in taggingselect1" :key="d.key">{{ d.value }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="标注子类">
+                      <a-select
+                        placeholder="请选择标注子类"
+                        v-decorator="[
                           'labelSubclass',
                           {
                             initialValue: undefined,
                             rules: [{ required: true, message: '必填项不能为空' }]
                           }
                         ]"
-                        >
-                          <a-select-option v-for="d in taggingselect2" :key="d.key">{{ d.value }}</a-select-option>
-                        </a-select>
-                      </a-form-item>
-                      <a-form-item label="车牌号码">
-                        <a-input
-                          :max-length="LimitInputlength"
-                          placeholder="没有车牌号，请填写无"
-                          v-decorator="[
+                      >
+                        <a-select-option v-for="d in taggingselect2" :key="d.key">{{ d.value }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="车牌号码">
+                      <a-input
+                        :max-length="LimitInputlength"
+                        placeholder="没有车牌号，请填写无"
+                        v-decorator="[
                           'plateNumber',
                           {
                             initialValue: '',
                             rules: [{ required: true, message: '必填项不能为空' }]
                           }
                         ]"
-                        />
-                      </a-form-item>
-                      <a-form-item label="采集时间" class="biaozhus">
-                        <a-date-picker
-                          placeholder="请选择采集时间"
-                          v-decorator="[
+                      />
+                    </a-form-item>
+                    <a-form-item label="采集时间" class="biaozhus">
+                      <a-date-picker
+                        placeholder="请选择采集时间"
+                        v-decorator="[
                           'gatheringTime',
                           {
                             initialValue:'',
                             rules: [{ required: true, message: '必填项不能为空' }]
                           }
                         ]"
-                        />
-                      </a-form-item>
-                      <a-form-item label="采集地址">
-                        <a-input
-                          :max-length="LimitInputlength"
-                          placeholder="请输入采集地址（30字符以内）"
-                          v-decorator="[
+                      />
+                    </a-form-item>
+                    <a-form-item label="采集地址">
+                      <a-input
+                        :max-length="LimitInputlength"
+                        placeholder="请输入采集地址（30字符以内）"
+                        v-decorator="[
                           'gatheringPlace',
                           {
                             initialValue: '',
                             rules: [{ required: true, message: '必填项不能为空' }]
                           }
                         ]"
-                        />
-                      </a-form-item>
-                      <a-form-item label="标注描述">
-                        <a-textarea
-                          placeholder="请输入标注描述（200字符以内）"
-                          style="display: flex;overflow-y:auto;resize: none;"
-                          allowClear
-                          :maxLength="textarealength"
-                          v-decorator="[
+                      />
+                    </a-form-item>
+                    <a-form-item label="标注描述">
+                      <a-textarea
+                        placeholder="请输入标注描述（200字符以内）"
+                        style="display: flex;overflow-y:auto;resize: none;"
+                        allowClear
+                        :maxLength="textarealength"
+                        v-decorator="[
                         'remark',
                         {
                           initialValue:'',
                           rules: [{ required: true, message: '必填项不能为空' }],
                         },
                       ]"
-                          :autoSize="{ minRows: 3, maxRows: 3 }"
-                        />
-                      </a-form-item>
-                    </el-scrollbar>
-                  </a-form>
-                  <a-button
-                    v-isshow="'lawarchives:avDate:threeBtn'"
-                    type="primary"
-                    @click="biaozhuSubmit"
-                    style="margin-top: 14px;margin-left: 44%;"
-                  >保存</a-button>
+                        :autoSize="{ minRows: 3, maxRows: 3 }"
+                      />
+                    </a-form-item>
+                  </el-scrollbar>
+                </a-form>
+                <a-button
+                  v-isshow="'lawarchives:avDate:threeBtn'"
+                  type="primary"
+                  @click="biaozhuSubmit"
+                  style="margin-top: 14px;margin-left: 44%;"
+                >保存</a-button>
                 <!-- </div> -->
                 <!-- <a-empty v-else style="margin-top:94px">
                   <span slot="description">没有标注信息</span>
-                </a-empty> -->
+                </a-empty>-->
               </a-tab-pane>
               <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
@@ -487,7 +507,6 @@
                     <a-form-item label="实际评分">
                       <a-input
                         :disabled="true"
-                        
                         v-decorator="[
                         'Actualscore',
                         {
@@ -539,7 +558,7 @@
         </template>
       </a-modal>
       <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear">
-        <el-scrollbar style="200px">
+        <el-scrollbar style="height: 200px;width: 476px;">
           <p
             v-for="item in logmsg"
             :key="item.id"
@@ -559,13 +578,15 @@ import {
 } from "@/InterfaceVariable/variable"
 
 import { Component, Vue } from "vue-property-decorator"
+
+
 import {
   Selecttype,
   Filedetails,
   PlayerOptions,
 } from "../../InterfaceVariable/interface"
 import moment from "moment"
-import axios from 'axios'
+import axios from "axios"
 @Component({})
 export default class AvData extends Vue {
   [x: string]: any
@@ -577,7 +598,7 @@ export default class AvData extends Vue {
   public form2!: any
   public form3!: any
   private departmentData = []
-  private page= {
+  private page = {
     currentPage: 1, //当前页数
     pageSize: 15, //每页多少条
     totalResult: 200, //总数
@@ -619,6 +640,7 @@ export default class AvData extends Vue {
       fullscreenToggle: true, //全屏按钮
     },
   }
+
   private Timetype: Selecttype[] = [
     { id: 1, value: "uploadDate", title: "导入时间" },
     { id: 2, value: "recordDate", title: "摄录时间" },
@@ -664,8 +686,8 @@ export default class AvData extends Vue {
   private Height = ""
   private tabledata = []
   private formdata = {
-    page:1,
-    limit:15,
+    page: 1,
+    limit: 15,
     department: "",
     userName: "",
     TimeData: "",
@@ -684,8 +706,8 @@ export default class AvData extends Vue {
     fileLevel_equal: "",
     uploadDate_gt: null, //必填  时间起
     uploadDate_lt: null, //必填  时间止
-    recordDate_gt:null,
-    recordDate_lt:null
+    recordDate_gt: null,
+    recordDate_lt: null,
   }
   private logmsg = []
   private taggingselect1 = []
@@ -707,7 +729,6 @@ export default class AvData extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     this.getdata()
-
   }
   private handleOk() {
     return
@@ -732,12 +753,12 @@ export default class AvData extends Vue {
             fileLevel_equal: val.levelData,
             uploadDate_gt: Date_gt, //必填  时间起
             uploadDate_lt: Date_lt, //必填  时间止
-            recordDate_gt: '',
-            recordDate_lt: '',
+            recordDate_gt: "",
+            recordDate_lt: "",
           }
           this.gettabledata(this.formDatelist)
         } else if (val.TimeData == "recordDate") {
-          this.formDatelist= {
+          this.formDatelist = {
             page: 1,
             limit: 15,
             deptCode_equal: val.department, //部门id
@@ -748,8 +769,8 @@ export default class AvData extends Vue {
             fileLevel_equal: val.levelData,
             recordDate_gt: Date_gt,
             recordDate_lt: Date_lt,
-            uploadDate_gt:'',
-            uploadDate_lt:''
+            uploadDate_gt: "",
+            uploadDate_lt: "",
           }
           this.gettabledata(this.formDatelist)
         }
@@ -774,10 +795,10 @@ export default class AvData extends Vue {
         moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
         moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
       ]
-      console.log(this.defaultdate);
-   
-      let date0 = res.data.myDate.split('~')[0].replace(/(^\s*)|(\s*$)/g,"")
-      let date1 = res.data.myDate.split('~')[1].replace(/(^\s*)|(\s*$)/g,"")
+      console.log(this.defaultdate)
+
+      let date0 = res.data.myDate.split("~")[0].replace(/(^\s*)|(\s*$)/g, "")
+      let date1 = res.data.myDate.split("~")[1].replace(/(^\s*)|(\s*$)/g, "")
       this.formDatelist = {
         page: this.page.currentPage,
         limit: this.page.pageSize,
@@ -787,16 +808,12 @@ export default class AvData extends Vue {
         timeRange: [],
         fileType_equal: "",
         fileLevel_equal: "",
-        uploadDate_gt: moment(date0).format(
-          "YYYY-MM-DD HH:mm:ss"
-        ), //必填  时间起
-        uploadDate_lt: moment(date1).format(
-          "YYYY-MM-DD HH:mm:ss"
-        ), //必填  时间止
+        uploadDate_gt: moment(date0).format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+        uploadDate_lt: moment(date1).format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
         recordDate_gt: "",
         recordDate_lt: "",
       }
-        this.gettabledata(this.formDatelist)
+      this.gettabledata(this.formDatelist)
     })
   }
   private gettabledata(obj): void {
@@ -823,36 +840,42 @@ export default class AvData extends Vue {
     this.logshow = false
     this.logmsg = []
   }
-  private tablebtn(row: any) {
-    console.log(row)
-    if (row.fileType_Name == "日志") {
-      this.DataM.getlogmsg(row.id).then((res) => {
-        console.log(res.data.split(/\r\n/g))
-        let splits = res.data.split(/\r\n/g)
-        let dataList = []
-        for (let i = 0; i < splits.length; i++) {
-          dataList.push({
-            id: i,
-            text: splits[i],
-          })
-        }
-        console.log(dataList)
-        this.logshow = true
-        this.logmsg = dataList
-      })
-    } else {
-      // 弹窗文件信息
-      this.DataM.getfiledetails(row.id).then((res) => {
-        this.visible = true
-        this.fileCode = row.code
-        this.fileId = row.id
-        this.activeKey = "1"
-        this.form2.resetFields()
-        this.form1.resetFields()
-        this.filedetails = res.data
-        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
-      })
+  private onRowClick({row, rowIndex,column }){
+    console.log(column.title);
+    if(column.title === '文件名称'){
+      this.tablebtn(row,rowIndex)
+    }    // console.log(row , rowIndex);
+  }
+  private tablebtn(row,rowIndex) {
+    if((document.getElementsByClassName('filenames')[rowIndex]as HTMLElement).style.cursor !== 'not-allowed'){
+      if (row.fileType_Name === "日志") {
+        this.DataM.getlogmsg(row.id).then((res) => {
+          let splits = res.data.split(/\r\n/g)
+          let dataList = []
+          for (let i = 0; i < splits.length; i++) {
+            dataList.push({
+              id: i,
+              text: splits[i],
+            })
+          }
+          this.logshow = true
+          this.logmsg = dataList
+        })
+      } else {
+        // 弹窗文件信息
+        this.DataM.getfiledetails(row.id).then((res) => {
+          this.visible = true
+          this.fileCode = row.code
+          this.fileId = row.id
+          this.activeKey = "1"
+          this.form2.resetFields()
+          this.form1.resetFields()
+          this.filedetails = res.data
+          this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+        })
+      }
     }
+   
   }
   private tabchange(activeKey) {
     console.log(activeKey)
@@ -860,7 +883,7 @@ export default class AvData extends Vue {
       // 标注信息
       this.DataM.getfiletagging(this.fileCode).then((res) => {
         console.log(res.data)
-         this.Emptystate = true
+        this.Emptystate = true
         if (res.data) {
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
@@ -886,9 +909,9 @@ export default class AvData extends Vue {
               })
             })
           })
-        }else{
+        } else {
           // 标注下拉数据1
-           this.DataM.taggingselect1().then((res) => {
+          this.DataM.taggingselect1().then((res) => {
             console.log(res.data)
             this.taggingselect1 = res.data
           })
@@ -1074,8 +1097,8 @@ export default class AvData extends Vue {
           _that.selectedRowKeys.forEach((item) => {
             window.open(item.downloadPath)
           })
-          _that.selectedRowKeys = [];
-          (_that.$refs.xTable1 as any).clearCheckboxRow()
+          _that.selectedRowKeys = []
+          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
         },
       })
     } else {
@@ -1108,7 +1131,7 @@ export default class AvData extends Vue {
                   timeRange: _that.myDate,
                   fileType_equal: _that.formdata.Filetype,
                   fileLevel_equal: _that.formdata.levelData,
-                  uploadDate_gt:moment(_that.formdata.date[0]).format(
+                  uploadDate_gt: moment(_that.formdata.date[0]).format(
                     "YYYY-MM-DD HH:mm:ss"
                   ), //必填  时间起
                   uploadDate_lt: moment(_that.formdata.date[1]).format(
@@ -1134,10 +1157,8 @@ export default class AvData extends Vue {
   public pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
-    console.log(this.defaultdate[0].format(
-          "YYYY-MM-DD HH:mm:ss"
-        ))
-    if(this.formdata.date.length == 0){
+    console.log(this.defaultdate[0].format("YYYY-MM-DD HH:mm:ss"))
+    if (this.formdata.date.length == 0) {
       let obj = {
         page: currentPage,
         limit: pageSize,
@@ -1147,19 +1168,15 @@ export default class AvData extends Vue {
         timeRange: "2020-10-06 ~ 2020-11-06",
         fileType_equal: "",
         fileLevel_equal: "",
-        uploadDate_gt: this.defaultdate[0].format(
-          "YYYY-MM-DD HH:mm:ss"
-        ), //必填  时间起
-        uploadDate_lt: this.defaultdate[1].format(
-          "YYYY-MM-DD HH:mm:ss"
-        ), //必填  时间止
+        uploadDate_gt: this.defaultdate[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+        uploadDate_lt: this.defaultdate[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
         recordDate_gt: "",
-        recordDate_lt: ""
+        recordDate_lt: "",
       }
-      console.log(this.formDatelist);
-      
+      console.log(this.formDatelist)
+
       this.gettabledata(obj)
-    }else{
+    } else {
       let obj = {
         page: currentPage,
         limit: pageSize,
@@ -1172,11 +1189,10 @@ export default class AvData extends Vue {
         uploadDate_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
         uploadDate_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
         recordDate_gt: "",
-        recordDate_lt: ""
+        recordDate_lt: "",
       }
       this.gettabledata(obj)
     }
-
   }
   public selectAllEvent({ checked, records }) {
     this.selectedRowKeys = records
@@ -1187,6 +1203,7 @@ export default class AvData extends Vue {
     console.log(checked ? "勾选事件" : "取消事件", records)
   }
   private tableRowClassName(record: any, index: number) {
+    record.rowIndex = index;
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
 
@@ -1216,7 +1233,7 @@ export default class AvData extends Vue {
     this.form2.resetFields()
     this.form3.resetFields()
     this.PreviousDisabled = false
-    this.NextDisabled = false;
+    this.NextDisabled = false
   }
   private previous() {
     // console.log(this.Tablesubscript)
@@ -1270,7 +1287,7 @@ export default class AvData extends Vue {
     this.DataM.bumendlt([this.fileId]).then((res) => {
       if (res.code == 0) {
         this.$message.success(res.msg)
-        console.log(this.formDatelist);
+        console.log(this.formDatelist)
         this.gettabledata(this.formDatelist)
         this.visible = false
       } else {
@@ -1280,24 +1297,24 @@ export default class AvData extends Vue {
   }
   // 视频播完回调
   private onPlayerEnded(e) {
-    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src); // 重置视频进度条
+    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
   }
   private fileLevel(val) {
-    let str = ''
-   switch (val) {
-     case 1:
-      str='低'
-       break;
-    case 2:
-      str= '中'
-       break;
-    case 3:
-      str= '高'
-       break;
-     default:
-       break;
-   }
-   return str
+    let str = ""
+    switch (val) {
+      case 1:
+        str = "低"
+        break
+      case 2:
+        str = "中"
+        break
+      case 3:
+        str = "高"
+        break
+      default:
+        break
+    }
+    return str
   }
 }
 </script>
@@ -1352,6 +1369,7 @@ export default class AvData extends Vue {
   height: 36px;
   line-height: 36px;
 }
+
 #AvData .ant-table-thead {
   height: 36px;
   line-height: 36px;
@@ -1448,5 +1466,4 @@ export default class AvData extends Vue {
     width: 276px !important;
   }
 }
-
 </style>

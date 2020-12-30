@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-26 12:51:44
- * @LastEditTime: 2020-11-26 13:55:15
+ * @LastEditTime: 2020-12-29 16:52:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\store\modules\menulist.ts
+ * @FilePath: \src\store\modules\menulist.ts
  */
 // 引入types
 import { ADDMENU } from "../types";
@@ -14,7 +14,6 @@ const state = {
 const getters = {};
 const mutations = {
   [ADDMENU](state: any, val): void {
-    console.log(val)
     state.menulist = val
   }
 };

@@ -273,8 +273,8 @@ export default class OperationLog extends Vue {
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     let obj = {
-      module_equal: this.type_equal,
-      type_equal: this.module_equal,
+      module_equal: this.module_equal ,
+      type_equal: this.type_equal,
       createTime: this.defaultdate,
     }
     axios.get(`${url}api/pconfig/base/log/export`,{

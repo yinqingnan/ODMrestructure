@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-26 16:31:41
+ * @LastEditTime: 2020-12-30 17:34:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\store\modules\tabs.ts
+ * @FilePath: \src\store\modules\tabs.ts
  */
 // 引入types
 import { ADDTBS, MENUADD, DLTTBS, INITTABS, CLEARTABLIST ,SETACTIVE} from "../types";
@@ -70,9 +70,10 @@ const mutations = {
     localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存
   },
   [INITTABS](state: any): void {
-    state.tagList = []
-    state.tagList = JSON.parse(localStorage.getItem("Tabslist"))
-    state.activeKey = JSON.parse(localStorage.getItem("activeKey")) +""
+    console.log();
+    state.tagList.push(JSON.parse(localStorage.getItem("Tabslist")))
+    localStorage.setItem("Tabslist", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist"))));
+    localStorage.setItem("activeKey", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist")).key));
   },
   [CLEARTABLIST](state: any,val): void{
     state.tagList = val

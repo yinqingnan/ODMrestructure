@@ -133,7 +133,7 @@
                   class="textblock"
                   :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
                 >{{fileLevel(row.fileLevel)}}</span>
-                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
+                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)" v-right="'fileEvaluate:evaluationRecord:look'" ref="kpjgright">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="部门" align="center" width="100" />
@@ -196,16 +196,6 @@
             >
               <template v-slot="{ row }">{{evaluateName(row)}}</template>
             </vxe-table-column>
-            <!-- <vxe-table-column field="actions" title="操作" align="center" fixed="right" width="100">
-              <template v-slot="{ row }">
-                <span
-                  type="text"
-                  @click="tablebtn(row)"
-                  style="color:#0db8df;cursor: pointer;"
-                  v-isshow="'fileEvaluate:evaluationRecord:look'"
-                >查看</span>
-              </template>
-            </vxe-table-column>-->
           </vxe-table>
           <p>
             <vxe-pager
@@ -792,30 +782,32 @@ export default class EvalRecord extends Vue {
 
   private tablebtn(row) {
     console.log(row)
-    this.visible = true
-    this.fileId = row.id
-    this.fileCode = row.code
-    this.DataM.getfiledetails(this.fileId).then((res) => {
-      console.log(res)
-      this.filedetails = res.data
-      this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
-    })
-    this.DataM.evaluate(this.fileCode).then((res) => {
-      console.log(res)
-      let arr = []
-      res.data.items.map((item) => {
-        arr.push(item.code)
-      })
-      this.options = res.data.items
-      this.$nextTick(() => {
-        this.form3.setFieldsValue({
-          Scoring: arr,
-          Total: res.data.total,
-          Actualscore: res.data.score,
-          remark: res.data.remark,
+     if((this.$refs.kpjgright as HTMLElement).style.cursor !== 'not-allowed'){
+        this.visible = true
+        this.fileId = row.id
+        this.fileCode = row.code
+        this.DataM.getfiledetails(this.fileId).then((res) => {
+          console.log(res)
+          this.filedetails = res.data
+          this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
         })
-      })
-    })
+        this.DataM.evaluate(this.fileCode).then((res) => {
+          console.log(res)
+          let arr = []
+          res.data.items.map((item) => {
+            arr.push(item.code)
+          })
+          this.options = res.data.items
+          this.$nextTick(() => {
+            this.form3.setFieldsValue({
+              Scoring: arr,
+              Total: res.data.total,
+              Actualscore: res.data.score,
+              remark: res.data.remark,
+            })
+          })
+        })
+     }
   }
 
   private tabchange(activeKey) {

@@ -117,7 +117,7 @@
           >
             <template v-slot:nameslot="{ row }">
               <span v-if="row.activeTime">{{row.activeTime}}</span>
-              <span v-else style="cursor: pointer;color:#0dc6eb" @click="qybtn(row)">
+              <span v-else style="cursor: pointer;color:#0dc6eb" @click="qybtn(row)" v-isshow="'device:matcherepairs:acive'">
                 启用
               </span>
             </template>

@@ -30,7 +30,7 @@
                         v-decorator="[
                         'department',
                         {
-                          initialValue: deptCode,
+                          initialValue: null,
                           rules: []
                         }
                       ]"
@@ -116,7 +116,7 @@ export default class VideoStatistics extends Vue {
   }
   private departmentData = []
   private layouts = layouts
-  private deptCode: null | string = null
+  private deptCode = null
   private defaultdate = []
   private tableColumn = [
     { type: "seq", width: 60, title: "序号", align: "center", fixed: "left" },
@@ -215,7 +215,7 @@ export default class VideoStatistics extends Vue {
       let obj = {
         page: 1,
         limit: 15,
-        deptCode: localStorage.getItem("deptCode"),
+        deptCode: localStorage.getItem("deptCode") && null,
       }
       this.gettabledata(obj)
   }
@@ -228,12 +228,6 @@ export default class VideoStatistics extends Vue {
   public reset() {
     this.deptCode = null
     this.form.resetFields()
-     let obj = {
-        page: 1,
-        limit: 15,
-        deptCode: localStorage.getItem("deptCode"),
-      }
-      this.gettabledata(obj)
   }
   public handle(e: MouseEvent) {
     e.preventDefault()

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-11 14:12:26
+ * @LastEditTime: 2020-12-29 16:54:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -21,17 +21,22 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 // todo 引入自定义指令
- Vue.directive('isshow',{
+Vue.directive('isshow',{
   inserted: function(el, binding, vnode) {
     const {value} = binding
-    const roles = vnode.context.$route.meta.permission
+    let roles = []
+    if(vnode.context.$route.meta.permission){
+      roles = vnode.context.$route.meta.permission 
+    }else{
+      roles = []
+    }
     let btn = "";
     //获取单个按钮权限
     if (value) {
       btn = value;
+      
     } else {
-      //无权限直接返回
-      return;
+      return; //无权限直接返回
     }
     if (JSON.stringify(vnode.context.$route.meta) == "{}") {
       return;
@@ -42,6 +47,31 @@ Vue.use(ElementUI);
     }
   }
 })
+Vue.directive("right", {
+  inserted: function (el, binding, vnode) {
+    const { value } = binding
+    let roles = []
+    if (vnode.context.$route.meta.permission) {
+      roles = vnode.context.$route.meta.permission
+    } else {
+      roles = []
+    }
+    let btn = ""
+    //获取单个按钮权限
+    if (value) {
+      btn = value
+    } else {
+      return //无权限直接返回
+    }
+    if (JSON.stringify(vnode.context.$route.meta) == "{}") {
+      return
+    }
+    if (roles.indexOf(btn) == -1) {
+      el.style.color = "#333" 
+      el.style.cursor = "not-allowed" 
+    }
+  },
+})
 
  import '../public/localiconfont/iconfont.css'// 引入图标
 // todo 引入视频播放插件
@@ -49,6 +79,9 @@ import VideoPlayer from 'vue-video-player'
 require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
 Vue.use(VideoPlayer)
+
+import Echart from 'echarts';
+Vue.prototype.$echarts = Echart;
 
 import 'xe-utils';
 import VXETable from 'vxe-table';

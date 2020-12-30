@@ -121,7 +121,7 @@
                   class="textblock"
                   :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
                 >{{fileLevel(row.fileLevel)}}</span>
-                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)">{{row.fileName}}</span>
+                <span style="color:#0db8df;cursor: pointer;" @click="tablebtn(row)" v-right="'fileEvaluate:evaluationDaily:look'" ref="rckpright">{{row.fileName}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="部门" align="center" min-width="15%" />
@@ -654,28 +654,30 @@ export default class EvalRecord extends Vue {
     })
   }
   private popup() {
-    // console.log(1)
+    return false
   }
   private tablebtn(row) {
-    this.visible = true
-    this.fileId = row.id
-    this.fileCode = row.code
-    this.DataM.getfiledetails(this.fileId).then((res) => {
-      console.log(res)
-      this.filedetails = res.data
-      this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
-    })
-    this.DataM.lawarchives().then((res) => {
-      console.log(res)
-      this.$nextTick(() => {
-        this.form3.setFieldsValue({
-          Total: res.data.total,
-          Scoring: [],
-        })
+    if((this.$refs.rckpright as HTMLElement).style.cursor !== 'not-allowed'){
+      this.visible = true
+      this.fileId = row.id
+      this.fileCode = row.code
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        console.log(res)
+        this.filedetails = res.data
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
       })
-      this.Total = res.data.total
-      this.options = res.data.list
-    })
+      this.DataM.lawarchives().then((res) => {
+        console.log(res)
+        this.$nextTick(() => {
+          this.form3.setFieldsValue({
+            Total: res.data.total,
+            Scoring: [],
+          })
+        })
+        this.Total = res.data.total
+        this.options = res.data.list
+      })
+    }
   }
 
   private relateCase(row) {

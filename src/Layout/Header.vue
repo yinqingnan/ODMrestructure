@@ -2,25 +2,30 @@
   <div>
     <div class="headers">
       <div class="header_left">
-        <img src="../assets/image/logo.png" alt />
+        <img src="../assets/image/headerlogo.png" alt />
       </div>
       <div class="header_rigth hidden-sm-and-down">
-        <div class="logo">
+        <!-- <div class="logo">
           <div id="components-badge-demo-title" @click="getNotice">
             <a-badge :dot="isshow" title="Custom hover text" >
               <a-icon type="alert" style="color:#fff;font-size:22px" />
             </a-badge>
           </div>
-        </div>
-        <!-- <div class="headportrait hidden-sm-and-down">
-          <img src="../assets/image/user/123123.png" alt />
         </div> -->
+   
         <div class="Menuss">
-          <a-dropdown :trigger="['click']">
-            <span>
+          <h2>
               {{ username }}
-              <a-icon type="down" />
-            </span>
+          </h2>
+          <div class="division"></div>
+          <div>
+              <span class="iconmima iconfont" @click="modify"></span>
+          </div>
+          <div>
+              <span class="icontuichu iconfont" @click="outuser"></span>
+          </div>
+          <!-- <a-dropdown :trigger="['click']">
+           
             <a-menu slot="overlay">
               <a-menu-item>
                 <a href="javascript:;" @click="modify">修改密码</a>
@@ -29,7 +34,7 @@
                 <a href="javascript:;" @click="outuser">安全退出</a>
               </a-menu-item>
             </a-menu>
-          </a-dropdown>
+          </a-dropdown> -->
         </div>
       </div>
     </div>
@@ -187,7 +192,6 @@ export default class Header extends Vue {
       localStorage.setItem("deptCode", res.data.deptCode)
     })
     this.Login.getNotice().then((res) => {
-      console.log(res)
       if(res.data.length>0){
         this.isshow = true
       }else{
@@ -228,7 +232,6 @@ export default class Header extends Vue {
 <style lang="less" scope>
 .headers {
   height: 74px;
-  // background: #2c4369;
   background-image: url("../assets/image/header.png");
   background-size: 100% 100%;
   display: flex;
@@ -270,13 +273,34 @@ img {
   cursor: pointer;
 }
 .Menuss {
-  cursor: pointer;
+  display: flex;
   margin-left: 16px;
-  margin-right: 16px;
-
-  span {
+  margin-right: 11px;
+  h2{
+    font-size: 16px;
     color: #fff;
+    font-weight: 500;
   }
+  div{
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    margin-top: 15px;
+    line-height: 1;
+    span {
+      
+      color: #fff;
+      cursor: pointer;
+      font-size: 20px;
+  }
+  }
+  
+}
+.iconmima:hover{
+  color:#7eb5e8 ;
+}
+.icontuichu:hover{
+  color:#7eb5e8 ;
 }
 .ant-dropdown-menu-item {
   width: 134px;
@@ -290,5 +314,13 @@ img {
 }
 .ant-form-item {
   margin-bottom: 12px;
+}
+.division{
+  height: 35px;
+  margin-left: 19px;
+  margin-top: 10px !important ;
+  width: 2px !important;
+  border-left:1px solid #384c6c ;
+  border-right:1px solid #1e3153 ;
 }
 </style>

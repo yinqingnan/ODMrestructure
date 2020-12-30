@@ -35,7 +35,7 @@
                         v-decorator="[
                         'deviceStatus',
                         {
-                          initialValue: '',
+                          initialValue: 'all',
                           rules: []
                         }
                       ]"
@@ -219,6 +219,7 @@
               <a-col :span="12">
                 <a-form-item label="FTP账号">
                   <a-input
+                    :disabled='ftpdisabled'
                     v-decorator="['name', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }] }]"
                     :max-length="LimitInputlength"
                     placeholder="请输入FTP账号"
@@ -256,7 +257,6 @@
     </div>
   </div>
 </template>
-// 90  630
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
 import {
@@ -329,11 +329,6 @@ export default class Storage extends Vue {
   }
   private reset() {
     this.form.resetFields()
-    let obj = {
-      page: this.page.currentPage,
-      limit: this.page.pageSize,
-    }
-    this.gettabledata(obj)
   }
   private handle(e) {
     e.preventDefault()
@@ -415,38 +410,37 @@ export default class Storage extends Vue {
   }
   private dlt() {
     let arr = this.getSelectEvent1()
-    console.log(arr)
     if (arr.length > 0) {
       let dltarr = []
+      let str = ''
       arr.map((item) => {
+        console.log(item);
+        str += item.name + ','
+        
         dltarr.push(item.id)
       })
       console.log(dltarr)
+      
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this
       this.$confirm({
         title: "提示",
-        content: "是否确定删除？",
+        content: `存储服务器删除后无法恢复，确定要删除存储服务器${ str }吗？`,
         onOk() {
           that.DeviceM.storedlt(dltarr).then((res) => {
             console.log(res)
             if (res.code == 0) {
               that.$message.success(res.msg)
               let obj = {
-                page: this.page.currentPage,
-                limit: this.page.pageSize,
+                page: that.page.currentPage,
+                limit: that.page.pageSize,
               }
               that.gettabledata(obj)
-              return new Promise((resolve, reject) => {
-                setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-              }).catch(() => console.log("Oops errors!"))
             } else {
               that.$message.error(res.msg)
             }
           })
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-          })
+         
         },
       })
     } else {
@@ -461,6 +455,7 @@ export default class Storage extends Vue {
   // }
   private async FTPconfig(row) {
     this.IP = row.ip
+    this.addshow = false
     this.FTPvisible = true
     let obj = { storageIp_equal: row.ip, 
     page: this.page.currentPage,
@@ -530,8 +525,10 @@ export default class Storage extends Vue {
       }
     })
   }
+  private ftpzhdisavled = false
   private ftpedit(row) {
     console.log(row.id)
+    this.ftpzhdisavled = true
     this.ftpid = row.id
     this.ftpdisabled = true
     this.addshow = true
@@ -549,7 +546,6 @@ export default class Storage extends Vue {
   }
   private ftpdlt(row) {
     console.log(row)
-    console.log()
     this.DeviceM.ftpconfigdlt({
       ip: this.IP,
       userName: row.userName,
@@ -558,7 +554,7 @@ export default class Storage extends Vue {
       if (res.code == 0) {
         this.$message.success(res.msg)
         this.DeviceM.ftptable({
-          storageIp_equal: row.ip,
+          storageIp_equal: this.IP,
           page: this.page.currentPage,
           limit: this.page.pageSize,
         }).then((res) => {
@@ -570,6 +566,7 @@ export default class Storage extends Vue {
     })
   }
   private ftpaddconfig() {
+    this.ftpdisabled = false
     this.addshow = true
     this.ftpdisabled = false
     this.ftpid = ""

@@ -3,7 +3,7 @@
     <div class="box">
       <!-- 头部 -->
       <div class="header">
-        <div class="select">岗位字典项</div>
+        <div class="select">高级配置</div>
         <div class="btnList"></div>
       </div>
       <!-- 内容 -->
@@ -44,7 +44,7 @@
               minWidth="130"
             >
               <template v-slot="{ row }">
-                <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;">编辑</span>
+              <span @click="edit(row)" style="color:#4d96ca;cursor:pointer;"  v-isshow = "'system:highConfig:update'">编辑</span>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -78,6 +78,7 @@
             <a-col :span="24">
               <a-form-item label="配置值" style="width: 100%">
                 <a-input
+                  :disabled='isdisblede'
                   v-decorator="[
                     'code',
                     {
@@ -94,7 +95,7 @@
                   v-decorator="[
                     'value',
                     {
-                      rules: [{ required: true, message: '请输入配置内容' }],
+                      rules: [{ required: true, message: '请输入配置内容' },{validator:contnentvalidator}],
                     },
                   ]"
                   placeholder="请输入配置内容"
@@ -107,7 +108,7 @@
                   v-decorator="[
                     'remark',
                     {
-                      rules: [{ required: true, message: '请输入配置说明' }],
+                      rules: [{ required: true, message: '请输入配置说明' },],
                     },
                   ]"
                   placeholder="请输入配置说明"
@@ -151,17 +152,6 @@ export default class RightContent extends Vue {
   public visible = false
   public saveData = {}
   public savaID: string
-  // public pagination = {
-  //   pageSize: 1000, // 默认每页显示数量
-  //   current: 1, //显示当前页数
-  //   total: 0,
-  //   showSizeChanger: false, // 显示可改变每页数量
-  //   showQuickJumper: false, //显示跳转到输入的那一页
-  //   showTotal: (total: number) =>
-  //     `共 ${total} 条记录 第 ${this.pagination.current} / ${Math.ceil(
-  //       total / this.pagination.pageSize
-  //     )} 页`, // 显示总数
-  // }
   beforeCreate() {
     this.form = this.$form.createForm(this)
   }
@@ -207,15 +197,19 @@ export default class RightContent extends Vue {
     pageSize: number
     current: number
   }) {
-    this.pagination.pageSize = pagination.pageSize
-    this.pagination.current = pagination.current
+    this.page.pageSize = pagination.pageSize
+    this.page.currentPage = pagination.current
     const obj = {
-      page: this.pagination.current,
-      limit: this.pagination.pageSize,
+      page: this.page.currentPage,
+      limit: this.page.pageSize,
     }
     this.getList(obj)
   }
+  private isdisblede = false
+  private contentcode = ''
   private edit(val: any): void {
+    this.contentcode = val.code
+    this.isdisblede = true
     this.visible = true
     this.savaID = val.id
     this.$nextTick(() => {
@@ -243,19 +237,34 @@ export default class RightContent extends Vue {
           id: this.savaID,
         }
         this.getData.upData(val, true).then((res: any) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           if (res.code == 0) {
             this.visible = !this.visible
+            this.isdisblede = false
             this.form.resetFields()
             const val = {
-              page: this.pagination.current,
-              limit: this.pagination.pageSize,
+              page: this.page.currentPage,
+              limit: this.page.pageSize,
             }
             this.getList(val)
           }
         })
       }
     })
+  }
+  private contnentvalidator(rule , value, callback){
+    console.log(this.contentcode);
+    if(this.contentcode === 'station_online_time' || this.contentcode === 'station_Port'|| this.contentcode === 'file_upload_level'){
+      let pattern = new RegExp( /^\d+$|^\d+[.]?\d+$/)
+      if (!pattern.test(value)){
+        callback('只能输入数字');
+      }else {
+        callback();
+      }
+        callback();
+    }else{
+       callback();
+    }
+    
   }
 }
 </script>

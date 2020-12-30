@@ -28,8 +28,7 @@
                     </div>
                     <div>
                       <template v-if="item.isEnabled">
-                        <!-- <a-button style="margin-right:8px" @click="edit(item)" v-isshow="'right:update,right:refmenu'">编辑</a-button> -->
-                        <a-button style="margin-right:8px" @click="edit(item)" >编辑</a-button>
+                        <a-button style="margin-right:8px" @click="edit(item)" v-isshow="'right:update'">编辑</a-button>
                         <a-button @click="dlt(item)" type="primary" v-isshow="'right:delete'">删除</a-button>
                       </template>
                       <template v-else>
@@ -52,28 +51,33 @@
         </div>
       </div>
       <div class="rightsright">
-        <div class="Simpleprogrambody editbody" :style="{height:(parseInt(Height)+42)+'px'}" style="padding:0">
+        <div
+          class="Simpleprogrambody editbody"
+          :style="{height:(parseInt(Height)+42)+'px'}"
+          style="padding:0"
+        >
           <div class="menuleft_header">
             <h2>菜单按钮</h2>
           </div>
           <div style="padding-left:30px;" :style="{height:(parseInt(Height))+'px'}">
             <el-scrollbar style="height:100%">
-            <a-tree
-              v-model="checkedKeys"
-              checkable
-              multiple
-              default-expand-all
-              :expanded-keys="expandedKeys"
-              :auto-expand-parent="autoExpandParent"
-              :tree-data="treeData"
-              :replaceFields="{
+              <a-tree
+                v-model="checkedKeys"
+                checkable
+                multiple
+                :checkStrictly="true"
+                default-expand-all
+                :expanded-keys="expandedKeys"
+                :auto-expand-parent="autoExpandParent"
+                :tree-data="treeData"
+                :replaceFields="{
                   children: 'children',
                   key: 'code',
                   title: 'name'
                 }"
-              @expand="onExpand"
-            />
-          </el-scrollbar>
+                @expand="onExpand"
+              />
+            </el-scrollbar>
           </div>
         </div>
         <div class="rightfooter">
@@ -113,7 +117,8 @@ export default class Right extends Vue {
   }
   @Watch("checkedKeys")
   getcheckedKeys(val) {
-    this.selectKeys = val
+    console.log(val)
+    this.selectKeys = val.checked
   }
   // todo 事件和生命周期
   private created() {
@@ -146,11 +151,11 @@ export default class Right extends Vue {
       this.OrganizationM.rightsTreesave({
         menuIds: this.selectKeys,
         rightId: this.id,
-      }).then(res=>{
-        if(res.code == 0){
+      }).then((res) => {
+        if (res.code == 0) {
           this.$message.success(res.msg)
           this.gettreedata({ rightId: this.id })
-        }else{
+        } else {
           this.$message.error(res.msg)
         }
       })
@@ -229,7 +234,7 @@ export default class Right extends Vue {
     }
   }
   private num = null
-  private listbtn(row,index) {
+  private listbtn(row, index) {
     console.log(row)
     this.expandedKeys = []
     this.num = index
@@ -251,25 +256,25 @@ export default class Right extends Vue {
       if (res.data) {
         let arr = []
         res.data.map((item) => {
-          if(item.checkArr.checked == 1){
+          if (item.checkArr.checked == 1) {
             arr.push(item.code)
           }
-          if(item.children){
-              item.children.map(el => {
-                if(el.checkArr.checked == 1){
-                  arr.push(el.code)
-                }
-                if(el.children){
-                  el.children.map(st => {
-                    if(st.checkArr.checked == 1){
-                      arr.push(st.code)
-                    }
-                  })
-                }
-              })
-            }
+          if (item.children) {
+            item.children.map((el) => {
+              if (el.checkArr.checked == 1) {
+                arr.push(el.code)
+              }
+              if (el.children) {
+                el.children.map((st) => {
+                  if (st.checkArr.checked == 1) {
+                    arr.push(st.code)
+                  }
+                })
+              }
+            })
+          }
         })
-        this.checkedKeys = arr 
+        this.checkedKeys = arr
       }
     })
   }
@@ -316,15 +321,20 @@ export default class Right extends Vue {
   h2 {
     font-size: 14px;
     text-indent: 12px;
+    width: 190px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
   }
 }
-.rightsright{
+.rightsright {
   padding-left: 20px;
 }
-.editbody{
+.editbody {
   border: 1px solid #ececec;
 }
-.active{
+.active {
   background: #ececec;
 }
 </style>

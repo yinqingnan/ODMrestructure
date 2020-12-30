@@ -1,10 +1,10 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-27 10:22:06
+ * @LastEditTime: 2020-12-30 17:32:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\views\BodyContent.vue
+ * @FilePath: \src\views\BodyContent.vue
 -->
 <template>
   <div style="height: 100%">
@@ -42,9 +42,8 @@ export default class BodyContent extends Vue {
   private mounted() {
     if (JSON.parse(localStorage.getItem("Tabslist")) != null) {
       this.inittabs()
-      console.log(this.$route.meta.key)
     } else {
-      this.addtbs({
+      let obj = {
         key: "1",
         path: "/home",
         name: "home",
@@ -59,7 +58,11 @@ export default class BodyContent extends Vue {
           permission: null,
         },
         children: null,
-      }) //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
+      }
+      localStorage.setItem('Tabslist',JSON.stringify(obj))
+      this.addtbs(obj) //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
+     
+     
     }
   }
 }

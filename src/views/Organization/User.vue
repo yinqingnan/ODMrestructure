@@ -678,7 +678,7 @@ export default class User extends Vue {
             return new Promise((resolve, reject) => {
               setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
               _that.OrganizationM.userresetpwd(newarr).then((res) => {
-                _that.$message.info(res.msg)
+                _that.$message.success(res.msg)
               })
             }).catch(() => console.log("Oops errors!"))
           },
@@ -689,7 +689,7 @@ export default class User extends Vue {
           content: `您确定要重置用户${arr[0].name}(警号${arr[0].code})的密码为111111吗？`,
           onOk() {
               _that.OrganizationM.userresetpwd(newarr).then((res) => {
-                _that.$message.info(res.msg)
+                _that.$message.success(res.msg)
             }).catch(() => console.log("Oops errors!"))
           },
         })

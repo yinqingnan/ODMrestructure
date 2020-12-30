@@ -155,14 +155,14 @@
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
                 >编辑</span>
                 <span
-                  v-isshow="'device:matche:active'"
+                  v-isshow="'device:matche:repair'"
                   type="text"
                   @click="Enable(row)"
                   v-if="row.deviceStatusName == '维修'"
                   style="color:#0db8df;cursor: pointer"
                 >启用</span>
                 <span
-                  v-isshow="'device:matche:repair'"
+                  v-isshow="'device:matche:active'"
                   type="text"
                   @click="Report(row)"
                   style="color:#0db8df;cursor: pointer;"

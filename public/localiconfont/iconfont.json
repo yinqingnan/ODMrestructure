@@ -6,6 +6,34 @@
   "description": "音视频数据管理图标",
   "glyphs": [
     {
+      "icon_id": "19071164",
+      "name": "choiced",
+      "font_class": "choiced",
+      "unicode": "e6ff",
+      "unicode_decimal": 59135
+    },
+    {
+      "icon_id": "19071088",
+      "name": "choice",
+      "font_class": "choice",
+      "unicode": "e6fe",
+      "unicode_decimal": 59134
+    },
+    {
+      "icon_id": "19070918",
+      "name": "yonghuming",
+      "font_class": "yonghuming",
+      "unicode": "e6fd",
+      "unicode_decimal": 59133
+    },
+    {
+      "icon_id": "19069868",
+      "name": "tuichu",
+      "font_class": "tuichu",
+      "unicode": "e6fc",
+      "unicode_decimal": 59132
+    },
+    {
       "icon_id": "18491374",
       "name": "ziping",
       "font_class": "ziping",
@@ -55,18 +83,18 @@
       "unicode_decimal": 59123
     },
     {
-      "icon_id": "18452658",
+      "icon_id": "19043815",
       "name": "shiping",
-      "font_class": "shiping",
-      "unicode": "e6f2",
-      "unicode_decimal": 59122
+      "font_class": "shiping-copy",
+      "unicode": "e6fa",
+      "unicode_decimal": 59130
     },
     {
-      "icon_id": "18452624",
+      "icon_id": "19043856",
       "name": "music",
-      "font_class": "music",
-      "unicode": "e6f1",
-      "unicode_decimal": 59121
+      "font_class": "music-copy",
+      "unicode": "e6fb",
+      "unicode_decimal": 59131
     },
     {
       "icon_id": "18452613",

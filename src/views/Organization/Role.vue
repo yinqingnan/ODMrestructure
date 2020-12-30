@@ -165,7 +165,9 @@
                       :span="12"
                       v-for="(d) in options"
                       :key="d.id"
-                      style="line-height: 30px;height: 30px;"
+                      style="line-height: 30px;height: 30px;text-overflow: ellipsis;white-space: nowrap;width: 150px;overflow: hidden;"
+                      class="rightlist"
+                      :title="d.name"
                     >
                       <a-checkbox :value="d.id">{{d.name}}</a-checkbox>
                     </a-col>

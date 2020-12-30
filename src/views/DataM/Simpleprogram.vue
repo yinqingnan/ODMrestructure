@@ -133,7 +133,7 @@
               show-overflow
             >
               <template v-slot="{ row }">
-                <vxe-button type="text" @click="tablebtn(row)" style="color:#0db8df">{{row.code}}</vxe-button>
+                <span type="text" @click="tablebtn(row)" style="color:#0db8df;cursor:pointer" ref="jycxright" v-right="'lawarchives:lllegalData:look'">{{row.code}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column
@@ -256,8 +256,8 @@
                   <div>
                     <p :title="item.fileName">{{item.fileName}}</p>
                     <div style="margin-right:10px">
-                      <a-icon type="download" @click.stop="Relatedownload(item)" />
-                      <a-icon type="rest" @click.stop="deleteRelate(item)" />
+                      <a-icon type="download" @click.stop="Relatedownload(item)" v-isshow="'lawarchives:lllegalData:download'"/>
+                      <a-icon type="rest" @click.stop="deleteRelate(item)" v-isshow="'lawarchives:lllegalData:delRelated'"/>
                     </div>
                   </div>
                   <div style="margin-top:8px">
@@ -270,7 +270,7 @@
           </div>
         </div>
         <template slot="footer">
-          <a-button type="primary" @click="AssociatedFile">关联平台文件</a-button>
+          <a-button type="primary" @click="AssociatedFile" v-isshow="'lawarchives:lllegalData:addRelated'">关联平台文件</a-button>
         </template>
       </a-modal>
 
@@ -676,26 +676,28 @@ export default class Simpleprogram extends Vue {
     })
   }
   private tablebtn(row) {
-    console.log(row)
-    this.casecode = row.code
-    this.visible = true
-    this.DataM.CaseDetails({ code: row.code, type: 1 }).then((res) => {
-      console.log(res.data)
-      if (res.data) {
-        this.CaseDetails = res.data
-      }
-    })
-    this.DataM.MatchFiles(row.code).then((res) => {
-      console.log(res)
-      if (res.data.length > 0) {
-        this.MatchFiles = res.data
-        this.defaultone = res.data[0]
-          this.playerOptions["sources"][0]["src"] = res.data[0].httpPath //修改视频方法
-      } else {
-        this.defaultone.fileName = ""
-        this.defaultone.fileType = ""
-      }
-    })
+    if((this.$refs.jycxright as HTMLElement).style.cursor !== 'not-allowed'){
+      this.casecode = row.code
+      this.visible = true
+      this.DataM.CaseDetails({ code: row.code, type: 1 }).then((res) => {
+        console.log(res.data)
+        if (res.data) {
+          this.CaseDetails = res.data
+        }
+      })
+      this.DataM.MatchFiles(row.code).then((res) => {
+        console.log(res)
+        if (res.data.length > 0) {
+          this.MatchFiles = res.data
+          this.defaultone = res.data[0]
+            this.playerOptions["sources"][0]["src"] = res.data[0].httpPath //修改视频方法
+        } else {
+          this.defaultone.fileName = ""
+          this.defaultone.fileType = ""
+        }
+      })
+    }
+    
   }
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage

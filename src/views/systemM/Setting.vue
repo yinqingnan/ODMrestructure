@@ -189,6 +189,7 @@
               <a-col :span="24" v-if="openF">
                 <a-form-item label="FTP账号" style="width:100%">
                   <a-input
+                    autocomplete="off"
                     v-decorator="[
                       'ftpUser',
                       {
@@ -202,6 +203,7 @@
               <a-col :span="24" v-if="openF">
                 <a-form-item label="FTP密码" style="width:100%">
                   <a-input
+                    autocomplete="off"
                     v-decorator="[
                       'ftpPasswd',
                       {

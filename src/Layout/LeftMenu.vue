@@ -42,8 +42,12 @@
 import { Component, Vue ,Watch} from "vue-property-decorator"
 import subMenu from "./SiderMenu/index.vue"
 import { namespace } from "vuex-class"
+import router from "@/router"
 import {list} from '../InterfaceVariable/variable'
+import { resetRouter } from "@/router/index" //重置路由信息
+import { concatrouter } from "@/router/concatrouter" //生成路由表方法
 const Tabs = namespace("Tabs")
+const Menu = namespace("Menu")
 @Component({
   components: {
     subMenu,
@@ -60,7 +64,8 @@ export default class LeftMenu extends Vue {
   menuadd!: (val: any) => {}
   @Tabs.Mutation("setactive")
   setactive!: (val: any) => {}
-
+  @Menu.Mutation("addmenu")
+  addmenu!: (val: any) => {}
   private icondata_video = "icondata_video"
 
   private list = []
@@ -73,9 +78,13 @@ export default class LeftMenu extends Vue {
   private getdata() {
     this.Login.getMenudata().then((res) => {
       if (res.code == 0) {
-        console.log(res.data)
         this.list = res.data
         // this.list = list
+        localStorage.setItem("navlist", JSON.stringify(res.data))
+        this.addmenu(concatrouter())
+        resetRouter() //重置路由
+        router.options.routes = concatrouter()
+        router.addRoutes(concatrouter())
         let name = this.$route.name
         this.openKeys = [this.findIndexArray(this.list, name, [])[0]]
       }
@@ -117,7 +126,6 @@ export default class LeftMenu extends Vue {
   }
   @Watch("$route")
   routechange(to: any) {
-    console.log(to)
     this.setactive(to.meta.key)
     this.$set(this.defaultSelectedKeys , 0, to.name)
     let name =  this.findIndexArray(this.list, to.name, [])[0]

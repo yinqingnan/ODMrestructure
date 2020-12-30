@@ -22,8 +22,8 @@
                     <a-input v-else v-model="item.jffz" placeholder="请输入分值" style="width:100px"/>
                   </div>
                   <div class="operation" style="display:flex;">
-                    <span class="iconfont"  style="margin-right:10px;"  :class="[item.isEnabled ? 'iconbianjan' : 'iconassets_store']" @click="edit(item)"></span>
-                    <span class="icondelete iconfont" @click="dlt(item)"></span>
+                    <span class="iconfont"  style="margin-right:10px;"  :class="[item.isEnabled ? 'iconbianjan' : 'iconassets_store']" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
+                    <span class="icondelete iconfont" @click="dlt(item)" v-isshow="'fileEvaluate:evSet:dlt'"></span>
                   </div>
                 </div>
                 <div class="listylefooter">
@@ -36,7 +36,7 @@
                         <h2>{{item.jfmc}}</h2>
                       </a-tooltip>
                     </h2>
-                    <a-textarea maxLength="30" v-else placeholder="请输入扣分说明" v-model="item.jfmc" :rows="2"  style="width: 216px;height: 44px;"/>
+                    <a-textarea :maxLength="30" v-else placeholder="请输入扣分说明" v-model="item.jfmc" :rows="2"  style="width: 216px;height: 44px;"/>
                 </div>
               </li>
             </ul>
@@ -92,34 +92,7 @@ export default class EvalSet extends Vue {
   // }
   
   public handleSubmit(e) {
-    // e.preventDefault()
-    // this.form.validateFields((err: any, val: any) => {
-    //   if (!err) {
-    //     let arr = [],
-    //       val2 = [],
-    //       vals = []
-    //     vals = Object.values(val)
-    //     for (var i = 0; i < vals.length; i += 3) {
-    //       val2.push(vals.slice(i, i + 3))
-    //     }
-    //     val2.map((item) => {
-    //       let obj = {
-    //         jfmc: item[0],
-    //         jfbh: item[2],
-    //         jffz: parseInt(item[1]),
-    //       }
-    //       arr.push(obj)
-    //     })
-    //     let arr2 = []
-    //     arr.map((item) => {
-    //       if (item.jfmc != "") {
-    //         arr2.push(item)
-    //       }
-    //     })
-    //     console.log(arr2)
-    //     this.EvaluationSave(arr2)
-    //   }
-    // })
+  // 
   }
   private phonevalidator(rule, value, callback) {
     let reg = new RegExp("^[0-9]*$")

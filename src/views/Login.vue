@@ -7,11 +7,10 @@
           <h2>{{ Title }}</h2>
         </div>
         <div class="loginbox_body">
-          <h2>账号密码登陆</h2>
-          <a-form :form="form" @submit="handleSubmit">
-            <a-form-item>
+          <a-form :form="form" @submit="handleSubmit" autocomplete="off">
+            <a-form-item style="margin-bottom: 20px;" >
               <a-input
-                autocomplete="off"
+                class="logininput"
                 :maxLength="LimitInputlength"
                 v-decorator="[
                   'username',
@@ -25,13 +24,14 @@
                 ]"
                 placeholder="请输入账号信息"
               >
-                <a-icon slot="prefix" type="user" />
+                <!-- <a-icon slot="prefix" type="user" /> -->
+                <span class="iconfont iconyonghuming" slot="prefix" style="color:#ccc;font-size:20px" ></span>
               </a-input>
             </a-form-item>
             <a-form-item>
               <a-input-password
+                class="logininput"
                 :maxLength="LimitInputlength"
-                autocomplete="off"
                 v-decorator="[
                   'password',
                   {
@@ -49,12 +49,11 @@
                 ]"
                 placeholder="请输入密码"
               >
-                <a-icon slot="prefix" type="unlock" />
+                <span class="iconfont iconmima" slot="prefix" style="color:#ccc;font-size:20px" ></span>
               </a-input-password>
             </a-form-item>
-
-            <a-form-item>
-              <a-checkbox :checked="checkNick" @change="handleChange">记住密码</a-checkbox>
+            <a-form-item style="margin-top: 14px;margin-bottom:0;" >
+              <a-checkbox :checked="checkNick" @change="handleChange">记住用户名</a-checkbox>
             </a-form-item>
             <a-form-item>
               <a-button type="primary" html-type="submit">登录</a-button>
@@ -209,18 +208,24 @@ export default class Login extends Vue {
 <style lang="less" scope>
 .bg {
   height: 100vh;
-  background: url("../assets/image/logon_bj.png");
+  background: url("../assets/image/bj.png");
   background-size: 100% 100%;
   position: relative;
 }
 .loginbox {
-  width: 452px;
-  height: 430px;
-  background: url("../assets/image/logon_bj1.png");
-  background-size: 100% 100%;
+  width: 410px;
+  border-radius: 3px;
+  height: 340px;
+  background: rgba(255,255,255,.2);
   position: absolute;
   top: ~"calc(50% - 226px)";
   left: ~"calc(50% - 215px)";
+  .ant-form-item-with-help{
+    margin-bottom: 24px;
+    .ant-form-explain{
+      position: absolute;
+    }
+  }
 }
 .loginbox_header {
   display: flex;
@@ -228,8 +233,8 @@ export default class Login extends Vue {
   line-height: 40px;
   width: 100%;
   text-align: center;
-  margin: 25px 0 35px 0;
-  margin-left: 54px;
+  margin: 24px 0 24px 0;
+  margin-left: 28px;
   > img {
     vertical-align: top;
   }
@@ -242,7 +247,7 @@ export default class Login extends Vue {
   }
 }
 .loginbox_body {
-  padding: 0 55px;
+  padding: 0 35px;
   > h2 {
     color: #fff;
     display: inline-block;
@@ -265,6 +270,15 @@ export default class Login extends Vue {
   }
   button {
     width: 100%;
+    height: 45px;
   }
+}
+.logininput{
+  input{
+    padding-left: 40px !important;
+  }
+}
+.ant-form-explain{
+  position: absolute;
 }
 </style>

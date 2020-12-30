@@ -90,6 +90,7 @@
               <template v-slot="{ row }">
                 <span
                   type="text"
+                  v-isshow="'menu:update'"
                   @click="tableedit(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
                 >编辑</span>
@@ -684,6 +685,7 @@ export default class Menu extends Vue {
     // })
   }
   private addbtn() {
+    this.form.resetFields()
     if (this.id) {
       this.btnstr = "添加按钮"
       this.addbtnshow = true

@@ -103,6 +103,7 @@ export default class RightContent extends Vue {
 .Multitab {
   height: 34px;
   background: #f6f5f8;
+  margin-bottom: 7px;
 }
 .el-col {
   border-radius: 4px;
@@ -137,11 +138,24 @@ export default class RightContent extends Vue {
 }
 .Multitab{
   .ant-tabs-nav-container{
-    border-bottom: 1px solid #e0e0e0;
+    // border-bottom: 1px solid #e0e0e0;
+  }
+  .ant-tabs{
+    border-bottom: 2px solid #dedede;
+    height: 40px;
   }
   .ant-tabs-nav-wrap{
     overflow: hidden;
     background:#f5f5f5;
   }
+}
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x{
+  line-height: 19px;
+}
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab .ant-tabs-close-x{
+  height: 16px;
+}
+.ant-tabs-nav-scroll{
+  // border-bottom: 1px solid #ddd;
 }
 </style>
