@@ -8,7 +8,7 @@
             <h2 style="font-weight:600">被考评人总分为{{count}}分，请合理设置单个考评项的扣分分值。</h2>
           </div>
           <div>
-            <a-button type="primary" @click="add" v-isshow="'fileEvaluate:evSet:add'">添加</a-button>
+            <a-button type="primary" @click="add" v-isshow="'fileEvaluate:evSet:save'">添加</a-button>
           </div>
         </div>
         <div class="seting" :style="{height:Height}">
@@ -23,7 +23,7 @@
                   </div>
                   <div class="operation" style="display:flex;">
                     <span class="iconfont"  style="margin-right:10px;"  :class="[item.isEnabled ? 'iconbianjan' : 'iconassets_store']" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
-                    <span class="icondelete iconfont" @click="dlt(item)" v-isshow="'fileEvaluate:evSet:dlt'"></span>
+                    <span class="icondelete iconfont" @click="dlt(item)" v-isshow="'fileEvaluate:evSet:del'"></span>
                   </div>
                 </div>
                 <div class="listylefooter">
@@ -49,7 +49,6 @@
 </template>
 
 <script lang="ts">
-// /api/tpb/lawarchives/dm-jfx    接口相关信息
 import { Component, Vue } from "vue-property-decorator"
 import { LimitInputlength } from "@/InterfaceVariable/variable"
 
@@ -130,14 +129,6 @@ export default class EvalSet extends Vue {
   private temporarystr = ''
   private edit(val){
     this.jfbh = val.jfbh
-    if(val.jfbh == ""){
-      if(val.jfmc == '' || val.jffz == ''){
-        this.list.shift()
-        this.num = true
-        this.$message.warning('取消新增')
-        return 
-      }
-    }
     val.isEnabled = !val.isEnabled
     let reg: any = new RegExp((/(^[0-9]\d*$)/))
     if(reg.test(val.jffz) && parseInt(val.jffz) <= 100 ){
@@ -148,8 +139,7 @@ export default class EvalSet extends Vue {
           jfmc: val.jfmc,
           pjlx: "",
         }
-        this.Supervision.EvaluationsettingsSave(obj).then((res) => {
-          console.log(res)
+        this.Supervision.EvaluationsettingsEdit(obj).then((res) => {
           if (res.code == 0) {
             this.$message.success(res.msg)
             this.num = true
@@ -159,6 +149,9 @@ export default class EvalSet extends Vue {
           }
         })
       }
+    }else if(val.jffz === "" || val.jfmc === ""){
+      val.isEnabled = false
+      this.$message.error('分值和扣分说明不能为空')
     }else{
       val.jffz = ""
       val.isEnabled = false
@@ -166,9 +159,11 @@ export default class EvalSet extends Vue {
     }
   }
   private dlt(val){
-    console.log(val)
-    if(!val.isEnabled){
-      this.$message.warning('请先保存后再执行操作')
+    console.log(!this.num)
+    if(!this.num){
+        this.list.shift()
+        this.num = true
+        this.$message.info('取消新增')
     }else{
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       let _that = this
@@ -188,7 +183,6 @@ export default class EvalSet extends Vue {
         },
       })
     }
-  
   }
 
 }

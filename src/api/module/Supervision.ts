@@ -28,106 +28,101 @@ export class Supervision {
     });
   }
   // 
-    // todo 获取考评记录table数据
-    public getDailytabledata(params: object) {
-      const url = "/api/tpb/lawarchives/file-evaluate/no/list";
-  
-      return new Promise((resolve, reject) => {
-        this.axios.get(url, {
-          params: params,
-        }).then((res: any) => {
-          // console.log(res)
-          this.resultHandle(res, resolve);
-        }).catch((err: { message: any }) => {
-          reject(err.message);
-        });
+  // todo 获取考评记录table数据
+  public getDailytabledata(params: object) {
+    const url = "/api/tpb/lawarchives/file-evaluate/no/list";
+
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
       });
-    }
-    // todo  随机抽查table数据
-    public getrandomtabledata(params: object) {
-      const url = "/api/tpb/lawarchives/file-evaluate/random/list";
-      return new Promise((resolve, reject) => {
-        this.axios.get(url, {
-          params: params,
-        }).then((res: any) => {
-          // console.log(res)
-          this.resultHandle(res, resolve);
-        }).catch((err: { message: any }) => {
-          reject(err.message);
-        });
+    });
+  }
+  // todo  随机抽查table数据
+  public getrandomtabledata(params: object) {
+    const url = "/api/tpb/lawarchives/file-evaluate/random/list";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
       });
-    }
+    });
+  }
 
 
-    //todo 考评设置数据  
-    public getsettingdata(params: object) {
-      const url = "/api/tpb/lawarchives/dm-jfx/getAllList";
-      return new Promise((resolve, reject) => {
-        this.axios.get(url, {
-          params: params,
-        }).then((res: any) => {
-          // console.log(res)
-          this.resultHandle(res, resolve);
-        }).catch((err: { message: any }) => {
-          reject(err.message);
-        });
+  //todo 考评设置数据  
+  public getsettingdata(params: object) {
+    const url = "/api/tpb/lawarchives/dm-jfx/getAllList";
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+      }).then((res: any) => {
+        // console.log(res)
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
       });
-    }
-    // todo 考评设置保存按钮
-    
-    // public EvaluationsettingsSave(params: object, jwt= true) {
-    //   const url = "/api/tpb/lawarchives/dm-jfx/saveList";
-    //   const body = params
-    //   return new Promise((resolve, reject) => {
-    //     this.axios.post(url, body, {
-    //       headers: { isJwt: jwt },
-    //     }).then((res: any) => {
-    //       this.resultHandle(res, resolve);
-    //     }).catch((err: { message: any }) => {
-    //       reject(err.message);
-    //     });
-    //   });
-    // }
+    });
+  }
 
-    // todo 考评设置 删除 /api/tpb/lawarchives/dm-jfx/delete/{id}
-    public Evaluationsetdlt(params: string) {
-      const url = "/api/tpb/lawarchives/dm-jfx/delete/" + params;
-      return new Promise((resolve, reject) => {
-        this.axios.get(url, {
-          params: params,
-        }).then((res: any) => {
-          this.resultHandle(res, resolve);
-        }).catch((err: { message: any }) => {
-          reject(err.message);
-        });
+  // todo 考评设置 删除 /api/tpb/lawarchives/dm-jfx/delete/{id}
+  public Evaluationsetdlt(params: string) {
+    const url = "/api/tpb/lawarchives/dm-jfx/delete/" + params;
+    return new Promise((resolve, reject) => {
+      this.axios.get(url, {
+        params: params,
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
       });
-    }
-    // todo 考评设置单个保存
-    
-    public EvaluationsettingsSave(params: object, jwt= true) {
-      const url = "/api/tpb/lawarchives/dm-jfx/save";
-      const body = params
-      return new Promise((resolve, reject) => {
-        this.axios.post(url, body, {
-          headers: { isJwt: jwt },
-        }).then((res: any) => {
-          this.resultHandle(res, resolve);
-        }).catch((err: { message: any }) => {
-          reject(err.message);
-        });
+    });
+  }
+  // todo 考评设置单个保存
+
+  public EvaluationsettingsSave(params: object) {
+    const url = "/api/tpb/lawarchives/dm-jfx/save";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
       });
-    }
+    });
+  }
 
-
-
+  // todo 考评设置编辑修改
+  public EvaluationsettingsEdit(params: object) {
+    const url = "api/tpb/lawarchives/dm-jfx/edit";
+    const body = params
+    return new Promise((resolve, reject) => {
+      this.axios.post(url, body, {
+      }).then((res: any) => {
+        this.resultHandle(res, resolve);
+      }).catch((err: { message: any }) => {
+        reject(err.message);
+      });
+    });
+  }
 
   /**
  * @param res
  * @param resolve
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
-     if (res.code == 1002 || res.code == 1004) {
-              Modal.confirm({
+    if (res.code == 1002 || res.code == 1004) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {

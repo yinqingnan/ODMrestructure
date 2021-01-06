@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-30 17:34:58
+ * @LastEditTime: 2021-01-05 17:00:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \src\store\modules\tabs.ts
@@ -34,14 +34,14 @@ const mutations = {
       })
       if (!state.result) {
         //如果不存在就添加
-        // state.activeKey = val.key
+        state.activeKey = val.key
         localStorage.setItem("activeKey", val.key)   //保存当前
         localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存选中项
         state.tagList.push(val)
         localStorage.setItem("activeKey", val.key)   //保存当前选中项
       } else {
         //如果存在就进行跳转
-        // state.activeKey = val.key
+        state.activeKey = val.key
         if (val.name == "home") {
           router.push({ path: `${val.path}` })
         } else {
@@ -70,14 +70,12 @@ const mutations = {
     localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存
   },
   [INITTABS](state: any): void {
-    console.log();
-    state.tagList.push(JSON.parse(localStorage.getItem("Tabslist")))
-    localStorage.setItem("Tabslist", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist"))));
-    localStorage.setItem("activeKey", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist")).key));
+    state.tagList = (JSON.parse(localStorage.getItem('Tabslist')))
+    // localStorage.setItem("Tabslist", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist"))));
+    // localStorage.setItem("activeKey", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist")).key));
   },
   [CLEARTABLIST](state: any,val): void{
     state.tagList = val
-    console.log(state.tagList)
   },
   [SETACTIVE](state: any,val: string){
     state.activeKey = val
