@@ -503,7 +503,6 @@ export default class EvalRandom extends Vue {
   ]
   private tableData = []
   private formdata = { contain: "", date: [], department: "", user: "" }
-
   private visible = false
   private filedetails = {
     downloadPath: "",

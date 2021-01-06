@@ -22,7 +22,9 @@
                     <a-input v-else v-model="item.jffz" placeholder="请输入分值" style="width:100px"/>
                   </div>
                   <div class="operation" style="display:flex;">
-                    <span class="iconfont"  style="margin-right:10px;"  :class="[item.isEnabled ? 'iconbianjan' : 'iconassets_store']" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
+                    <!-- <span class="iconfont"  style="margin-right:10px;"  :class="[item.isEnabled ? 'iconbianjan' : 'iconassets_store']" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span> -->
+                    <span v-if="item.isEnabled" class="iconfont iconbianjan"  style="margin-right:10px;" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
+                    <span v-else class="iconfont iconassets_store"  style="margin-right:10px;"  @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
                     <span class="icondelete iconfont" @click="dlt(item)" v-isshow="'fileEvaluate:evSet:del'"></span>
                   </div>
                 </div>
@@ -105,6 +107,7 @@ export default class EvalSet extends Vue {
   }
   private num = true
   public add() {
+    // this.savestatus = true
     let len = this.list.length
     let obj = {
       jfmc: "",
@@ -127,7 +130,10 @@ export default class EvalSet extends Vue {
   }
   private jfbh = ''
   private temporarystr = ''
+  // private savestatus = true
   private edit(val){
+    console.log(val);
+    // this.savestatus = !val.isEnabled
     this.jfbh = val.jfbh
     val.isEnabled = !val.isEnabled
     let reg: any = new RegExp((/(^[0-9]\d*$)/))

@@ -1,10 +1,10 @@
 /*
- * @Author: your name
+ * @Author: yqn
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-25 09:58:17
+ * @LastEditTime: 2021-01-06 10:40:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\vue.config.js
+ * @FilePath: \vue.config.js
  */
 
 // const AntDesignThemePlugin = require("antd-theme-webpack-plugin");
