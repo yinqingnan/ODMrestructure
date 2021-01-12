@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-20 20:46:45
- * @LastEditors: your name
+ * @LastEditTime: 2021-01-11 17:24:21
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\api\module\Interface.ts
+ * @FilePath: \src\api\module\Interface.ts
  */
 import { Interceptors } from '../interceptors';
 import { message, Modal } from 'ant-design-vue';   // 弹吐司
@@ -33,7 +33,7 @@ export class Interface {
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -61,7 +61,7 @@ export class Interface {
     };
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {

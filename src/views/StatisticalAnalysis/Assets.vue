@@ -245,11 +245,16 @@ export default class VideoStatistics extends Vue {
   }
   public daochu() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
-    let obj = {
-      deptCode:this.deptCode
-    }
-    axios.get(`${url}api/tpb/report/assets/unit/export`,{
-        params: obj,
+    // let obj = {
+    //   deptCode:this.deptCode ?? '',
+    // }
+    let deptCode=this.deptCode === null ?  "" :this.deptCode
+    console.log(deptCode);
+    if(deptCode == 'null'){
+      axios.get(`${url}api/tpb/report/assets/unit/export`,{
+        params: {
+          // deptCode
+        },
         headers: {
           Token: localStorage.getItem("token"),
         },
@@ -261,6 +266,25 @@ export default class VideoStatistics extends Vue {
         aLink.setAttribute('download', '资产统计' + '.xls')
         aLink.click()
     })
+      
+    }else{
+       axios.get(`${url}api/tpb/report/assets/unit/export`,{
+          params: {
+            deptCode
+          },
+          headers: {
+            Token: localStorage.getItem("token"),
+          },
+          'responseType': 'blob'
+      }).then(res => {
+          const aLink = document.createElement("a");
+          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+          aLink.href = URL.createObjectURL(blob)
+          aLink.setAttribute('download', '资产统计' + '.xls')
+          aLink.click()
+      })
+      
+    }
     // (this.$refs.gltj as any).exportData({
     //   filename: "资产统计",
     //   sheetName: "Sheet1",

@@ -150,24 +150,24 @@
               <template v-slot="{ row }">
                 <span
                   v-isshow="'device:matche:update'"
-                  type="text"
                   @click="edit(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
                 >编辑</span>
-                <span
-                  v-isshow="'device:matche:repair'"
-                  type="text"
-                  @click="Enable(row)"
-                  v-if="row.deviceStatusName == '维修'"
-                  style="color:#0db8df;cursor: pointer"
-                >启用</span>
-                <span
-                  v-isshow="'device:matche:active'"
-                  type="text"
-                  @click="Report(row)"
-                  style="color:#0db8df;cursor: pointer;"
-                  v-if="row.deviceStatusName == '启用'"
-                >报修</span>
+                <span v-show="row.deviceStatusName === '维修'">
+                    <span
+                    v-isshow="'device:matche:active'"
+                    @click="Enable(row)"
+                    style="color:#0db8df;cursor: pointer"
+                  >启用</span>
+                </span>
+               <span v-show="row.deviceStatusName === '启用'">
+                  <span
+                    v-isshow="'device:matche:repair'"
+                    @click="Report(row)"
+                    style="color:#0db8df;cursor: pointer;"
+                  >报修</span>
+               </span>
+                
               </template>
             </vxe-table-column>
           </vxe-table>

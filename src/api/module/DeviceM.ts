@@ -13,7 +13,7 @@ export class DeviceM {
     this.axios = new Interceptors().getInterceptors()
   }
   // todo执法仪设备table数据
-  public gettabledata(params: object, jwt=TextTrackCueList) {
+  public gettabledata(params: object) {
     const url = "/api/mdm/device/matche/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
@@ -25,15 +25,14 @@ export class DeviceM {
       });
     });
   }
- 
+
   // todo 执法仪删除
   // 
-  public instrumentdlt(params: object, jwt= true) {
+  public instrumentdlt(params: object) {
     const url = "/api/mdm/device/matche/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -43,13 +42,11 @@ export class DeviceM {
   }
   // todo姓名警号 人员接口
   // 
-  public getPolicepersonneldata(params: object, jwt=TextTrackCueList) {
+  public getPolicepersonneldata(params: object) {
     const url = "/api/uauth/base/user/lists";
-
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);
@@ -59,12 +56,11 @@ export class DeviceM {
     });
   }
   //todo 执法仪新增 
-  public Policepersonnelsave(params: object, jwt= true) {
+  public Policepersonnelsave(params: object) {
     const url = "/api/mdm/device/matche/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -73,13 +69,13 @@ export class DeviceM {
     });
   }
   // todo 保修接口
-  
-  public Sendforrepair(params: object, jwt= true) {
+
+  public Sendforrepair(params: object) {
     const url = "/api/mdm/device/matche-repairs/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -90,12 +86,12 @@ export class DeviceM {
 
   // todo 启用执法仪
 
-  public Enable(params: object, jwt=TextTrackCueList) {
+  public Enable(params: object,) {
     const url = "/api/mdm/device/matche/modify";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);
@@ -106,8 +102,8 @@ export class DeviceM {
   }
 
   // todo 报修记录
-  
-  public Repairrecord(params: object, jwt=TextTrackCueList) {
+
+  public Repairrecord(params: object) {
     const url = "/api/mdm/device/matche-repairs/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
@@ -123,13 +119,13 @@ export class DeviceM {
 
 
   // todo采集站table数据
- 
-  public stationstable(params: object, jwt=TextTrackCueList) {
+
+  public stationstable(params: object) {
     const url = "/api/mdm/device/stations/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);
@@ -145,12 +141,12 @@ export class DeviceM {
 
 
   //todo 存储服务器table  
-  public storetable(params: object, jwt=TextTrackCueList) {
+  public storetable(params: object) {
     const url = "/api/mdm/device/storage/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);
@@ -160,12 +156,12 @@ export class DeviceM {
     });
   }
   // todo存储服务器新增  
-  public storeadd(params: object, jwt= true) {
+  public storeadd(params: object) {
     const url = "/api/mdm/device/storage/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -174,12 +170,12 @@ export class DeviceM {
     });
   }
   // todo FTP设置表格数据 
-  public ftptable(params: object, jwt=TextTrackCueList) {
+  public ftptable(params: object) {
     const url = "/api/mdm/device/storage-ftp/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -189,12 +185,12 @@ export class DeviceM {
   }
 
   // todo ftp配置新增 
-  public ftpconfigadd(params: object, jwt= true) {
+  public ftpconfigadd(params: object) {
     const url = "/api/mdm/device/storage-ftp/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -203,13 +199,13 @@ export class DeviceM {
     });
   }
   // todo ftp设置的删除
-  
-  public ftpconfigdlt(params: object, jwt= true) {
+
+  public ftpconfigdlt(params: object) {
     const url = "/api/mdm/device/storage-ftp/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -218,13 +214,13 @@ export class DeviceM {
     });
   }
   // todo 采集站启用
-  
-  public collectionEnable(params: object, jwt= true) {
+
+  public collectionEnable(params: object) {
     const url = "/api/mdm/device/stations/enable";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -233,12 +229,12 @@ export class DeviceM {
     });
   }
   // todo 采集站重启 
-  public collectionrestart(params: object, jwt= true) {
+  public collectionrestart(params: object) {
     const url = "/api/mdm/device/stations/restart";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -247,13 +243,13 @@ export class DeviceM {
     });
   }
   // todo 采集站数据同步
-  
-  public collectiondatasync(params: object, jwt= true) {
+
+  public collectiondatasync(params: object) {
     const url = "/api/mdm/device/stations/sync";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -262,12 +258,12 @@ export class DeviceM {
     });
   }
   // todo 采集站数据升级
-  public collectionupgrade(params: object, jwt= true) {
+  public collectionupgrade(params: object) {
     const url = "/api/mdm/device/stations/upgrade";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -276,13 +272,13 @@ export class DeviceM {
     });
   }
   // todo 采集站数据关机
- 
-  public collectionShutdown(params: object, jwt= true) {
+
+  public collectionShutdown(params: object) {
     const url = "/api/mdm/device/stations/shutdown";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -291,12 +287,12 @@ export class DeviceM {
     });
   }
   // todo 采集站数据禁用
-  public collectionDisable(params: object, jwt= true) {
+  public collectionDisable(params: object) {
     const url = "/api/mdm/device/stations/disable";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -305,12 +301,12 @@ export class DeviceM {
     });
   }
   // todo 采集站数据删除
-  public collectionDlt(params: object, jwt= true) {
+  public collectionDlt(params: object) {
     const url = "/api/mdm/device/stations/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -320,12 +316,12 @@ export class DeviceM {
   }
 
   // todo 子平台table
-  public platformtable(params: object, jwt=TextTrackCueList) {
+  public platformtable(params: object,) {
     const url = "/api/mdm/device/stations/platform-list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // resolve(res);
         this.resultHandle(res, resolve);
@@ -335,12 +331,12 @@ export class DeviceM {
     });
   }
   //todo 子平台删除  
-  public platformdlt(params: object, jwt= true) {
+  public platformdlt(params: object) {
     const url = "/api/mdm/device/stations/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -350,12 +346,12 @@ export class DeviceM {
   }
 
   //todo 存储服务器删除 
-  public storedlt(params: object, jwt= true) {
+  public storedlt(params: object) {
     const url = "/api/mdm/device/storage/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -375,33 +371,38 @@ export class DeviceM {
 
 
 
-   /**
- * @param res
- * @param resolve
- */
+  /**
+* @param res
+* @param resolve
+*/
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
-    // if (res.code === 0) {
-      // resolve(res);
-    //   message.success(res.msg)
-    // } 
-    // else {
-    //   message.error(res.msg)
-    //   // this.errorHandle(res);
-    // }
-     if (res.code == 1002 || res.code == 1004) {
-              Modal.confirm({
+    if (res.code == 1002 ) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            // localStorage.removeItem("activeKey")
-            // localStorage.removeItem("Tabslist")
-            // localStorage.removeItem("token");
             localStorage.clear();
             router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
         onCancel() {

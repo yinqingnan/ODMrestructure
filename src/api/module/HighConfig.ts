@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-23 19:48:52
+ * @LastEditTime: 2021-01-11 17:28:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\api\module\HighConfig.ts
+ * @FilePath: \src\api\module\HighConfig.ts
  */
 import { Interceptors } from '../interceptors';
 import { message, Modal } from 'ant-design-vue';   // 弹吐司
@@ -20,17 +20,15 @@ export class HighConfig {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  public getData(params: object, jwt: boolean, flag: string,) {
+  public getData(params: object,) {
     const url = "";
     const body = {
       data: params,
-      tag: flag,
     };
 
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -47,13 +45,12 @@ export class HighConfig {
   * @param jwt   是否token校验
   * @param flag          标记
   */
-  public getList(params: object, jwt: boolean, flag: string) {
+  public getList(params: object) {
     const url = "/api/pconfig/base/base-config/page/all";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -63,12 +60,11 @@ export class HighConfig {
     });
   }
 
-  public upData(params: object, jwt: boolean, flag: string) {
+  public upData(params: object) {
     const url = "/api/pconfig/base/base-config/update";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -83,24 +79,32 @@ export class HighConfig {
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
-    // if (res.code === 0) {
-    // resolve(res);
-    // } else {
-    //   this.errorHandle(res);
-    // }
-     if (res.code == 1002 || res.code == 1004) {
-              Modal.confirm({
+    if (res.code == 1002 ) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            // localStorage.removeItem("activeKey")
-            // localStorage.removeItem("Tabslist")
-            // localStorage.removeItem("token");
             localStorage.clear();
             router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
         onCancel() {

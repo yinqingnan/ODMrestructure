@@ -121,7 +121,7 @@ export class Supervision {
  * @param resolve
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
-    if (res.code == 1002 || res.code == 1004) {
+    if (res.code == 1002 ) {
       Modal.confirm({
         title: '提示',
         content: res.msg,
@@ -129,10 +129,24 @@ export class Supervision {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
         onCancel() {

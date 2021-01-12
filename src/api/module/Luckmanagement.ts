@@ -15,12 +15,12 @@ export class Luckmanagement {
     this.axios = new Interceptors().getInterceptors()
   }
   // todo 接入管理table
-  public getIncomingtabledata(params: object, jwt = true) {
+  public getIncomingtabledata(params: object) {
     const url = "/api/pconfig/system/authorization/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -31,12 +31,12 @@ export class Luckmanagement {
   }
 
   // todo 接入管理新增接入 子平台和采集站  
-  public accessauthsave(params: object, jwt = true) {
+  public accessauthsave(params: object) {
     const url = "/api/pconfig/system/authorization/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         resolve(res);
       }).catch((err: { message: any }) => {
@@ -46,12 +46,12 @@ export class Luckmanagement {
   }
 
   // todo 平台删除 
-  public accessauthdlt(params: object, jwt = true) {
+  public accessauthdlt(params: object) {
     const url = "/api/pconfig/system/authorization/delete";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         resolve(res);
       }).catch((err: { message: any }) => {
@@ -62,12 +62,12 @@ export class Luckmanagement {
 
 
   //todo 升级管理table
-  public getUpgradeMtable(params: object, jwt = true) {
+  public getUpgradeMtable(params: object) {
     const url = "/api/mdm/system/upgrade/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         resolve(res)
       }).catch((err: { message: any }) => {
@@ -76,12 +76,12 @@ export class Luckmanagement {
     });
   }
   // todo 升级管理删除 
-  public Uploaddlt(params: object, jwt = true) {
+  public Uploaddlt(params: object) {
     const url = "/api/mdm/system/upgrade/delete";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         resolve(res)
       }).catch((err: { message: any }) => {
@@ -90,12 +90,11 @@ export class Luckmanagement {
     });
   }
   // todo 文件上传接口
-  public Uploadsave(params: object, jwt = true) {
+  public Uploadsave(params: object) {
     const url = "/api/mdm/system/upgrade/save";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         resolve(res);
       }).catch((err: { message: any }) => {
@@ -105,12 +104,11 @@ export class Luckmanagement {
   }
 
   // todo 日志管理获取时间
-  public getlogdate(params: object, jwt = true) {
+  public getlogdate(params: object) {
     const url = "/api/uauth/my/date";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         resolve(res)
       }).catch((err: { message: any }) => {
@@ -120,12 +118,11 @@ export class Luckmanagement {
   }
 
   // todo 日志管理获取日志类型下拉
-  public getlogtype(params: object, jwt = true) {
+  public getlogtype(params: object) {
     const url = "/api/pconfig/base/log/logType";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         resolve(res)
       }).catch((err: { message: any }) => {
@@ -135,12 +132,11 @@ export class Luckmanagement {
   }
 
   // todo 日志管理获取功能模块下拉
-  public getlogfunmodule(params: object, jwt = true) {
+  public getlogfunmodule(params: object) {
     const url = "/api/pconfig/base/log/logBiz";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         resolve(res)
       }).catch((err: { message: any }) => {
@@ -149,12 +145,11 @@ export class Luckmanagement {
     });
   }
   // todo  日志管理table  
-  public getlogtable(params: object, jwt = true) {
+  public getlogtable(params: object) {
     const url = "/api/pconfig/base/log/list";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
       }).then((res: any) => {
         resolve(res)
       }).catch((err: { message: any }) => {
@@ -168,24 +163,32 @@ export class Luckmanagement {
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
-    // if (res.status === 200) {
-    // resolve(res.data);
-    // } else {
-    //   this.errorHandle(res);
-    // }
-     if (res.code == 1002 || res.code == 1004) {
-              Modal.confirm({
+    if (res.code == 1002 ) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            // localStorage.removeItem("activeKey")
-            // localStorage.removeItem("Tabslist")
-            // localStorage.removeItem("token");
             localStorage.clear();
             router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
         onCancel() {

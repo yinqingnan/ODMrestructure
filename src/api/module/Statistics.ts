@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-30 14:08:12
- * @LastEditTime: 2020-12-16 15:08:41
+ * @LastEditTime: 2021-01-11 17:27:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \src\api\module\Statistics.ts
@@ -103,18 +103,32 @@ export class Statistics {
  * @param resolve
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
-     if (res.code == 1002 || res.code == 1004) {
-              Modal.confirm({
+    if (res.code == 1002 ) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            localStorage.removeItem("activeKey")
-            localStorage.removeItem("Tabslist")
-            localStorage.removeItem("token");
+            localStorage.clear();
             router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
         onCancel() {

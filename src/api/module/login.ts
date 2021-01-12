@@ -11,17 +11,16 @@ export class Login {
   constructor() {
     this.axios = new Interceptors().getInterceptors()
   }
-  public getData(params: object, jwt: boolean, flag: string) {
+  public getData(params: object) {
     const url = "/api/uauth/my/date";
     const body = {
       data: params,
-      tag: flag,
     };
 
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -31,12 +30,12 @@ export class Login {
     });
   }
   // 查验权限
-  public getjurisdiction(params: object, jwt: boolean, flag: string) {
+  public getjurisdiction(params: object) {
     const url = "/api/uauth/my/date";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -45,12 +44,12 @@ export class Login {
     });
   }
   //获取登陆界面title
-  public gettitle(params: object, jwt: boolean, flag: string) {
+  public gettitle(params: object) {
     const url = "/api/pconfig/system/setting/getPlatformName";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -65,12 +64,12 @@ export class Login {
   * @param jwt   是否token校验
   * @param flag          标记
   */
-  public login(params: object, jwt: boolean, flag: string) {
+  public login(params: object) {
     const url = "/api/uauth/login";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -79,12 +78,12 @@ export class Login {
     });
   }
   // 退出登录
-  public outuser(params: object, jwt: boolean, flag: string) {
+  public outuser(params: object) {
     const url = "/api/uauth/logout";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -94,12 +93,12 @@ export class Login {
   }
 
   // 获取当前用户基础信息
-  public usermsg(params: object, jwt: boolean, flag: string) {
+  public usermsg(params: object) {
     const url = "/api/uauth/my/info";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -108,12 +107,12 @@ export class Login {
     });
   }
   // 修改密码
-  public editpsd(params: object, jwt: boolean, flag: string) {
+  public editpsd(params: object) {
     const url = "/api/uauth/my/passwd";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -122,12 +121,12 @@ export class Login {
     });
   }
   // todo 获取公告
-  public getNotice(params: object, jwt=true) {
+  public getNotice(params: object) {
     const url = "/api/pconfig/system/notice/getNotices";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -137,12 +136,12 @@ export class Login {
     });
   } 
   // todo 获取菜单 
-  public getMenudata(params: object, jwt=true) {
+  public getMenudata(params: object) {
     const url = "/api/uauth/base/menu/nav";
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: params,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -157,24 +156,32 @@ export class Login {
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
-    // if (res.code === 0) {
-    // resolve(res);
-    // } else {
-    //   this.errorHandle(res);
-    // }
-     if (res.code == 1002 || res.code == 1004) {
-              Modal.confirm({
+    if (res.code == 1002 ) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            // localStorage.removeItem("activeKey")
-            // localStorage.removeItem("Tabslist")
-            // localStorage.removeItem("token");
             localStorage.clear();
             router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
         },
         onCancel() {

@@ -936,9 +936,8 @@ export default class User extends Vue {
     this.QRshow = true
     this.OrganizationM.getQRcode({ userId: row.id }).then((res) => {
       if (res.code == 0) {
-        let text = res.data
-        this.$message.success(res.msg)
-        ;(this.$refs.qrCodeUrl as any).innerHTML = "" //清空当前
+        let text = res.data;
+        (this.$refs.qrCodeUrl as any).innerHTML = "" //清空当前
         this.qrCode(text)
       } else {
         this.$message.error(res.msg)

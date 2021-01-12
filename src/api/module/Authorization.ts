@@ -36,13 +36,13 @@ export class Authorization {
   * @param jwt   是否token校验
   * @param flag          标记
   */
-  public getBiz(params: object, jwt: boolean, flag: string) {
+  public getBiz(params: object) {
     const url = "/api/pconfig/auth/biz";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
         params: body,
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         // console.log(res)
         this.resultHandle(res, resolve);
@@ -52,12 +52,12 @@ export class Authorization {
     });
   }
 
-  public software(params: object, jwt: boolean, flag: string) {
+  public software(params: object) {
     const url = "/api/pconfig/auth/software";
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
-        headers: { isJwt: jwt },
+
       }).then((res: any) => {
         this.resultHandle(res, resolve);
       }).catch((err: { message: any }) => {
@@ -72,22 +72,14 @@ export class Authorization {
  */
   public resultHandle(res: any, resolve: { (value?: unknown): void; (value?: unknown): void; (arg0: any): void }) {
     // 在此处判断res.status状态然后返回值
-    // if (res.code === 0) {
-    // resolve(res);
-    // } else {
-    //   this.errorHandle(res);
-    // }
-     if (res.code == 1002 || res.code == 1004) {
-        Modal.confirm({
+    if (res.code == 1002 ) {
+      Modal.confirm({
         title: '提示',
         content: res.msg,
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             Modal.destroyAll();
-            // localStorage.removeItem("activeKey")
-            // localStorage.removeItem("Tabslist")
-            // localStorage.removeItem("token");
             localStorage.clear();
             router.push({ name: "Login" })
           }).catch(() => console.log('Oops errors!'));
@@ -96,10 +88,26 @@ export class Authorization {
           Modal.destroyAll();
         },
       });
+    }else if(res.code == 1004){
+      Modal.confirm({
+        title: '提示',
+        content: res.msg,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+            Modal.destroyAll();
+            // localStorage.clear();
+            // router.push({ name: "Login" })
+          }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          Modal.destroyAll();
+        },
+      });
     } else {
       resolve(res);
-    }
   }
+}
   /**
  * 服务端状态处理,例如中断性异常,退出异常等等(与拦截器http握手状态注意区分,一般都能分清楚吧)
  * @param res

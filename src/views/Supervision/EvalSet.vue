@@ -22,9 +22,12 @@
                     <a-input v-else v-model="item.jffz" placeholder="请输入分值" style="width:100px"/>
                   </div>
                   <div class="operation" style="display:flex;">
-                    <!-- <span class="iconfont"  style="margin-right:10px;"  :class="[item.isEnabled ? 'iconbianjan' : 'iconassets_store']" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span> -->
-                    <span v-if="item.isEnabled" class="iconfont iconbianjan"  style="margin-right:10px;" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
-                    <span v-else class="iconfont iconassets_store"  style="margin-right:10px;"  @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
+                    <!-- 编辑 -->
+                    <span class="iconfont iconbianjan"  style="margin-right:10px;" @click="edit(item)" v-isshow="'fileEvaluate:evSet:edit'"></span>
+                    <!-- 保存 -->
+                    <span v-if="!item.isEnabled" class="iconfont iconassets_store"  style="margin-right:10px;"  @click="save(item)" ></span>
+                    
+                    <!-- 删除 -->
                     <span class="icondelete iconfont" @click="dlt(item)" v-isshow="'fileEvaluate:evSet:del'"></span>
                   </div>
                 </div>
@@ -132,19 +135,52 @@ export default class EvalSet extends Vue {
   private temporarystr = ''
   // private savestatus = true
   private edit(val){
+    console.log(val.isEnabled);
+    
+    val.isEnabled = false
+    // let reg: any = new RegExp((/(^[0-9]\d*$)/))
+    // if(reg.test(val.jffz) && parseInt(val.jffz) <= 100 ){
+    //   if(val.isEnabled){   //编辑保存
+    //     let obj = {
+    //       jfbh: this.jfbh,
+    //       jffz: val.jffz,
+    //       jfmc: val.jfmc,
+    //       pjlx: "",
+    //     }
+
+    //       this.Supervision.EvaluationsettingsEdit(obj).then((res) => {
+    //         if (res.code == 0) {
+    //           this.$message.success(res.msg)
+    //           this.num = true
+    //           this.getdata()
+    //         } else {
+    //           this.$message.error(res.msg)
+    //         }
+    //       })
+        
+    //   }
+    // }else if(val.jffz === "" || val.jfmc === ""){
+    //   val.isEnabled = false
+    //   this.$message.error('分值和扣分说明不能为空')
+    // }else{
+    //   val.jffz = ""
+    //   val.isEnabled = false
+    //   this.$message.error('分值各式错误，请输入0~100的整数')
+    // }
+  }
+  private save(val){
     console.log(val);
-    // this.savestatus = !val.isEnabled
+    
     this.jfbh = val.jfbh
-    val.isEnabled = !val.isEnabled
     let reg: any = new RegExp((/(^[0-9]\d*$)/))
     if(reg.test(val.jffz) && parseInt(val.jffz) <= 100 ){
-      if(val.isEnabled){   //编辑保存
-        let obj = {
-          jfbh: this.jfbh,
-          jffz: val.jffz,
-          jfmc: val.jfmc,
-          pjlx: "",
-        }
+      let obj = {
+        jfbh: this.jfbh,
+        jffz: val.jffz,
+        jfmc: val.jfmc,
+        pjlx: "",
+      }
+      if(this.jfbh){
         this.Supervision.EvaluationsettingsEdit(obj).then((res) => {
           if (res.code == 0) {
             this.$message.success(res.msg)
@@ -154,7 +190,18 @@ export default class EvalSet extends Vue {
             this.$message.error(res.msg)
           }
         })
+      }else{
+        this.Supervision.EvaluationsettingsSave(obj).then((res) => {
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+            this.num = true
+            this.getdata()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       }
+   
     }else if(val.jffz === "" || val.jfmc === ""){
       val.isEnabled = false
       this.$message.error('分值和扣分说明不能为空')
@@ -163,9 +210,9 @@ export default class EvalSet extends Vue {
       val.isEnabled = false
       this.$message.error('分值各式错误，请输入0~100的整数')
     }
+    
   }
   private dlt(val){
-    console.log(!this.num)
     if(!this.num){
         this.list.shift()
         this.num = true
