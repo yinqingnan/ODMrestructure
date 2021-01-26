@@ -125,6 +125,7 @@
       @cancel="cancel"
       :width="680"
       okText="提交"
+      :keyboard='false'
     >
       <a-form
         autocomplete="off"
@@ -276,7 +277,7 @@
         </a-row>
       </a-form>
     </a-modal>
-    <a-modal v-model="addbtnshow" :title="btnstr" @ok="btnmodule" @cancel="cancel" okText="提交">
+    <a-modal v-model="addbtnshow" :title="btnstr" @ok="btnmodule" @cancel="cancel" okText="提交" :keyboard='false'>
       <a-form
         autocomplete="off"
         :form="form"
@@ -351,10 +352,10 @@ export default class Menu extends Vue {
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private layouts = layouts
   private Height = ""
   public str = ""
@@ -707,12 +708,12 @@ export default class Menu extends Vue {
   }
   private menusort (rule, val, callback){
     let pattern = new RegExp( /^\d+$|^\d+[.]?\d+$/)
-      if (!pattern.test(val)){
-        callback('只能输入数字');
-      }else {
-        callback();
-      }
-        callback();
+    if (!pattern.test(val)){
+      callback('只能输入数字');
+    }else {
+      callback();
+    }
+    callback();
   }
 }
 </script>

@@ -105,10 +105,11 @@
         v-model="visible"
         :title="str"
         @ok="Upgrade"
-        class="quxiao"
+        class="quxiao upgrade"
         @cancel="handleCancel"
         okText="提交"
         :width="640"
+        :keyboard='false'
       >
         <a-form
           autocomplete="off"
@@ -228,7 +229,7 @@ import axios from "axios"
 import { http } from "../../api/interceptors"
 
 @Component({
-  components: {},
+  components: {}
 })
 export default class Upgrade extends Vue {
   // todo 变量
@@ -242,15 +243,15 @@ export default class Upgrade extends Vue {
   private path = ""
   private Acquisitionlist = [
     { id: "0", value: "1", title: "柜式采集站" },
-    { id: "0", value: "2", title: "便携式采集站" },
+    { id: "0", value: "2", title: "便携式采集站" }
   ]
   private status = true
   private typelist = [
     { id: "0", value: "1", title: "前端软件" },
-    { id: "0", value: "2", title: "后端软件" },
+    { id: "0", value: "2", title: "后端软件" }
   ]
   private headers = {
-    authorization: "authorization-text",
+    authorization: "authorization-text"
   }
 
   private layouts = layouts
@@ -258,7 +259,7 @@ export default class Upgrade extends Vue {
   private page = {
     currentPage: 1, //当前页数
     pageSize: 15, //每页多少条
-    totalResult: 200, //总数
+    totalResult: 200 //总数
   }
   private filename = ""
   private fileList = []
@@ -277,7 +278,7 @@ export default class Upgrade extends Vue {
   private mounted() {
     let obj = {
       page: this.page.currentPage,
-      limit: this.page.pageSize,
+      limit: this.page.pageSize
     }
     this.gettabledata(obj)
     // this.getdata()
@@ -295,7 +296,7 @@ export default class Upgrade extends Vue {
     this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
-      limit: pageSize,
+      limit: pageSize
     }
     this.gettabledata(obj)
   }
@@ -334,9 +335,9 @@ export default class Upgrade extends Vue {
           {
             uid: "-1",
             name: "xxx.png",
-            status: "done",
-          },
-        ],
+            status: "done"
+          }
+        ]
       })
     })
   }
@@ -357,7 +358,7 @@ export default class Upgrade extends Vue {
               _that.$message.success(res.msg)
               let obj = {
                 page: _that.page.currentPage,
-                limit: _that.page.pageSize,
+                limit: _that.page.pageSize
               }
               _that.gettabledata(obj)
             } else {
@@ -365,7 +366,7 @@ export default class Upgrade extends Vue {
             }
           })
         }).catch(() => console.log("Oops errors!"))
-      },
+      }
     })
   }
   private filestatus = false
@@ -412,8 +413,8 @@ export default class Upgrade extends Vue {
               .post(this.http + "api/mdm/system/upgrade/uploadFile", formData, {
                 headers: {
                   "Content-Type": "multipart/form-data",
-                  Token: localStorage.getItem("token"),
-                },
+                  Token: localStorage.getItem("token")
+                }
               })
               .then((res) => {
                 console.log(res)
@@ -425,7 +426,7 @@ export default class Upgrade extends Vue {
                     softwareType: val.softwareType,
                     updateContent: val.updateContent,
                     upgradeType: val.upgradeType,
-                    version: val.version,
+                    version: val.version
                   }
                   this.Luckmanagement.Uploadsave(obj).then((res) => {
                     if (res.code == 0) {
@@ -435,7 +436,7 @@ export default class Upgrade extends Vue {
                       this.visible = false
                       let obj = {
                         page: this.page.currentPage,
-                        limit: this.page.pageSize,
+                        limit: this.page.pageSize
                       }
                       this.gettabledata(obj)
                     } else {
@@ -456,7 +457,7 @@ export default class Upgrade extends Vue {
             softwareType: val.softwareType,
             updateContent: val.updateContent,
             upgradeType: val.upgradeType,
-            version: val.version,
+            version: val.version
           }
           this.Luckmanagement.Uploadsave(obj).then((res) => {
             if (res.code == 0) {
@@ -466,7 +467,7 @@ export default class Upgrade extends Vue {
               this.visible = false
               let obj = {
                 page: this.page.currentPage,
-                limit: this.page.pageSize,
+                limit: this.page.pageSize
               }
               this.gettabledata(obj)
             } else {
@@ -484,12 +485,12 @@ export default class Upgrade extends Vue {
   private filebtn() {
     this.status = true
   }
-  private versionvalidator(rule, val, callback){
+  private versionvalidator(rule, val, callback) {
     let pattern = new RegExp(/\d/)
-    if(!pattern.test(val)){
-      callback('必须包含数字');
-    }else{
-      callback();
+    if (!pattern.test(val)) {
+      callback("必须包含数字")
+    } else {
+      callback()
     }
   }
 
@@ -538,6 +539,11 @@ export default class Upgrade extends Vue {
 .sjlx {
   .ant-form-item-label {
     width: 90px;
+  }
+}
+.upgrade {
+  .antd-col-24 {
+    height: 56px;
   }
 }
 </style>

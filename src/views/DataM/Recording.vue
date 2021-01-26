@@ -74,6 +74,7 @@
       cancel-text="取消"
       @ok="hideModal"
       @cancel="reset"
+      :keyboard='false'
     >
       <a-form
         autocomplete="off"

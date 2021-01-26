@@ -69,7 +69,7 @@
           </p>
         </div>
       </div>
-      <a-modal v-model="visible" :title="str" @ok="zipingtai" class="quxiao" okText="提交">
+      <a-modal v-model="visible" :title="str" @ok="zipingtai" class="quxiao" okText="提交" :keyboard='false'>
         <a-form
           autocomplete="off"
           :form="form"
@@ -141,7 +141,7 @@
           </a-row>
         </a-form>
       </a-modal>
-      <a-modal v-model="collection" :title="str2" @ok="caijizhan" class="quxiao" okText="提交">
+      <a-modal v-model="collection" :title="str2" @ok="caijizhan" class="quxiao" okText="提交" :keyboard='false'>
         <a-form
           autocomplete="off"
           :form="form2"

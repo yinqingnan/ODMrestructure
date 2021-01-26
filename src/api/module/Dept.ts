@@ -37,7 +37,7 @@ export class Dept {
   * @param flag          标记
   */
   public getList(params: object) {
-    const url = "/api/uauth/base/dept/queryAll";
+    const url = "/api/uauth/base/dept/queryAll?temm=" + new Date().getTime();
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.get(url, {
@@ -81,7 +81,7 @@ export class Dept {
   }
 
   public saveVal(params: object) {
-    const url = "/api/uauth/base/dept/save";
+    const url = "/api/uauth/base/dept/save"
     const body = params
     return new Promise((resolve, reject) => {
       this.axios.post(url, body, {
@@ -92,6 +92,7 @@ export class Dept {
       });
     });
   }
+  
   /**
  * @param res
  * @param resolve

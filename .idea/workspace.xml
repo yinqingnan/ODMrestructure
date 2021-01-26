@@ -2,7 +2,37 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46d628e3-bf6d-4b9b-8ca6-2bcc8d32ba25" name="默认的" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layout/Header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/Header.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/module/Dept.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/module/Dept.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/module/dataM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/module/dataM.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/style/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/style/index.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/isOperate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/isOperate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DataM/AvData.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/AvData.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DataM/Coercivemeasures.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/Coercivemeasures.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DataM/Recording.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/Recording.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DataM/Simpleprogram.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/Simpleprogram.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DevOps/AccessAuth.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DevOps/AccessAuth.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DevOps/OperationLog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DevOps/OperationLog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/DevOps/Upgrade.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DevOps/Upgrade.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Device/Matche.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Device/Matche.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Device/Stations.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Device/Stations.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Device/Storage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Device/Storage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Organization/Dept.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/Dept.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Organization/Menu.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/Menu.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Organization/Role.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/Role.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Organization/User.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/User.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Assets.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Assets.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Label.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Label.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Lawcase.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Lawcase.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/VideoStatistics.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/VideoStatistics.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Supervision/EvalDaily.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Supervision/EvalDaily.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Supervision/EvalRandom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Supervision/EvalRandom.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Supervision/EvalRecord.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Supervision/EvalRecord.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/systemM/Announcement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/Announcement.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/systemM/Dictionary.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/Dictionary.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/systemM/HighConfig.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/HighConfig.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +72,7 @@
       <updated>1609205714397</updated>
       <workItem from="1609205720515" duration="4453000" />
       <workItem from="1609322006441" duration="1872000" />
+      <workItem from="1611553924834" duration="900000" />
     </task>
     <servers />
   </component>

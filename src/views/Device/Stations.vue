@@ -194,10 +194,10 @@ export default class Stations extends Vue {
   ]
   private tableData = []
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private deptCode_equal = ''
   private name_like = ''
   private stationStatus = ''
@@ -471,27 +471,31 @@ export default class Stations extends Vue {
   public daochu() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     const obj = {
-        // name_like:  this.nameLike,
-        // code_like: this.codeLike,
-        type_notequal: 3,
-          deptCode_equal: this.deptCode_equal,
-          name_like: this.name_like,
-          stationStatus: this.stationStatus,
+      // name_like:  this.nameLike,
+      // code_like: this.codeLike,
+      type_notequal: 3,
+      deptCode_equal: this.deptCode_equal,
+      name_like: this.name_like,
+      stationStatus: this.stationStatus,
     }
     axios.get(`${url}api/mdm/device/stations/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        'responseType': 'blob'
-      }).then(res => {
-        console.log(res)
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
+    }).then(res => {
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`采集站.xls`);
+      }
+      else {
         const aLink = document.createElement("a");
-        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
         aLink.href = URL.createObjectURL(blob)
         aLink.setAttribute('download', '采集站' + '.xls')
         aLink.click()
-      })
+      }
+    })
     // (this.$refs.caijizhan as any).exportData({
     //   filename: "采集站",
     //   sheetName: "Sheet1",

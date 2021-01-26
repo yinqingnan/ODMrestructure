@@ -162,6 +162,7 @@
         title="媒体文件查看"
         :width="1000"
         @cancel="tccancel"
+        :keyboard='false'
         :maskClosable="false"
       >
         <div class="filesee">
@@ -658,31 +659,31 @@ export default class EvalRandom extends Vue {
     // console.log(1)
   }
   private tablebtn(row) {
-     if((this.$refs.sjccright as HTMLElement).style.cursor !== 'not-allowed'){
-          if(row.isEdit){
-          this.visible = true
-          this.fileId = row.id
-          this.fileCode = row.code
-          this.DataM.getfiledetails(this.fileId).then((res) => {
-            console.log(res)
-            this.filedetails = res.data
-            this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+    if((this.$refs.sjccright as HTMLElement).style.cursor !== 'not-allowed'){
+      if(row.isEdit){
+        this.visible = true
+        this.fileId = row.id
+        this.fileCode = row.code
+        this.DataM.getfiledetails(this.fileId).then((res) => {
+          console.log(res)
+          this.filedetails = res.data
+          this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+        })
+        this.DataM.lawarchives().then((res) => {
+          console.log(res)
+          this.$nextTick(() => {
+            this.form3.setFieldsValue({
+              Total: res.data.total,
+              Scoring: [],
+            })
           })
-            this.DataM.lawarchives().then((res) => {
-              console.log(res)
-              this.$nextTick(() => {
-                this.form3.setFieldsValue({
-                  Total: res.data.total,
-                  Scoring: [],
-                })
-              })
-              this.Total = res.data.total
-              this.options = res.data.list
-          })
-        }else{
-          return false
-        }
-     }
+          this.Total = res.data.total
+          this.options = res.data.list
+        })
+      }else{
+        return false
+      }
+    }
   }
 
   private relateCase(row) {
@@ -819,11 +820,11 @@ export default class EvalRandom extends Vue {
             this.sum = 0
             this.visible = false
             this.tableData.map(item => {
-            if(item.code === this.fileCode){
-              item.isEdit = false
-            }
+              if(item.code === this.fileCode){
+                item.isEdit = false
+              }
             })
-             this.form3.resetFields()
+            this.form3.resetFields()
             // this.getDailytabledata({
             //   page: this.page.currentPage,
             //   limit: this.page.pageSize,
@@ -849,20 +850,20 @@ export default class EvalRandom extends Vue {
   }
   private fileLevel(val) {
     let str = ''
-   switch (val) {
-     case 1:
+    switch (val) {
+    case 1:
       str='低'
-       break;
+      break;
     case 2:
       str= '中'
-       break;
+      break;
     case 3:
       str= '高'
-       break;
-     default:
-       break;
-   }
-   return str
+      break;
+    default:
+      break;
+    }
+    return str
   }
   private phonevalidator (rule,value,callback){
     let reg = new RegExp('^[0-9]*$')

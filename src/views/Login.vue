@@ -274,8 +274,10 @@ export default class Login extends Vue {
   }
 }
 .logininput{
+  line-height:1;
   input{
     padding-left: 40px !important;
+    line-height:1;
   }
 }
 .ant-form-explain{

@@ -160,6 +160,7 @@
         cancelText="取消"
         okText="提交"
         @cancel="back"
+        :keyboard='false'
       >
         <a-form :form="form2" @submit="handleSubmit" layout="inline"  autocomplete="off">
           <a-row :gutter="24">
@@ -360,7 +361,7 @@ export default class RightContent extends Vue {
     this.getSL()
   }
   mounted() {
-     this.Height = `${document.documentElement.clientHeight - 230}px`
+    this.Height = `${document.documentElement.clientHeight - 230}px`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
@@ -371,9 +372,9 @@ export default class RightContent extends Vue {
     this.getData.getNotices(val, true).then((res: any) => {
       if(res.data){
         res.data.map(item => {
-        if(item.type == "1") item.type= '通知'
-        else if(item.type == '2') item.type=  '系统升级'
-      })
+          if(item.type == "1") item.type= '通知'
+          else if(item.type == '2') item.type=  '系统升级'
+        })
         this.tabData = res.data
         this.page.totalResult =parseInt(res.count) 
       }
@@ -428,21 +429,21 @@ export default class RightContent extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
     this.$confirm({
-        title: "提示",
-        content: `公告删除后无法恢复，确认要删除公告${val.title}吗？`,
-        onOk() {
-          _that.getData.removeItem(DT, true).then((res: any) => {
-            if (res.code == 0) {
-              const val = {
-                page: _that.page.currentPage,
-                limit: _that.page.pageSize,
-                status: _that.seachKey,
-              }
-              _that.getList(val)
+      title: "提示",
+      content: `公告删除后无法恢复，确认要删除公告${val.title}吗？`,
+      onOk() {
+        _that.getData.removeItem(DT, true).then((res: any) => {
+          if (res.code == 0) {
+            const val = {
+              page: _that.page.currentPage,
+              limit: _that.page.pageSize,
+              status: _that.seachKey,
             }
-          })
-        },
-      })
+            _that.getList(val)
+          }
+        })
+      },
+    })
     
   }
   private edit(val: any): void {
@@ -475,14 +476,14 @@ export default class RightContent extends Vue {
     this.form2.validateFields((err: any, values: any) => {
       console.log(values)
       if (!err) {
-          let str = ''
-          if(values.type == '通知'){
-            str = '1' 
-          }else if(values.type == '系统升级'){
-            str = '2'
-          }else{
-            str = values.type
-          }
+        let str = ''
+        if(values.type == '通知'){
+          str = '1' 
+        }else if(values.type == '系统升级'){
+          str = '2'
+        }else{
+          str = values.type
+        }
         if (this.isShow == false) {
           this.saveData = {
             acceptDeptCode: "ALL",
@@ -508,7 +509,7 @@ export default class RightContent extends Vue {
         if(this.myTitle == '添加公告'){
           this.saveVal(this.saveData)
         }else{
-           this.editVal(this.saveData)
+          this.editVal(this.saveData)
         }
       }
     })
@@ -560,23 +561,27 @@ export default class RightContent extends Vue {
     })
   }
   private Export(e: any): void {
-  let url = window.gurl.SERVICE_CONTEXT_PATH
-  let obj = {
-    status: this.seachKey, 
-  }
-  axios.get(`${url}api/pconfig/system/notice/export`,{
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    let obj = {
+      status: this.seachKey, 
+    }
+    axios.get(`${url}api/pconfig/system/notice/export`,{
       params: obj,
       headers: {
         Token: localStorage.getItem("token"),
       },
       'responseType': 'blob'
     }).then(res => {
-      console.log(res)
       const aLink = document.createElement("a");
       let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-      aLink.href = URL.createObjectURL(blob)
-      aLink.setAttribute('download', '公告管理' + '.xls')
-      aLink.click()
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`公告管理.xls`);
+      }
+      else {
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '公告管理' + '.xls')
+        aLink.click()
+      }
     })
     // (this.$refs.logAdministration as any).exportData({
     //   filename: "公告管理",

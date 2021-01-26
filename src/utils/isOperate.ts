@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2020-12-21 16:23:35
- * @LastEditTime: 2020-12-21 17:43:11
+ * @LastEditTime: 2021-01-22 14:55:56
  * @FilePath: \src\utils\isOperate.ts
  */
 // 用户长时间未操作 退出登录
@@ -12,7 +12,9 @@ import {  Modal } from 'ant-design-vue';   // 弹吐司
 let timer = null
 let lastTime = new Date().getTime() // 最后一次点击时间
 let currentTime = new Date().getTime() // 当前时间
-let timeOut = 1500000 // 允许最长未操作时间
+let timeOut = 900000  // 允许最长未操作时间
+// let timeOut = 6000  // 允许最长未操作时间
+
 let i = 1 // 辅助作用
 clearInterval(timer)
 function handleInterval() { // 定时器
@@ -22,13 +24,15 @@ function handleInterval() { // 定时器
       // alert('长时间未操作')
       clearInterval(timer) // 清除定时器
         Modal.confirm({
-          title: '提示',
-          content: '超时自动退出',
+          title: "提示",
+          content: "超时自动退出",
+          okText: "确认",
+          cancelText: "取消",
           onOk() {
-              Modal.destroyAll();
-              localStorage.clear();
-              router.push({ name: "Login" })
-          }
+            Modal.destroyAll();
+            localStorage.clear();
+            router.push({ name: "Login" });
+          },
         });
     }
   }, 1000)

@@ -83,6 +83,7 @@
         cancelText="取消"
         okText="提交"
         @cancel="back"
+        :keyboard='false'
       >
         <a-form :form="form2" layout="inline" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" autocomplete="off">
           <a-row :gutter="24">
@@ -268,13 +269,13 @@ export default class RightContent extends Vue {
     //eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     this.$confirm({
-        title: '提示',
-        content: `字典项删除后无法恢复，确认要删除字典项${val.value}吗？`,
-        onOk() {
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-            const DT = [val.id]
-            _that.getData.removeItem(DT, true).then((res: any) => {
+      title: '提示',
+      content: `字典项删除后无法恢复，确认要删除字典项${val.value}吗？`,
+      onOk() {
+        return new Promise((resolve, reject) => {
+          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+          const DT = [val.id]
+          _that.getData.removeItem(DT, true).then((res: any) => {
             if (res.code == 0) {
               let val = {
                 page: this.page.currentPage,
@@ -284,9 +285,9 @@ export default class RightContent extends Vue {
               _that.getList(val)
             }
           })
-          }).catch(() => console.log('Oops errors!'));
-        },
-      });
+        }).catch(() => console.log('Oops errors!'));
+      },
+    });
   }
   private btnDisable = false
   private edit(val: any): void {

@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <a-modal v-model="visible" title="修改密码" ok-text="确认" cancel-text="取消" @ok="hideModal">
+    <a-modal v-model="visible" title="修改密码" ok-text="确认" cancel-text="取消" @ok="hideModal" :keyboard='false'>
       <a-form
         :form="form"
         :label-col="{ span: 5 }"
@@ -83,7 +83,7 @@
         </a-form-item>
       </a-form>
     </a-modal>
-    <a-modal v-model="Noticeshow" title="公告" :footer="null">
+    <a-modal v-model="Noticeshow" title="公告" :footer="null" :keyboard='false'>
       <div style="text-align: center;height:130px;line-height:130px" v-if="!blank">公告示例</div>
       <a-empty v-else />
     </a-modal>
@@ -218,7 +218,7 @@ export default class Header extends Vue {
       callback('密码格式不正确，必须是数字或字母')
     }
   }
-   private zhdator(rule, value, callback) {
+  private zhdator(rule, value, callback) {
     let reg = new RegExp('[\u4E00-\u9FA5]+')
     if(!reg.test(value)){
       callback()

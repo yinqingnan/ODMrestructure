@@ -175,6 +175,7 @@
         :width="1000"
         @cancel="tccancel"
         :maskClosable="false"
+        :keyboard='false'
       >
         <div class="filesee">
           <div class="filesee_left">
@@ -770,7 +771,7 @@ export default class EvalRecord extends Vue {
             })
           })
         }else{
-            this.Emptystate = true
+          this.Emptystate = true
         }
       })
     }
@@ -838,20 +839,20 @@ export default class EvalRecord extends Vue {
   }
   private fileLevel(val) {
     let str = ''
-   switch (val) {
-     case 1:
+    switch (val) {
+    case 1:
       str='低'
-       break;
+      break;
     case 2:
       str= '中'
-       break;
+      break;
     case 3:
       str= '高'
-       break;
-     default:
-       break;
-   }
-   return str
+      break;
+    default:
+      break;
+    }
+    return str
   }
 }
 </script>

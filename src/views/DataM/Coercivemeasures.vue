@@ -137,7 +137,13 @@
               show-overflow
             >
               <template v-slot="{ row }">
-                <span type="text" @click="tablebtn(row)" ref="qzcsright" style="color:#0db8df" v-right="'lawarchives:lllegalData:look'">{{row.code}}</span>
+                <span
+                  type="text"
+                  @click="tablebtn(row)"
+                  ref="qzcsright"
+                  style="color:#0db8df"
+                  v-right="'lawarchives:lllegalData:look'"
+                >{{row.code}}</span>
               </template>
             </vxe-table-column>
             <vxe-table-column
@@ -148,7 +154,6 @@
               min-width="70"
             />
 
-            
             <vxe-table-column
               field="userName"
               title="姓名/警号"
@@ -222,6 +227,7 @@
         :width="810"
         @cancel="Filedetails"
         class="Filedetails"
+        :keyboard='false'
       >
         <div class="FileDetails_header">
           <p>{{CaseDetails.typeName}}({{CaseDetails.code}})</p>
@@ -250,7 +256,7 @@
                 @ended="onPlayerEnded($event)"
               />
             </div>
-           <div v-if="defaultone.fileType == 'audio'" class="audioconfig">
+            <div v-if="defaultone.fileType == 'audio'" class="audioconfig">
               <audio controls="controls" controlslist="nodownload" :src="defaultone.httpPath"></audio>
             </div>
           </div>
@@ -266,8 +272,16 @@
                   <div v-if="item.fileName">
                     <p :title="item.fileName">{{item.fileName}}</p>
                     <div style="margin-right:10px">
-                      <a-icon type="download" @click.stop="Relatedownload(item)" v-isshow="'lawarchives:lllegalData:download'"/>
-                      <a-icon type="rest" @click.stop="deleteRelate(item)" v-isshow="'lawarchives:lllegalData:delRelated'"/>
+                      <a-icon
+                        type="download"
+                        @click.stop="Relatedownload(item)"
+                        v-isshow="'lawarchives:lllegalData:download'"
+                      />
+                      <a-icon
+                        type="rest"
+                        @click.stop="deleteRelate(item)"
+                        v-isshow="'lawarchives:lllegalData:delRelated'"
+                      />
                     </div>
                   </div>
                   <div style="margin-top:8px">
@@ -280,7 +294,11 @@
           </div>
         </div>
         <template slot="footer">
-          <a-button type="primary" @click="AssociatedFile" v-isshow="'lawarchives:lllegalData:addRelated'">关联平台文件</a-button>
+          <a-button
+            type="primary"
+            @click="AssociatedFile"
+            v-isshow="'lawarchives:lllegalData:addRelated'"
+          >关联平台文件</a-button>
         </template>
       </a-modal>
 
@@ -291,6 +309,7 @@
         @ok="Filedetailsok"
         class="guanlian"
         :width="1000"
+        :keyboard='false'
       >
         <div style="height:50px;line-height:1;padding-top: 10px;">
           <template>
@@ -398,16 +417,24 @@
             @checkbox-change="selectChangeEvent"
           >
             <vxe-table-column type="checkbox" width="60" align="center" />
-            <vxe-table-column field="fileName" title="文件名称" align="center"  min-width="150" show-overflow>
+            <vxe-table-column
+              field="fileName"
+              title="文件名称"
+              align="center"
+              min-width="150"
+              show-overflow
+            >
               <template v-slot="{ row }">
-                <vxe-button type="text" @click="Playvideo(row)" style="color:#0db8df">{{row.fileName}}</vxe-button>
+                <vxe-button
+                  type="text"
+                  @click="Playvideo(row)"
+                  style="color:#0db8df"
+                >{{row.fileName}}</vxe-button>
               </template>
             </vxe-table-column>
             <vxe-table-column field="deptName" title="部门" align="center" />
-            <vxe-table-column field="userName" title="姓名/警号" align="center" show-overflow >
-              <template v-slot="{ row }">
-               {{row.userName}}({{row.userCode}})
-              </template>
+            <vxe-table-column field="userName" title="姓名/警号" align="center" show-overflow>
+              <template v-slot="{ row }">{{row.userName}}({{row.userCode}})</template>
             </vxe-table-column>
             <vxe-table-column field="fileType_Name" title="文件类型" align="center" />
             <vxe-table-column field="recordDate" title="拍摄时间" align="center" show-overflow />
@@ -416,7 +443,7 @@
               <template v-slot="{ row }">
                 <vxe-button type="text" @click="Playvideo(row)" style="color:#0db8df">查看</vxe-button>
               </template>
-            </vxe-table-column> -->
+            </vxe-table-column>-->
           </vxe-table>
           <!-- <p>
             <vxe-pager
@@ -433,7 +460,7 @@
         </div>
       </a-modal>
 
-      <a-modal v-model="visible3" title="文件查看" :footer="null">
+      <a-modal v-model="visible3" title="文件查看" :footer="null" :keyboard='false'>
         <div class="Filelist">
           <div v-if="Fileview.fileType == 'photo'">
             <img :src="Fileview.httpPath" />
@@ -444,11 +471,17 @@
               ref="filevideo"
               :playsinline="true"
               :options="playerOptions"
-               @ended="filevideoEnded($event)"
+              @ended="filevideoEnded($event)"
             />
           </div>
           <div v-if="Fileview.fileType == 'audio'" class="audioconfig">
-            <audio ref="audio" controls="controls" controlslist="nodownload" style="margin-left:20%" :src="Fileview.httpPath"></audio>
+            <audio
+              ref="audio"
+              controls="controls"
+              controlslist="nodownload"
+              style="margin-left:20%"
+              :src="Fileview.httpPath"
+            ></audio>
           </div>
         </div>
       </a-modal>
@@ -482,7 +515,7 @@ export default class Coercivemeasures extends Vue {
     Drivercode: "",
     numcode: "",
     Illegaladdress: "",
-    date: [],
+    date: []
   }
   private Departmentdisabled = false
   public visible = false
@@ -491,7 +524,7 @@ export default class Coercivemeasures extends Vue {
   private defaultone = {
     fileName: "",
     fileType: "",
-    httpPath:""
+    httpPath: ""
   }
   private CaseDetails = {
     daptName: "",
@@ -506,8 +539,8 @@ export default class Coercivemeasures extends Vue {
     driverNum: "",
     deptName: "",
     userCode: "",
-    typeName:"",
-    code:""
+    typeName: "",
+    code: ""
   }
   private deptCode = localStorage.getItem("deptCode")
   private MatchFiles = []
@@ -516,21 +549,21 @@ export default class Coercivemeasures extends Vue {
     { id: 0, value: "请选择", title: "请选择" },
     { id: 1, value: "video", title: "视频" },
     { id: 2, value: "audio", title: "音频" },
-    { id: 3, value: "photo", title: "图片" },
+    { id: 3, value: "photo", title: "图片" }
   ]
-  private page= {
+  private page = {
     currentPage: 1, //当前页数
     pageSize: 15, //每页多少条
-    totalResult: 200, //总数
+    totalResult: 200 //总数
   }
   private defaultdate = [
     moment("2010-06-06", "YYYY-MM-DD"),
-    moment("2020-06-06", "YYYY-MM-DD"),
+    moment("2020-06-06", "YYYY-MM-DD")
   ]
   private Associatedfilestabledata = []
   private calculationdate = [
     moment().format("YYYY-MM-DD HH:mm:ss"),
-    moment().format("YYYY-MM-DD HH:mm:ss"),
+    moment().format("YYYY-MM-DD HH:mm:ss")
   ]
   private casecode = ""
   private playerOptions = {
@@ -545,9 +578,9 @@ export default class Coercivemeasures extends Vue {
     sources: [
       {
         type: "",
-        src: "http://vjs.zencdn.net/v/oceans.mp4", //url地址
+        src: "http://vjs.zencdn.net/v/oceans.mp4" //url地址
         // src: "" //url地址
-      },
+      }
     ],
     poster: "", //你的封面地址
     // width: document.documentElement.clientWidth,
@@ -556,8 +589,8 @@ export default class Coercivemeasures extends Vue {
       timeDivider: true,
       durationDisplay: true,
       remainingTimeDisplay: false,
-      fullscreenToggle: true, //全屏按钮
-    },
+      fullscreenToggle: true //全屏按钮
+    }
   }
   // todo 声明周期
   private created() {
@@ -611,7 +644,7 @@ export default class Coercivemeasures extends Vue {
           wfdz_like: val.Illegaladdress,
           type: 2,
           wfsj_gt: val.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
-          wfsj_lt: val.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+          wfsj_lt: val.date[1].format("YYYY-MM-DD HH:mm:ss") //必填  时间止
         }
         this.gettabledata(obj)
       }
@@ -625,23 +658,23 @@ export default class Coercivemeasures extends Vue {
       this.myDate = res.data.myDate
       this.defaultdate = [
         moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
-        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
+        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD")
       ]
-       let obj = {
-          page: this.page.currentPage,
-          limit: this.page.pageSize,
-          zqbm_equal: '', //部门id
-          mjxm: '', //警员
-          dsr_like: '', //当事人
-          wfsj:this.myDate ,
-          jdsbh_like: '',
-          jszh_like: '',
-          hphm_like:'',
-          wfdz_like: '',
-          type: 2,
-          wfsj_gt: this.defaultdate[0].format('YYYY-MM-DD HH:mm:ss'), //必填  时间起
-          wfsj_lt: this.defaultdate[1].format('YYYY-MM-DD HH:mm:ss') //必填  时间止
-        }
+      let obj = {
+        page: this.page.currentPage,
+        limit: this.page.pageSize,
+        zqbm_equal: "", //部门id
+        mjxm: "", //警员
+        dsr_like: "", //当事人
+        wfsj: this.myDate,
+        jdsbh_like: "",
+        jszh_like: "",
+        hphm_like: "",
+        wfdz_like: "",
+        type: 2,
+        wfsj_gt: this.defaultdate[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+        wfsj_lt: this.defaultdate[1].format("YYYY-MM-DD HH:mm:ss") //必填  时间止
+      }
       this.gettabledata(obj)
     })
   }
@@ -653,12 +686,12 @@ export default class Coercivemeasures extends Vue {
     })
   }
   private tablebtn(row) {
-    if((this.$refs.qzcsright as HTMLElement).style.cursor !== 'not-allowed'){
+    if ((this.$refs.qzcsright as HTMLElement).style.cursor !== "not-allowed") {
       this.casecode = row.code
       this.visible = true
       this.DataM.CaseDetails({ code: row.code, type: 2 }).then((res) => {
         console.log(res)
-        if(res.data){
+        if (res.data) {
           this.CaseDetails = res.data
         }
       })
@@ -675,7 +708,6 @@ export default class Coercivemeasures extends Vue {
         }
       })
     }
-    
   }
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
@@ -693,7 +725,7 @@ export default class Coercivemeasures extends Vue {
       wfdz_like: this.formdata.Illegaladdress,
       type: 2,
       wfsj_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
-      wfsj_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+      wfsj_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss") //必填  时间止
     }
     this.gettabledata(obj)
   }
@@ -736,12 +768,12 @@ export default class Coercivemeasures extends Vue {
             .format("YYYY-MM-DD HH:mm:ss"),
           moment(moment(this.CaseDetails.illegalTime).add(3, "d")).format(
             "YYYY-MM-DD HH:mm:ss"
-          ),
+          )
         ]
         let obj = {
           page: this.page.currentPage,
           limit: this.page.pageSize,
-          deptCode_equal: localStorage.getItem('deptCode'),
+          deptCode_equal: localStorage.getItem("deptCode"),
           userName: "",
           fileType_equal: "",
           recordDate: `${moment(this.calculationdate[0]).format(
@@ -749,7 +781,7 @@ export default class Coercivemeasures extends Vue {
           )} ~ ${moment(this.calculationdate[1]).format("YYYY-MM-DD")}`,
           notIds: JSON.stringify(this.WithID),
           recordDate_gt: this.calculationdate[0],
-          recordDate_lt: this.calculationdate[1],
+          recordDate_lt: this.calculationdate[1]
         }
         this.DataM.Associatedfiles(obj).then((res) => {
           console.log(res)
@@ -764,13 +796,13 @@ export default class Coercivemeasures extends Vue {
     })
   }
   private Relatedownload(item) {
-       window.open(item.downloadPath)
+    window.open(item.downloadPath)
   }
   private deleteRelate(item) {
     let obj = {
       caseNumber: this.casecode,
       fileCode: item.code,
-      logType: 2,
+      logType: 2
     }
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
@@ -778,40 +810,40 @@ export default class Coercivemeasures extends Vue {
       title: "提示?",
       content: "确认解除该文件的关联吗？",
       onOk() {
-          _that.DataM.deleteRelate(obj).then((res) => {
-            console.log(res)
-            if (res.code == 0) {
-              _that.$message.success(res.msg)
-              _that.DataM.MatchFiles(_that.casecode).then((res) => {
-                if (res.data.length > 0) {
-                  _that.MatchFiles = res.data
-                  _that.num = 0
-                  _that.defaultone = res.data[0]
-                } else {
-                  _that.MatchFiles = []
-                  _that.defaultone.fileName = ""
-                  _that.defaultone.fileType = ""
-                }
-              })
-            }
-          })
-      },
+        _that.DataM.deleteRelate(obj).then((res) => {
+          console.log(res)
+          if (res.code == 0) {
+            _that.$message.success(res.msg)
+            _that.DataM.MatchFiles(_that.casecode).then((res) => {
+              if (res.data.length > 0) {
+                _that.MatchFiles = res.data
+                _that.num = 0
+                _that.defaultone = res.data[0]
+              } else {
+                _that.MatchFiles = []
+                _that.defaultone.fileName = ""
+                _that.defaultone.fileType = ""
+              }
+            })
+          }
+        })
+      }
     })
   }
   private visible3 = false
   private Fileview = {
     fileType: "",
-    httpPath:""
+    httpPath: ""
   }
   private Playvideo(row) {
     console.log(row)
     this.visible3 = true
     this.Fileview = row
-    if(row.fileType == 'audio'){
-     this.Fileview.httpPath= row.httpPath
-    }else if(row.fileType == 'video'){
+    if (row.fileType == "audio") {
+      this.Fileview.httpPath = row.httpPath
+    } else if (row.fileType == "video") {
       this.playerOptions["sources"][0]["src"] = row.httpPath //修改视频方法
-    } 
+    }
   }
   private FileSubmit(e: any): void {
     e.preventDefault()
@@ -834,7 +866,7 @@ export default class Coercivemeasures extends Vue {
           ).format("YYYY-MM-DD")}`,
           notIds: JSON.stringify(this.WithID),
           recordDate_gt: moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss"),
-          recordDate_lt: moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss"),
+          recordDate_lt: moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss")
         }
         console.log(obj)
         this.DataM.Associatedfiles(obj).then((res) => {
@@ -856,7 +888,7 @@ export default class Coercivemeasures extends Vue {
         caseNumbers: [this.casecode],
         fileCodes: arr,
         logType: 2, //1、视音频数据页面；2、违法数据页面
-        type: 1, //1.简易程序 2.强制执法
+        type: 1 //1.简易程序 2.强制执法
       }
       this.DataM.saveRelate(obj).then((res) => {
         console.log(res)
@@ -873,7 +905,7 @@ export default class Coercivemeasures extends Vue {
         }
       })
     } else {
-      this.$message.error("选择按键后在尝试提交")
+      this.$message.error("选择按键后再尝试提交")
     }
   }
   private Filedetails2() {
@@ -885,11 +917,11 @@ export default class Coercivemeasures extends Vue {
   private pause() {
     console.log("pause click")
   }
-  private onPlayerEnded(e){
-    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src); 
+  private onPlayerEnded(e) {
+    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src)
   }
-  private filevideoEnded(e){
-    (this.$refs.filevideo as any).player.src(e.options_.sources[0].src); 
+  private filevideoEnded(e) {
+    (this.$refs.filevideo as any).player.src(e.options_.sources[0].src)
   }
 }
 </script>

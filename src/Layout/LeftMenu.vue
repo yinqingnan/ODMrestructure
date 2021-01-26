@@ -6,7 +6,7 @@
           :defaultSelectedKeys="defaultSelectedKeys"
           :openKeys="openKeys"
           mode="inline"
-          style="width: 256px;padding-right: 18px;padding-left: 16px;"
+          style="width: 256px;padding-right: 18px;padding-left: 16px;height:calc(100vh-74px)"
           :theme="theme"
           @click="menuClick"
           @openChange="onOpenChange"

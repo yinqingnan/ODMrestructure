@@ -196,6 +196,7 @@
         :width="674"
         @ok="handleSubmit"
         @cancel="handleCancel"
+        :keyboard='false'
       >
         <a-form
           autocomplete="off"
@@ -338,6 +339,7 @@
         okText="提交"
         @ok="repairSubmit"
         @cancel="repairCancel"
+        :keyboard='false'
       >
         <a-form
           autocomplete="off"
@@ -477,7 +479,7 @@
         </a-form>
       </a-modal>
 
-      <a-modal v-model="importshow" title="执法仪导入" :width="675"  class="importmodule" @cancel = "importclear">
+      <a-modal v-model="importshow" title="执法仪导入" :width="675"  class="importmodule" @cancel = "importclear" :keyboard='false'>
         <div class="importheader">
           <p>提示：第一次导入的时候请先下载模板，编辑内容后再进行导入操作。</p>
             <div style="display:flex">
@@ -534,9 +536,9 @@ export default class Matche extends Vue {
   private state = ""
   private Title = ""
   private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
   }
   private repairshow = false
   private namelist = []
@@ -794,7 +796,7 @@ export default class Matche extends Vue {
   private dlt() {
     let arr = this.getSelectEvent1()
     if(arr.length > 0 ){
-       let dltarr = []
+      let dltarr = []
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       let _that = this
       arr.map((item) => {
@@ -804,10 +806,10 @@ export default class Matche extends Vue {
       this.$confirm({
         title: "提示",
         content: `确定要删除选中的执法仪吗？`,
-          onOk() {
-            _that.instrumentdlt(dltarr)
-          }
-        })
+        onOk() {
+          _that.instrumentdlt(dltarr)
+        }
+      })
     }else{
       this.$message.error("请选择需要删除的执法仪")
     }
@@ -817,30 +819,30 @@ export default class Matche extends Vue {
   }
   private importben() {
     if(this.fileList.length>0){
-     let formData = new FormData() //保存文件后再保存
-          formData.append("file", this.fileList[0])
-          axios
-            .post(http + "api/mdm/device/matche/import", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Token: localStorage.getItem("token"),
-              },
-            })
-            .then((res: any) => {
-              let str,str1 = ''
-              str = res.data.replace(/%n1/g,"&nbsp;")
-              str1 = str.replace(/%n2/g,"<br/>")
-              if(res.data == 'ok'){
-                this.importshow = false
-                this.iserror = false
-                this.fileList = []
-                this.filename =""
-                this.$message.success('导入成功')
-              }else{
-                this.iserror = true
-                this.errormsg = str1
-              }
-            })
+      let formData = new FormData() //保存文件后再保存
+      formData.append("file", this.fileList[0])
+      axios
+        .post(http + "api/mdm/device/matche/import", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Token: localStorage.getItem("token"),
+          },
+        })
+        .then((res: any) => {
+          let str,str1 = ''
+          str = res.data.replace(/%n1/g,"&nbsp;")
+          str1 = str.replace(/%n2/g,"<br/>")
+          if(res.data == 'ok'){
+            this.importshow = false
+            this.iserror = false
+            this.fileList = []
+            this.filename =""
+            this.$message.success('导入成功')
+          }else{
+            this.iserror = true
+            this.errormsg = str1
+          }
+        })
     }else{
       this.$message.error("未选择文件")
     }
@@ -866,9 +868,9 @@ export default class Matche extends Vue {
   }
   private beforeUpload(file) {
     if(file.type === "application/vnd.ms-excel"){
-        this.filename = file.name
-        this.fileList = [file]
-        return false
+      this.filename = file.name
+      this.fileList = [file]
+      return false
     }else{
       this.$message.error("文件类型错误，仅支持.xls 和 .xlsx 类型的文件")
     }
@@ -877,27 +879,33 @@ export default class Matche extends Vue {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     console.log(this.Sval)
     let obj = {
-          code:this.Sval.code,
-          deptCode: this.Sval.department,
-          userCode: this.Sval.user,
-          isBinding: this.Sval.deviceStatus,
-          deviceType: this.Sval.deviceType,
-          deviceStatus: this.Sval.deviceStatusName,
+      code:this.Sval.code,
+      deptCode: this.Sval.department,
+      userCode: this.Sval.user,
+      isBinding: this.Sval.deviceStatus,
+      deviceType: this.Sval.deviceType,
+      deviceStatus: this.Sval.deviceStatusName,
     }
     axios.get(`${url}api/mdm/device/matche/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        'responseType': 'blob'
-      }).then(res => {
-        console.log(res)
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
+    }).then(res => {
+      
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`执法仪.xls`);
+      }
+      else {
         const aLink = document.createElement("a");
-        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
         aLink.href = URL.createObjectURL(blob)
         aLink.setAttribute('download', '执法仪' + '.xls')
         aLink.click()
-      })
+      }
+     
+    })
     // (this.$refs.zhifayi as any).exportData({
     //   filename: "执法仪",
     //   sheetName: "Sheet1",
@@ -933,7 +941,7 @@ export default class Matche extends Vue {
     this.DeviceM.Policepersonnelsave(obj).then((res) => {
       console.log(res)
       if (res.code == 0) {
-          this.visible = false
+        this.visible = false
         this.gettable({
           page: this.page.currentPage,
           limit: this.page.pageSize,
@@ -1007,9 +1015,9 @@ export default class Matche extends Vue {
     let nary=ary.sort();
     let state = true
     for(var i=0;i<ary.length;i++){
-        if (nary[i] && nary[i+1] && nary[i]==nary[i+1]){
-          state= false
-        }
+      if (nary[i] && nary[i+1] && nary[i]==nary[i+1]){
+        state= false
+      }
     }
     if(!state){
       callback('警员信息重复')

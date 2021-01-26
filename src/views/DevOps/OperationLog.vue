@@ -178,10 +178,10 @@ export default class OperationLog extends Vue {
   public form!: any
   public Luckmanagement = new this.$api.configInterface.Luckmanagement()
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private tableData = []
@@ -237,11 +237,11 @@ export default class OperationLog extends Vue {
   }
   private reset() {
     this.Luckmanagement.getlogdate({}).then((res) => {
-    this.defaultdate = res.data
-    this.date = [
-      moment(res.data.split("~")[0].replace(/\s*/g, ""), "YYYY-MM-DD"),
-      moment(res.data.split("~")[1].replace(/\s*/g, ""), "YYYY-MM-DD"),
-    ]
+      this.defaultdate = res.data
+      this.date = [
+        moment(res.data.split("~")[0].replace(/\s*/g, ""), "YYYY-MM-DD"),
+        moment(res.data.split("~")[1].replace(/\s*/g, ""), "YYYY-MM-DD"),
+      ]
     })
     this.type_equal = "-1"
     this.module_equal = "-1"
@@ -264,8 +264,8 @@ export default class OperationLog extends Vue {
           module_equal: val.type_equal,
           type_equal: val.module_equal,
           createTime: `${val.date[0].format(
-          "YYYY-MM-DD"
-        )} ~ ${val.date[1].format("YYYY-MM-DD")}`,
+            "YYYY-MM-DD"
+          )} ~ ${val.date[1].format("YYYY-MM-DD")}`,
         })
       }
     })
@@ -278,17 +278,22 @@ export default class OperationLog extends Vue {
       createTime: this.defaultdate,
     }
     axios.get(`${url}api/pconfig/base/log/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        responseType: 'arraybuffer'
-      }).then(res => {
-      const aLink = document.createElement("a");
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      responseType: 'arraybuffer'
+    }).then(res => {
       let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-      aLink.href = URL.createObjectURL(blob)
-      aLink.setAttribute('download', '日志管理' + '.xls') // 设置下载文件名称
-      aLink.click()
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`日志管理.xls`);
+      }
+      else {
+        const aLink = document.createElement("a");
+        aLink.href = URL.createObjectURL(blob)
+        aLink.setAttribute('download', '日志管理' + '.xls') // 设置下载文件名称
+        aLink.click()
+      }
     })
   }
   private getdata() {

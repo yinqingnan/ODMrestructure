@@ -140,6 +140,7 @@
         cancelText="取消"
         okText="提交"
         @cancel="back"
+        :keyboard='false'
       >
         <a-form :form="form2" @submit="handleSubmit" layout="inline" autocomplete="off">
           <a-row :gutter="24">
@@ -218,7 +219,7 @@
           </a-row>
           <a-row :gutter="24">
             <a-col :span="12">
-              <a-form-item label="联系人" style="margin-left:26px">
+              <a-form-item label="联系人" style="margin-left:26px;display:flex">
                 <a-input
                   :max-length="LimitInputlength"
                   v-decorator="[
@@ -232,7 +233,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="12">
-              <a-form-item label="联系电话" style="margin-left:11px;">
+              <a-form-item label="联系电话" style="margin-left:11px;display:flex">
                 <a-input
                   :max-length="LimitInputlength"
                   v-decorator="[
@@ -275,6 +276,7 @@
         :width="675"
         class="importmodule"
         @cancel="importclear"
+        :keyboard='false'
       >
         <div class="importheader">
           <p>提示：第一次导入的时候请先下载模板，编辑内容后再进行导入操作。</p>
@@ -436,24 +438,28 @@ export default class Dept extends Vue {
   private Export(e: any): void {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     const obj = {
-        name_like:  this.nameLike,
-        code_like: this.codeLike,
+      name_like:  this.nameLike,
+      code_like: this.codeLike,
     }
     
     axios.get(`${url}api/uauth/base/dept/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        'responseType': 'blob'
-      }).then(res => {
-        console.log(res)
-        const aLink = document.createElement("a");
-        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
+    }).then(res => {
+      const aLink = document.createElement("a");
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`部门管理.xls`);
+      }
+      else {
         aLink.href = URL.createObjectURL(blob)
         aLink.setAttribute('download', '部门管理' + '.xls')
         aLink.click()
-      })
+      }
+    })
     // (this.$refs.depttable as any).exportData({
     //   filename: "部门管理",
     //   sheetName: "Sheet1",
@@ -500,9 +506,9 @@ export default class Dept extends Vue {
           },
         })
         .then((res: any) => {
-           let str,str1 = ''
-              str = res.data.replace(/%n1/g,"&nbsp;")
-              str1 = str.replace(/%n2/g,"<br/>")
+          let str,str1 = ''
+          str = res.data.replace(/%n1/g,"&nbsp;")
+          str1 = str.replace(/%n2/g,"<br/>")
           if (res.data == "ok") {
             this.importshow = false
             this.iserror = false
@@ -523,25 +529,27 @@ export default class Dept extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
     this.$confirm({
-        title: '提示',
-        content: `部门删除后无法恢复，确认要删除部门${row.name}吗`,
-        onOk() {
-          _that.getData.removeID({ id: row.deptId }).then((res) => {
-            console.log(res)
-            if (res.code == 0) {
-              _that.$message.success(res.msg)
+      title: '提示',
+      content: `部门删除后无法恢复，确认要删除部门${row.name}吗`,
+      onOk() {
+        _that.getData.removeID({ id: row.deptId }).then((res) => {
+          console.log(res)
+          if (res.code == 0) {
+            setTimeout(() =>{
               const val = {
                 parentCode: "parent_top",
                 name_like: "",
                 code_like: "",
               }
               _that.getList(val)
-            } else {
-              _that.$message.error(res.msg)
-            }
-          })
-        }
-      });
+              _that.$message.success(res.msg)
+            },200)
+          } else {
+            _that.$message.error(res.msg)
+          }
+        })
+      }
+    });
    
   }
   private add(e: any): void {
@@ -573,7 +581,7 @@ export default class Dept extends Vue {
           remark: val.remark,
           id: this.saveID,
         }
-        this.getData.saveVal(obj, true).then((res: any) => {
+        this.getData.saveVal(obj).then((res: any) => {
           if (res.code == 0) {
             this.visible = false
             this.form2.resetFields()
@@ -586,9 +594,11 @@ export default class Dept extends Vue {
               isTop: true,
               notPlatform: true,
             }
-            this.getList(val)
-            this.getSelect(obj)
-            this.saveID = ""
+            setTimeout(() => {
+              this.getList(val)
+              this.getSelect(obj)
+              this.saveID = ""
+            },200);
           }else{
             this.$message.error(res.msg)
           }

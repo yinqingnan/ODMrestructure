@@ -116,7 +116,7 @@
           </p>
         </div>
       </div>
-      <a-modal v-model="visible" :title="text" ok-text="确认" cancel-text="取消" @ok="modalbtn">
+      <a-modal v-model="visible" :title="text" ok-text="确认" cancel-text="取消" @ok="modalbtn" :keyboard='false'>
         <a-form
           autocomplete="off"
           :form="form2"
@@ -169,6 +169,7 @@
         @ok="ftpbtn"
         :width="800"
         class="ftptc"
+        :keyboard='false'
       >
         <a-button
           class="ftpadd"
@@ -458,8 +459,8 @@ export default class Storage extends Vue {
     this.addshow = false
     this.FTPvisible = true
     let obj = { storageIp_equal: row.ip, 
-    page: this.page.currentPage,
-    limit: this.page.pageSize, }
+      page: this.page.currentPage,
+      limit: this.page.pageSize, }
     axios
       .get(
         `${window.gurl.SERVICE_CONTEXT_PATH}api/mdm/device/storage-ftp/list`,

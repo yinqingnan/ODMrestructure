@@ -149,10 +149,10 @@ export default class VideoStatistics extends Vue {
   ]
   private tableData = []
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private departmentData = []
   private layouts = layouts
   private deptCode: null | string = null
@@ -361,19 +361,24 @@ export default class VideoStatistics extends Vue {
       dateRange:this.dateRange
     }
     axios.get(`${url}api/tpb/report/recording/information/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        'responseType': 'blob'
-      }).then(res => {
-        console.log(res)
-        const aLink = document.createElement("a");
-        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
+    }).then(res => {
+      console.log(res)
+      const aLink = document.createElement("a");
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`摄录统计.xls`);
+      }
+      else {
         aLink.href = URL.createObjectURL(blob)
         aLink.setAttribute('download', '摄录统计' + '.xls')
         aLink.click()
-      })
+      }
+    })
   }
 }
 </script>

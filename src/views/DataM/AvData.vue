@@ -168,7 +168,7 @@
               <template v-slot="{ row }" >
                 <span
                   class="iconfont iconblock"
-                  :class="{'iconpicture': row.fileType === 'photo', 'iconshiping': row.fileType=='video', 'iconmusic': row.fileType=='audio'}"
+                  :class="{'iconpicture': row.fileType === 'photo', 'iconshiping-copy': row.fileType=='video', 'iconmusic': row.fileType=='audio'}"
                 ></span>
                 <span
                   style="cursor: pointer;text-align:center"
@@ -237,6 +237,7 @@
         title="视频查看"
         @ok="handleOk"
         :width="1000"
+        :keyboard='false'
         :destroyOnClose="true"
       >
         <div class="filesee">
@@ -267,8 +268,8 @@
             >
               <a-tab-pane key="1" tab="文件">
                 <div class="fileclass">
-                  <p>{{filedetails.fileName}}</p>
-                  <p>{{filedetails.deptName}}({{filedetails.deptCode}}) - {{filedetails.userName}}({{filedetails.userCode}})</p>
+                  <p style="font-size:12px;font-weight:bold">{{filedetails.fileName}}</p>
+                  <p style="font-size:12px;font-weight:bold">{{filedetails.deptName}}({{filedetails.deptCode}}) - {{filedetails.userName}}({{filedetails.userCode}})</p>
                   <ul>
                     <li>摄录时间：{{filedetails.recordDate}}</li>
                     <li>导入时间：{{filedetails.uploadDate}}</li>
@@ -447,9 +448,10 @@
               <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
                   :form="form3"
-                  :label-col="{ span:6 }"
-                  :wrapper-col="{ span: 18 }"
+                  :label-col="{ span:5 }"
+                  :wrapper-col="{ span: 19 }"
                   @submit="pingjiaSubmit"
+                  class="pf"
                 >
                   <el-scrollbar style="height:310px;padding-right: 10px">
                     <a-form-item label="评价总分">
@@ -466,6 +468,7 @@
                     </a-form-item>
                     <a-form-item label="评分项">
                       <a-checkbox-group
+                        class="pfx"
                         :disabled="disabled"
                         v-decorator="['Scoring', { initialValue: []}]"
                         style="width: 100%;"
@@ -478,11 +481,18 @@
                               :key="d.id"
                               style="line-height: 30px;height: 30px;"
                             >
-                              <a-checkbox
+                               <a-checkbox
                                 style="letter-spacing: -0.5px;"
                                 @change="checkboxChange($event, d.jffz)"
                                 :value="d.jfbh"
-                              >{{d.jfmc}}(-{{d.jffz}}分)</a-checkbox>
+                              >
+                                <a-tooltip>
+                                  <template slot="title">
+                                    {{d.jfmc}}(-{{d.jffz}}分)
+                                  </template>
+                                  {{d.jfmc}}(-{{d.jffz}}分)
+                                </a-tooltip>
+                              </a-checkbox>
                             </a-col>
                           </a-row>
                         </el-scrollbar>
@@ -497,8 +507,15 @@
                               <a-checkbox
                                 style="letter-spacing: -0.5px;"
                                 @change="checkboxChange($event, d.jffz)"
-                                :value="d.code"
-                              >{{d.name}}(-{{d.score}}分)</a-checkbox>
+                                :value="d.jfbh"
+                              >
+                                <a-tooltip>
+                                  <template slot="title">
+                                    {{d.jfmc}}(-{{d.jffz}}分)
+                                  </template>
+                                  {{d.jfmc}}(-{{d.jffz}}分)
+                                </a-tooltip>
+                              </a-checkbox>
                             </a-col>
                           </a-row>
                         </el-scrollbar>
@@ -557,7 +574,7 @@
           <a-button type="default" @click="moduleDlt">删除</a-button>
         </template>
       </a-modal>
-      <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear">
+      <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear" :keyboard='false'>
         <el-scrollbar style="height: 200px;width: 476px;">
           <p
             v-for="item in logmsg"
@@ -586,7 +603,6 @@ import {
   PlayerOptions,
 } from "../../InterfaceVariable/interface"
 import moment from "moment"
-import axios from "axios"
 @Component({})
 export default class AvData extends Vue {
   [x: string]: any
@@ -1091,7 +1107,7 @@ export default class AvData extends Vue {
     if (this.selectedRowKeys.length != 0) {
       this.$confirm({
         title: "提示",
-        content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿如果浏览器未出现下载提示，请您在浏览器地址栏右侧，点击‘已拦截的弹窗’，选择‘始终允许显示本站点的弹出式窗口`,
+        content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿,如果浏览器未出现下载提示,请您在浏览器地址栏右侧,点击“已拦截的弹窗”,选择"始终允许显示本站点的弹出式窗口"。`,
         onOk() {
           let num = 0
           _that.selectedRowKeys.forEach((item) => {
@@ -1302,17 +1318,17 @@ export default class AvData extends Vue {
   private fileLevel(val) {
     let str = ""
     switch (val) {
-      case 1:
-        str = "低"
-        break
-      case 2:
-        str = "中"
-        break
-      case 3:
-        str = "高"
-        break
-      default:
-        break
+    case 1:
+      str = "低"
+      break
+    case 2:
+      str = "中"
+      break
+    case 3:
+      str = "高"
+      break
+    default:
+      break
     }
     return str
   }
@@ -1464,6 +1480,27 @@ export default class AvData extends Vue {
 .biaozhus {
   .ant-calendar-picker {
     width: 276px !important;
+  }
+}
+.ant-checkbox + span{
+  letter-spacing: -0.9px;
+}
+.pfx{
+  .ant-checkbox-wrapper{
+    display:flex;
+    line-height:1;
+    span:nth-of-type(2) {
+      overflow: hidden;
+      white-space: nowrap;
+      width:80%;
+      text-overflow: ellipsis;
+    }
+  }
+
+}
+.pf{
+  .is-horizontal{
+    display:none;
   }
 }
 </style>

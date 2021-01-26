@@ -110,10 +110,10 @@ export default class VideoStatistics extends Vue {
   ]
   private tableData = []
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private departmentData = []
   private layouts = layouts
   private deptCode = null
@@ -155,12 +155,12 @@ export default class VideoStatistics extends Vue {
           title: "维修",
           align: "center",
         },
-         {
+        {
           field: "countMatcheScrapped",
           title: "报废",
           align: "center",
         },
-         {
+        {
           field: "countMatcheStop",
           title: "停用",
           align: "center",
@@ -212,12 +212,12 @@ export default class VideoStatistics extends Vue {
     this.DataM.getMenulist({}, true).then((res: any) => {
       this.departmentData = res.data
     })
-      let obj = {
-        page: 1,
-        limit: 15,
-        deptCode: localStorage.getItem("deptCode") && null,
-      }
-      this.gettabledata(obj)
+    let obj = {
+      page: 1,
+      limit: 15,
+      deptCode: localStorage.getItem("deptCode") && null,
+    }
+    this.gettabledata(obj)
   }
   private tableRowClassName(record: any, index: number) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
@@ -259,29 +259,41 @@ export default class VideoStatistics extends Vue {
           Token: localStorage.getItem("token"),
         },
         'responseType': 'blob'
-    }).then(res => {
+      }).then(res => {
         const aLink = document.createElement("a");
         let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-        aLink.href = URL.createObjectURL(blob)
-        aLink.setAttribute('download', '资产统计' + '.xls')
-        aLink.click()
-    })
-      
-    }else{
-       axios.get(`${url}api/tpb/report/assets/unit/export`,{
-          params: {
-            deptCode
-          },
-          headers: {
-            Token: localStorage.getItem("token"),
-          },
-          'responseType': 'blob'
-      }).then(res => {
-          const aLink = document.createElement("a");
-          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+
+     
+        if (navigator.msSaveBlob) { // IE10+ 
+          window.navigator.msSaveOrOpenBlob(blob,`资产统计.xls`);
+        }
+        else {
           aLink.href = URL.createObjectURL(blob)
           aLink.setAttribute('download', '资产统计' + '.xls')
           aLink.click()
+        }
+      })
+      
+    }else{
+      axios.get(`${url}api/tpb/report/assets/unit/export`,{
+        params: {
+          deptCode
+        },
+        headers: {
+          Token: localStorage.getItem("token"),
+        },
+        'responseType': 'blob'
+      }).then(res => {
+        const aLink = document.createElement("a");
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        if (navigator.msSaveBlob) { // IE10+ 
+          window.navigator.msSaveOrOpenBlob(blob,`资产统计.xls`);
+        }
+        else {
+          aLink.href = URL.createObjectURL(blob)
+          aLink.setAttribute('download', '资产统计' + '.xls')
+          aLink.click()
+        }
       })
       
     }

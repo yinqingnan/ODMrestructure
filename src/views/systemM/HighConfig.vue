@@ -71,6 +71,7 @@
         wrapClassName="myAM"
         cancelText="取消"
         okText="提交"
+        :keyboard='false'
         @cancel="back"
       >
         <a-form :form="form" layout="inline" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
@@ -139,10 +140,10 @@ export default class RightContent extends Vue {
   [x: string]: any
   public getData = new this.$api.configInterface.HighConfig()
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
   private layouts = layouts
@@ -260,9 +261,9 @@ export default class RightContent extends Vue {
       }else {
         callback();
       }
-        callback();
+      callback();
     }else{
-       callback();
+      callback();
     }
     
   }

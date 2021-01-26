@@ -90,14 +90,14 @@
           </p>
         </div>
       </div>
-      <a-modal v-model="visible" :title="str" @ok="handleOk" >
+      <a-modal v-model="visible" :title="str" @ok="handleOk" :keyboard='false'>
         <a-form
           autocomplete="off"
           :form="form"
           :label-col="{ span: 6 }"
           :wrapper-col="{ span: 18 }"
           @submit="handleOk"
-        >
+>
           <a-row :gutter="24">
             <a-col :span="24">
               <a-form-item label="角色名称">
@@ -132,7 +132,7 @@
         </a-form>
       </a-modal>
 
-      <a-modal v-model="configshow" title="权限配置" @ok="configshowok">
+      <a-modal v-model="configshow" title="权限配置" @ok="configshowok" :keyboard='false'>
         <a-form
           autocomplete="off"
           :form="form1"
@@ -202,10 +202,10 @@ export default class Role extends Vue {
   public visible = false
   public OrganizationM = new this.$api.configInterface.OrganizationM()
     private page= {
-  currentPage: 1, //当前页数
-  pageSize: 15, //每页多少条
-  totalResult: 200, //总数
-  }
+      currentPage: 1, //当前页数
+      pageSize: 15, //每页多少条
+      totalResult: 200, //总数
+    }
   private options = []
   private selectarr = []
   private configshow = false

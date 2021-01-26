@@ -227,6 +227,7 @@
         okText="提交"
         @ok="repairSubmit"
         @cancel="repairCancel"
+        :keyboard='false'
       >
         <a-form
           autocomplete="off"
@@ -392,7 +393,7 @@
         </a-form>
       </a-modal>
       <!-- 二维码弹窗 -->
-      <a-modal v-model="QRshow" title="二维码登录" :width="325" :footer="null" class="qrcodemodule">
+      <a-modal v-model="QRshow" title="二维码登录" :width="325" :footer="null" class="qrcodemodule" :keyboard='false'>
         <div style="text-alin">
           <div class="qrcode" ref="qrCodeUrl"></div>
         </div>
@@ -403,6 +404,7 @@
         :width="675"
         class="importmodule"
         @cancel="importclear"
+        :keyboard='false'
       >
         <div class="importheader">
           <p>提示：第一次导入的时候请先下载模板，编辑内容后再进行导入操作。</p>
@@ -494,12 +496,12 @@ export default class User extends Vue {
   private errormsg = ""
   private filename = ""
   private formdatalist = {
-      page: this.page.currentPage,
-      limit: this.page.pageSize,
-      deptCode: "",
-      name: "",
-      code: "",
-      type: "全部",
+    page: this.page.currentPage,
+    limit: this.page.pageSize,
+    deptCode: "",
+    name: "",
+    code: "",
+    type: "全部",
   }
   // todo 事件和生命周期
   private created() {
@@ -688,8 +690,8 @@ export default class User extends Vue {
           title: "提示",
           content: `您确定要重置用户${arr[0].name}(警号${arr[0].code})的密码为111111吗？`,
           onOk() {
-              _that.OrganizationM.userresetpwd(newarr).then((res) => {
-                _that.$message.success(res.msg)
+            _that.OrganizationM.userresetpwd(newarr).then((res) => {
+              _that.$message.success(res.msg)
             }).catch(() => console.log("Oops errors!"))
           },
         })
@@ -704,25 +706,30 @@ export default class User extends Vue {
   }
   // 导出
   private exports() {
-   let url = window.gurl.SERVICE_CONTEXT_PATH
-   let obj = {
+    let url = window.gurl.SERVICE_CONTEXT_PATH
+    let obj = {
       deptCode:  this.deptCode,
       name:this.name,
       code: this.code,
       type: this.type,
     }
     axios.get(`${url}api/uauth/base/user/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        'responseType': 'blob'
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
     }).then(res => {
-        const aLink = document.createElement("a");
-        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      const aLink = document.createElement("a");
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`用户管理.xls`);
+      }
+      else {
         aLink.href = URL.createObjectURL(blob)
         aLink.setAttribute('download', '用户管理' + '.xls')
         aLink.click()
+      }
     })
 
 
@@ -996,9 +1003,9 @@ export default class User extends Vue {
           },
         })
         .then((res: any) => {
-           let str,str1 = ''
-              str = res.data.replace(/%n1/g,"&nbsp;")
-              str1 = str.replace(/%n2/g,"<br/>")
+          let str,str1 = ''
+          str = res.data.replace(/%n1/g,"&nbsp;")
+          str1 = str.replace(/%n2/g,"<br/>")
           if (res.data == "ok") {
             this.importshow = false
             this.iserror = false

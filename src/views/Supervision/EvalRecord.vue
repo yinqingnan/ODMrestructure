@@ -218,6 +218,7 @@
         :width="1000"
         @cancel="tccancel"
         :maskClosable="false"
+        :keyboard='false'
       >
         <div class="filesee">
           <div class="filesee_left">
@@ -734,7 +735,7 @@ export default class EvalRecord extends Vue {
         return `异常（扣${str}分）`
       } 
     }else {
-        return "通过"
+      return "通过"
     }
   }
   private relateCase(row) {
@@ -782,39 +783,39 @@ export default class EvalRecord extends Vue {
 
   private tablebtn(row) {
     console.log(row)
-     if((this.$refs.kpjgright as HTMLElement).style.cursor !== 'not-allowed'){
-        this.visible = true
-        this.fileId = row.id
-        this.fileCode = row.code
-        this.DataM.getfiledetails(this.fileId).then((res) => {
-          console.log(res)
-          this.filedetails = res.data
-          this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+    if((this.$refs.kpjgright as HTMLElement).style.cursor !== 'not-allowed'){
+      this.visible = true
+      this.fileId = row.id
+      this.fileCode = row.code
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        console.log(res)
+        this.filedetails = res.data
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+      })
+      this.DataM.evaluate(this.fileCode).then((res) => {
+        console.log(res)
+        let arr = []
+        res.data.items.map((item) => {
+          arr.push(item.code)
         })
-        this.DataM.evaluate(this.fileCode).then((res) => {
-          console.log(res)
-          let arr = []
-          res.data.items.map((item) => {
-            arr.push(item.code)
-          })
-          this.options = res.data.items
-          this.$nextTick(() => {
-            this.form3.setFieldsValue({
-              Scoring: arr,
-              Total: res.data.total,
-              Actualscore: res.data.score,
-              remark: res.data.remark,
-            })
+        this.options = res.data.items
+        this.$nextTick(() => {
+          this.form3.setFieldsValue({
+            Scoring: arr,
+            Total: res.data.total,
+            Actualscore: res.data.score,
+            remark: res.data.remark,
           })
         })
-     }
+      })
+    }
   }
 
   private tabchange(activeKey) {
     if (activeKey == 3) {
       this.DataM.getfiletagging(this.fileCode).then((res) => {
         if (res.data) {
-           console.log("有值")
+          console.log("有值")
           this.Emptystate = false
           this.labelType = res.data.labelType
           this.taggingmsg = res.data
@@ -859,20 +860,20 @@ export default class EvalRecord extends Vue {
   }
   private fileLevel(val) {
     let str = ''
-   switch (val) {
-     case 1:
+    switch (val) {
+    case 1:
       str='低'
-       break;
+      break;
     case 2:
       str= '中'
-       break;
+      break;
     case 3:
       str= '高'
-       break;
-     default:
-       break;
-   }
-   return str
+      break;
+    default:
+      break;
+    }
+    return str
   }
 }
 </script>

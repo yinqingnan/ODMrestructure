@@ -305,7 +305,7 @@ export default class VideoStatistics extends Vue {
     })
   }
 
-   private pagerchange({ currentPage, pageSize }) {
+  private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
     let obj = {
@@ -316,7 +316,7 @@ export default class VideoStatistics extends Vue {
       dateRange: this.dateRange,
     }
     this.gettabledata(obj)
-   }
+  }
   public daochu() {
     // (this.$refs.kptj as any).exportData({
     //   filename: "考评统计",
@@ -331,19 +331,24 @@ export default class VideoStatistics extends Vue {
       dateRange: this.dateRange,
     }
     axios.get(`${url}api/tpb/report/label/user/export`,{
-        params: obj,
-        headers: {
-          Token: localStorage.getItem("token"),
-        },
-        'responseType': 'blob'
-      }).then(res => {
-        console.log(res)
-        const aLink = document.createElement("a");
-        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      params: obj,
+      headers: {
+        Token: localStorage.getItem("token"),
+      },
+      'responseType': 'blob'
+    }).then(res => {
+      console.log(res)
+      const aLink = document.createElement("a");
+      let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+      if (navigator.msSaveBlob) { // IE10+ 
+        window.navigator.msSaveOrOpenBlob(blob,`考评统计.xls`);
+      }
+      else {
         aLink.href = URL.createObjectURL(blob)
         aLink.setAttribute('download', '考评统计' + '.xls')
         aLink.click()
-      })
+      }
+    })
   }
 }
 </script>
