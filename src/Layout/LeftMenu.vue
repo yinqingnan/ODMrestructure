@@ -6,7 +6,8 @@
           :defaultSelectedKeys="defaultSelectedKeys"
           :openKeys="openKeys"
           mode="inline"
-          style="width: 256px;padding-right: 18px;padding-left: 16px;height:calc(100vh-74px)"
+          :style="{height:Height}"
+          style="width: 256px;padding-right: 18px;padding-left: 16px;"
           :theme="theme"
           @click="menuClick"
           @openChange="onOpenChange"
@@ -20,6 +21,7 @@
               ref="menulist"
             >
               <router-link
+                :class="{'Lowerversion':Lowerversion}"
                 :to="{
                   path: '/index' + item.path,
                   params: { title: item.title }
@@ -72,8 +74,20 @@ export default class LeftMenu extends Vue {
   private openKeys: any = ['index']
   private defaultSelectedKeys = [this.$route.name]
   private theme = "dark"
+  private Height = ""
+  private Lowerversion= true
   private mounted() {
     this.getdata()
+    this.Height = `${document.documentElement.clientHeight - 74}px`
+    const  regStr_chrome = /chrome\/[\d.]+/gi ;
+    let agent = window.navigator.userAgent.toLowerCase()
+    if(agent.indexOf("chrome") > 0){
+      if(Number(agent.match(regStr_chrome)[0].split('/')[1].split('.')[0])>50){
+        this.Lowerversion = false;
+      }else{
+        this.Lowerversion = true;
+      }
+    }
   }
   private getdata() {
     this.Login.getMenudata().then((res) => {
@@ -249,5 +263,10 @@ export default class LeftMenu extends Vue {
 
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   background: rgba(0, 0, 0, 0.2) !important;
+}
+.Lowerversion{
+  >span:first-child{
+    display: none;
+  }
 }
 </style>

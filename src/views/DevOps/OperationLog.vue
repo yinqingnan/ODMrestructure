@@ -24,6 +24,7 @@
                   <el-scrollbar class="screen">
                     <a-form-item label="日志类型">
                       <a-select
+                        format="YYYY-MM-DD"
                         v-decorator="[
                         'module_equal',
                         {
@@ -56,6 +57,7 @@
                     </a-form-item>
                     <a-form-item label="操作时段">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,

@@ -530,7 +530,7 @@ export default class Dept extends Vue {
     let _that = this
     this.$confirm({
       title: '提示',
-      content: `部门删除后无法恢复，确认要删除部门${row.name}吗`,
+      content: `部门删除后无法恢复，确认要删除部门${row.name}吗？`,
       onOk() {
         _that.getData.removeID({ id: row.deptId }).then((res) => {
           console.log(res)

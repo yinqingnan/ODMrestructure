@@ -68,6 +68,7 @@
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :show-time="{
                         hideDisabledOptions: true,
                         defaultValue: [],
@@ -82,6 +83,7 @@
                       ]"
                         @change="onChange"
                       />
+          
                     </a-form-item>
                     <a-form-item label="文件类型">
                       <a-select

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-01-25 16:07:52
+ * @LastEditTime: 2021-02-01 10:41:31
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\store\modules\tabs.ts
@@ -70,9 +70,7 @@ const mutations = {
     localStorage.setItem("Tabslist", JSON.stringify(state.tagList))  //保存
   },
   [INITTABS](state: any): void {
-    state.tagList = (JSON.parse(localStorage.getItem('Tabslist')))
-    // localStorage.setItem("Tabslist", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist"))));
-    // localStorage.setItem("activeKey", JSON.stringify(JSON.parse(localStorage.getItem("Tabslist")).key));
+    state.tagList = JSON.parse(localStorage.getItem("Tabslist"));
   },
   [CLEARTABLIST](state: any,val): void{
     state.tagList = val

@@ -40,16 +40,17 @@
                         :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                         :tree-data="departmentData"
                         :replace-fields="{
-                        id: 'code',
-                        pId: 'parentCode',
-                        value: 'value',
-                        title: 'name',
+                          id: 'code',
+                          pId: 'parentCode',
+                          value: 'value',
+                          title: 'name',
                       }"
                         placeholder="请选择所属部门"
                       />
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,
@@ -207,8 +208,10 @@ export default class VideoStatistics extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-    this.deptCode = localStorage.getItem("deptCode")
-    // console.log(this.deptCode)
+    if( localStorage.getItem("deptCode") == 'null'){
+      this.deptCode  = null
+    }
+    
   }
   private mounted() {
     this.getdata()

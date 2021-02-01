@@ -159,7 +159,7 @@
               title="4G账号"
               show-overflow
               align="center"
-              minWidth="100"
+              minWidth="160"
             >
               <template v-slot="{ row }">
                 <div v-if="row.commDeviceCode" style="display:flex;" v-isshow="'base:user:4glist'">

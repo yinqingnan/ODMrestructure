@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-29 16:54:51
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-02-01 11:03:24
+ * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
  */
@@ -113,14 +113,14 @@ Vue.use(VXETable)
  
 Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
-Vue.prototype.$confirm = confirm;  // 挂载服务
-Vue.prototype.$message = message;  // 挂载服务
+Vue.prototype.$confirm = confirm;  // 挂载确认弹窗服务
+Vue.prototype.$message = message;  // 挂载全局提示服务
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
+
 //路由拦截
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  // console.log(localStorage.getItem("lockpsd"));
   if (!localStorage.getItem("token")) {
     if (to.path !== "/login") {
       NProgress.done();

@@ -60,6 +60,7 @@
                     </a-form-item>
                     <a-form-item label="违法时间">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :show-time="{
                         hideDisabledOptions: true,
                         defaultValue: [],
@@ -369,6 +370,7 @@
                     </a-form-item>
                     <a-form-item label="拍摄时间">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,

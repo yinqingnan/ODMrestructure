@@ -53,6 +53,7 @@
 
                     <a-form-item label="摄录时间">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,

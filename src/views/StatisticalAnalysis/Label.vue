@@ -57,6 +57,7 @@
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,

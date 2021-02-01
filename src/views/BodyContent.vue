@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-01-05 17:10:10
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-02-01 10:56:33
+ * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\BodyContent.vue
 -->
@@ -61,8 +61,6 @@ export default class BodyContent extends Vue {
       }
       localStorage.setItem('Tabslist',JSON.stringify(obj))
       this.addtbs(obj) //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
-     
-     
     }
   }
 }

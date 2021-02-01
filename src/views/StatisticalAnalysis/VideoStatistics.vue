@@ -72,6 +72,7 @@
                     </a-form-item>
                     <a-form-item label="拍摄时间">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,
@@ -259,7 +260,6 @@ export default class VideoStatistics extends Vue {
     },
   ]
   private policeName =''
-  private deptCode =''
   private level =''
   private dateRange = ''
   // todo 生命周期
@@ -271,7 +271,11 @@ export default class VideoStatistics extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-    this.deptCode = localStorage.getItem("deptCode")
+    
+    // this.deptCode = localStorage.getItem("deptCode")
+    if( localStorage.getItem("deptCode") === null){
+      this.deptCode  = null
+    }
   }
   private mounted() {
     this.getdata()

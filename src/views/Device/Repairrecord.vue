@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 报修记录 -->
+    <!-- 执法仪报修 -->
     <div id="EvalRecord" class="layoutcontainer">
       <div class="containers">
         <div
@@ -56,6 +56,7 @@
                     </a-form-item>
                     <a-form-item label="报修时间">
                       <a-range-picker
+                        format="YYYY-MM-DD"
                         :allowClear="false"
                         :show-time="{
                         hideDisabledOptions: true,
@@ -290,15 +291,15 @@ export default class Repairrecord extends Vue {
     }).then((res) => {
       if (res.code == 0) {
         this.$message.success(`设备${row.matcheCode}启动成功`)
-          let obj = {
-            page: this.page.currentPage,
-            limit: this.page.pageSize,
-            deptCode: "",
-            reportUserName: "",
-            reportTimes: "",
-            matcheCode: "",
-          }
-          this.gettabledata(obj)
+        let obj = {
+          page: this.page.currentPage,
+          limit: this.page.pageSize,
+          deptCode: "",
+          reportUserName: "",
+          reportTimes: "",
+          matcheCode: "",
+        }
+        this.gettabledata(obj)
       } else {
         this.$message.error(res.msg)
       }

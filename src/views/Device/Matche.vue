@@ -251,7 +251,6 @@
               <a-form-item label="所属部门">
                 <a-tree-select
                   show-search
-                  @change="departmentchange"
                   treeNodeFilterProp="title"
                   v-decorator="[
                         'department',
@@ -283,7 +282,7 @@
                   v-decorator="[
                         'username',
                         {
-                          initialValue: 'no',
+                          initialValue: '不绑定民警',
                            rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
@@ -623,7 +622,7 @@ export default class Matche extends Vue {
     //获取警员姓名信息
     this.DeviceM.getPolicepersonneldata(obj).then((res) => {
       let obj = {
-        code: "no",
+        code: '不绑定民警',
         nameCode: "不绑定民警",
       }
       this.namelist = res.data
@@ -763,10 +762,9 @@ export default class Matche extends Vue {
     })
   }
   private departmentchange(value) {
-    console.log(value)
     this.namelist = []
     this.form2.setFieldsValue({
-      username: "",
+      username: "不绑定民警",
     })
     this.getPolicepersonneldata({ deptCode_equal: value, source_notequal: 3 })
   }
@@ -1056,17 +1054,25 @@ export default class Matche extends Vue {
 #EvalRecord .ant-modal-body {
   height: 400px;
 }
-.addmodal /deep/ .ant-col-12 {
-  height: 60px;
+.addmodal {
+  .ant-col-12 {
+    height: 60px;
+  }
 }
-.addmodal /deep/ .ant-calendar-picker-input {
+.addmodal {
+.ant-calendar-picker-input {
   width: 200px;
 }
-.gzms /deep/ .ant-form-item-label {
+} 
+.gzms {
+.ant-form-item-label {
   width: 100px;
 }
-.gzms /deep/ .ant-form-item-control-wrapper {
+} 
+.gzms{
+ .ant-form-item-control-wrapper {
   width: 524px;
+}
 }
 .textareatext{
   display: flex;
