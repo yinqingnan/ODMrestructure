@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2020-12-21 16:23:35
- * @LastEditTime: 2021-01-22 14:55:56
+ * @LastEditTime: 2021-02-04 16:05:11
  * @FilePath: \src\utils\isOperate.ts
  */
 // 用户长时间未操作 退出登录
@@ -13,8 +13,6 @@ let timer = null
 let lastTime = new Date().getTime() // 最后一次点击时间
 let currentTime = new Date().getTime() // 当前时间
 let timeOut = 900000  // 允许最长未操作时间
-// let timeOut = 6000  // 允许最长未操作时间
-
 let i = 1 // 辅助作用
 clearInterval(timer)
 function handleInterval() { // 定时器

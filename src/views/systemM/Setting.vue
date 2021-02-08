@@ -232,7 +232,6 @@
 </template>
 
 <script lang="ts">
-// import { PropType } from "vue";
 import { Component, Vue } from "vue-property-decorator";
 @Component({
   components: {}

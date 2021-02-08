@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-12-30 17:47:53
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-02-08 13:54:21
+ * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\Index\Home.vue
 -->
@@ -72,8 +72,6 @@
       </div>
       <div class="home_Chart">
         <div class="home_Chart_header">
-          <!-- <h2 >本周</h2>
-          <h2>本月</h2>-->
           <h2
             v-for="(item,index) in Timebtn"
             :key="index"
@@ -106,19 +104,22 @@
          
         </div>
       </div>
-    </el-scrollbar>
+    </el-scrollbar> 
+     <Testviews/>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator"
-import { page, layouts } from "../../InterfaceVariable/variable"
+import { Component,  Vue } from "vue-property-decorator"
+import {  layouts } from "../../InterfaceVariable/variable"
 import Uploadmap from "../../components/Echarts/Uploadmap.vue"
 import Correlationrate from "@/components/Echarts/Correlationrate.vue"
+import Testviews from '../Testviews/Testviews.vue'
 @Component({
   components: {
     Uploadmap,
     Correlationrate,
+    Testviews
   },
 })
 export default class Home extends Vue {
@@ -288,11 +289,14 @@ export default class Home extends Vue {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private pagerchange({ currentPage, pageSize }) {
-    return
+    if(this.tbnum ==0){
+      return 
+    }else{
+      return
+    }
+    
   }
-  private pagerchange1({ currentPage, pageSize }) {
-    return
-  }
+
   private num = 0
   private btn(index) {
     this.num = index

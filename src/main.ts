@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-02-01 11:03:24
+ * @LastEditTime: 2021-02-05 17:47:03
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -20,6 +20,9 @@ Vue.use(Antd)
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
+import formCreate from "@form-create/ant-design-vue";
+
+Vue.use(formCreate)
 // todo 引入自定义指令
 Vue.directive('isshow',{
   inserted: function(el, binding, vnode) {
@@ -73,7 +76,7 @@ Vue.directive("right", {
   },
 })
 
- import '../public/localiconfont/iconfont.css'// 引入图标
+import '../public/localiconfont/iconfont.css'// 引入图标
 // todo 引入视频播放插件
 import VideoPlayer from 'vue-video-player'
 require('video.js/dist/video-js.css')
@@ -115,7 +118,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService();  // 挂载服务
 Vue.prototype.$confirm = confirm;  // 挂载确认弹窗服务
 Vue.prototype.$message = message;  // 挂载全局提示服务
-import { resetRouter } from "@/router/index" //重置路由信息
+import { resetRouter } from "@/router" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
 
 //路由拦截

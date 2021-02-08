@@ -7,112 +7,113 @@
             <a-dropdown :trigger="['click']" class="dropdown">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
-                <a-icon type="down" />
+                <a-icon type="down"/>
               </a>
               <a-menu slot="overlay" class="box">
                 <a-form
-                  autocomplete="off"
-                  :form="form"
-                  :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 14 }"
-                  @submit="handleSubmit"
+                    autocomplete="off"
+                    :form="form"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 14 }"
+                    @submit="handleSubmit"
                 >
                   <el-scrollbar class="screen">
                     <a-form-item label="部门">
                       <a-tree-select
-                        show-search
-                        treeNodeFilterProp="title"
-                        v-decorator="[
+                          show-search
+                          treeNodeFilterProp="title"
+                          v-decorator="[
                         'department',
                         {
-                          initialValue: undefined,
+                          initialValue: '100006',
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        :dropdown-match-select-width="true"
-                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                        :tree-data="departmentData"
-                        :replace-fields="{
-                        id: 'code',
-                        pId: 'parentCode',
-                        value: 'value',
-                        title: 'name'
+                          :allow-clear="true"
+                          style="width: 100%"
+                          :dropdown-match-select-width="true"
+                          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                          :tree-data="departmentData"
+                          :replace-fields="{
+                          id: 'code',
+                          pId: 'parentCode',
+                          value: 'value',
+                          title: 'name'
                       }"
-                        placeholder="请选择..."
+                          placeholder="请选择..."
                       />
                     </a-form-item>
                     <a-form-item label="姓名/警号">
                       <a-input
-                        v-decorator="['user', { initialValue: '', rules: [] }]"
-                        :max-length="LimitInputlength"
-                        placeholder="请输入姓名/警号"
-                      >/></a-input>
+                          v-decorator="['user', { initialValue: '', rules: [] }]"
+                          :max-length="LimitInputlength"
+                          placeholder="请输入姓名/警号"
+                      >/>
+                      </a-input>
                     </a-form-item>
                     <a-form-item label="时间类型">
                       <a-select
-                        v-decorator="[
+                          v-decorator="[
                         'TimeData',
                         {
                           initialValue: 'uploadDate',
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
                       >
                         <a-select-option v-for="d in Timetype" :key="d.value">{{ d.title }}</a-select-option>
                       </a-select>
                     </a-form-item>
                     <a-form-item label="时间范围">
                       <a-range-picker
-                        format="YYYY-MM-DD"
-                        :show-time="{
+                          format="YYYY-MM-DD"
+                          :show-time="{
                         hideDisabledOptions: true,
                         defaultValue: [],
                       }"
-                        :allowClear="false"
-                        v-decorator="[
+                          :allowClear="false"
+                          v-decorator="[
                         'date',
                         {
                           initialValue: defaultdate,
                           rules: []
                         }
                       ]"
-                        @change="onChange"
+                          @change="onChange"
                       />
-          
+
                     </a-form-item>
                     <a-form-item label="文件类型">
                       <a-select
-                        v-decorator="[
+                          v-decorator="[
                         'Filetype',
                         {
                           initialValue: undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
                       >
                         <a-select-option v-for="d in filetype" :key="d.value">{{ d.title }}</a-select-option>
                       </a-select>
                     </a-form-item>
                     <a-form-item label="重要级别">
                       <a-select
-                        v-decorator="[
+                          v-decorator="[
                         'levelData',
                         {
                           initialValue: undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
                       >
                         <a-select-option v-for="d in levelData" :key="d.value">{{ d.title }}</a-select-option>
                       </a-select>
@@ -128,133 +129,135 @@
           </template>
           <div style="line-height:1">
             <a-button
-              type="primary"
-              @click="dlt"
-              style="line-height:1"
-              v-isshow="'lawarchives:avDate:deletes'"
-            >批量删除</a-button>
+                type="primary"
+                @click="dlt"
+                style="line-height:1"
+                v-isshow="'lawarchives:avDate:deletes'"
+            >批量删除
+            </a-button>
             <a-button
-              v-isshow="'lawarchives:avDate:downloads'"
-              type="primary"
-              @click="download"
-              style="line-height:1"
-            >批量下载</a-button>
+                v-isshow="'lawarchives:avDate:downloads'"
+                type="primary"
+                @click="download"
+                style="line-height:1"
+            >批量下载
+            </a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
-            border
-            resizable
-            show-header-overflow
-            :row-class-name="tableRowClassName"
-            height="auto"
-            :data="tabledata"
-            class="mytable-scrollbar"
-            highlight-hover-row
-            ref="xTable1"
-            @cell-click='onRowClick'
-            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
-            @checkbox-all="selectAllEvent"
-            @checkbox-change="selectChangeEvent"
+              border
+              resizable
+              show-header-overflow
+              :row-class-name="tableRowClassName"
+              height="auto"
+              :data="tabledata"
+              class="mytable-scrollbar"
+              highlight-hover-row
+              ref="xTable1"
+              @cell-click='onRowClick'
+              :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
+              @checkbox-all="selectAllEvent"
+              @checkbox-change="selectChangeEvent"
           >
             >
-            <vxe-table-column type="checkbox" width="60" align="center" />
+            <vxe-table-column type="checkbox" width="60" align="center"/>
             <vxe-table-column
-              header-align="center"
-              field="fileName"
-              title="文件名称"
-              align="left"
-              show-overflow
-              width="30%"
-            >
-              <template v-slot="{ row }" >
-                <span
-                  class="iconfont iconblock"
-                  :class="{'iconpicture': row.fileType === 'photo', 'iconshiping-copy': row.fileType=='video', 'iconmusic': row.fileType=='audio'}"
-                ></span>
-                <span
-                  style="cursor: pointer;text-align:center"
-                  class="textblock"
-                  :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
-                >{{fileLevel(row.fileLevel)}}</span>
-                <span
-                  style="cursor: pointer;color:#0db8df"
-                  v-right="'lawarchives:avDate:look'"
-                  ref="avdataright"
-                  class="filenames"
-                >{{row.fileName}}</span>
-              </template>
-            </vxe-table-column>
-            <vxe-table-column field="deptName" title="部门" align="center" width="10%" />
-            <vxe-table-column
-              field="userName"
-              title="姓名/警号"
-              align="center"
-              show-overflow
-              width="10%"
+                header-align="center"
+                field="fileName"
+                title="文件名称"
+                align="left"
+                show-overflow
+                width="30%"
             >
               <template v-slot="{ row }">
-                <span>{{row.userName}}({{row.userCode}})</span>
+                <span
+                    class="iconfont iconblock"
+                    :class="{'iconpicture': row.fileType === 'photo', 'iconshiping-copy': row.fileType=='video', 'iconmusic-copy': row.fileType=='audio'}"
+                ></span>
+                <span
+                    style="cursor: pointer;text-align:center"
+                    class="textblock"
+                    :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
+                >{{ fileLevel(row.fileLevel) }}</span>
+                <span
+                    style="cursor: pointer;color:#0db8df"
+                    v-right="'lawarchives:avDate:look'"
+                    ref="avdataright"
+                    class="filenames"
+                >{{ row.fileName }}</span>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="deptName" title="部门" align="center" width="10%"/>
+            <vxe-table-column
+                field="userName"
+                title="姓名/警号"
+                align="center"
+                show-overflow
+                width="10%"
+            >
+              <template v-slot="{ row }">
+                <span>{{ row.userName }}({{ row.userCode }})</span>
               </template>
             </vxe-table-column>
             <vxe-table-column
-              field="recordDate"
-              title="摄录时间"
-              show-overflow
-              align="center"
-              width="10%"
+                field="recordDate"
+                title="摄录时间"
+                show-overflow
+                align="center"
+                width="10%"
             />
             <vxe-table-column
-              field="fileDuration_Name"
-              title="摄录时长"
-              show-overflow
-              align="center"
-              width="10%"
+                field="fileDuration_Name"
+                title="摄录时长"
+                show-overflow
+                align="center"
+                width="10%"
             />
             <vxe-table-column
-              field="uploadDate"
-              title="导入时间"
-              show-overflow
-              align="center"
-              width="10%"
+                field="uploadDate"
+                title="导入时间"
+                show-overflow
+                align="center"
+                width="10%"
             />
           </vxe-table>
           <p>
             <vxe-pager
-              align="right"
-              size="mini"
-              :layouts="layouts"
-              :current-page.sync="page.currentPage"
-              :page-size.sync="page.pageSize"
-              :total="page.totalResult"
-              :page-sizes="[15, 50, 100, 200]"
-              @page-change="pagerchange"
+                align="right"
+                size="mini"
+                :layouts="layouts"
+                :current-page.sync="page.currentPage"
+                :page-size.sync="page.pageSize"
+                :total="page.totalResult"
+                :page-sizes="[15, 50, 100, 200]"
+                @page-change="pagerchange"
             />
           </p>
         </div>
       </div>
       <a-modal
-        @cancel="tccancel"
-        v-model="visible"
-        title="视频查看"
-        @ok="handleOk"
-        :width="1000"
-        :keyboard='false'
-        :destroyOnClose="true"
+          @cancel="tccancel"
+          v-model="visible"
+          title="视频查看"
+          @ok="handleOk"
+          :width="1000"
+          :keyboard='false'
+          :destroyOnClose="true"
       >
         <div class="filesee">
           <div class="filesee_left">
             <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
-              <img :src="filedetails.httpPath" />
+              <img :src="filedetails.httpPath"/>
             </div>
             <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
               <video-player
-                style="height:423px"
-                class="video-player vjs-custom-skin"
-                ref="videoPlayer"
-                :playsinline="true"
-                :options="playerOptions"
-                @ended="onPlayerEnded($event)"
+                  style="height:423px"
+                  class="video-player vjs-custom-skin"
+                  ref="videoPlayer"
+                  :playsinline="true"
+                  :options="playerOptions"
+                  @ended="onPlayerEnded($event)"
               />
             </div>
             <div v-if="filedetails.fileType_Name == '音频'" class="audiofig">
@@ -263,34 +266,35 @@
           </div>
           <div class="filesee_right">
             <a-tabs
-              default-active-key="1"
-              :tabBarGutter="10"
-              v-model="activeKey"
-              @change="tabchange"
+                default-active-key="1"
+                :tabBarGutter="10"
+                v-model="activeKey"
+                @change="tabchange"
             >
               <a-tab-pane key="1" tab="文件">
                 <div class="fileclass">
-                  <p style="font-size:12px;font-weight:bold">{{filedetails.fileName}}</p>
-                  <p style="font-size:12px;font-weight:bold">{{filedetails.deptName}}({{filedetails.deptCode}}) - {{filedetails.userName}}({{filedetails.userCode}})</p>
+                  <p style="font-size:12px;font-weight:bold">{{ filedetails.fileName }}</p>
+                  <p style="font-size:12px;font-weight:bold">{{ filedetails.deptName }}({{ filedetails.deptCode }}) -
+                    {{ filedetails.userName }}({{ filedetails.userCode }})</p>
                   <ul>
-                    <li>摄录时间：{{filedetails.recordDate}}</li>
-                    <li>导入时间：{{filedetails.uploadDate}}</li>
-                    <li>文件大小：{{filedetails.fileSize_Name}}</li>
+                    <li>摄录时间：{{ filedetails.recordDate }}</li>
+                    <li>导入时间：{{ filedetails.uploadDate }}</li>
+                    <li>文件大小：{{ filedetails.fileSize_Name }}</li>
                   </ul>
-                  <h2>文件存储位置：{{filedetails.storageLocation_Name}}</h2>
-                  <h2>剩余存储天数：{{filedetails.storageDays}}</h2>
+                  <h2>文件存储位置：{{ filedetails.storageLocation_Name }}</h2>
+                  <h2>剩余存储天数：{{ filedetails.storageDays }}</h2>
                 </div>
               </a-tab-pane>
               <a-tab-pane key="2" tab="标记" force-render>
                 <a-form
-                  :form="form"
-                  :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
-                  @submit="biaojiSubmit"
+                    :form="form"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 18 }"
+                    @submit="biaojiSubmit"
                 >
                   <a-form-item label="重要级别">
                     <a-select
-                      v-decorator="[
+                        v-decorator="[
                         'lv',
                         {
                           initialValue: filedetails.fileLevel +'',
@@ -306,7 +310,7 @@
                   </a-form-item>
                   <a-form-item label="存储类别">
                     <a-select
-                      v-decorator="[
+                        v-decorator="[
                         'category',
                         {
                           initialValue: filedetails.categoryId+'',
@@ -319,43 +323,44 @@
                   </a-form-item>
                   <a-form-item label="标记描述">
                     <a-textarea
-                      :maxLength="textarealength"
-                      style="display: flex;height:77px !important;overflow-y:auto;resize: none;"
-                      allowClear
-                      placeholder="请输入标记描述（200字符以内）"
-                      v-decorator="[
+                        :maxLength="textarealength"
+                        style="display: flex;height:77px !important;overflow-y:auto;resize: none;"
+                        allowClear
+                        placeholder="请输入标记描述（200字符以内）"
+                        v-decorator="[
                       'remark',
                       {
                         initialValue: filedetails.marker,
                         rules: [],
                       },
                     ]"
-                      :autoSize="{ minRows: 3, maxRows: 3 }"
+                        :autoSize="{ minRows: 3, maxRows: 3 }"
                     />
                   </a-form-item>
                   <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
                     <a-button
-                      v-isshow="'lawarchives:avDate:oneBtn'"
-                      type="primary"
-                      html-type="submit"
-                    >保存</a-button>
+                        v-isshow="'lawarchives:avDate:oneBtn'"
+                        type="primary"
+                        html-type="submit"
+                    >保存
+                    </a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
               <a-tab-pane key="3" tab="标注">
                 <!-- <div v-if="!Emptystate"> -->
                 <a-form
-                  :form="form2"
-                  :label-col="{ span: 6 }"
-                  :wrapper-col="{ span: 18 }"
-                  @submit="biaozhuSubmit"
+                    :form="form2"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 18 }"
+                    @submit="biaozhuSubmit"
                 >
                   <el-scrollbar style="height:300px;padding-right:10px">
                     <a-form-item label="标注类型">
                       <a-select
-                        @change="labelTypeChange"
-                        placeholder="请选择标注类型"
-                        v-decorator="[
+                          @change="labelTypeChange"
+                          placeholder="请选择标注类型"
+                          v-decorator="[
                           'labelType',
                           {
                             initialValue: undefined,
@@ -368,8 +373,8 @@
                     </a-form-item>
                     <a-form-item label="标注子类">
                       <a-select
-                        placeholder="请选择标注子类"
-                        v-decorator="[
+                          placeholder="请选择标注子类"
+                          v-decorator="[
                           'labelSubclass',
                           {
                             initialValue: undefined,
@@ -382,9 +387,9 @@
                     </a-form-item>
                     <a-form-item label="车牌号码">
                       <a-input
-                        :max-length="LimitInputlength"
-                        placeholder="没有车牌号，请填写无"
-                        v-decorator="[
+                          :max-length="LimitInputlength"
+                          placeholder="没有车牌号，请填写无"
+                          v-decorator="[
                           'plateNumber',
                           {
                             initialValue: '',
@@ -395,8 +400,8 @@
                     </a-form-item>
                     <a-form-item label="采集时间" class="biaozhus">
                       <a-date-picker
-                        placeholder="请选择采集时间"
-                        v-decorator="[
+                          placeholder="请选择采集时间"
+                          v-decorator="[
                           'gatheringTime',
                           {
                             initialValue:'',
@@ -407,9 +412,9 @@
                     </a-form-item>
                     <a-form-item label="采集地址">
                       <a-input
-                        :max-length="LimitInputlength"
-                        placeholder="请输入采集地址（30字符以内）"
-                        v-decorator="[
+                          :max-length="LimitInputlength"
+                          placeholder="请输入采集地址（30字符以内）"
+                          v-decorator="[
                           'gatheringPlace',
                           {
                             initialValue: '',
@@ -420,28 +425,29 @@
                     </a-form-item>
                     <a-form-item label="标注描述">
                       <a-textarea
-                        placeholder="请输入标注描述（200字符以内）"
-                        style="display: flex;overflow-y:auto;resize: none;"
-                        allowClear
-                        :maxLength="textarealength"
-                        v-decorator="[
+                          placeholder="请输入标注描述（200字符以内）"
+                          style="display: flex;overflow-y:auto;resize: none;"
+                          allowClear
+                          :maxLength="textarealength"
+                          v-decorator="[
                         'remark',
                         {
                           initialValue:'',
                           rules: [{ required: true, message: '必填项不能为空' }],
                         },
                       ]"
-                        :autoSize="{ minRows: 3, maxRows: 3 }"
+                          :autoSize="{ minRows: 3, maxRows: 3 }"
                       />
                     </a-form-item>
                   </el-scrollbar>
                 </a-form>
                 <a-button
-                  v-isshow="'lawarchives:avDate:threeBtn'"
-                  type="primary"
-                  @click="biaozhuSubmit"
-                  style="margin-top: 14px;margin-left: 44%;"
-                >保存</a-button>
+                    v-isshow="'lawarchives:avDate:threeBtn'"
+                    type="primary"
+                    @click="biaozhuSubmit"
+                    style="margin-top: 14px;margin-left: 44%;"
+                >保存
+                </a-button>
                 <!-- </div> -->
                 <!-- <a-empty v-else style="margin-top:94px">
                   <span slot="description">没有标注信息</span>
@@ -449,17 +455,17 @@
               </a-tab-pane>
               <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
                 <a-form
-                  :form="form3"
-                  :label-col="{ span:5 }"
-                  :wrapper-col="{ span: 19 }"
-                  @submit="pingjiaSubmit"
-                  class="pf"
+                    :form="form3"
+                    :label-col="{ span:5 }"
+                    :wrapper-col="{ span: 19 }"
+                    @submit="pingjiaSubmit"
+                    class="pf"
                 >
                   <el-scrollbar style="height:310px;padding-right: 10px">
                     <a-form-item label="评价总分">
                       <a-input
-                        :disabled="true"
-                        v-decorator="[
+                          :disabled="true"
+                          v-decorator="[
                         'Total',
                         {
                           initialValue: Total,
@@ -470,29 +476,29 @@
                     </a-form-item>
                     <a-form-item label="评分项">
                       <a-checkbox-group
-                        class="pfx"
-                        :disabled="disabled"
-                        v-decorator="['Scoring', { initialValue: []}]"
-                        style="width: 100%;"
+                          class="pfx"
+                          :disabled="disabled"
+                          v-decorator="['Scoring', { initialValue: []}]"
+                          style="width: 100%;"
                       >
                         <el-scrollbar style="height:130px;" v-if="!disabled">
                           <a-row>
                             <a-col
-                              :span="24"
-                              v-for="(d) in options"
-                              :key="d.id"
-                              style="line-height: 30px;height: 30px;"
+                                :span="24"
+                                v-for="(d) in options"
+                                :key="d.id"
+                                style="line-height: 30px;height: 30px;"
                             >
-                               <a-checkbox
-                                style="letter-spacing: -0.5px;"
-                                @change="checkboxChange($event, d.jffz)"
-                                :value="d.jfbh"
+                              <a-checkbox
+                                  style="letter-spacing: -0.5px;"
+                                  @change="checkboxChange($event, d.jffz)"
+                                  :value="d.jfbh"
                               >
                                 <a-tooltip>
                                   <template slot="title">
-                                    {{d.jfmc}}(-{{d.jffz}}分)
+                                    {{ d.jfmc }}(-{{ d.jffz }}分)
                                   </template>
-                                  {{d.jfmc}}(-{{d.jffz}}分)
+                                  {{ d.jfmc }}(-{{ d.jffz }}分)
                                 </a-tooltip>
                               </a-checkbox>
                             </a-col>
@@ -501,21 +507,21 @@
                         <el-scrollbar style="height:130px;" v-else>
                           <a-row>
                             <a-col
-                              :span="24"
-                              v-for="(d) in options"
-                              :key="d.id"
-                              style="line-height: 30px;height: 30px;"
+                                :span="24"
+                                v-for="(d) in options"
+                                :key="d.id"
+                                style="line-height: 30px;height: 30px;"
                             >
                               <a-checkbox
-                                style="letter-spacing: -0.5px;"
-                                @change="checkboxChange($event, d.jffz)"
-                                :value="d.jfbh"
+                                  style="letter-spacing: -0.5px;"
+                                  @change="checkboxChange($event, d.jffz)"
+                                  :value="d.jfbh"
                               >
                                 <a-tooltip>
                                   <template slot="title">
-                                    {{d.jfmc}}(-{{d.jffz}}分)
+                                    {{ d.jfmc }}(-{{ d.jffz }}分)
                                   </template>
-                                  {{d.jfmc}}(-{{d.jffz}}分)
+                                  {{ d.jfmc }}(-{{ d.jffz }}分)
                                 </a-tooltip>
                               </a-checkbox>
                             </a-col>
@@ -525,8 +531,8 @@
                     </a-form-item>
                     <a-form-item label="实际评分">
                       <a-input
-                        :disabled="true"
-                        v-decorator="[
+                          :disabled="true"
+                          v-decorator="[
                         'Actualscore',
                         {
                           initialValue:Actualscore,
@@ -537,32 +543,33 @@
                     </a-form-item>
                     <a-form-item label="评分说明">
                       <a-textarea
-                        :disabled="disabled"
-                        style="display: flex;overflow-y:auto;resize: none;"
-                        allowClear
-                        :maxLength="textarealength"
-                        v-decorator="[
+                          :disabled="disabled"
+                          style="display: flex;overflow-y:auto;resize: none;"
+                          allowClear
+                          :maxLength="textarealength"
+                          v-decorator="[
                       'remark',
                       {
                         initialValue: filedetails.marker,
                         rules: [{ required: true, message: '必填项不能为空' }],
                       },
                     ]"
-                        placeholder="请输入评分说明（200字符以内）"
-                        :autoSize="{ minRows: 3, maxRows: 3 }"
+                          placeholder="请输入评分说明（200字符以内）"
+                          :autoSize="{ minRows: 3, maxRows: 3 }"
                       />
                     </a-form-item>
                   </el-scrollbar>
                   <a-form-item
-                    :wrapper-col="{ span: 12, offset: 5 }"
-                    v-if="!disabled"
-                    style="text-align:center"
+                      :wrapper-col="{ span: 12, offset: 5 }"
+                      v-if="!disabled"
+                      style="text-align:center"
                   >
                     <a-button
-                      v-isshow="'lawarchives:avDate:foreBtn'"
-                      type="primary"
-                      html-type="submit"
-                    >保存</a-button>
+                        v-isshow="'lawarchives:avDate:foreBtn'"
+                        type="primary"
+                        html-type="submit"
+                    >保存
+                    </a-button>
                   </a-form-item>
                 </a-form>
               </a-tab-pane>
@@ -579,10 +586,10 @@
       <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear" :keyboard='false'>
         <el-scrollbar style="height: 200px;width: 476px;">
           <p
-            v-for="item in logmsg"
-            :key="item.id"
-            style="text-align: center;margin-top:8px;font-size:12px"
-          >{{item.text}}</p>
+              v-for="item in logmsg"
+              :key="item.id"
+              style="text-align: center;margin-top:8px;font-size:12px"
+          >{{ item.text }}</p>
         </el-scrollbar>
       </a-modal>
     </div>
@@ -596,7 +603,7 @@ import {
   textarealength,
 } from "@/InterfaceVariable/variable"
 
-import { Component, Vue } from "vue-property-decorator"
+import {Component, Vue} from "vue-property-decorator"
 
 
 import {
@@ -605,9 +612,11 @@ import {
   PlayerOptions,
 } from "../../InterfaceVariable/interface"
 import moment from "moment"
+
 @Component({})
 export default class AvData extends Vue {
   [x: string]: any
+
   public DataM = new this.$api.configInterface.DataM()
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
@@ -660,19 +669,19 @@ export default class AvData extends Vue {
   }
 
   private Timetype: Selecttype[] = [
-    { id: 1, value: "uploadDate", title: "导入时间" },
-    { id: 2, value: "recordDate", title: "摄录时间" },
+    {id: 1, value: "uploadDate", title: "导入时间"},
+    {id: 2, value: "recordDate", title: "摄录时间"},
   ]
   private filetype: Selecttype[] = [
-    { id: 1, value: "video", title: "视频" },
-    { id: 2, value: "audio", title: "音频" },
-    { id: 3, value: "photo", title: "图片" },
-    { id: 4, value: "log", title: "日志" },
+    {id: 1, value: "video", title: "视频"},
+    {id: 2, value: "audio", title: "音频"},
+    {id: 3, value: "photo", title: "图片"},
+    {id: 4, value: "log", title: "日志"},
   ]
   private levelData: Selecttype[] = [
-    { id: 1, value: "3", title: "高" },
-    { id: 2, value: "2", title: "中" },
-    { id: 3, value: "1", title: "低" },
+    {id: 1, value: "3", title: "高"},
+    {id: 2, value: "2", title: "中"},
+    {id: 3, value: "1", title: "低"},
   ]
   private defaultdate = [
     moment("2012-06-06", "YYYY-MM-DD"),
@@ -735,6 +744,7 @@ export default class AvData extends Vue {
   private fileCode = ""
   private disabled = false
   private Tablesubscript = []
+
   private created() {
     this.form = this.$form.createForm(this)
     this.form1 = this.$form.createForm(this)
@@ -748,9 +758,11 @@ export default class AvData extends Vue {
     })
     this.getdata()
   }
+
   private handleOk() {
     return
   }
+
   private handleSubmit(e?: any): void {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
@@ -795,9 +807,11 @@ export default class AvData extends Vue {
       }
     })
   }
+
   private onChange(date: any, dateString: any): void {
     this.selectdata = dateString
   }
+
   private getdata() {
     this.DataM.getMenulist({}, true).then((res: any) => {
       this.departmentData = res.data
@@ -806,7 +820,7 @@ export default class AvData extends Vue {
     this.DataM.getfileselect().then((res) => {
       this.tcselect = res.data
     })
-    this.DataM.gettimeframe({ type: "LATELY_MONTH" }, true).then((res: any) => {
+    this.DataM.gettimeframe({type: "LATELY_MONTH"}, true).then((res: any) => {
       this.myDate = res.data.myDate
       // todo 请求默认时间
       this.defaultdate = [
@@ -834,6 +848,7 @@ export default class AvData extends Vue {
       this.gettabledata(this.formDatelist)
     })
   }
+
   private gettabledata(obj): void {
     this.DataM.gettabledata(obj, true).then((res: any) => {
       console.log(res.data)
@@ -851,21 +866,25 @@ export default class AvData extends Vue {
     this.form.resetFields()
     // this.defaultdate = []
   }
+
   private popup(e: { preventDefault: () => void }) {
     e.preventDefault()
   }
+
   private logclear() {
     this.logshow = false
     this.logmsg = []
   }
-  private onRowClick({row, rowIndex,column }){
+
+  private onRowClick({row, rowIndex, column}) {
     console.log(column.title);
-    if(column.title === '文件名称'){
-      this.tablebtn(row,rowIndex)
+    if (column.title === '文件名称') {
+      this.tablebtn(row, rowIndex)
     }    // console.log(row , rowIndex);
   }
-  private tablebtn(row,rowIndex) {
-    if((document.getElementsByClassName('filenames')[rowIndex]as HTMLElement).style.cursor !== 'not-allowed'){
+
+  private tablebtn(row, rowIndex) {
+    if ((document.getElementsByClassName('filenames')[rowIndex] as HTMLElement).style.cursor !== 'not-allowed') {
       if (row.fileType_Name === "日志") {
         this.DataM.getlogmsg(row.id).then((res) => {
           let splits = res.data.split(/\r\n/g)
@@ -893,8 +912,9 @@ export default class AvData extends Vue {
         })
       }
     }
-   
+
   }
+
   private tabchange(activeKey) {
     console.log(activeKey)
     if (activeKey == 3) {
@@ -987,11 +1007,13 @@ export default class AvData extends Vue {
       })
     }
   }
+
   public rowClassName(record: any, index: number) {
     let className = "light-row"
     if (index % 2 === 1) className = "dark-row"
     return className
   }
+
   private biaojiSubmit(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
@@ -1009,6 +1031,7 @@ export default class AvData extends Vue {
       }
     })
   }
+
   private biaozhuSubmit(e) {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
@@ -1017,7 +1040,7 @@ export default class AvData extends Vue {
           fileCode: this.fileCode,
           gatheringPlace: val.gatheringPlace,
           gatheringTime: moment(val.gatheringTime).format(
-            "YYYY-MM-DD HH:mm:ss"
+              "YYYY-MM-DD HH:mm:ss"
           ),
           labelSubclass: val.labelSubclass,
           labelType: val.labelType,
@@ -1032,7 +1055,9 @@ export default class AvData extends Vue {
       }
     })
   }
+
   public sum = 0
+
   private checkboxChange(e, val) {
     console.log(e.target.checked)
     if (e.target.checked) {
@@ -1042,6 +1067,7 @@ export default class AvData extends Vue {
     }
     this.Actualscore = this.Total - this.sum
   }
+
   private pingjiaSubmit(e) {
     e.preventDefault()
     this.form3.validateFields((err: any, val: any) => {
@@ -1052,9 +1078,9 @@ export default class AvData extends Vue {
         let newarr = []
         arr.map((item) => {
           newarr.push(
-            this.options.filter((el) => {
-              return el.jfbh == item
-            })
+              this.options.filter((el) => {
+                return el.jfbh == item
+              })
           )
         })
         let items = []
@@ -1094,6 +1120,7 @@ export default class AvData extends Vue {
       }
     })
   }
+
   private labelTypeChange(value) {
     this.DataM.taggingselect2(value).then((res) => {
       console.log(res.data)
@@ -1103,6 +1130,7 @@ export default class AvData extends Vue {
       })
     })
   }
+
   public download() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
@@ -1123,6 +1151,7 @@ export default class AvData extends Vue {
       this.$message.error("请选择需要下载的文件")
     }
   }
+
   public dlt() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
@@ -1150,10 +1179,10 @@ export default class AvData extends Vue {
                   fileType_equal: _that.formdata.Filetype,
                   fileLevel_equal: _that.formdata.levelData,
                   uploadDate_gt: moment(_that.formdata.date[0]).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                      "YYYY-MM-DD HH:mm:ss"
                   ), //必填  时间起
                   uploadDate_lt: moment(_that.formdata.date[1]).format(
-                    "YYYY-MM-DD HH:mm:ss"
+                      "YYYY-MM-DD HH:mm:ss"
                   ), //必填  时间止
                   recordDate_gt: "",
                   recordDate_lt: "",
@@ -1172,7 +1201,8 @@ export default class AvData extends Vue {
       this.$message.error("请选择需要删除的文件")
     }
   }
-  public pagerchange({ currentPage, pageSize }) {
+
+  public pagerchange({currentPage, pageSize}) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
     console.log(this.defaultdate[0].format("YYYY-MM-DD HH:mm:ss"))
@@ -1212,14 +1242,17 @@ export default class AvData extends Vue {
       this.gettabledata(obj)
     }
   }
-  public selectAllEvent({ checked, records }) {
+
+  public selectAllEvent({checked, records}) {
     this.selectedRowKeys = records
     console.log(checked ? "所有勾选事件" : "所有取消事件", records)
   }
-  public selectChangeEvent({ checked, records }) {
+
+  public selectChangeEvent({checked, records}) {
     this.selectedRowKeys = records
     console.log(checked ? "勾选事件" : "取消事件", records)
   }
+
   private tableRowClassName(record: any, index: number) {
     record.rowIndex = index;
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
@@ -1241,10 +1274,12 @@ export default class AvData extends Vue {
       return "未关联"
     }
   }
+
   private filedownload() {
     // alert("当前下载" + this.filedetails.downloadPath)
     window.open(this.filedetails.downloadPath)
   }
+
   private tccancel() {
     this.activeKey = "1"
     this.form.resetFields()
@@ -1253,6 +1288,7 @@ export default class AvData extends Vue {
     this.PreviousDisabled = false
     this.NextDisabled = false
   }
+
   private previous() {
     // console.log(this.Tablesubscript)
     // console.log(this.fileId)
@@ -1274,6 +1310,7 @@ export default class AvData extends Vue {
       })
     }
   }
+
   private next() {
     this.PreviousDisabled = false
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
@@ -1293,6 +1330,7 @@ export default class AvData extends Vue {
       })
     }
   }
+
   private arrSelect(arr, val) {
     for (var i = 0; i < arr.length; i++) {
       if (arr[i] == val + "") return i
@@ -1313,10 +1351,12 @@ export default class AvData extends Vue {
       }
     })
   }
+
   // 视频播完回调
   private onPlayerEnded(e) {
     (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
   }
+
   private fileLevel(val) {
     let str = ""
     switch (val) {
@@ -1347,6 +1387,7 @@ export default class AvData extends Vue {
   justify-content: space-between;
   padding-top: 13px;
 }
+
 .contaninerheader {
   > div > button {
     background: #0db8df;
@@ -1357,16 +1398,19 @@ export default class AvData extends Vue {
     // width: 58px;
     height: 30px;
   }
+
   > div > button:nth-of-type(1) {
     margin-right: 9px;
   }
 }
+
 .box {
   width: 347px;
   height: 337px;
   background: #ffffff;
   border: 1px solid #f1f1f1;
 }
+
 .dropdown {
   width: 58px;
   height: 30px;
@@ -1376,12 +1420,15 @@ export default class AvData extends Vue {
   text-align: center;
   color: #a1a9b5;
 }
+
 .ant-row .ant-form-item {
   width: 100%;
 }
+
 .ant-form-item-label > label {
   color: #808994;
 }
+
 #AvData .ant-table-tbody > tr > td {
   padding: 0px;
   height: 36px;
@@ -1396,9 +1443,11 @@ export default class AvData extends Vue {
 .light-row {
   background-color: #f5f5f5;
 }
+
 .dark-row {
   background-color: #ffffff;
 }
+
 .ant-calendar-picker {
   width: 200px !important;
 }
@@ -1408,10 +1457,12 @@ export default class AvData extends Vue {
   width: 10px;
   height: 10px;
 }
+
 /*滚动条的轨道*/
 .mytable-scrollbar ::-webkit-scrollbar-track {
   background-color: #ffffff;
 }
+
 /*滚动条里面的小方块，能向上向下移动*/
 .mytable-scrollbar ::-webkit-scrollbar-thumb {
   background-color: #bfbfbf;
@@ -1419,16 +1470,20 @@ export default class AvData extends Vue {
   border: 1px solid #f1f1f1;
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
+
 .mytable-scrollbar ::-webkit-scrollbar-thumb:hover {
   background-color: #a8a8a8;
 }
+
 .mytable-scrollbar ::-webkit-scrollbar-thumb:active {
   background-color: #787878;
 }
+
 /*边角，即两个滚动条的交汇处*/
 .mytable-scrollbar ::-webkit-scrollbar-corner {
   background-color: #ffffff;
 }
+
 .screen {
   width: 347px;
   height: 260px;
@@ -1437,36 +1492,45 @@ export default class AvData extends Vue {
 .filesee {
   display: flex;
   height: 410px;
+
   .filesee_left {
     width: 560px;
     margin-right: 12px;
     overflow: hidden;
+
     div {
       // height: 100%;
       height: auto;
     }
+
     img {
       width: 100%;
       height: 100%;
     }
   }
+
   .filesee_right {
     width: 40%;
   }
 }
+
 .fileclass {
   padding-left: 22px;
+
   p {
     color: #7f8893;
   }
+
   ul {
     padding-left: 24px;
+
     li {
       line-height: 36px;
       font-size: 12px;
       color: #7f8893;
     }
   }
+
   h2 {
     font-size: 12px;
     line-height: 1;
@@ -1474,35 +1538,41 @@ export default class AvData extends Vue {
     color: #7f8893;
   }
 }
+
 .AvData {
   .vjs-custom-skin > .video-js {
     height: 423px;
   }
 }
+
 .biaozhus {
   .ant-calendar-picker {
     width: 276px !important;
   }
 }
-.ant-checkbox + span{
+
+.ant-checkbox + span {
   letter-spacing: -0.9px;
 }
-.pfx{
-  .ant-checkbox-wrapper{
-    display:flex;
-    line-height:1;
+
+.pfx {
+  .ant-checkbox-wrapper {
+    display: flex;
+    line-height: 1;
+
     span:nth-of-type(2) {
       overflow: hidden;
       white-space: nowrap;
-      width:80%;
+      width: 80%;
       text-overflow: ellipsis;
     }
   }
 
 }
-.pf{
-  .is-horizontal{
-    display:none;
+
+.pf {
+  .is-horizontal {
+    display: none;
   }
 }
 </style>

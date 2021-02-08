@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-02-01 10:56:33
+ * @LastEditTime: 2021-02-02 10:46:09
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\BodyContent.vue
@@ -40,9 +40,11 @@ export default class BodyContent extends Vue {
     height: 1,
   }
   private mounted() {
-    if (JSON.parse(localStorage.getItem("Tabslist")) != null) {
+    if (JSON.parse(localStorage.getItem("Tabslist")) !== null) {
+      // console.log('刷新');
       this.inittabs()
     } else {
+      // console.log('第一次进入');
       let obj = {
         key: "1",
         path: "/home",
@@ -59,7 +61,8 @@ export default class BodyContent extends Vue {
         },
         children: null,
       }
-      localStorage.setItem('Tabslist',JSON.stringify(obj))
+      localStorage.setItem("Tabslist", JSON.stringify([obj]));
+      localStorage.setItem("activeKey", JSON.stringify(obj.key));
       this.addtbs(obj) //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
     }
   }

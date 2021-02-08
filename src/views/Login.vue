@@ -66,13 +66,13 @@
 </template>
 
 <script lang="ts">
-import { message } from "ant-design-vue"
-import { Component, Prop, Vue } from "vue-property-decorator"
+// import { message } from "ant-design-vue"
+import { Component, Vue } from "vue-property-decorator"
 import { LimitInputlength } from "../InterfaceVariable/variable"
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "../router/concatrouter" //生成路由表方法
 import router from "@/router"
-import { list } from "@/InterfaceVariable/variable"
+// import { list } from "@/InterfaceVariable/variable"
 import { namespace } from "vuex-class"
 const Menu = namespace("Menu")
 const Tabs = namespace("Tabs")
@@ -119,7 +119,6 @@ export default class Login extends Vue {
   }
   private login(data: object) {
     localStorage.clear()
-
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.Login.login(data, false).then((res: any) => {
       if (res.code == 0) {

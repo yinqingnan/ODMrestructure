@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="46d628e3-bf6d-4b9b-8ca6-2bcc8d32ba25" name="默认的" comment="">
-      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Layout/Header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/Header.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/module/Dept.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/module/Dept.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/module/dataM.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/module/dataM.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/style/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/style/index.less" afterDir="false" />
+    <list default="true" id="46d628e3-bf6d-4b9b-8ca6-2bcc8d32ba25" name="默认的" comment="2021年2月8日13:55:47 yqn">
+      <change afterPath="$PROJECT_DIR$/src/views/Testviews/Testviews.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layout/LeftMenu.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/LeftMenu.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Layout/RightContent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/Layout/RightContent.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/http.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/http.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/module/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/module/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/tabs.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/tabs.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/isOperate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/isOperate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/BodyContent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/BodyContent.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/DataM/AvData.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/AvData.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/DataM/Coercivemeasures.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/Coercivemeasures.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/DataM/Recording.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/Recording.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/DataM/Simpleprogram.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DataM/Simpleprogram.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/DevOps/AccessAuth.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DevOps/AccessAuth.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/DevOps/OperationLog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DevOps/OperationLog.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/DevOps/Upgrade.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/DevOps/Upgrade.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Device/Matche.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Device/Matche.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Device/Stations.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Device/Stations.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Device/Storage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Device/Storage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Index/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Index/Home.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Login.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Organization/Dept.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/Dept.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Organization/Menu.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/Menu.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Organization/Role.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/Role.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Organization/User.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Organization/User.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Assets.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Assets.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Label.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Label.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Lawcase.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/Lawcase.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/StatisticalAnalysis/VideoStatistics.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/StatisticalAnalysis/VideoStatistics.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Supervision/EvalDaily.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Supervision/EvalDaily.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Supervision/EvalRandom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Supervision/EvalRandom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Supervision/EvalRecord.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Supervision/EvalRecord.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/systemM/Announcement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/Announcement.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/systemM/Dictionary.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/Dictionary.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/systemM/HighConfig.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/HighConfig.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/systemM/Setting.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/systemM/Setting.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="1mJJMJtm8SGmj8MK8SlkTKRheEZ" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -58,9 +62,27 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.smartKeys" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="ts.external.directory.path" value="C:\Users\Administrator\Desktop\ODMrestructure\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration name="serve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.serve" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -73,6 +95,10 @@
       <workItem from="1609205720515" duration="4453000" />
       <workItem from="1609322006441" duration="1872000" />
       <workItem from="1611553924834" duration="900000" />
+      <workItem from="1612662791768" duration="8021000" />
+      <workItem from="1612678200606" duration="142000" />
+      <workItem from="1612678357419" duration="207000" />
+      <workItem from="1612678578779" duration="22048000" />
     </task>
     <servers />
   </component>
@@ -90,5 +116,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="2021年2月8日13:55:47 yqn" />
+    <option name="LAST_COMMIT_MESSAGE" value="2021年2月8日13:55:47 yqn" />
   </component>
 </project>

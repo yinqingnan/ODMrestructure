@@ -39,7 +39,6 @@ export default class RightContent extends Vue {
   }
   private onEdit(e: string): void {
     console.log(e)
-
     const len: number = this.tagList.length
     let flag = 0
     if (len == 1) {

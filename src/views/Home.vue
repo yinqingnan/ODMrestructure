@@ -1,10 +1,10 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2020-11-26 14:13:00
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-02-04 16:10:18
+ * @LastEditors: yqn
  * @Description: In User Settings Edit
- * @FilePath: \ODMrestructure\src\views\Home.vue
+ * @FilePath: \src\views\Home.vue
 -->
 <template>
   <div class="home">

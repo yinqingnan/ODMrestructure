@@ -60,8 +60,6 @@ export default class LeftMenu extends Vue {
   public Login = new this.$api.configInterface.Login()
   @Tabs.Mutation("addtbs")
   addtabs!: (val: any) => {}
-  @Tabs.Mutation("inittabs")
-  inittabs!: () => {}
   @Tabs.Mutation("menuadd")
   menuadd!: (val: any) => {}
   @Tabs.Mutation("setactive")
