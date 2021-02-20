@@ -26,11 +26,8 @@ const state = {
 const getters = {};
 const mutations = {
   [ADDTBS](state: any, val: any): void {
-    // console.log(state.tagList)
     state.tagList.push(val);
     state.activeKey = val.key;
-    // localStorage.setItem("Tabslist", JSON.stringify(val));
-    // localStorage.setItem("activeKey", JSON.stringify(val.key));
   },
   [MENUADD](state: any, val: any): void {
     if (state.tagList.length != 0) {
@@ -45,7 +42,6 @@ const mutations = {
         state.tagList.push(val);
         localStorage.setItem("activeKey", val.key); //保存当前
         localStorage.setItem("Tabslist", JSON.stringify(state.tagList)); //保存选中项
-        // localStorage.setItem("activeKey", val.key)   //保存当前选中项
       } else {
         //如果存在就进行跳转
         state.activeKey = val.key;
@@ -82,9 +78,7 @@ const mutations = {
     localStorage.setItem("Tabslist", JSON.stringify(state.tagList)); //保存
   },
   [INITTABS](state: any): void {
-    // console.log(JSON.parse(localStorage.getItem("Tabslist")));
     state.tagList = JSON.parse(localStorage.getItem("Tabslist"));
-    // console.log(state.tagList);
   },
   [CLEARTABLIST](state: any, val): void {
     state.tagList = val;

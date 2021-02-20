@@ -386,8 +386,6 @@ export default class Testviews extends Vue {
   }
 }
 </script>
-
-
 <style lang="less" scope>
 .divbtn {
   display: flex;

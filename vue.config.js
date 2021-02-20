@@ -1,8 +1,8 @@
 /*
  * @Author: yqn
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-01-06 10:40:43
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-02-08 15:03:10
+ * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \vue.config.js
  */
@@ -45,5 +45,5 @@ module.exports = {
     }
   },
   publicPath: "/",
-  outputDir: "dist"
+  outputDir: "dist",
 };
