@@ -31,7 +31,6 @@ export default class Diskmsg extends Vue {
 
   @Watch("diskSpace", { immediate: true, deep: true })
   change(val){
-    console.log(val ,'______111');
     this.option = {
       title: [
         {

@@ -1006,9 +1006,6 @@ export default class Menu extends Vue {
   // todo 数据获取
   private gettabledata(id) {
     this.OrganizationM.menubtntable(id).then((res) => {
-      res.data?.length
-        ? this.$message.success("操作成功")
-        : this.$message.warning("没有数据")
       this.tableData = res.data
       this.page.totalResult = res.data?.length && 0
 

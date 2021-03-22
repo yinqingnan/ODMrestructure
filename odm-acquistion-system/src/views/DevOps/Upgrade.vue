@@ -361,14 +361,12 @@ export default class Upgrade extends Vue {
       if (!err) {
         if (this.status) {
           if (this.filestatus) {
-            // eslint-disable-next-line no-irregular-whitespace
             let formData = new FormData() //保存文件后再保存
             formData.append("file", this.fileList[0])
             formData.append('brand',val.brand)
             formData.append('content',val.content)
             formData.append('model',val.model)
             formData.append('ver',val.ver)
-            console.log(formData);
             axios
               .post(this.http + "upgrade/recorder", formData,{
                 headers: {
@@ -436,13 +434,9 @@ export default class Upgrade extends Vue {
   }
   getdata() {
     this.DeviceM.deviceBrandSelect().then((res) => {
-      console.log(res.data);
       this.Acquisitionlist = res.data
-      
-
     })
     this.DeviceM.Equipmentmodel().then((res) => {
-      console.log(res.data);
       this.typelist = res.data
     })
   }

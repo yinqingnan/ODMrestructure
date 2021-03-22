@@ -132,8 +132,6 @@ export default class Login extends Vue {
         this.addmenu(concatrouter())
         resetRouter() //重置路由
         router.options.routes = concatrouter()
-        console.log(concatrouter());
-        
         router.addRoutes(concatrouter())
         this.$router.push({path: "/home"}) //成功后跳转
 
@@ -172,8 +170,6 @@ export default class Login extends Vue {
       const arr = document.cookie.split(";")
       for (let i = 0; i < arr.length; i++) {
         const arr2 = arr[i].split("=")
-        console.log(arr2);
-        
         if (arr2[0] === "userName") {
           this.$nextTick(()=>{
             this.form.setFieldsValue({

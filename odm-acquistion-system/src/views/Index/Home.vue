@@ -139,7 +139,6 @@ export default class Home extends Vue {
   private getdata() {
     this.Login.homePage().then((res) => {
       res.data.diskSpace.ratio = res.data.diskSpace.ratio.toFixed(2)
-      console.log( res.data.fileStat);
       this.diskSpace = res.data.diskSpace
       this.fileStat = res.data.fileStat
       this.network = res.data.network

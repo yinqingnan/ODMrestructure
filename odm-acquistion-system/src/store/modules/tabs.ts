@@ -57,9 +57,7 @@ const mutations = {
   },
 
   [DLTTBS](state: any, val: any): void {
-    console.log(val);
     if (val.flag == 0) {
-      console.log(state.tagList[val.flag + 1].id);
       state.activeKey = state.tagList[val.flag + 1].id; //向后加一
       router.push({ path: "/index/" + state.tagList[val.flag + 1].pathAlias });
       localStorage.setItem(
