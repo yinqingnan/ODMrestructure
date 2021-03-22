@@ -1,0 +1,275 @@
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.layoutcontainer {
+  min-width: 448px;
+  background: #f5f5f5;
+  // padding: 16px 21px ;
+  padding: 10px 21px 16px 21px;
+  height: ~"calc(100vh - 115px)";
+  margin-top: 7px;
+}
+
+.container {
+  height: 100%;
+  background: #ffffff;
+}
+
+.contaninerheader {
+  height: 58px;
+  line-height: 58px;
+  background: #fff;
+  border: 0;
+  padding-top: 12px;
+}
+
+
+.modulebot {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 44px;
+
+  button:nth-of-type(1) {
+    margin-right: 10px;
+  }
+
+  height: 34px;
+  margin-top: 18px;
+}
+
+.ant-calendar-range-picker-input {
+  letter-spacing: 0.2px !important;
+}
+
+.Simpleprogrambody {
+  background: #fff;
+  padding: 0 26px;
+}
+
+li {
+  list-style: none;
+}
+
+.dropdown {
+  width: 58px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #f1f1f1;
+  display: block;
+  text-align: center;
+  color: #a1a9b5;
+}
+
+.ant-btn-primary {
+  background: #0cb9de !important;
+  border-color: #0cb9de;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: #0cb9de;
+  border-color: #0cb9de;
+}
+
+.ant-modal-confirm-confirm .ant-modal-confirm-body>.anticon,
+.ant-modal-confirm-warning .ant-modal-confirm-body>.anticon {
+  color: #faad14;
+}
+
+.bgF5 {
+  background: #f5f5f5;
+}
+
+textarea {
+  resize: none !important;
+}
+
+.ant-modal-confirm-body {
+  svg {
+    color: #faad14;
+  }
+}
+
+.ant-menu-vertical .ant-menu-item:not(:last-child),
+.ant-menu-vertical-left .ant-menu-item:not(:last-child),
+.ant-menu-vertical-right .ant-menu-item:not(:last-child),
+.ant-menu-inline .ant-menu-item:not(:last-child) {
+  margin-bottom: 0;
+}
+
+.importmodule {
+  .ant-modal-body {
+    padding: 0;
+  }
+}
+
+.importheader {
+  height: 140px;
+  padding-left: 28px;
+  padding-top: 21px;
+
+  .ant-upload-list-item {
+    display: none !important;
+  }
+
+  p {
+    color: #e06e1a;
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    font-size: 12px;
+    color: #7F8893;
+    margin-top: 18px;
+    font-weight: 700;
+  }
+}
+
+.importfooter {
+  height: 260px;
+}
+
+.gao {
+  background: #bc4141;
+}
+
+.zhong {
+  background: #f19149;
+}
+
+.di {
+  background: #5086c2;
+}
+
+.textblock {
+  height: 22px;
+  width: 30px;
+  color: #fff;
+  border-radius: 5px;
+  margin-right: 15px;
+  display: inline-block;
+  line-height: 22px;
+  font-size: 12px;
+}
+
+.iconblock {
+  cursor: pointer;
+  font-size: 24px;
+  vertical-align: middle;
+  color: #a7a7a7;
+  margin-right: 14px;
+  width: 24px;
+  display: inline-block;
+}
+
+// 去除火狐自带的滚动条
+.el-scrollbar__wrap::-webkit-scrollbar {
+  display: none;
+  scrollbar-width: none;
+}
+
+.el-scrollbar__wrap {
+  scrollbar-width: none;
+}
+
+/*滚动条整体部分*/
+.mytable-scrollbar ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/*滚动条的轨道*/
+.mytable-scrollbar ::-webkit-scrollbar-track {
+  background-color: #FFFFFF;
+}
+
+/*滚动条里面的小方块，能向上向下移动*/
+.mytable-scrollbar ::-webkit-scrollbar-thumb {
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  border: 1px solid #F1F1F1;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+}
+
+.mytable-scrollbar ::-webkit-scrollbar-thumb:hover {
+  background-color: #A8A8A8;
+}
+
+.mytable-scrollbar ::-webkit-scrollbar-thumb:active {
+  background-color: #787878;
+}
+
+/*边角，即两个滚动条的交汇处*/
+.mytable-scrollbar ::-webkit-scrollbar-corner {
+  background-color: #FFFFFF;
+}
+
+.el-scrollbar__wrap {
+  width: 100% !important;
+  overflow-x: hidden;
+}
+
+// 音频播放设置
+.audiofig {
+  audio {
+    margin-top: 36%;
+    margin-left: 19%;
+  }
+}
+
+audio {
+  outline: none;
+}
+
+
+//视频播放器底部操作栏样式
+.vjs-custom-skin>.video-js .vjs-control-bar {
+  bottom: 14px;
+}
+
+.vjs-volume-level {
+  top: 0px !important;
+}
+
+// 取消日期选择器的选择时间按钮
+.ant-calendar-range.ant-calendar-time .ant-calendar-footer .ant-calendar-time-picker-btn {
+  display: none;
+}
+
+// 隐藏掉视频加载时的乱象
+.vjs-loading-spinner {
+  display: none !important;
+  opacity: 0;
+}
+
+// 兼容调整时间选择器的字间距
+.ant-calendar-range-picker-separator {
+  letter-spacing: 0.8px;
+}
+
+.vxe-header--row>th>div {
+  margin: 0 auto;
+}
+
+.ant-tabs-nav-container {
+  span {
+    background-color: #f6f5f8;
+  }
+}
+
+// 修改文本域清除图标位置
+.ant-input-textarea-clear-icon {
+  top: -4px;
+  right: 11px;
+}
+
+.quanxian {
+  .ant-modal-confirm-btns {
+    >button:nth-of-type(1) {
+      display: none
+    }
+  }
+}

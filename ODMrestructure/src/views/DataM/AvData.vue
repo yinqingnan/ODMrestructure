@@ -1,0 +1,1578 @@
+<template>
+  <div>
+    <div id="AvData" class="layoutcontainer">
+      <div class="container">
+        <div class="contaninerheader" style="padding:13px 26px 0 26px">
+          <template>
+            <a-dropdown :trigger="['click']" class="dropdown">
+              <a class="ant-dropdown-link" @click="popup">
+                筛选
+                <a-icon type="down"/>
+              </a>
+              <a-menu slot="overlay" class="box">
+                <a-form
+                    autocomplete="off"
+                    :form="form"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 14 }"
+                    @submit="handleSubmit"
+                >
+                  <el-scrollbar class="screen">
+                    <a-form-item label="部门">
+                      <a-tree-select
+                          show-search
+                          treeNodeFilterProp="title"
+                          v-decorator="[
+                        'department',
+                        {
+                          initialValue: '100006',
+                          rules: []
+                        }
+                      ]"
+                          :allow-clear="true"
+                          style="width: 100%"
+                          :dropdown-match-select-width="true"
+                          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                          :tree-data="departmentData"
+                          :replace-fields="{
+                          id: 'code',
+                          pId: 'parentCode',
+                          value: 'value',
+                          title: 'name'
+                      }"
+                          placeholder="请选择..."
+                      />
+                    </a-form-item>
+                    <a-form-item label="姓名/警号">
+                      <a-input
+                          v-decorator="['user', { initialValue: '', rules: [] }]"
+                          :max-length="LimitInputlength"
+                          placeholder="请输入姓名/警号"
+                      >/>
+                      </a-input>
+                    </a-form-item>
+                    <a-form-item label="时间类型">
+                      <a-select
+                          v-decorator="[
+                        'TimeData',
+                        {
+                          initialValue: 'uploadDate',
+                          rules: []
+                        }
+                      ]"
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                      >
+                        <a-select-option v-for="d in Timetype" :key="d.value">{{ d.title }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="时间范围">
+                      <a-range-picker
+                          format="YYYY-MM-DD"
+                          :show-time="{
+                        hideDisabledOptions: true,
+                        defaultValue: [],
+                      }"
+                          :allowClear="false"
+                          v-decorator="[
+                        'date',
+                        {
+                          initialValue: defaultdate,
+                          rules: []
+                        }
+                      ]"
+                          @change="onChange"
+                      />
+
+                    </a-form-item>
+                    <a-form-item label="文件类型">
+                      <a-select
+                          v-decorator="[
+                        'Filetype',
+                        {
+                          initialValue: undefined,
+                          rules: []
+                        }
+                      ]"
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                      >
+                        <a-select-option v-for="d in filetype" :key="d.value">{{ d.title }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="重要级别">
+                      <a-select
+                          v-decorator="[
+                        'levelData',
+                        {
+                          initialValue: undefined,
+                          rules: []
+                        }
+                      ]"
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                      >
+                        <a-select-option v-for="d in levelData" :key="d.value">{{ d.title }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </el-scrollbar>
+                  <div class="modulebot">
+                    <a-button type="Default" @click="reset">重置</a-button>
+                    <a-button type="primary" @click="handleSubmit">查询</a-button>
+                  </div>
+                </a-form>
+              </a-menu>
+            </a-dropdown>
+          </template>
+          <div style="line-height:1">
+            <a-button
+                type="primary"
+                @click="dlt"
+                style="line-height:1"
+                v-isshow="'lawarchives:avDate:deletes'"
+            >批量删除
+            </a-button>
+            <a-button
+                v-isshow="'lawarchives:avDate:downloads'"
+                type="primary"
+                @click="download"
+                style="line-height:1"
+            >批量下载
+            </a-button>
+          </div>
+        </div>
+        <div class="Simpleprogrambody" :style="{height:Height}">
+          <vxe-table
+              border
+              resizable
+              show-header-overflow
+              :row-class-name="tableRowClassName"
+              height="auto"
+              :data="tabledata"
+              class="mytable-scrollbar"
+              highlight-hover-row
+              ref="xTable1"
+              @cell-click='onRowClick'
+              :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
+              @checkbox-all="selectAllEvent"
+              @checkbox-change="selectChangeEvent"
+          >
+            >
+            <vxe-table-column type="checkbox" width="60" align="center"/>
+            <vxe-table-column
+                header-align="center"
+                field="fileName"
+                title="文件名称"
+                align="left"
+                show-overflow
+                width="30%"
+            >
+              <template v-slot="{ row }">
+                <span
+                    class="iconfont iconblock"
+                    :class="{'iconpicture': row.fileType === 'photo', 'iconshiping-copy': row.fileType=='video', 'iconmusic-copy': row.fileType=='audio'}"
+                ></span>
+                <span
+                    style="cursor: pointer;text-align:center"
+                    class="textblock"
+                    :class="{'gao': row.fileLevel == '3', 'zhong': row.fileLevel=='2', 'di': row.fileLevel=='1'}"
+                >{{ fileLevel(row.fileLevel) }}</span>
+                <span
+                    style="cursor: pointer;color:#0db8df"
+                    v-right="'lawarchives:avDate:look'"
+                    ref="avdataright"
+                    class="filenames"
+                >{{ row.fileName }}</span>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column field="deptName" title="部门" align="center" width="10%"/>
+            <vxe-table-column
+                field="userName"
+                title="姓名/警号"
+                align="center"
+                show-overflow
+                width="10%"
+            >
+              <template v-slot="{ row }">
+                <span>{{ row.userName }}({{ row.userCode }})</span>
+              </template>
+            </vxe-table-column>
+            <vxe-table-column
+                field="recordDate"
+                title="摄录时间"
+                show-overflow
+                align="center"
+                width="10%"
+            />
+            <vxe-table-column
+                field="fileDuration_Name"
+                title="摄录时长"
+                show-overflow
+                align="center"
+                width="10%"
+            />
+            <vxe-table-column
+                field="uploadDate"
+                title="导入时间"
+                show-overflow
+                align="center"
+                width="10%"
+            />
+          </vxe-table>
+          <p>
+            <vxe-pager
+                align="right"
+                size="mini"
+                :layouts="layouts"
+                :current-page.sync="page.currentPage"
+                :page-size.sync="page.pageSize"
+                :total="page.totalResult"
+                :page-sizes="[15, 50, 100, 200]"
+                @page-change="pagerchange"
+            />
+          </p>
+        </div>
+      </div>
+      <a-modal
+          @cancel="tccancel"
+          v-model="visible"
+          title="视频查看"
+          @ok="handleOk"
+          :width="1000"
+          :keyboard='false'
+          :destroyOnClose="true"
+      >
+        <div class="filesee">
+          <div class="filesee_left">
+            <div v-if="filedetails.fileType_Name == '图片'" style="height:100%">
+              <img :src="filedetails.httpPath"/>
+            </div>
+            <div v-if="filedetails.fileType_Name == '视频'" class="AvData">
+              <video-player
+                  style="height:423px"
+                  class="video-player vjs-custom-skin"
+                  ref="videoPlayer"
+                  :playsinline="true"
+                  :options="playerOptions"
+                  @ended="onPlayerEnded($event)"
+              />
+            </div>
+            <div v-if="filedetails.fileType_Name == '音频'" class="audiofig">
+              <audio controls="controls" controlslist="nodownload" :src="filedetails.httpPath"></audio>
+            </div>
+          </div>
+          <div class="filesee_right">
+            <a-tabs
+                default-active-key="1"
+                :tabBarGutter="10"
+                v-model="activeKey"
+                @change="tabchange"
+            >
+              <a-tab-pane key="1" tab="文件">
+                <div class="fileclass">
+                  <p style="font-size:12px;font-weight:bold">{{ filedetails.fileName }}</p>
+                  <p style="font-size:12px;font-weight:bold">{{ filedetails.deptName }}({{ filedetails.deptCode }}) -
+                    {{ filedetails.userName }}({{ filedetails.userCode }})</p>
+                  <ul>
+                    <li>摄录时间：{{ filedetails.recordDate }}</li>
+                    <li>导入时间：{{ filedetails.uploadDate }}</li>
+                    <li>文件大小：{{ filedetails.fileSize_Name }}</li>
+                  </ul>
+                  <h2>文件存储位置：{{ filedetails.storageLocation_Name }}</h2>
+                  <h2>剩余存储天数：{{ filedetails.storageDays }}</h2>
+                </div>
+              </a-tab-pane>
+              <a-tab-pane key="2" tab="标记" force-render>
+                <a-form
+                    :form="form"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 18 }"
+                    @submit="biaojiSubmit"
+                >
+                  <a-form-item label="重要级别">
+                    <a-select
+                        v-decorator="[
+                        'lv',
+                        {
+                          initialValue: filedetails.fileLevel +'',
+                          rules: []
+                        }
+                      ]"
+                    >
+                      <a-select-option value="1">请选择</a-select-option>
+                      <a-select-option value="3">高</a-select-option>
+                      <a-select-option value="2">中</a-select-option>
+                      <a-select-option value="1">低</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                  <a-form-item label="存储类别">
+                    <a-select
+                        v-decorator="[
+                        'category',
+                        {
+                          initialValue: filedetails.categoryId+'',
+                          rules: []
+                        }
+                      ]"
+                    >
+                      <a-select-option v-for="d in tcselect" :key="d.id">{{ d.name }}</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                  <a-form-item label="标记描述">
+                    <a-textarea
+                        :maxLength="textarealength"
+                        style="display: flex;height:77px !important;overflow-y:auto;resize: none;"
+                        allowClear
+                        placeholder="请输入标记描述（200字符以内）"
+                        v-decorator="[
+                      'remark',
+                      {
+                        initialValue: filedetails.marker,
+                        rules: [],
+                      },
+                    ]"
+                        :autoSize="{ minRows: 3, maxRows: 3 }"
+                    />
+                  </a-form-item>
+                  <a-form-item :wrapper-col="{ span: 12, offset: 5 }" style="text-align:center">
+                    <a-button
+                        v-isshow="'lawarchives:avDate:oneBtn'"
+                        type="primary"
+                        html-type="submit"
+                    >保存
+                    </a-button>
+                  </a-form-item>
+                </a-form>
+              </a-tab-pane>
+              <a-tab-pane key="3" tab="标注">
+                <!-- <div v-if="!Emptystate"> -->
+                <a-form
+                    :form="form2"
+                    :label-col="{ span: 6 }"
+                    :wrapper-col="{ span: 18 }"
+                    @submit="biaozhuSubmit"
+                >
+                  <el-scrollbar style="height:300px;padding-right:10px">
+                    <a-form-item label="标注类型">
+                      <a-select
+                          @change="labelTypeChange"
+                          placeholder="请选择标注类型"
+                          v-decorator="[
+                          'labelType',
+                          {
+                            initialValue: undefined,
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                      >
+                        <a-select-option v-for="d in taggingselect1" :key="d.key">{{ d.value }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="标注子类">
+                      <a-select
+                          placeholder="请选择标注子类"
+                          v-decorator="[
+                          'labelSubclass',
+                          {
+                            initialValue: undefined,
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                      >
+                        <a-select-option v-for="d in taggingselect2" :key="d.key">{{ d.value }}</a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item label="车牌号码">
+                      <a-input
+                          :max-length="LimitInputlength"
+                          placeholder="没有车牌号，请填写无"
+                          v-decorator="[
+                          'plateNumber',
+                          {
+                            initialValue: '',
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                      />
+                    </a-form-item>
+                    <a-form-item label="采集时间" class="biaozhus">
+                      <a-date-picker
+                          placeholder="请选择采集时间"
+                          v-decorator="[
+                          'gatheringTime',
+                          {
+                            initialValue:'',
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                      />
+                    </a-form-item>
+                    <a-form-item label="采集地址">
+                      <a-input
+                          :max-length="LimitInputlength"
+                          placeholder="请输入采集地址（30字符以内）"
+                          v-decorator="[
+                          'gatheringPlace',
+                          {
+                            initialValue: '',
+                            rules: [{ required: true, message: '必填项不能为空' }]
+                          }
+                        ]"
+                      />
+                    </a-form-item>
+                    <a-form-item label="标注描述">
+                      <a-textarea
+                          placeholder="请输入标注描述（200字符以内）"
+                          style="display: flex;overflow-y:auto;resize: none;"
+                          allowClear
+                          :maxLength="textarealength"
+                          v-decorator="[
+                        'remark',
+                        {
+                          initialValue:'',
+                          rules: [{ required: true, message: '必填项不能为空' }],
+                        },
+                      ]"
+                          :autoSize="{ minRows: 3, maxRows: 3 }"
+                      />
+                    </a-form-item>
+                  </el-scrollbar>
+                </a-form>
+                <a-button
+                    v-isshow="'lawarchives:avDate:threeBtn'"
+                    type="primary"
+                    @click="biaozhuSubmit"
+                    style="margin-top: 14px;margin-left: 44%;"
+                >保存
+                </a-button>
+                <!-- </div> -->
+                <!-- <a-empty v-else style="margin-top:94px">
+                  <span slot="description">没有标注信息</span>
+                </a-empty>-->
+              </a-tab-pane>
+              <a-tab-pane key="4" tab="评价" v-isshow="'lawarchives:avDate:fourTab'">
+                <a-form
+                    :form="form3"
+                    :label-col="{ span:5 }"
+                    :wrapper-col="{ span: 19 }"
+                    @submit="pingjiaSubmit"
+                    class="pf"
+                >
+                  <el-scrollbar style="height:310px;padding-right: 10px">
+                    <a-form-item label="评价总分">
+                      <a-input
+                          :disabled="true"
+                          v-decorator="[
+                        'Total',
+                        {
+                          initialValue: Total,
+                          rules: []
+                        }
+                      ]"
+                      />
+                    </a-form-item>
+                    <a-form-item label="评分项">
+                      <a-checkbox-group
+                          class="pfx"
+                          :disabled="disabled"
+                          v-decorator="['Scoring', { initialValue: []}]"
+                          style="width: 100%;"
+                      >
+                        <el-scrollbar style="height:130px;" v-if="!disabled">
+                          <a-row>
+                            <a-col
+                                :span="24"
+                                v-for="(d) in options"
+                                :key="d.id"
+                                style="line-height: 30px;height: 30px;"
+                            >
+                              <a-checkbox
+                                  style="letter-spacing: -0.5px;"
+                                  @change="checkboxChange($event, d.jffz)"
+                                  :value="d.jfbh"
+                              >
+                                <a-tooltip>
+                                  <template slot="title">
+                                    {{ d.jfmc }}(-{{ d.jffz }}分)
+                                  </template>
+                                  {{ d.jfmc }}(-{{ d.jffz }}分)
+                                </a-tooltip>
+                              </a-checkbox>
+                            </a-col>
+                          </a-row>
+                        </el-scrollbar>
+                        <el-scrollbar style="height:130px;" v-else>
+                          <a-row>
+                            <a-col
+                                :span="24"
+                                v-for="(d) in options"
+                                :key="d.id"
+                                style="line-height: 30px;height: 30px;"
+                            >
+                              <a-checkbox
+                                  style="letter-spacing: -0.5px;"
+                                  @change="checkboxChange($event, d.jffz)"
+                                  :value="d.jfbh"
+                              >
+                                <a-tooltip>
+                                  <template slot="title">
+                                    {{ d.jfmc }}(-{{ d.jffz }}分)
+                                  </template>
+                                  {{ d.jfmc }}(-{{ d.jffz }}分)
+                                </a-tooltip>
+                              </a-checkbox>
+                            </a-col>
+                          </a-row>
+                        </el-scrollbar>
+                      </a-checkbox-group>
+                    </a-form-item>
+                    <a-form-item label="实际评分">
+                      <a-input
+                          :disabled="true"
+                          v-decorator="[
+                        'Actualscore',
+                        {
+                          initialValue:Actualscore,
+                          rules: []
+                        }
+                      ]"
+                      />
+                    </a-form-item>
+                    <a-form-item label="评分说明">
+                      <a-textarea
+                          :disabled="disabled"
+                          style="display: flex;overflow-y:auto;resize: none;"
+                          allowClear
+                          :maxLength="textarealength"
+                          v-decorator="[
+                      'remark',
+                      {
+                        initialValue: filedetails.marker,
+                        rules: [{ required: true, message: '必填项不能为空' }],
+                      },
+                    ]"
+                          placeholder="请输入评分说明（200字符以内）"
+                          :autoSize="{ minRows: 3, maxRows: 3 }"
+                      />
+                    </a-form-item>
+                  </el-scrollbar>
+                  <a-form-item
+                      :wrapper-col="{ span: 12, offset: 5 }"
+                      v-if="!disabled"
+                      style="text-align:center"
+                  >
+                    <a-button
+                        v-isshow="'lawarchives:avDate:foreBtn'"
+                        type="primary"
+                        html-type="submit"
+                    >保存
+                    </a-button>
+                  </a-form-item>
+                </a-form>
+              </a-tab-pane>
+            </a-tabs>
+          </div>
+        </div>
+        <template slot="footer">
+          <a-button type="default" @click="previous" :disabled="PreviousDisabled">上一个</a-button>
+          <a-button type="default" @click="next" :disabled="NextDisabled">下一个</a-button>
+          <a-button type="default" @click="filedownload" v-isshow="'lawarchives:avDate:download'">下载</a-button>
+          <a-button type="default" @click="moduleDlt">删除</a-button>
+        </template>
+      </a-modal>
+      <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear" :keyboard='false'>
+        <el-scrollbar style="height: 200px;width: 476px;">
+          <p
+              v-for="item in logmsg"
+              :key="item.id"
+              style="text-align: center;margin-top:8px;font-size:12px"
+          >{{ item.text }}</p>
+        </el-scrollbar>
+      </a-modal>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import {
+  LimitInputlength,
+  page,
+  layouts,
+  textarealength,
+} from "@/InterfaceVariable/variable"
+
+import {Component, Vue} from "vue-property-decorator"
+
+
+import {
+  Selecttype,
+  Filedetails,
+  PlayerOptions,
+} from "../../InterfaceVariable/interface"
+import moment from "moment"
+
+@Component({})
+export default class AvData extends Vue {
+  [x: string]: any
+
+  public DataM = new this.$api.configInterface.DataM()
+  private LimitInputlength = LimitInputlength
+  private textarealength = textarealength
+  public form!: any
+  public form1!: any
+  public form2!: any
+  public form3!: any
+  private departmentData = []
+  private page = {
+    currentPage: 1, //当前页数
+    pageSize: 15, //每页多少条
+    totalResult: 200, //总数
+  }
+  private activeKey = "1"
+  private tcselect = []
+  private visible = false
+  private layouts = layouts
+  private options = []
+  private Total = 0
+  private fileId = ""
+  private Actualscore = 100
+  private logshow = false
+  private PreviousDisabled = false
+  private NextDisabled = false
+  private playerOptions: PlayerOptions = {
+    playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+    autoplay: false, //如果true,浏览器准备好时开始回放。
+    muted: false, // 默认情况下将会消除任何音频。
+    loop: false, // 导致视频一结束就重新开始。
+    preload: "auto", // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+    language: "zh-CN",
+    aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+    fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+    sources: [
+      {
+        type: "",
+        src: "http://vjs.zencdn.net/v/oceans.mp4", //url地址
+        // src: "" //url地址
+      },
+    ],
+    poster: "", //你的封面地址
+    // width: document.documentElement.clientWidth,
+    notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+    controlBar: {
+      timeDivider: true,
+      durationDisplay: true,
+      remainingTimeDisplay: false,
+      fullscreenToggle: true, //全屏按钮
+    },
+  }
+
+  private Timetype: Selecttype[] = [
+    {id: 1, value: "uploadDate", title: "导入时间"},
+    {id: 2, value: "recordDate", title: "摄录时间"},
+  ]
+  private filetype: Selecttype[] = [
+    {id: 1, value: "video", title: "视频"},
+    {id: 2, value: "audio", title: "音频"},
+    {id: 3, value: "photo", title: "图片"},
+    {id: 4, value: "log", title: "日志"},
+  ]
+  private levelData: Selecttype[] = [
+    {id: 1, value: "3", title: "高"},
+    {id: 2, value: "2", title: "中"},
+    {id: 3, value: "1", title: "低"},
+  ]
+  private defaultdate = [
+    moment("2012-06-06", "YYYY-MM-DD"),
+    moment("2020-06-06", "YYYY-MM-DD"),
+  ]
+  private Emptystate = false
+  private filedetails: Filedetails = {
+    fileName: "",
+    deptName: "",
+    deptCode: "",
+    userCode: "",
+    recordDate: "",
+    uploadDate: "",
+    fileSize_Name: "",
+    storageLocation_Name: "",
+    storageDays: "",
+    downloadPath: "",
+    id: "",
+    fileType_Name: "",
+    marker: "",
+    categoryId: "",
+    userName: "",
+    fileLevel: "",
+    httpPath: "",
+  }
+  private myDate = []
+  private selectdata = []
+  private selectedRowKeys = []
+  private Height = ""
+  private tabledata = []
+  private formdata = {
+    page: 1,
+    limit: 15,
+    department: "",
+    userName: "",
+    TimeData: "",
+    Filetype: "",
+    levelData: "",
+    date: [],
+  }
+  private formDatelist = {
+    page: this.page.currentPage,
+    limit: this.page.pageSize,
+    deptCode_equal: "", //部门id
+    userName: "", //警员
+    timeType: "uploadDate", //时间类型
+    timeRange: [],
+    fileType_equal: "",
+    fileLevel_equal: "",
+    uploadDate_gt: null, //必填  时间起
+    uploadDate_lt: null, //必填  时间止
+    recordDate_gt: null,
+    recordDate_lt: null,
+  }
+  private logmsg = []
+  private taggingselect1 = []
+  private taggingselect2 = []
+  private labelType = ""
+  private taggingmsg = []
+  private fileCode = ""
+  private disabled = false
+  private Tablesubscript = []
+
+  private created() {
+    this.form = this.$form.createForm(this)
+    this.form1 = this.$form.createForm(this)
+    this.form2 = this.$form.createForm(this)
+    this.form3 = this.$form.createForm(this)
+    this.Height = `${document.documentElement.clientHeight - 230}px`
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    window.addEventListener("resize", () => {
+      _that.Height = `${document.documentElement.clientHeight - 230}px`
+    })
+    this.getdata()
+  }
+
+  private handleOk() {
+    return
+  }
+
+  private handleSubmit(e?: any): void {
+    e.preventDefault()
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        this.formdata = val
+        this.page.currentPage = 1
+        let Date_gt = val.date[0].format("YYYY-MM-DD HH:mm:ss")
+        let Date_lt = val.date[1].format("YYYY-MM-DD HH:mm:ss")
+        if (val.TimeData == "uploadDate") {
+          this.formDatelist = {
+            page: 1,
+            limit: 15,
+            deptCode_equal: val.department, //部门id
+            userName: val.user, //警员
+            timeType: val.TimeData, //时间类型
+            timeRange: this.myDate,
+            fileType_equal: val.Filetype,
+            fileLevel_equal: val.levelData,
+            uploadDate_gt: Date_gt, //必填  时间起
+            uploadDate_lt: Date_lt, //必填  时间止
+            recordDate_gt: "",
+            recordDate_lt: "",
+          }
+          this.gettabledata(this.formDatelist)
+        } else if (val.TimeData == "recordDate") {
+          this.formDatelist = {
+            page: 1,
+            limit: 15,
+            deptCode_equal: val.department, //部门id
+            userName: val.user, //警员
+            timeType: val.TimeData, //时间类型
+            timeRange: this.myDate,
+            fileType_equal: val.Filetype,
+            fileLevel_equal: val.levelData,
+            recordDate_gt: Date_gt,
+            recordDate_lt: Date_lt,
+            uploadDate_gt: "",
+            uploadDate_lt: "",
+          }
+          this.gettabledata(this.formDatelist)
+        }
+      }
+    })
+  }
+
+  private onChange(date: any, dateString: any): void {
+    this.selectdata = dateString
+  }
+
+  private getdata() {
+    this.DataM.getMenulist({}, true).then((res: any) => {
+      this.departmentData = res.data
+    })
+    // 标记下拉数据
+    this.DataM.getfileselect().then((res) => {
+      this.tcselect = res.data
+    })
+    this.DataM.gettimeframe({type: "LATELY_MONTH"}, true).then((res: any) => {
+      this.myDate = res.data.myDate
+      // todo 请求默认时间
+      this.defaultdate = [
+        moment(res.data.myDate.split("~")[0], "YYYY-MM-DD"),
+        moment(res.data.myDate.split("~")[1], "YYYY-MM-DD"),
+      ]
+      console.log(this.defaultdate)
+
+      let date0 = res.data.myDate.split("~")[0].replace(/(^\s*)|(\s*$)/g, "")
+      let date1 = res.data.myDate.split("~")[1].replace(/(^\s*)|(\s*$)/g, "")
+      this.formDatelist = {
+        page: this.page.currentPage,
+        limit: this.page.pageSize,
+        deptCode_equal: "", //部门id
+        userName: "", //警员
+        timeType: "uploadDate", //时间类型
+        timeRange: [],
+        fileType_equal: "",
+        fileLevel_equal: "",
+        uploadDate_gt: moment(date0).format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+        uploadDate_lt: moment(date1).format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+        recordDate_gt: "",
+        recordDate_lt: "",
+      }
+      this.gettabledata(this.formDatelist)
+    })
+  }
+
+  private gettabledata(obj): void {
+    this.DataM.gettabledata(obj, true).then((res: any) => {
+      console.log(res.data)
+      this.page.totalResult = parseInt(res.count)
+      this.tabledata = res.data
+      this.Tablesubscript = []
+      // 保存当前表格的所有code
+      res.data.map((item) => {
+        this.Tablesubscript.push(item.id)
+      })
+    })
+  }
+
+  private reset() {
+    this.form.resetFields()
+    // this.defaultdate = []
+  }
+
+  private popup(e: { preventDefault: () => void }) {
+    e.preventDefault()
+  }
+
+  private logclear() {
+    this.logshow = false
+    this.logmsg = []
+  }
+
+  private onRowClick({row, rowIndex, column}) {
+    console.log(column.title);
+    if (column.title === '文件名称') {
+      this.tablebtn(row, rowIndex)
+    }    // console.log(row , rowIndex);
+  }
+
+  private tablebtn(row, rowIndex) {
+    if ((document.getElementsByClassName('filenames')[rowIndex] as HTMLElement).style.cursor !== 'not-allowed') {
+      if (row.fileType_Name === "日志") {
+        this.DataM.getlogmsg(row.id).then((res) => {
+          let splits = res.data.split(/\r\n/g)
+          let dataList = []
+          for (let i = 0; i < splits.length; i++) {
+            dataList.push({
+              id: i,
+              text: splits[i],
+            })
+          }
+          this.logshow = true
+          this.logmsg = dataList
+        })
+      } else {
+        // 弹窗文件信息
+        this.DataM.getfiledetails(row.id).then((res) => {
+          this.visible = true
+          this.fileCode = row.code
+          this.fileId = row.id
+          this.activeKey = "1"
+          this.form2.resetFields()
+          this.form1.resetFields()
+          this.filedetails = res.data
+          this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+        })
+      }
+    }
+
+  }
+
+  private tabchange(activeKey) {
+    console.log(activeKey)
+    if (activeKey == 3) {
+      // 标注信息
+      this.DataM.getfiletagging(this.fileCode).then((res) => {
+        console.log(res.data)
+        this.Emptystate = true
+        if (res.data) {
+          this.labelType = res.data.labelType
+          this.taggingmsg = res.data
+          // 标注下拉数据1
+          this.DataM.taggingselect1().then((res) => {
+            console.log(res.data)
+            this.taggingselect1 = res.data
+          })
+          // 标注下拉数据2
+          this.DataM.taggingselect2(this.labelType).then((res) => {
+            console.log(res.data)
+            this.taggingselect2 = res.data
+          })
+          setTimeout(() => {
+            this.$nextTick(() => {
+              this.form2.setFieldsValue({
+                labelType: res.data.labelType,
+                labelSubclass: res.data.labelSubclass,
+                plateNumber: res.data.plateNumber,
+                gatheringTime: moment(res.data.gatheringTime),
+                gatheringPlace: res.data.gatheringPlace,
+                remark: res.data.remark,
+              })
+            })
+          })
+        } else {
+          // 标注下拉数据1
+          this.DataM.taggingselect1().then((res) => {
+            console.log(res.data)
+            this.taggingselect1 = res.data
+          })
+          // 标注下拉数据2
+          this.DataM.taggingselect2(this.labelType).then((res) => {
+            console.log(res.data)
+            this.taggingselect2 = res.data
+          })
+        }
+      })
+    } else if (activeKey == 4) {
+      this.DataM.evaluate(this.fileCode).then((res) => {
+        console.log(res)
+        if (res.data) {
+          this.Total = res.data.total
+          this.disabled = true
+          console.log(res.data)
+          this.options = res.data.items
+          let arr = res.data.items
+          let newarr = []
+          arr.map((item) => {
+            newarr.push(item.code)
+          })
+          this.$nextTick(() => {
+            this.form3.setFieldsValue({
+              Scoring: newarr,
+              Actualscore: res.data.score,
+              remark: res.data.remark,
+              Total: res.data.total,
+            })
+          })
+          // console.log("这是已经评价过的")
+        } else {
+          // console.log("尚未评价")
+          this.disabled = false
+          this.DataM.lawarchives().then((res) => {
+            console.log(res)
+            this.$nextTick(() => {
+              this.form3.setFieldsValue({
+                Scoring: [],
+                remark: "",
+              })
+            })
+            this.Total = res.data.total
+            this.options = res.data.list
+          })
+        }
+      })
+    } else if (activeKey == 2) {
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.filedetails = res.data
+        console.log(res.data)
+        this.fileCode = res.data.code
+        // this.playerOptions['sources'][0]['src'] = res.data.httpPath;   修改视频方法
+      })
+    }
+  }
+
+  public rowClassName(record: any, index: number) {
+    let className = "light-row"
+    if (index % 2 === 1) className = "dark-row"
+    return className
+  }
+
+  private biaojiSubmit(e) {
+    e.preventDefault()
+    this.form.validateFields((err: any, val: any) => {
+      if (!err) {
+        console.log(val)
+        let obj = {
+          categoryId: val.category,
+          fileLevel: val.lv,
+          id: this.filedetails.id,
+          marker: val.remark,
+        }
+        this.DataM.marksave(obj).then((res) => {
+          this.$message.success(res.msg)
+        })
+      }
+    })
+  }
+
+  private biaozhuSubmit(e) {
+    e.preventDefault()
+    this.form2.validateFields((err: any, val: any) => {
+      if (!err) {
+        let obj = {
+          fileCode: this.fileCode,
+          gatheringPlace: val.gatheringPlace,
+          gatheringTime: moment(val.gatheringTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+          ),
+          labelSubclass: val.labelSubclass,
+          labelType: val.labelType,
+          plateNumber: val.labelType,
+          remark: val.remark,
+        }
+        this.DataM.taggingsave(obj).then((res) => {
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+          }
+        })
+      }
+    })
+  }
+
+  public sum = 0
+
+  private checkboxChange(e, val) {
+    console.log(e.target.checked)
+    if (e.target.checked) {
+      this.sum += val
+    } else {
+      this.sum -= val
+    }
+    this.Actualscore = this.Total - this.sum
+  }
+
+  private pingjiaSubmit(e) {
+    e.preventDefault()
+    this.form3.validateFields((err: any, val: any) => {
+      if (!err) {
+        console.log(this.fileCode)
+        console.log(val)
+        let arr = val.Scoring
+        let newarr = []
+        arr.map((item) => {
+          newarr.push(
+              this.options.filter((el) => {
+                return el.jfbh == item
+              })
+          )
+        })
+        let items = []
+        newarr.map((item) => {
+          let obj = {
+            code: item[0].jfbh,
+            score: item[0].jffz + "",
+            name: item[0].jfmc,
+          }
+          items.push(obj)
+        })
+        let obj = {
+          fileCode: this.fileCode,
+          items: items,
+          logType: "1",
+          score: val.Actualscore,
+          total: val.Total,
+          remark: val.remark,
+        }
+        this.DataM.pfsave(obj).then((res) => {
+          console.log(res)
+          if (res.code == 0) {
+            this.disabled = true
+            this.$message.success(res.msg)
+            this.sum = 0
+            this.DataM.evaluate(this.fileCode).then((res) => {
+              if (res.data) {
+                this.Total = res.data.total
+                console.log(res.data)
+                this.options = res.data.items
+              }
+            })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    })
+  }
+
+  private labelTypeChange(value) {
+    this.DataM.taggingselect2(value).then((res) => {
+      console.log(res.data)
+      this.taggingselect2 = res.data
+      this.form2.setFieldsValue({
+        labelSubclass: undefined,
+      })
+    })
+  }
+
+  public download() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    if (this.selectedRowKeys.length != 0) {
+      this.$confirm({
+        title: "提示",
+        content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿,如果浏览器未出现下载提示,请您在浏览器地址栏右侧,点击“已拦截的弹窗”,选择"始终允许显示本站点的弹出式窗口"。`,
+        onOk() {
+          let num = 0
+          _that.selectedRowKeys.forEach((item) => {
+            window.open(item.downloadPath)
+          })
+          _that.selectedRowKeys = []
+          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
+        },
+      })
+    } else {
+      this.$message.error("请选择需要下载的文件")
+    }
+  }
+
+  public dlt() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    if (this.selectedRowKeys.length > 0) {
+      let arr = []
+      this.selectedRowKeys.map((item) => {
+        arr.push(item.id)
+      })
+      this.$confirm({
+        title: "提示",
+        content: `确认批量删除${this.selectedRowKeys.length}个文件？`,
+        onOk() {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+            _that.DataM.bumendlt(arr).then((res) => {
+              if (res.code == 0) {
+                _that.$message.success(res.msg)
+                let obj = {
+                  page: this.pager.currentPage,
+                  limit: this.page.pageSize,
+                  deptCode_equal: _that.formdata.department, //部门id
+                  userName: _that.formdata.userName, //警员
+                  timeType: _that.formdata.TimeData, //时间类型
+                  timeRange: _that.myDate,
+                  fileType_equal: _that.formdata.Filetype,
+                  fileLevel_equal: _that.formdata.levelData,
+                  uploadDate_gt: moment(_that.formdata.date[0]).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                  ), //必填  时间起
+                  uploadDate_lt: moment(_that.formdata.date[1]).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                  ), //必填  时间止
+                  recordDate_gt: "",
+                  recordDate_lt: "",
+                }
+                _that.gettabledata(obj)
+                _that.selectedRowKeys = []
+              } else {
+                _that.$message.error(res.msg)
+              }
+            })
+            ;(_that.$refs.xTable1 as any).clearCheckboxRow()
+          }).catch(() => console.log("删除失败"))
+        },
+      })
+    } else {
+      this.$message.error("请选择需要删除的文件")
+    }
+  }
+
+  public pagerchange({currentPage, pageSize}) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
+    console.log(this.defaultdate[0].format("YYYY-MM-DD HH:mm:ss"))
+    if (this.formdata.date.length == 0) {
+      let obj = {
+        page: currentPage,
+        limit: pageSize,
+        deptCode_equal: "", //部门id
+        userName: "", //警员
+        timeType: "uploadDate", //时间类型
+        timeRange: "2020-10-06 ~ 2020-11-06",
+        fileType_equal: "",
+        fileLevel_equal: "",
+        uploadDate_gt: this.defaultdate[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+        uploadDate_lt: this.defaultdate[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+        recordDate_gt: "",
+        recordDate_lt: "",
+      }
+      console.log(this.formDatelist)
+
+      this.gettabledata(obj)
+    } else {
+      let obj = {
+        page: currentPage,
+        limit: pageSize,
+        deptCode_equal: this.formdata.department, //部门id
+        userName: this.formdata.userName, //警员
+        timeType: this.formdata.TimeData, //时间类型
+        timeRange: this.myDate,
+        fileType_equal: this.formdata.Filetype,
+        fileLevel_equal: this.formdata.levelData,
+        uploadDate_gt: this.formdata.date[0].format("YYYY-MM-DD HH:mm:ss"), //必填  时间起
+        uploadDate_lt: this.formdata.date[1].format("YYYY-MM-DD HH:mm:ss"), //必填  时间止
+        recordDate_gt: "",
+        recordDate_lt: "",
+      }
+      this.gettabledata(obj)
+    }
+  }
+
+  public selectAllEvent({checked, records}) {
+    this.selectedRowKeys = records
+    console.log(checked ? "所有勾选事件" : "所有取消事件", records)
+  }
+
+  public selectChangeEvent({checked, records}) {
+    this.selectedRowKeys = records
+    console.log(checked ? "勾选事件" : "取消事件", records)
+  }
+
+  private tableRowClassName(record: any, index: number) {
+    record.rowIndex = index;
+    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  }
+
+  public modify(row) {
+    var cases = row.relateCase
+    if (cases) {
+      if (JSON.stringify(cases) == "{}") {
+        return "关联删除"
+      }
+      var resStr = ""
+      for (var key in cases) {
+        resStr += cases[key] + "(" + key + "),"
+      }
+      resStr = resStr.substring(0, resStr.length - 1)
+      return resStr
+    } else {
+      return "未关联"
+    }
+  }
+
+  private filedownload() {
+    // alert("当前下载" + this.filedetails.downloadPath)
+    window.open(this.filedetails.downloadPath)
+  }
+
+  private tccancel() {
+    this.activeKey = "1"
+    this.form.resetFields()
+    this.form2.resetFields()
+    this.form3.resetFields()
+    this.PreviousDisabled = false
+    this.NextDisabled = false
+  }
+
+  private previous() {
+    // console.log(this.Tablesubscript)
+    // console.log(this.fileId)
+    this.NextDisabled = false
+    let index = this.arrSelect(this.Tablesubscript, this.fileId)
+    if (index == 0) {
+      this.$message.info("已经是第一个了")
+      this.PreviousDisabled = true
+    } else {
+      this.fileId = this.Tablesubscript[index - 1]
+      console.log(this.fileId)
+      // 修改弹窗文件信息
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.filedetails = res.data
+        console.log(res.data)
+        this.fileCode = res.data.code
+        this.activeKey = "1"
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+      })
+    }
+  }
+
+  private next() {
+    this.PreviousDisabled = false
+    let index = this.arrSelect(this.Tablesubscript, this.fileId)
+    if (index == this.Tablesubscript.length - 1) {
+      this.$message.info("已经是当前页面最后一个")
+      this.NextDisabled = true
+    } else {
+      this.fileId = this.Tablesubscript[index + 1]
+      console.log(this.fileId)
+      // 修改弹窗文件信息
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.filedetails = res.data
+        console.log(res.data)
+        this.fileCode = res.data.code
+        this.activeKey = "1"
+        this.playerOptions["sources"][0]["src"] = res.data.httpPath //修改视频方法
+      })
+    }
+  }
+
+  private arrSelect(arr, val) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] == val + "") return i
+    }
+    return -1
+  }
+
+  private moduleDlt() {
+    console.log(this.fileId)
+    this.DataM.bumendlt([this.fileId]).then((res) => {
+      if (res.code == 0) {
+        this.$message.success(res.msg)
+        console.log(this.formDatelist)
+        this.gettabledata(this.formDatelist)
+        this.visible = false
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
+  }
+
+  // 视频播完回调
+  private onPlayerEnded(e) {
+    (this.$refs.videoPlayer as any).player.src(e.options_.sources[0].src) // 重置视频进度条
+  }
+
+  private fileLevel(val) {
+    let str = ""
+    switch (val) {
+    case 1:
+      str = "低"
+      break
+    case 2:
+      str = "中"
+      break
+    case 3:
+      str = "高"
+      break
+    default:
+      break
+    }
+    return str
+  }
+}
+</script>
+
+<style lang="less" scope>
+.ant-form-item {
+  margin-bottom: 7px;
+}
+
+.contaninerheader {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 13px;
+}
+
+.contaninerheader {
+  > div > button {
+    background: #0db8df;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    // width: 58px;
+    height: 30px;
+  }
+
+  > div > button:nth-of-type(1) {
+    margin-right: 9px;
+  }
+}
+
+.box {
+  width: 347px;
+  height: 337px;
+  background: #ffffff;
+  border: 1px solid #f1f1f1;
+}
+
+.dropdown {
+  width: 58px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #f1f1f1;
+  display: block;
+  text-align: center;
+  color: #a1a9b5;
+}
+
+.ant-row .ant-form-item {
+  width: 100%;
+}
+
+.ant-form-item-label > label {
+  color: #808994;
+}
+
+#AvData .ant-table-tbody > tr > td {
+  padding: 0px;
+  height: 36px;
+  line-height: 36px;
+}
+
+#AvData .ant-table-thead {
+  height: 36px;
+  line-height: 36px;
+}
+
+.light-row {
+  background-color: #f5f5f5;
+}
+
+.dark-row {
+  background-color: #ffffff;
+}
+
+.ant-calendar-picker {
+  width: 200px !important;
+}
+
+/*滚动条整体部分*/
+.mytable-scrollbar ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/*滚动条的轨道*/
+.mytable-scrollbar ::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+/*滚动条里面的小方块，能向上向下移动*/
+.mytable-scrollbar ::-webkit-scrollbar-thumb {
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  border: 1px solid #f1f1f1;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.mytable-scrollbar ::-webkit-scrollbar-thumb:hover {
+  background-color: #a8a8a8;
+}
+
+.mytable-scrollbar ::-webkit-scrollbar-thumb:active {
+  background-color: #787878;
+}
+
+/*边角，即两个滚动条的交汇处*/
+.mytable-scrollbar ::-webkit-scrollbar-corner {
+  background-color: #ffffff;
+}
+
+.screen {
+  width: 347px;
+  height: 260px;
+}
+
+.filesee {
+  display: flex;
+  height: 410px;
+
+  .filesee_left {
+    width: 560px;
+    margin-right: 12px;
+    overflow: hidden;
+
+    div {
+      // height: 100%;
+      height: auto;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .filesee_right {
+    width: 40%;
+  }
+}
+
+.fileclass {
+  padding-left: 22px;
+
+  p {
+    color: #7f8893;
+  }
+
+  ul {
+    padding-left: 24px;
+
+    li {
+      line-height: 36px;
+      font-size: 12px;
+      color: #7f8893;
+    }
+  }
+
+  h2 {
+    font-size: 12px;
+    line-height: 1;
+    margin-bottom: 16px;
+    color: #7f8893;
+  }
+}
+
+.AvData {
+  .vjs-custom-skin > .video-js {
+    height: 423px;
+  }
+}
+
+.biaozhus {
+  .ant-calendar-picker {
+    width: 276px !important;
+  }
+}
+
+.ant-checkbox + span {
+  letter-spacing: -0.9px;
+}
+
+.pfx {
+  .ant-checkbox-wrapper {
+    display: flex;
+    line-height: 1;
+
+    span:nth-of-type(2) {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 80%;
+      text-overflow: ellipsis;
+    }
+  }
+
+}
+
+.pf {
+  .is-horizontal {
+    display: none;
+  }
+}
+</style>
