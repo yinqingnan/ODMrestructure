@@ -82,6 +82,7 @@
           <div style="width：100%">
             <vxe-table
               border
+              width="100%"
               show-overflow
               keep-source
               height="270"
@@ -93,14 +94,14 @@
                 field="dictKey"
                 title="字典项值"
                 show-overflow
-                wdith="60"
+                width="25%"
                 align="center"
                 :edit-render="{name: 'input', attrs: {type: 'text'}}"
               />
               <vxe-table-column
                 field="value"
                 title="字典名称"
-                wdith="60"
+                width="25%"
                 show-overflow
                 align="center"
                 :edit-render="{name: 'input', attrs: {type: 'text'}}"
@@ -110,10 +111,10 @@
                 title="序号"
                 show-overflow
                 align="center"
-                MaxWdith="40"
+                width="20%"
                 :edit-render="{name: 'input', attrs: {type: 'text'}}"
               />
-              <vxe-table-column title="操作" align="center" wdith="80">
+              <vxe-table-column title="操作" align="center" width="30%">
                 <template v-slot="{row}">
                   <template v-if="row.isedit">
                     <vxe-button @click="saveRowEvent(row)" v-isshow="'base:dict:save'">保存</vxe-button>

@@ -359,7 +359,7 @@ export default class Recording extends Vue {
 .vxe-cell {
   display: inline-block;
   span {
-    margin-right: 8px;
+    // margin-right: 8px;
     cursor: pointer;
   }
 }

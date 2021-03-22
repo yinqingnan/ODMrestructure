@@ -632,8 +632,8 @@ export default class User extends Vue {
               size: this.page.pageSize,
               name: this.name,
               role: this.role,
-              sidx: "code",
-              order: "create_time"
+              sidx: "id",
+              order: "desc"
             })
           } else {
             this.$message.error(res.msg)
@@ -719,8 +719,8 @@ export default class User extends Vue {
               size: this.page.pageSize,
               name: this.name,
               role: this.role,
-              sidx: "code",
-              order: "create_time"
+              sidx: "id",
+              order: "disc"
             })
           } else {
             this.iserror = true
