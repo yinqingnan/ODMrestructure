@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2020-12-01 11:37:14
- * @LastEditTime: 2020-12-18 16:45:52
+ * @LastEditTime: 2021-03-23 10:55:13
  * @FilePath: \src\views\DataM\Lawarchives.vue
 -->
 
@@ -49,11 +49,6 @@ export default class Lawarchives extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
   }
-  
-// private timecompute(time1? , time2?){
-//   let str = '123'
-//   return str
-// }
   get inputContent() {
     // moment(m2 - m1).format('HH时mm分ss秒');
     return `${moment('10:00','hh:mm').subtract(parseInt(this.time1), "minutes").format('HH:mm')} ~ ${moment('10:00','hh:mm').add(parseInt(this.time2), "minutes").format('HH:mm')}`;
@@ -69,13 +64,13 @@ export default class Lawarchives extends Vue {
     if(reg.test(this.time1) && reg.test(this.time2)){
       if(parseInt(this.time1)  <= 180 && parseInt(this.time2)  <= 180){
         this.DataM.relationsave({
-            match_floor: this.time2,
-            match_limit: this.time1,
+          match_floor: this.time2,
+          match_limit: this.time1,
         }).then((res) => {
-            if (res.code == 0) {
-              this.$message.success(res.msg)
-              this.getdata()
-            }
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+            this.getdata()
+          }
         })
       }else{
         this.$message.error("偏移时间输入不正确，请输入0到180之间的整数")

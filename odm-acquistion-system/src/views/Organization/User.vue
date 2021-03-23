@@ -393,7 +393,7 @@ export default class User extends Vue {
     name: "",
     role: "",
     sidx: "code",
-    order: "create_time"
+    order: "desc"
   }
   // todo 事件和生命周期
   private created() {
@@ -453,7 +453,7 @@ export default class User extends Vue {
           user: val.username,
           roleId: val.role,
           sidx: "code",
-          order: "create_time"
+          order: "desc"
         }
         this.gettabledata(obj)
       }
@@ -567,7 +567,7 @@ export default class User extends Vue {
                     name: _that.name,
                     role: _that.role,
                     sidx: "code",
-                    order: "create_time"
+                    order: "desc"
                   })
                 } else {
                   _that.$message.error(res.msg)
@@ -593,7 +593,7 @@ export default class User extends Vue {
                     name: _that.name,
                     role: _that.role,
                     sidx: "code",
-                    order: "create_time"
+                    order: "desc"
                   })
                 } else {
                   _that.$message.error(res.msg)
