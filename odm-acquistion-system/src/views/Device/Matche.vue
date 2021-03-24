@@ -328,7 +328,7 @@
                         'is_enabled',
                         {
                           initialValue: EIPstatus[0].value || '',
-                           rules: [{ required: true, message: '请选择执法仪型号' }]
+                           rules: [{ required: true, message: '请选择设备状态' }]
                         }
                       ]"
                     :allow-clear="true"

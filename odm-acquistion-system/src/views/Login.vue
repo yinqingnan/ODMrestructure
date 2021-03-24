@@ -11,14 +11,12 @@
             <a-form-item style="margin-bottom: 20px;">
               <a-input
                   class="logininput"
-                  :maxLength="LimitInputlength"
                   v-decorator="[
                   'username',
                   {
                     rules: [{ required: true, message: '请输入账号' },
                     {
                       validator: checkData, 
-                      trigger: 'blur'
                     }]
                   }
                 ]"
@@ -30,7 +28,6 @@
             <a-form-item>
               <a-input-password
                   class="logininput"
-                  :maxLength="LimitInputlength"
                   v-decorator="[
                   'password',
                   {
@@ -41,7 +38,6 @@
                       },
                       {
                          validator: checkData, 
-                         trigger: 'blur'
                       }
                     ]
                   }
@@ -166,7 +162,7 @@ export default class Login extends Vue {
   // 获取cookie
   private getCookie() {
     if (document.cookie.length > 0) {
-      this.checkNick = true
+      console.log(document.cookie);
       const arr = document.cookie.split(";")
       for (let i = 0; i < arr.length; i++) {
         const arr2 = arr[i].split("=")
@@ -176,7 +172,7 @@ export default class Login extends Vue {
               username: arr2[1],
             })
           })
-         
+          this.checkNick = true
         }
         if (arr2[0] === " userPwd") {
           this.$nextTick(()=>{
