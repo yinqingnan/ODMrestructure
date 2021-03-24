@@ -66,7 +66,7 @@
             v-decorator="[
               'newPassword',
               {
-                rules: [{ required: true, message: '请输入新密码！' },{ validator: codevalidator}]
+                rules: [{ required: true, message: '请输入新密码！' },{ validator: codevalidator}],validateTrigger: 'blur' 
               }
             ]"
           />
@@ -77,7 +77,7 @@
             v-decorator="[
               'newRePassword',
               {
-                rules: [{ required: true, message: '请再次输入新密码！' },{ validator: codevalidator}]
+                rules: [{ required: true, message: '请再次输入新密码！' },{ validator: codevalidator}],validateTrigger: 'blur' 
               }
             ]"
           />
@@ -205,10 +205,14 @@ export default class Header extends Vue {
   }
   private codevalidator(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,30}$/
-    if(reg.test(value)){
-      callback()
+    if(value.length < 6){
+      callback('密码长度为6至30位')
     }else{
-      callback('密码格式不正确，必须是数字或字母')
+      if(reg.test(value)){
+        callback()
+      }else{
+        callback('密码格式不正确，必须是数字或字母')
+      }
     }
   }
 }

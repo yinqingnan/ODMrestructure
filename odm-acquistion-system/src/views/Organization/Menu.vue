@@ -291,17 +291,16 @@ export default class Menu extends Vue {
           validate: [
             {
               type: "number",
-              min: 1,
-              max: 99999,
+              min: 0,
               required: true,
-              message: "仅支持数字，最小值为1,最大值为99999"
+              message: "仅支持数字"
             }
           ],
           props: {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入排序，仅限数字",
-            maxLength: "5" //
+            maxLength: "30" //
           },
           className: "menusort",
           col: {
@@ -392,7 +391,7 @@ export default class Menu extends Vue {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入权限相关",
-            maxLength: LimitInputlength
+            maxLength: 100
           },
           col: {
             span: 12
@@ -560,8 +559,7 @@ export default class Menu extends Vue {
           validate: [
             {
               type: "number",
-              min: 1,
-              max: 99999,
+              min: 0,
               required: true,
               message: "仅支持数字，最小值为1,最大值为99999"
             }
@@ -570,7 +568,7 @@ export default class Menu extends Vue {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入排序，仅限数字",
-            maxLength: "5" //
+            maxLength: "30" //
           },
           className: "menusort",
           col: {
@@ -689,17 +687,16 @@ export default class Menu extends Vue {
           validate: [
             {
               type: "number",
-              min: 1,
-              max: 99999,
+              min: 0,
               required: true,
-              message: "仅支持数字，最小值为1,最大值为99999"
+              message: "仅支持数字"
             }
           ],
           props: {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入排序，仅限数字",
-            maxLength: "5" //
+            maxLength: "30" //
           },
           className: "btnsort",
           col: {
@@ -749,9 +746,9 @@ export default class Menu extends Vue {
   // todo事件
   //子组件传递事件
   private Treeprop(state: string, val: Treepropobj, type: string) {
-    console.log(state)
-    console.log(val)
-    console.log(type)
+    // console.log(state)
+    // console.log(val)
+    // console.log(type)
     if (type == "PC") {
       // PC操作
       if (state === "dlt") {
@@ -871,6 +868,7 @@ export default class Menu extends Vue {
     form.resetFields()
   }
   private Webcancel() {
+    this.id = ''
     let form = this.WebFApi as any
     form.resetFields()
   }
@@ -942,6 +940,11 @@ export default class Menu extends Vue {
     this.WebFormshow = true
     this.id = "0"
     this.parentid = "0"
+  }
+  private cancelmenuweb () {
+    console.log(12313);
+    
+    this.id = ''
   }
   private addmenupc() {
     this.Pcstr = "PC新增菜单"

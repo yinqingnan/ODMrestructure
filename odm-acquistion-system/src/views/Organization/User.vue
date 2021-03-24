@@ -170,7 +170,6 @@
         </div>
       </div>
       <a-modal
-        class="addmodal"
         :visible="visible"
         :title="str"
         cancelText

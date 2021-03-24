@@ -107,9 +107,9 @@
                 <a-input-number
                   v-decorator="['sort', { initialValue: '',  rules: [] }]"
                   :max-length="5"
-                  :min="1"
+                  :min="0"
                   :max="99999"
-                  placeholder="请输入排序，仅限数字"
+                  placeholder="请输入数字,数字越大排序越靠后"
                 >/></a-input-number>
               </a-form-item>
             </a-col>
@@ -283,6 +283,8 @@ export default class Role extends Vue {
     })
   }
   private edit(row) {
+    console.log(row);
+    
     this.status = "编辑"
     this.str = "编辑"
     this.id = row.id
@@ -291,7 +293,7 @@ export default class Role extends Vue {
       this.form.setFieldsValue({
         name: row.name,
         remark: row.remark,
-        sort: row.sort
+        sort:Number(row.sort)
       })
     })
   }

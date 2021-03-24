@@ -117,12 +117,12 @@
               <vxe-table-column title="操作" align="center" width="30%">
                 <template v-slot="{row}">
                   <template v-if="row.isedit">
-                    <vxe-button @click="saveRowEvent(row)" v-isshow="'base:dict:save'">保存</vxe-button>
-                    <vxe-button @click="cancelRowEvent(row)">取消</vxe-button>
+                    <span class="btnspan" @click="saveRowEvent(row)" v-isshow="'base:dict:save'" style="margin-right:10px">保存</span>
+                    <span class="btnspan" @click="cancelRowEvent(row)">取消</span>
                   </template>
                   <template v-else>
-                    <vxe-button @click="editRowEvent(row)" v-isshow="'base:dict:save'">编辑</vxe-button>
-                    <vxe-button @click="dltRowEvent(row)" v-isshow="'base:dict:delete'">删除</vxe-button>
+                    <span class="btnspan" @click="editRowEvent(row)" v-isshow="'base:dict:save'" style="margin-right:10px">编辑</span>
+                    <span class="btnspan" @click="dltRowEvent(row)" v-isshow="'base:dict:delete'">删除</span>
                   </template>
                 </template>
               </vxe-table-column>
@@ -439,5 +439,10 @@ export default class RightContent extends Vue {
   .vxe-input + .vxe-button--dropdown {
     margin-left: 5px;
   }
+}
+.btnspan{
+  color: #4d96ca;
+  cursor: pointer;
+  display:inline-block;
 }
 </style>

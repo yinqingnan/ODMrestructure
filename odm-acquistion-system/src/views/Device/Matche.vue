@@ -274,7 +274,7 @@
               <a-form-item label="产品序号" class="serialnum">
                 <a-input
                     :disabled="Disabled"
-                    v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }, { validator: codevalidator}] }]"
+                    v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }, { validator: codevalidator}],validateTrigger: 'blur'  }]"
                     :max-length="LimitInputlength"
                     placeholder="请输入产品序号"
                 >/>
@@ -536,13 +536,13 @@ export default class Matche extends Vue {
 
   public gettable(obj) {
     this.DeviceM.gettabledata(obj)
-        .then((res) => {
-          this.page.totalResult = parseInt(res.count)
-          this.tableData = res.data
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      .then((res) => {
+        this.page.totalResult = parseInt(res.count)
+        this.tableData = res.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   private popup() {
@@ -605,12 +605,12 @@ export default class Matche extends Vue {
             userCode: val.usercode,
             purchaseDate:
                 val.purchasedate == ""
-                    ? null
-                    : val.purchasedate.format("YYYY-MM-DD"),
+                  ? null
+                  : val.purchasedate.format("YYYY-MM-DD"),
             warrantyDate:
                 val.warrantydate == ""
-                    ? null
-                    : val.warrantydate.format("YYYY-MM-DD")
+                  ? null
+                  : val.warrantydate.format("YYYY-MM-DD")
           })
         } else if (val.purchasedate == "" && val.warrantydate != "") {
           this.Policepersonnelsave({
@@ -622,12 +622,12 @@ export default class Matche extends Vue {
             userCode: val.usercode,
             purchaseDate:
                 val.purchasedate == ""
-                    ? null
-                    : val.purchasedate.format("YYYY-MM-DD"),
+                  ? null
+                  : val.purchasedate.format("YYYY-MM-DD"),
             warrantyDate:
                 val.warrantydate == ""
-                    ? null
-                    : val.warrantydate.format("YYYY-MM-DD")
+                  ? null
+                  : val.warrantydate.format("YYYY-MM-DD")
           })
         } else if (val.warrantydate == "" && val.purchasedate != "") {
           this.Policepersonnelsave({
@@ -639,12 +639,12 @@ export default class Matche extends Vue {
             userCode: val.usercode,
             purchaseDate:
                 val.purchasedate == ""
-                    ? null
-                    : val.purchasedate.format("YYYY-MM-DD"),
+                  ? null
+                  : val.purchasedate.format("YYYY-MM-DD"),
             warrantyDate:
                 val.warrantydate == ""
-                    ? null
-                    : val.warrantydate.format("YYYY-MM-DD")
+                  ? null
+                  : val.warrantydate.format("YYYY-MM-DD")
           })
         } else {
           if (val.purchasedate.isBefore(val.warrantydate)) {
@@ -657,12 +657,12 @@ export default class Matche extends Vue {
               userCode: val.usercode,
               purchaseDate:
                   val.purchasedate == ""
-                      ? null
-                      : val.purchasedate.format("YYYY-MM-DD"),
+                    ? null
+                    : val.purchasedate.format("YYYY-MM-DD"),
               warrantyDate:
                   val.warrantydate == ""
-                      ? null
-                      : val.warrantydate.format("YYYY-MM-DD")
+                    ? null
+                    : val.warrantydate.format("YYYY-MM-DD")
             })
           } else {
             this.$message.error("保修时间应大于购买时间")
@@ -674,9 +674,9 @@ export default class Matche extends Vue {
 
   private filterOption(input, option) {
     return (
-        option.componentOptions.children[0].text
-            .toLowerCase()
-            .indexOf(input.toLowerCase()) >= 0
+      option.componentOptions.children[0].text
+        .toLowerCase()
+        .indexOf(input.toLowerCase()) >= 0
     )
   }
 
@@ -753,36 +753,36 @@ export default class Matche extends Vue {
       let formData = new FormData() //保存文件后再保存
       formData.append("file", this.fileList[0])
       axios
-          .post(http + "recorder/import", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Token: localStorage.getItem("token")
-            }
-          })
-          .then((res: any) => {
-            let str = ""
-            str = res.data.msg.replace(/%n1/g, "&nbsp;")
-            if (res.data.code == 0) {
-              this.importshow = false
-              this.iserror = false
-              this.fileList = []
-              this.filename = ""
-              this.$message.success("导入成功")
-              this.gettable({
-                page: this.page.currentPage,
-                limit: this.page.pageSize,
-                code_equal: this.Sval.code,
-                model_equal: this.Sval.model,
-                is_enabled_equal: this.Sval.is_enabled,
-                is_binding_equal: this.Sval.is_binding,
-                user: this.Sval.user,
-                brand_equal: this.Sval.brand
-              })
-            } else {
-              this.iserror = true
-              this.errormsg = str
-            }
-          })
+        .post(http + "recorder/import", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Token: localStorage.getItem("token")
+          }
+        })
+        .then((res: any) => {
+          let str = ""
+          str = res.data.msg.replace(/%n1/g, "&nbsp;")
+          if (res.data.code == 0) {
+            this.importshow = false
+            this.iserror = false
+            this.fileList = []
+            this.filename = ""
+            this.$message.success("导入成功")
+            this.gettable({
+              page: this.page.currentPage,
+              limit: this.page.pageSize,
+              code_equal: this.Sval.code,
+              model_equal: this.Sval.model,
+              is_enabled_equal: this.Sval.is_enabled,
+              is_binding_equal: this.Sval.is_binding,
+              user: this.Sval.user,
+              brand_equal: this.Sval.brand
+            })
+          } else {
+            this.iserror = true
+            this.errormsg = str
+          }
+        })
     } else {
       this.$message.error("未选择文件")
     }
@@ -831,25 +831,25 @@ export default class Matche extends Vue {
       is_binding: this.Sval.is_binding
     }
     axios
-        .get(`${url}recorder/export`, {
-          params: obj,
-          headers: {
-            Token: localStorage.getItem("token")
-          },
-          responseType: "blob"
-        })
-        .then((res) => {
-          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-          if (navigator.msSaveBlob) {
-            // IE10+
-            window.navigator.msSaveOrOpenBlob(blob, `执法仪.xls`)
-          } else {
-            const aLink = document.createElement("a")
-            aLink.href = URL.createObjectURL(blob)
-            aLink.setAttribute("download", "执法仪" + ".xls")
-            aLink.click()
-          }
-        })
+      .get(`${url}recorder/export`, {
+        params: obj,
+        headers: {
+          Token: localStorage.getItem("token")
+        },
+        responseType: "blob"
+      })
+      .then((res) => {
+        let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+        if (navigator.msSaveBlob) {
+          // IE10+
+          window.navigator.msSaveOrOpenBlob(blob, `执法仪.xls`)
+        } else {
+          const aLink = document.createElement("a")
+          aLink.href = URL.createObjectURL(blob)
+          aLink.setAttribute("download", "执法仪" + ".xls")
+          aLink.click()
+        }
+      })
   }
 
   private getSelectEvent1() {
