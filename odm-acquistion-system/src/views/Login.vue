@@ -107,6 +107,8 @@ export default class Login extends Vue {
       if (!err) {
         if (this.checkNick) {
           this.setCookie(values.username, values.password, 7)
+          this.username = values.username
+          this.password = values.password
           this.login(values)
         } else {
           this.login(values)
@@ -137,8 +139,6 @@ export default class Login extends Vue {
         this.$message.error(res.msg)
         this.clearCookie()
         this.checkNick = false
-        this.username = ""
-        this.password = ""
       }
     })
   }
