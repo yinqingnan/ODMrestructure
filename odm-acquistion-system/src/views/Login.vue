@@ -3,34 +3,39 @@
     <div class="bg">
       <div class="loginbox">
         <div class="loginbox_header">
-          <img src="../assets/image/logon_logo.png" alt/>
+          <img src="../assets/image/logon_logo.png" alt />
           <h2>{{ Title }}</h2>
         </div>
         <div class="loginbox_body">
           <a-form :form="form" @submit="handleSubmit" autocomplete="off">
             <a-form-item style="margin-bottom: 20px;">
               <a-input
-                  class="logininput"
-                  v-decorator="[
+                class="logininput"
+                v-decorator="[
                   'username',
                   {
+                    initialValue: username,
                     rules: [{ required: true, message: '请输入账号' },
                     {
                       validator: checkData, 
                     }]
                   }
                 ]"
-                  placeholder="请输入账号信息"
+                placeholder="请输入账号信息"
               >
-                <span class="iconfont iconyonghuming" slot="prefix" style="color:#ccc;font-size:20px"></span>
+                <span
+                  class="iconfont iconyonghuming"
+                  slot="prefix"
+                  style="color:#ccc;font-size:20px"
+                ></span>
               </a-input>
             </a-form-item>
             <a-form-item>
               <a-input-password
-                  class="logininput"
-                  v-decorator="[
+                class="logininput"
+                v-decorator="[
                   'password',
-                  {
+                  {initialValue: password,
                     rules: [
                       {
                         required: true,
@@ -42,7 +47,7 @@
                     ]
                   }
                 ]"
-                  placeholder="请输入密码"
+                placeholder="请输入密码"
               >
                 <span class="iconfont iconmima" slot="prefix" style="color:#ccc;font-size:20px"></span>
               </a-input-password>
@@ -62,13 +67,13 @@
 
 <script lang="ts">
 // import { message } from "ant-design-vue"
-import {Component, Vue} from "vue-property-decorator"
-import {LimitInputlength} from "../InterfaceVariable/variable"
-import {resetRouter} from "@/router/index" //重置路由信息
-import {concatrouter} from "../router/concatrouter" //生成路由表方法
+import { Component, Vue } from "vue-property-decorator"
+import { LimitInputlength } from "../InterfaceVariable/variable"
+import { resetRouter } from "@/router/index" //重置路由信息
+import { concatrouter } from "../router/concatrouter" //生成路由表方法
 import router from "@/router"
 // import {claerTime} from '@/utils/isOperate'
-import {namespace} from "vuex-class"
+import { namespace } from "vuex-class"
 
 const Menu = namespace("Menu")
 const Tabs = namespace("Tabs")
@@ -83,18 +88,17 @@ export default class Login extends Vue {
   private checkNick = false
   public Login = new this.$api.configInterface.Login()
   private Title = ""
-
+  private password = ""
+  private username = ""
   private created() {
     this.form = this.$form.createForm(this)
   }
   private LimitInputlength = LimitInputlength
-
   private mounted() {
     this.gettitle()
     this.getCookie()
     this.cleartablist([])
   }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleSubmit(e: any): void {
     e.preventDefault()
@@ -114,7 +118,6 @@ export default class Login extends Vue {
   private handleChange(e: { target: { checked: boolean } }) {
     this.checkNick = e.target.checked
   }
-
   private login(data: object) {
     localStorage.clear()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -129,16 +132,13 @@ export default class Login extends Vue {
         resetRouter() //重置路由
         router.options.routes = concatrouter()
         router.addRoutes(concatrouter())
-        this.$router.push({path: "/home"}) //成功后跳转
-
+        this.$router.push({ path: "/home" }) //成功后跳转
       } else {
         this.$message.error(res.msg)
         this.clearCookie()
         this.checkNick = false
-        this.form.setFieldsValue({
-          password: "",
-          username: "",
-        })
+        this.username = ""
+        this.password = ""
       }
     })
   }
@@ -147,47 +147,35 @@ export default class Login extends Vue {
       this.Title = res.data
     })
   }
-
   //设置cookie
   private setCookie(cName: string, cPwd: string, exdays: number) {
     const exdate = new Date() //获取时间
     exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays) //保存的天数
     //字符串拼接cookie
     window.document.cookie =
-        "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString()
+      "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString()
     window.document.cookie =
-        "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString()
+      "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString()
   }
-
   // 获取cookie
   private getCookie() {
     if (document.cookie.length > 0) {
-      console.log(document.cookie);
+      this.checkNick = true
       const arr = document.cookie.split(";")
       for (let i = 0; i < arr.length; i++) {
         const arr2 = arr[i].split("=")
         if (arr2[0] === "userName") {
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({
-              username: arr2[1],
-            })
-          })
-          this.checkNick = true
+          this.username = arr2[1]
         }
         if (arr2[0] === " userPwd") {
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({
-              password: arr2[1],
-            })
-          })
+          this.password = arr2[1]
         }
       }
     }
   }
-
   //清除cookie
   private clearCookie = () => {
-    this.setCookie("", "", -1) //修改2值都为空，天数为负1天就好了
+    this.setCookie("", "", -1) // 修改2值都为空，天数为负1天就好了
   }
 
   private checkData(rule, value, callback) {
@@ -215,7 +203,7 @@ export default class Login extends Vue {
   width: 410px;
   border-radius: 3px;
   height: 340px;
-  background: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, 0.2);
   position: absolute;
   top: ~"calc(50% - 226px)";
   left: ~"calc(50% - 215px)";

@@ -85,7 +85,9 @@
                   <a-form-item label="采集设备位置" style="width:100%">
                     <a-input
                       v-decorator="[
-                      'address'
+                      'address',{
+                        rules: [{ required: true, message: '请输入采集设备位置' }]
+                      }
                     ]"
                       placeholder="请输入采集设备位置"
                     />
@@ -94,7 +96,7 @@
                 <a-col :span="24">
                   <a-form-item label="文件存储周期" style="width:100%" class="storageCycle">
                     <a-input-number
-                      :min="1"
+                      :min="0"
                       :max="9999"
                       v-decorator="[
                       'storageCycle'
@@ -108,12 +110,13 @@
                 </a-col>
                 <a-col :span="24" class="aNone">
                   <a-form-item label=" " style="width:100%">
-                    <a-checkbox-group
-                      v-decorator="['openCloud', { initialValue: ['1'] }]"
+                    <!-- <a-checkbox-group
+                      v-decorator="['openCloud', { initialValue: '0' }]"
                       @change="ckChange($event, 'openC')"
                     >
                       <a-checkbox value="1">连接上级平台</a-checkbox>
-                    </a-checkbox-group>
+                    </a-checkbox-group> -->
+                     <a-checkbox :checked="checkNick" @change="ckChange">记住用户名</a-checkbox>
                   </a-form-item>
                 </a-col>
                 <a-col :span="24" v-if="openC">
@@ -178,7 +181,8 @@
                       step: '00:10',
                       end: '23:50'
                     }"
-                    />一
+                    />
+                    一
                     <el-time-select
                       placeholder="结束时间"
                       v-model="endTime"
@@ -222,6 +226,8 @@ export default class RightContent extends Vue {
   public startTime = ""
   public endTime = ""
   private moment = moment
+  private checkNick = false
+
   beforeCreate() {
     this.form = this.$form.createForm(this)
   }
@@ -235,32 +241,19 @@ export default class RightContent extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 160}px`
     })
   }
-  private ckChange(e: any, val: string): void {
-    const len: number = e.length
-    if (len <= 0) {
-      this.flag = false
-    } else {
-      this.flag = true
+  private ckChange(e: { target: { checked: boolean } }): void {
+    this.checkNick = e.target.checked
+    this.openC =  e.target.checked
+    if(this.checkNick){
+      this.getSet()
     }
-    this.startTime = ''
-    this.endTime = ''
-    if (val == "openC") {
-      if (this.flag == false) {
-        this.openC = this.flag
-      } else {
-        this.openC = this.flag
-        // this.getSet()
-      }
-    }else{
-      this.openC = false
-    }
-
   }
   private getSet(){
     this.getData.getSetting({}, true).then((res) => {
       this.saveID = res.data.id
       if(res.data.openCloud){
         this.openC = true
+        this.checkNick = true
         this.$nextTick(()=>{
           this.form.setFieldsValue({
             code: res.data.code,
@@ -271,7 +264,6 @@ export default class RightContent extends Vue {
             manager: res.data.manager,
             address: res.data.address,
             storageCycle:res.data.storageCycle,
-            openCloud: res.data.openCloud ? ["1"] : ["0"],
             accessKey: res.data.accessKey,
             cloudIp: res.data.cloudIp,
             cloudPort: res.data.cloudPort,
@@ -291,7 +283,6 @@ export default class RightContent extends Vue {
             manager: res.data.manager,
             address: res.data.address,
             storageCycle:res.data.storageCycle,
-            openCloud: res.data.openCloud ? ["1"] : ["0"],
           })
         })
       }
@@ -302,8 +293,7 @@ export default class RightContent extends Vue {
     e.preventDefault()
     this.form.validateFields((err, val) => {
       if (!err) {
-        let state = val.openCloud.length > 0 ? true : false
-        if(state){
+        if(this.checkNick){
           this.saveData = {
             code: val.code,
             name: val.name,
@@ -314,7 +304,7 @@ export default class RightContent extends Vue {
             address: val.address,
             accessCloudIp: val.accessCloudIp,
             accessCloudProt: val.accessCloudProt,
-            openCloud: state,
+            openCloud: this.checkNick,
             accessKey: val.accessKey,
             cloudIp: val.cloudIp,
             cloudPort: val.cloudPort,
@@ -336,14 +326,12 @@ export default class RightContent extends Vue {
             address: val.address,
             accessCloudIp: val.accessCloudIp,
             accessCloudProt: val.accessCloudProt,
-            openCloud: state,
+            openCloud: this.checkNick,
             id: this.saveID,
             storageCycle:val.storageCycle,
-           
           }
           this.saveD(this.saveData)
         }
-   
       }
     })
   }
