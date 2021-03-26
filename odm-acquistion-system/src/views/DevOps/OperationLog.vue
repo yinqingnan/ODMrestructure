@@ -284,7 +284,6 @@ export default class OperationLog extends Vue {
     })
   }
   private typechang(val) {
-    console.log(val)
     this.$nextTick(() => {
       this.form.setFieldsValue({
         module_equal: "-1"

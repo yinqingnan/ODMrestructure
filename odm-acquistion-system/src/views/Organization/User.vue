@@ -391,7 +391,7 @@ export default class User extends Vue {
     size: this.page.pageSize,
     name: "",
     role: "",
-    sidx: "code",
+    sidx: "name",
     order: "desc"
   }
   // todo 事件和生命周期
@@ -426,7 +426,7 @@ export default class User extends Vue {
     this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
-      limit: pageSize,
+      size: pageSize,
       name: this.name,
       role: this.role
     }
@@ -804,16 +804,16 @@ export default class User extends Vue {
   border: 0;
   margin-left: 10px;
 }
-.userm /deep/ .ant-form-item-label {
-  width: 73px;
+.userm{
+.ant-form-item-label {
+  width: 74px;
 }
-.userm /deep/ .ant-form-item-control-wrapper {
+}  
+.userm {
+  .ant-form-item-control-wrapper {
   width: 578px;
 }
-.qrcodemodule /deep/ .ant-modal-body {
-  height: 280px;
 }
-
 .col--checkbox {
   margin: 0 atuo;
 }

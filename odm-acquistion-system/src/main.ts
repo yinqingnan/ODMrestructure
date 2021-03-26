@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-16 18:00:15
+ * @LastEditTime: 2021-03-26 09:51:05
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -126,17 +126,11 @@ import { concatrouter } from "@/router/concatrouter"; //生成路由表方法
 
 //路由拦截
 router.beforeEach((to, from, next) => {
-  
   NProgress.start();
   if (!localStorage.getItem("token")) {
     if (to.path !== "/login") {
       NProgress.done();
       return next("/login");
-    }
-  } else if (localStorage.getItem("lockpsd")) {
-    if (to.path !== "/lockscreen") {
-      NProgress.done();
-      return next("/lockscreen");
     }
   } else {
     if (to.path !== "/login") {
@@ -155,12 +149,12 @@ router.beforeEach((to, from, next) => {
     }
   }
   NProgress.done();
-  if(to.path ==='/login'){
-    document.title = '登陆'
-  }else{
+  if (to.path === "/login") {
+    document.title = "登陆";
+  } else {
     document.title = to.name;
   }
-  
+
   next();
 });
 

@@ -107,8 +107,6 @@ export default class Login extends Vue {
       if (!err) {
         if (this.checkNick) {
           this.setCookie(values.username, values.password, 7)
-          this.username = values.username
-          this.password = values.password
           this.login(values)
         } else {
           this.login(values)
@@ -160,24 +158,26 @@ export default class Login extends Vue {
   // 获取cookie
   private getCookie() {
     if (document.cookie.length > 0) {
-      this.checkNick = true
       const arr = document.cookie.split(";")
-      for (let i = 0; i < arr.length; i++) {
-        const arr2 = arr[i].split("=")
-        if (arr2[0] === "userName") {
+      arr.map((item) => {
+        item = item.trim()
+        console.log(item.split("="))
+        const arr2 = item.split("=")
+        if (arr2[0] == "userName") {
           this.username = arr2[1]
+          this.checkNick = true
         }
-        if (arr2[0] === " userPwd") {
+        if (arr2[0] == "userPwd") {
           this.password = arr2[1]
+          this.checkNick = true
         }
-      }
+      })
     }
   }
   //清除cookie
   private clearCookie = () => {
     this.setCookie("", "", -1) // 修改2值都为空，天数为负1天就好了
   }
-
   private checkData(rule, value, callback) {
     if (value) {
       if (/[\u4E00-\u9FA5]/g.test(value)) {

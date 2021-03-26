@@ -292,15 +292,16 @@ export default class Menu extends Vue {
             {
               type: "number",
               min: 0,
+              max: 99999,
               required: true,
-              message: "仅支持数字"
+              message: "仅支持数字，最小值为1,最大值为99999"
             }
           ],
           props: {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入排序，仅限数字",
-            maxLength: "30" //
+            maxLength: "5" //
           },
           className: "menusort",
           col: {
@@ -560,6 +561,7 @@ export default class Menu extends Vue {
             {
               type: "number",
               min: 0,
+              max: 99999,
               required: true,
               message: "仅支持数字，最小值为1,最大值为99999"
             }
@@ -568,7 +570,7 @@ export default class Menu extends Vue {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入排序，仅限数字",
-            maxLength: "30" //
+            maxLength: "5" //
           },
           className: "menusort",
           col: {
@@ -688,15 +690,16 @@ export default class Menu extends Vue {
             {
               type: "number",
               min: 0,
+              max: 99999,
               required: true,
-              message: "仅支持数字"
+              message: "仅支持数字，最小值为1,最大值为99999"
             }
           ],
           props: {
             disabled: false, //是否可禁用
             allowClear: false, //是否可清除
             placeholder: "请输入排序，仅限数字",
-            maxLength: "30" //
+            maxLength: "5" //
           },
           className: "btnsort",
           col: {
@@ -746,9 +749,6 @@ export default class Menu extends Vue {
   // todo事件
   //子组件传递事件
   private Treeprop(state: string, val: Treepropobj, type: string) {
-    // console.log(state)
-    // console.log(val)
-    // console.log(type)
     if (type == "PC") {
       // PC操作
       if (state === "dlt") {
@@ -852,8 +852,8 @@ export default class Menu extends Vue {
         this.$message.success(res.msg)
         this.addbtnshow = false
         this.gettabledata(obj.parentId)
-        this.btnid = ''
-      }else{
+        this.btnid = ""
+      } else {
         this.$message.warning(res.msg)
       }
     })
@@ -868,7 +868,7 @@ export default class Menu extends Vue {
     form.resetFields()
   }
   private Webcancel() {
-    this.id = ''
+    this.id = ""
     let form = this.WebFApi as any
     form.resetFields()
   }
@@ -884,7 +884,7 @@ export default class Menu extends Vue {
         sort: formdata.sort
       }
       this.OrganizationM.PCMenuAdd(obj).then((res) => {
-        console.log(res)
+        // console.log(res)
         if (res.code == 0) {
           this.$message.success(res.msg)
           this.getdata()
@@ -900,15 +900,15 @@ export default class Menu extends Vue {
   private WebFormSubmit() {
     const form = this.WebFApi as any
     form.submit((formData) => {
-      console.log(this.parentid)
-      console.log(this.id)
-      console.log(this.Webstr);
-      
+      // console.log(this.parentid)
+      // console.log(this.id)
+      // console.log(this.Webstr)
+
       let obj = {
         component: formData.component,
         hidden: formData.hidden == "1" ? true : false,
         icon: formData.icon,
-        id: this.Webstr == '新增菜单' ? '' : this.id,
+        id: this.Webstr == "新增菜单" ? "" : this.id,
         isEnabled: formData.isEnabled == "1" ? true : false,
         keepAlive: formData.keepAlive == "1" ? true : false,
         name: formData.name,
@@ -941,10 +941,10 @@ export default class Menu extends Vue {
     this.id = "0"
     this.parentid = "0"
   }
-  private cancelmenuweb () {
-    console.log(12313);
-    
-    this.id = ''
+  private cancelmenuweb() {
+    console.log(12313)
+
+    this.id = ""
   }
   private addmenupc() {
     this.Pcstr = "PC新增菜单"
@@ -961,10 +961,10 @@ export default class Menu extends Vue {
     setTimeout(() => {
       let form = this.AddBtnformApi as any
       form.setValue({
-        name:row.name,
-        permission:row.permission,
-        sort:row.sort,
-        remark: row.remark,
+        name: row.name,
+        permission: row.permission,
+        sort: row.sort,
+        remark: row.remark
       })
     })
   }
@@ -978,12 +978,11 @@ export default class Menu extends Vue {
       onOk() {
         return new Promise((resolve, reject) => {
           setTimeout(Math.random() > 0.5 ? resolve : reject, 500)
-          _that.OrganizationM.menubtnDlt( row.id ).then((res) => {
+          _that.OrganizationM.menubtnDlt(row.id).then((res) => {
             console.log(res)
             if (res.code == 0) {
               _that.$message.success(res.msg)
               _that.gettabledata(row.parentId)
-           
             } else {
               _that.$message.error(res.msg)
             }
@@ -1000,8 +999,7 @@ export default class Menu extends Vue {
       setTimeout(() => {
         let form = this.AddBtnformApi as any
         form.resetFields()
-      });
-     
+      })
     } else {
       this.$message.warning("请先选择需要添加的菜单")
     }
@@ -1011,8 +1009,6 @@ export default class Menu extends Vue {
     this.OrganizationM.menubtntable(id).then((res) => {
       this.tableData = res.data
       this.page.totalResult = res.data?.length && 0
-
-     
     })
   }
   private getdata() {

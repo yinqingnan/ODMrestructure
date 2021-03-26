@@ -256,7 +256,7 @@ export default class Upgrade extends Vue {
   private mounted() {
     let obj = {
       page: this.page.currentPage,
-      limit: this.page.pageSize
+      size: this.page.pageSize
     }
     this.gettabledata(obj)
     this.getdata()
@@ -274,7 +274,7 @@ export default class Upgrade extends Vue {
     this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
-      limit: pageSize
+      size: pageSize
     }
     this.gettabledata(obj)
   }
@@ -316,7 +316,7 @@ export default class Upgrade extends Vue {
               _that.$message.success(res.msg)
               let obj = {
                 page: _that.page.currentPage,
-                limit: _that.page.pageSize
+                size: _that.page.pageSize
               }
               _that.gettabledata(obj)
             } else {
@@ -382,7 +382,7 @@ export default class Upgrade extends Vue {
                 this.visible = false
                 let obj = {
                   page: this.page.currentPage,
-                  limit: this.page.pageSize
+                  size: this.page.pageSize
                 }
                 this.gettabledata(obj)
               })

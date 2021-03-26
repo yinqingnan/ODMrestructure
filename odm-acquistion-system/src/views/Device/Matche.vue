@@ -502,7 +502,7 @@ export default class Matche extends Vue {
   private getdata() {
     let obj = {
       page: this.page.currentPage,
-      limit: this.page.pageSize,
+      size: this.page.pageSize,
       order: "desc",
       sidx: "id"
     }
@@ -562,7 +562,7 @@ export default class Matche extends Vue {
       if (!err) {
         let obj = {
           page: this.page.currentPage,
-          limit: this.page.pageSize,
+          size: this.page.pageSize,
           code_like: val.code_like,
           model_equal: val.model,
           deviceStatus_equal: val.is_enabled,
@@ -702,7 +702,7 @@ export default class Matche extends Vue {
     this.page.pageSize = pageSize
     this.gettable({
       page: this.page.currentPage,
-      limit: this.page.pageSize,
+      size: this.page.pageSize,
       code_equal: this.Sval.code,
       model_equal: this.Sval.model,
       is_enabled_equal: this.Sval.is_enabled,
@@ -763,7 +763,7 @@ export default class Matche extends Vue {
             this.$message.success("导入成功")
             this.gettable({
               page: this.page.currentPage,
-              limit: this.page.pageSize,
+              size: this.page.pageSize,
               code_equal: this.Sval.code,
               model_equal: this.Sval.model,
               is_enabled_equal: this.Sval.is_enabled,
@@ -856,7 +856,7 @@ export default class Matche extends Vue {
         this.$message.success(res.msg)
         this.gettable({
           page: this.page.currentPage,
-          limit: this.page.pageSize,
+          size: this.page.pageSize,
           code: this.Sval.code,
           model: this.Sval.model,
           user: this.Sval.user,
@@ -874,7 +874,7 @@ export default class Matche extends Vue {
         this.visible = false
         this.gettable({
           page: this.page.currentPage,
-          limit: this.page.pageSize,
+          size: this.page.pageSize,
           code: this.Sval.code,
           model: this.Sval.model,
           user: this.Sval.user,
@@ -913,7 +913,7 @@ export default class Matche extends Vue {
     if (property === "deviceStatusName") property = "is_binding"
     this.gettable({
       page: this.page.currentPage,
-      limit: this.page.pageSize,
+      size: this.page.pageSize,
       code: this.Sval.code,
       model: this.Sval.model,
       user: this.Sval.user,
