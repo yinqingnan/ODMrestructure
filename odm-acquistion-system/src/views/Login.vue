@@ -70,7 +70,7 @@
 import { Component, Vue } from "vue-property-decorator"
 import { LimitInputlength } from "../InterfaceVariable/variable"
 import { resetRouter } from "@/router/index" //重置路由信息
-import { concatrouter } from "../router/concatrouter" //生成路由表方法
+import { concatrouter } from "@/router/concatrouter" //生成路由表方法
 import router from "@/router"
 // import {claerTime} from '@/utils/isOperate'
 import { namespace } from "vuex-class"
@@ -126,13 +126,20 @@ export default class Login extends Vue {
         localStorage.setItem("token", res.data.accessToken)
         localStorage.setItem("user", JSON.stringify(res.data.user))
         let arr = res.data.user.menus //菜单数据
-        // let arr = list //菜单数据
         localStorage.setItem("navlist", JSON.stringify(arr))
         this.addmenu(concatrouter())
         resetRouter() //重置路由
         router.options.routes = concatrouter()
         router.addRoutes(concatrouter())
-        this.$router.push({ path: "/home" }) //成功后跳转
+        let path = ''
+        if(arr[0].children){
+          console.log(arr[0].children[0].path);
+          path = arr[0].children[0].path
+        }else{
+          console.log(arr[0].path);
+          path = arr[0].path
+        }
+        this.$router.push({ path: `/index${path}` }) //成功后跳转
       } else {
         this.$message.error(res.msg)
         this.clearCookie()
@@ -161,7 +168,6 @@ export default class Login extends Vue {
       const arr = document.cookie.split(";")
       arr.map((item) => {
         item = item.trim()
-        console.log(item.split("="))
         const arr2 = item.split("=")
         if (arr2[0] == "userName") {
           this.username = arr2[1]

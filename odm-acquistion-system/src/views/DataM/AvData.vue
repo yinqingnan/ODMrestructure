@@ -244,7 +244,7 @@
             <p style="font-size:14px;font-weight:bold">{{ filedetails.fileName }}</p>
             <p
               style="font-size:14px;font-weight:bold"
-            >{{ filedetails.userName }}({{ filedetails.userCode }})</p>
+            >{{ filedetails.userName }}</p>
             <ul>
               <li>摄录时间：{{ filedetails.recordDate }}</li>
               <li>导入时间：{{ filedetails.uploadDate }}</li>

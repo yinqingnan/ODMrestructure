@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-02-25 16:30:19
+ * @LastEditTime: 2021-03-26 15:10:53
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\store\modules\tabs.ts
@@ -31,7 +31,7 @@ const mutations = {
     localStorage.setItem("Tabslist", JSON.stringify([val]));
   },
   [MENUADD](state: any, val: any): void {
-    if (state.tagList.length != 0) {
+    // if (state.tagList.length != 0) {
       state.result = state.tagList.some(function (item: any) {
         if (item.id == val.id) {
           return true;
@@ -53,7 +53,7 @@ const mutations = {
           // router.push({ name: val.pathAlias });
         }
       }
-    }
+    // }
   },
 
   [DLTTBS](state: any, val: any): void {

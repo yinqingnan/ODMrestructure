@@ -72,7 +72,7 @@ export default class LeftMenu extends Vue {
   addmenu!: (val: any) => {}
   private icondata_video = "icondata_video"
   private list = []
-  private openKeys: any = ["home"]
+  private openKeys: any = [this.$route.name]
   private defaultSelectedKeys = [this.$route.name]
   private theme = "dark"
   private Height = ""
