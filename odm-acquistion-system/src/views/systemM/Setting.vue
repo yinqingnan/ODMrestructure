@@ -1,5 +1,5 @@
 <template>
-  <div id="Setting">
+  <div id="Setting" >
     <el-scrollbar :style="{height:Height}">
       <div class="box">
         <a-row>
@@ -98,6 +98,7 @@
                     <a-input-number
                       :min="0"
                       :max="9999"
+                      :disabled="checkNick"
                       v-decorator="[
                       'storageCycle'
                     ]"
@@ -115,8 +116,8 @@
                       @change="ckChange($event, 'openC')"
                     >
                       <a-checkbox value="1">连接上级平台</a-checkbox>
-                    </a-checkbox-group> -->
-                     <a-checkbox :checked="checkNick" @change="ckChange">记住用户名</a-checkbox>
+                    </a-checkbox-group>-->
+                    <a-checkbox :checked="checkNick" @change="ckChange">连接上级平台</a-checkbox>
                   </a-form-item>
                 </a-col>
                 <a-col :span="24" v-if="openC">
@@ -181,8 +182,7 @@
                       step: '00:10',
                       end: '23:50'
                     }"
-                    />
-                    一
+                    />一
                     <el-time-select
                       placeholder="结束时间"
                       v-model="endTime"
@@ -197,7 +197,11 @@
                 </a-col>
                 <a-col :span="24" :style="{ textAlign: 'center' }" class="aNone">
                   <a-form-item label=" " style="width:100%">
-                    <a-button html-type="submit" class="upData" v-isshow="'core:workStation:save'">提交</a-button>
+                    <a-button
+                      html-type="submit"
+                      class="upData"
+                      v-isshow="'core:workStation:save'"
+                    >提交</a-button>
                   </a-form-item>
                 </a-col>
               </a-row>
@@ -227,7 +231,7 @@ export default class RightContent extends Vue {
   public endTime = ""
   private moment = moment
   private checkNick = false
-
+  private fullscreenLoading = false
   beforeCreate() {
     this.form = this.$form.createForm(this)
   }
@@ -243,18 +247,18 @@ export default class RightContent extends Vue {
   }
   private ckChange(e: { target: { checked: boolean } }): void {
     this.checkNick = e.target.checked
-    this.openC =  e.target.checked
-    if(this.checkNick){
+    this.openC = e.target.checked
+    if (this.checkNick) {
       this.getSet()
     }
   }
-  private getSet(){
+  private getSet() {
     this.getData.getSetting({}, true).then((res) => {
       this.saveID = res.data.id
-      if(res.data.openCloud){
+      if (res.data.openCloud) {
         this.openC = true
         this.checkNick = true
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
           this.form.setFieldsValue({
             code: res.data.code,
             name: res.data.name,
@@ -263,7 +267,7 @@ export default class RightContent extends Vue {
             phone: res.data.phone,
             manager: res.data.manager,
             address: res.data.address,
-            storageCycle:res.data.storageCycle,
+            storageCycle: res.data.storageCycle,
             accessKey: res.data.accessKey,
             cloudIp: res.data.cloudIp,
             cloudPort: res.data.cloudPort,
@@ -272,8 +276,8 @@ export default class RightContent extends Vue {
           this.endTime = res.data.uploadTime.split("~")[1]
           this.startTime = res.data.uploadTime.split("~")[0]
         })
-      }else{
-        this.$nextTick(()=>{
+      } else {
+        this.$nextTick(() => {
           this.form.setFieldsValue({
             code: res.data.code,
             name: res.data.name,
@@ -282,18 +286,17 @@ export default class RightContent extends Vue {
             phone: res.data.phone,
             manager: res.data.manager,
             address: res.data.address,
-            storageCycle:res.data.storageCycle,
+            storageCycle: res.data.storageCycle
           })
         })
       }
-      
     })
   }
   private handleSubmit(e: any): void {
     e.preventDefault()
     this.form.validateFields((err, val) => {
       if (!err) {
-        if(this.checkNick){
+        if (this.checkNick) {
           this.saveData = {
             code: val.code,
             name: val.name,
@@ -310,12 +313,12 @@ export default class RightContent extends Vue {
             cloudPort: val.cloudPort,
             deptCode: val.deptCode,
             id: this.saveID,
-            storageCycle:val.storageCycle,
+            storageCycle: val.storageCycle,
             uploadStartTime: `2020-01-01 ${this.startTime}:00`,
-            uploadEndTime:  `2020-01-01 ${this.endTime}:00`,
+            uploadEndTime: `2020-01-01 ${this.endTime}:00`
           }
           this.saveD(this.saveData)
-        }else{
+        } else {
           this.saveData = {
             code: val.code,
             name: val.name,
@@ -328,7 +331,7 @@ export default class RightContent extends Vue {
             accessCloudProt: val.accessCloudProt,
             openCloud: this.checkNick,
             id: this.saveID,
-            storageCycle:val.storageCycle,
+            storageCycle: val.storageCycle
           }
           this.saveD(this.saveData)
         }
@@ -336,11 +339,24 @@ export default class RightContent extends Vue {
     })
   }
   private saveD(val: any): void {
+    const loading = this.$loading({
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
     this.getData.upData(val, true).then((res: any) => {
+      loading.close();
+
       if (res.code == 0) {
+        // this.fullscreenLoading = false
+        if (this.checkNick) {
+          this.$router.push({ name: "Login" })
+        }
         this.$message.success(res.msg)
       } else {
         this.$message.error(res.msg)
+        
       }
     })
   }

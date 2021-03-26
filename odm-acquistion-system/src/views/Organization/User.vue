@@ -205,7 +205,7 @@
                     rules: [
                     { required: true, message: '请输入警号' },
                     { validator: codevalidator}
-                    ]
+                    ],validateTrigger: 'blur'
                   }
                   ]"
                   :max-length="LimitInputlength"

@@ -69,8 +69,8 @@
                         style="width: 100%"
                         placeholder="请选择..."
                       >
-                        <a-select-option value='1'>WEB</a-select-option>
-                        <a-select-option value='0'>PC</a-select-option>
+                        <a-select-option value="1">WEB</a-select-option>
+                        <a-select-option value="0">PC</a-select-option>
                       </a-select>
                     </a-form-item>
                     <a-form-item label="操作时段">
@@ -120,13 +120,7 @@
           >
             <vxe-table-column type="seq" width="60" align="center" title="序号" />
             <vxe-table-column field="type" title="日志类型" show-overflow align="center" width="10%" />
-            <vxe-table-column
-              field="isWeb"
-              title="平台类型"
-              show-overflow
-              align="center"
-              width="10%"
-            />
+            <vxe-table-column field="isWeb" title="平台类型" show-overflow align="center" width="10%" />
 
             <vxe-table-column field="module" title="功能模块" show-overflow align="center" width="10%" />
             <vxe-table-column
@@ -179,6 +173,18 @@ import {
   textarealength
 } from "@/InterfaceVariable/variable"
 import axios from "axios"
+
+interface Search {
+  page: number
+  size: number
+  module_equal: string
+  type_equal: string
+  createTime_ge?: string
+  createTime_le?: string
+  is_web_equal: string
+  sidx: string
+  order: string
+}
 @Component({
   components: {}
 })
@@ -201,7 +207,7 @@ export default class OperationLog extends Vue {
   private defaultdate = ""
   private type_equal = "-1" //功能模块
   private module_equal = "-1" //日志类型
-  private is_web = '1'
+  private is_web = "1"
   // todo 事件和生命周期
   private created() {
     this.form = this.$form.createForm(this)
@@ -218,8 +224,11 @@ export default class OperationLog extends Vue {
       size: this.page.pageSize,
       type_equel: "",
       module_equal: "",
+      is_web_equal:'1',
       createTime_ge: "", //开始日期
-      createTime_le: "" //结束日期
+      createTime_le: "", //结束日期
+      sidx: "id",
+      order: "asc"
     }
     this.gettabledata(obj)
   }
@@ -232,12 +241,16 @@ export default class OperationLog extends Vue {
     this.page.pageSize = pageSize
     let obj = {
       page: currentPage,
-      size: pageSize
+      size: pageSize,
+      module_equal: this.search.module_equal,
+      type_equal: this.searchtype_equel,
+      is_web_equal: this.search.is_web_equal,
+      createTime_ge: this.search.createTime_ge,
+      createTime_le: this.search.createTime_le,
+      sidx: "id",
+      order: "asc"
     }
-    this.Luckmanagement.getlogtable(obj).then((res) => {
-      this.tableData = res.data
-      this.page.totalResult = parseInt(res.count)
-    })
+    this.gettabledata(obj)
   }
   private popup() {
     return
@@ -247,19 +260,34 @@ export default class OperationLog extends Vue {
     this.module_equal = "-1"
     this.form.resetFields()
   }
+
+  private search: Search = {
+    page: 1,
+    size: 15,
+    is_web_equal: "1",
+    module_equal: "",
+    type_equal: "",
+    createTime_ge: "",
+    createTime_le: "",
+    sidx: "id",
+    order: "asc"
+  }
   private handle(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val)
+
         this.page.currentPage = 1
         this.type_equal = val.type_equal
         this.module_equal = val.module_equal
         if (val.date?.length > 0) {
-          this.gettabledata({
+          let obj = {
             page: this.page.currentPage,
             size: this.page.pageSize,
             module_equal: val.module_equal === "-1" ? "" : val.module_equal,
             type_equal: val.type_equel === "-1" ? "" : val.type_equel,
+            is_web_equal: val.is_web,
             createTime_ge:
               val.date?.length > 0
                 ? val.date[0].format("YYYY-MM-DD HH:mm:ss")
@@ -267,18 +295,26 @@ export default class OperationLog extends Vue {
             createTime_le:
               val.date?.length > 0
                 ? val.date[1].format("YYYY-MM-DD HH:mm:ss")
-                : ""
-          })
+                : "",
+            sidx: "id",
+            order: "asc"
+          }
+          this.search = obj
+          this.gettabledata(obj)
           this.createTime_ge = val.date[0].format("YYYY-MM-DD HH:mm:ss")
           this.createTime_le = val.date[1].format("YYYY-MM-DD HH:mm:ss")
         } else {
-          this.gettabledata({
+          let obj = {
             page: this.page.currentPage,
             size: this.page.pageSize,
-            is_web:val.is_web,
+            is_web_equal: val.is_web,
             module_equal: val.module_equal === "-1" ? "" : val.module_equal,
-            type_equal: val.type_equel === "-1" ? "" : val.type_equel
-          })
+            type_equal: val.type_equel === "-1" ? "" : val.type_equel,
+            sidx: "id",
+            order: "asc"
+          }
+          this.search = obj
+          this.gettabledata(obj)
         }
       }
     })
