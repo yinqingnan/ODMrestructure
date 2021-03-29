@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-21 10:34:33
- * @LastEditTime: 2021-03-04 10:19:27
+ * @LastEditTime: 2021-03-26 16:31:12
  * @FilePath: \src\components\modules\Tree\Tree.vue
  * @LastEditors: yqn
 -->
@@ -123,9 +123,8 @@ export default class Tree extends Vue {
     }, 3000)
   }
   private Onselect(selectedKeys, e) {
+    console.log(selectedKeys,e);
     let type = 'LeftClick'
-    console.log(e.node.dataRef);
-    
     let obj: Treepropobj = {
       id: e.node.dataRef.id,
     }

@@ -7,7 +7,6 @@
           class="contaninerheader"
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
-          <div></div>
           <div class="btns">
             <a-button @click="add" type="primary" v-isshow="'base:role:save'">添加</a-button>
           </div>
@@ -136,7 +135,6 @@
           </a-row>
         </a-form>
       </a-modal>
-
       <a-modal v-model="configshow" title="权限配置" @ok="configshowok" :keyboard="false">
         <a-form
           autocomplete="off"
@@ -172,9 +170,14 @@
                       :key="d.id"
                       style="line-height: 30px;height: 30px;text-overflow: ellipsis;white-space: nowrap;width: 150px;overflow: hidden;"
                       class="rightlist"
-                      :title="d.name"
                     >
-                      <a-checkbox :value="d.id">{{d.name}}</a-checkbox>
+                      <a-tooltip>
+                        <template slot="title" v-if="d.name.length > 5">{{d.name}}</template>
+                        <a-checkbox
+                          :value="d.id"
+                          style="width:110px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
+                        >{{d.name}}</a-checkbox>
+                      </a-tooltip>
                     </a-col>
                   </a-row>
                 </a-checkbox-group>
@@ -283,8 +286,8 @@ export default class Role extends Vue {
     })
   }
   private edit(row) {
-    console.log(row);
-    
+    console.log(row)
+
     this.status = "编辑"
     this.str = "编辑"
     this.id = row.id
@@ -293,7 +296,7 @@ export default class Role extends Vue {
       this.form.setFieldsValue({
         name: row.name,
         remark: row.remark,
-        sort:Number(row.sort)
+        sort: Number(row.sort)
       })
     })
   }

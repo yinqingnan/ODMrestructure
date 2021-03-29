@@ -93,7 +93,7 @@
                   key: 'id',
                   title: 'name'
                 }"
-                    @expand="onExpand"
+                    @check="PconCheck"
                   />
                 </el-scrollbar>
               </div>
@@ -106,14 +106,14 @@
                     multiple
                     :checkStrictly="true"
                     default-expand-all
-                    :auto-expand-parent="autoExpandParent"
+                    :autoExpandParent="autoExpandParent"
                     :tree-data="webtreeData"
                     :replaceFields="{
                   children: 'children',
                   key: 'id',
                   title: 'name'
                 }"
-                    @expand="onExpand"
+                    @check="WebonCheck"
                   />
                 </el-scrollbar>
               </div>
@@ -148,27 +148,15 @@ export default class Right extends Vue {
   public autoExpandParent = false
   public pccheckedKeys = [] //默认选中的
   public webcheckedKeys = [] //默认选中的
-  public pcselectKeys = []
-  public webselectKeys = []
-  public onExpand(expandedKeys) {
-    this.expandedKeys = expandedKeys
-    this.autoExpandParent = false
+  public WebonCheck(checkedKeys) {
+    this.webcheckedKeys = checkedKeys.checked
   }
-  public onCheck(checkedKeys) {
-    // console.log(checkedKeys)
-
-    this.checkedKeys = checkedKeys
+  public PconCheck(checkedKeys) {
+    this.pccheckedKeys = checkedKeys.checked
   }
   private oldData = [] // 开始排序时按住的旧数据
   private newData = [] // 拖拽过程的数据
-  @Watch("pccheckedKeys")
-  getpccheckedKeys(val) {
-    this.pcselectKeys = val.checked === undefined ? [] : val.checked
-  }
-  @Watch("webcheckedKeys")
-  getwebcheckedKeys(val) {
-    this.webselectKeys = val.checked === undefined ? [] : val.checked
-  }
+
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}`
@@ -179,7 +167,6 @@ export default class Right extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}`
     })
     this.getdata()
-    // this.gettreedata()
   }
   // todo事件
   private addbtn() {
@@ -234,23 +221,21 @@ export default class Right extends Vue {
     e.preventDefault()
   }
   private treesave() {
-    if (this.pcselectKeys.length !== 0 || this.webselectKeys.length !== 0) {
-      this.OrganizationM.rightsTreesave({
-        menuIds: [...this.pcselectKeys, ...this.webselectKeys],
-        rightId: this.id
-      }).then((res) => {
-        if (res.code == 0) {
-          this.$message.success(res.msg)
-          this.gettreedata({ rightId: this.id })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    } else {
-      this.$message.info("没有任何进行操作")
-    }
+    console.log("初始化数据")
+    this.OrganizationM.rightsTreesave({
+      menuIds: [...this.pccheckedKeys, ...this.webcheckedKeys],
+      rightId: this.id
+    }).then((res) => {
+      if (res.code == 0) {
+        this.$message.success(res.msg)
+        this.gettreedata({ rightId: this.id })
+      } else {
+        this.$message.error(res.msg)
+      }
+    })
   }
   private edit(row) {
+    this.status = "编辑"
     this.dataList.map((item) => {
       item.isEnabled = 1
     })
@@ -263,23 +248,21 @@ export default class Right extends Vue {
       title: "提示",
       content: `权限项删除后无法恢复，确定要删除权限项${row.name}吗？`,
       onOk() {
-        return new Promise((resolve, reject) => {
-          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-          _that.OrganizationM.rightsDlt(row.id).then((res) => {
-            if (res.code == 0) {
-              row.isEnabled = 1
-              _that.$message.success(res.msg)
-              _that.getdata()
-            } else {
-              _that.$message.error(res.msg)
-            }
-          })
-        }).catch(() => console.log("Oops errors!"))
+        _that.OrganizationM.rightsDlt(row.id).then((res) => {
+          if (res.code == 0) {
+            row.isEnabled = 1
+            _that.$message.success(`权限项${row.name}删除成功`)
+            _that.getdata()
+          } else {
+            _that.$message.error(`删除失败请确认没有角色使用权限项${row.name}后，再删除`)
+          }
+        })
+      
       }
     })
   }
   private saveRowEvent(row) {
-    if (this.status == "新增") {
+    if (this.status === "新增") {
       let obj = {
         id: "",
         name: row.name,
