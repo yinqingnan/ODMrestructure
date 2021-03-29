@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-26 15:10:53
+ * @LastEditTime: 2021-03-29 15:02:44
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\store\modules\tabs.ts
@@ -32,41 +32,41 @@ const mutations = {
   },
   [MENUADD](state: any, val: any): void {
     // if (state.tagList.length != 0) {
-      state.result = state.tagList.some(function (item: any) {
-        if (item.id == val.id) {
-          return true;
-        }
-      });
-      if (!state.result) {
-        // console.log(val.id);
-        //如果不存在就添加
-        state.activeKey = val.id;
-        state.tagList.push(val);
-        localStorage.setItem("activeKey", val.id); //保存当前
-        localStorage.setItem("Tabslist", JSON.stringify(state.tagList)); //保存选中项
-      } else {
-        //如果存在就进行跳转
-        state.activeKey = val.id;
-        if (val.pathAlias === "home") {
-          router.push({ path: `${val.path}` });
-        } else {
-          // router.push({ name: val.pathAlias });
-        }
+    state.result = state.tagList.some(function (item: any) {
+      if (item.id == val.id) {
+        return true;
       }
+    });
+    if (!state.result) {
+      // console.log(val.id);
+      //如果不存在就添加
+      state.activeKey = val.id;
+      state.tagList.push(val);
+      localStorage.setItem("activeKey", val.id); //保存当前
+      localStorage.setItem("Tabslist", JSON.stringify(state.tagList)); //保存选中项
+    } else {
+      //如果存在就进行跳转
+      state.activeKey = val.id;
+      if (val.pathAlias === "home") {
+        router.push({ path: `${val.path}` });
+      } else {
+        // router.push({ name: val.pathAlias });
+      }
+    }
     // }
   },
 
   [DLTTBS](state: any, val: any): void {
     if (val.flag == 0) {
       state.activeKey = state.tagList[val.flag + 1].id; //向后加一
-      router.push({ path: "/index/" + state.tagList[val.flag + 1].pathAlias });
+      router.push({ path: "/index" + state.tagList[val.flag + 1].path });
       localStorage.setItem(
         "activeKey",
-        JSON.stringify(state.tagList[val.flag + 1].id)
+        JSON.stringify(state.tagList[val.flag].id)
       ); //保存当前高亮的key
     } else {
       state.activeKey = state.tagList[val.flag - 1].id;
-      router.push({ path: "/index/" + state.tagList[val.flag - 1].pathAlias });
+      router.push({ path: "/index" + state.tagList[val.flag - 1].path });
       localStorage.setItem(
         "activeKey",
         JSON.stringify(state.tagList[val.flag - 1].id)

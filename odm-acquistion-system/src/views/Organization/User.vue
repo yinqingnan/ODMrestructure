@@ -8,12 +8,12 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown">
+            <a-dropdown :trigger="['click']" class="dropdown" :visible='searchForm'>
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box">
+              <a-menu slot="overlay" class="box" >
                 <a-form
                   autocomplete="off"
                   :form="form"
@@ -203,7 +203,6 @@
                   v-decorator="['code', 
                   { initialValue: '',
                     rules: [
-                    { required: true, message: '请输入警号' },
                     { validator: codevalidator}
                     ],validateTrigger: 'blur'
                   }
@@ -375,8 +374,9 @@ export default class User extends Vue {
   // private userroleData = []
   private postlist = []
   private Height = ""
+  private searchForm = false
   private popup() {
-    return
+    this.searchForm = true
   }
   private codedisabled = false
   private status = ""
@@ -454,6 +454,7 @@ export default class User extends Vue {
           sidx: "code",
           order: "desc"
         }
+        this.searchForm = false
         this.gettabledata(obj)
       }
     })
@@ -745,7 +746,6 @@ export default class User extends Vue {
       callback("必须为数字")
     }
   }
-
   private validatorID(rule, value, callback) {
     let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
     if(value.length == 0){
@@ -757,14 +757,15 @@ export default class User extends Vue {
         callback("身份证格式不对")
       }
     }
-   
   }
   private codevalidator(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,30}$/
-    if (reg.test(value)) {
+    if(value.length == 0){
+      callback("请输入警号")
+    }else if(!reg.test(value)){
+      callback("警号格式不正确")
+    }else{
       callback()
-    } else {
-      callback("警号格式不对，必须是数字或字母")
     }
   }
   private sortChangeEvent({ column, property, order }) {

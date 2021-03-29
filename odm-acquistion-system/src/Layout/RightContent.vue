@@ -44,7 +44,10 @@ export default class RightContent extends Vue {
       return
     }
     this.tagList.forEach((e2, i) => {
-      if (e2.key == e) {
+      console.log(e);
+      console.log(e2);
+      
+      if (e2.id == e) {
         flag = i
       }
     })
@@ -53,7 +56,6 @@ export default class RightContent extends Vue {
       flag
     }
     this.dlttbs(obj)
-    // this.tagList.splice(flag, 1);
   }
   private tabChange(e: string): void {
     localStorage.setItem("activeKey", JSON.stringify(e)) //保存当前
@@ -67,14 +69,12 @@ export default class RightContent extends Vue {
         flag = i
       }
     })
-    console.log(this.tagList[flag])
-
-    if (this.tagList[flag].pathAlias === "home") {
-      console.log(12123)
-      this.$router.push({ path: "/index/home" })
+    // console.log(this.tagList[flag].path)
+    if (this.tagList[flag].path === "/index/home") {
+      this.$router.push({ path: this.tagList[flag].path})
     } else {
       // console.log(this.tagList[flag].pathAlias)
-      this.$router.push({ path: this.tagList[flag].pathAlias })
+      this.$router.push({ path: `/index/${this.tagList[flag].pathAlias}` })
     }
   }
   private rightclick(e){

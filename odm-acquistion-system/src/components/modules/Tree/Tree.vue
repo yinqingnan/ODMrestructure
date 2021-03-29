@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-21 10:34:33
- * @LastEditTime: 2021-03-26 16:31:12
+ * @LastEditTime: 2021-03-29 14:34:09
  * @FilePath: \src\components\modules\Tree\Tree.vue
  * @LastEditors: yqn
 -->
@@ -88,7 +88,8 @@ export default class Tree extends Vue {
     let obj: Treepropobj = {
       id: this.id,
       parentid: this.parentid,
-      parentname: this.parentName
+      parentname: this.parentName,
+      name:this.name
     }
     this.tmDisplay = false
     this.send("dlt", obj, type)

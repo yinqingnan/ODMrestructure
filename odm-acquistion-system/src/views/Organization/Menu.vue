@@ -104,18 +104,6 @@
               </template>
             </vxe-table-column>
           </vxe-table>
-          <!-- <p class="pbg">
-            <vxe-pager
-              align="right"
-              size="mini"
-              :layouts="layouts"
-              :page-sizes="[15, 50, 100, 200]"
-              :current-page.sync="page.currentPage"
-              :page-size.sync="page.pageSize"
-              :total="page.totalResult"
-              @page-change="pagerchange"
-            />
-          </p>-->
         </div>
       </div>
     </div>
@@ -752,10 +740,18 @@ export default class Menu extends Vue {
     if (type == "PC") {
       // PC操作
       if (state === "dlt") {
-        this.OrganizationM.menuDlt(val.id).then((res) => {
-          if (res.code == 0) {
-            this.$message.success(res.msg)
-            this.getdata()
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let _that = this
+        this.$confirm({
+          title: "提示",
+          content: `按钮删除后无法恢复，确定要删除按钮${val.name}吗？`,
+          onOk() {
+            _that.OrganizationM.menuDlt(val.id).then((res) => {
+              if (res.code == 0) {
+                _that.$message.success(res.msg)
+                _that.getdata()
+              }
+            })
           }
         })
       } else if (state == "edit") {
@@ -820,10 +816,19 @@ export default class Menu extends Vue {
           })
         })
       } else if (state === "dlt") {
-        this.OrganizationM.menuDlt(val.id).then((res) => {
-          if (res.code == 0) {
-            this.$message.success(res.msg)
-            this.getdata()
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let _that = this
+        this.$confirm({
+          title: "提示",
+          content: `按钮删除后无法恢复，确定要删除按钮${val.name}吗？`,
+          onOk() {
+            _that.OrganizationM.menuDlt(val.id).then((res) => {
+              if (res.code == 0) {
+                _that.$message.success(res.msg)
+                _that.getdata()
+              }
+            })
+            
           }
         })
       }
@@ -900,10 +905,6 @@ export default class Menu extends Vue {
   private WebFormSubmit() {
     const form = this.WebFApi as any
     form.submit((formData) => {
-      // console.log(this.parentid)
-      // console.log(this.id)
-      // console.log(this.Webstr)
-
       let obj = {
         component: formData.component,
         hidden: formData.hidden == "1" ? true : false,

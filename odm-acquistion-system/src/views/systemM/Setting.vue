@@ -111,12 +111,6 @@
                 </a-col>
                 <a-col :span="24" class="aNone">
                   <a-form-item label=" " style="width:100%">
-                    <!-- <a-checkbox-group
-                      v-decorator="['openCloud', { initialValue: '0' }]"
-                      @change="ckChange($event, 'openC')"
-                    >
-                      <a-checkbox value="1">连接上级平台</a-checkbox>
-                    </a-checkbox-group>-->
                     <a-checkbox :checked="checkNick" @change="ckChange">连接上级平台</a-checkbox>
                   </a-form-item>
                 </a-col>
@@ -347,9 +341,7 @@ export default class RightContent extends Vue {
     });
     this.getData.upData(val, true).then((res: any) => {
       loading.close();
-
       if (res.code == 0) {
-        // this.fullscreenLoading = false
         if (this.checkNick) {
           this.$router.push({ name: "Login" })
         }

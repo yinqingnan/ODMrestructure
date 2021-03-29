@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <div class="btns">
-            <a-button @click="add" type="primary" v-isshow="'base:role:save'">添加</a-button>
+            <a-button @click="add" type="primary" style="margin:0" v-isshow="'base:role:save'">添加</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">

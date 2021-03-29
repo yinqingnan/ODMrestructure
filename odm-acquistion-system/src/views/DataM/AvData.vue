@@ -4,7 +4,7 @@
       <div class="container">
         <div class="contaninerheader" style="padding:13px 26px 0 26px">
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown">
+            <a-dropdown :trigger="['click']" class="dropdown" :visible='searchForm'>
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -477,6 +477,7 @@ export default class AvData extends Vue {
     // console.log(this.StandaloneMode);
   }
   private handleSubmit(e?: any): void {
+    this.searchForm = false
     e.preventDefault()
     this.form.validateFields((err, val) => {
       if (!err) {
@@ -525,8 +526,9 @@ export default class AvData extends Vue {
     this.form.resetFields()
   }
 
-  private popup(e: { preventDefault: () => void }) {
-    e.preventDefault()
+  private searchForm = false
+  private popup() {
+    this.searchForm = true
   }
   private onRowClick({ row, rowIndex, column }) {
     // console.log(column)

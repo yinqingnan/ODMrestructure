@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown">
+            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -538,8 +538,9 @@ export default class Matche extends Vue {
       })
   }
 
+  private searchForm = false
   private popup() {
-    return
+    this.searchForm = true
   }
 
   private reset() {
@@ -555,9 +556,9 @@ export default class Matche extends Vue {
     user: "",
     brand: ""
   }
-
   private handle(e) {
     e.preventDefault()
+    this.searchForm = false
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         let obj = {
@@ -576,7 +577,6 @@ export default class Matche extends Vue {
         if (val.is_binding === "all") {
           delete obj["is_binding"]
         }
-        console.log(obj)
         this.gettable(obj)
       }
     })
@@ -708,7 +708,9 @@ export default class Matche extends Vue {
       is_enabled_equal: this.Sval.is_enabled,
       is_binding_equal: this.Sval.is_binding,
       user: this.Sval.user,
-      brand_equal: this.Sval.brand
+      brand_equal: this.Sval.brand,
+      order: "desc",
+      sidx: "id"
     })
   }
 
@@ -881,8 +883,8 @@ export default class Matche extends Vue {
           brand: this.Sval.brand,
           is_enabled: this.Sval.is_enabled,
           is_binding: this.Sval.is_binding,
-          order: "desc",
-          sidx: "id"
+          order: this.order,
+          sidx: this.sidx
         })
         this.$message.success(res.msg)
         this.reset()
@@ -905,12 +907,15 @@ export default class Matche extends Vue {
       callback("格式不正确，必须是数字或字母")
     }
   }
+  private order = "desc"
+  private sidx = "id"
 
   private sortChangeEvent({ column, property, order }) {
     this.tableData = []
     if (property === "modelName") property = "model"
     if (property === "userName") property = "user_code"
     if (property === "deviceStatusName") property = "is_binding"
+    if (property === "brandName") property = "brand"
     this.gettable({
       page: this.page.currentPage,
       size: this.page.pageSize,
@@ -923,20 +928,9 @@ export default class Matche extends Vue {
       order: order,
       sidx: property
     })
+    this.order = order
+    this.sidx = property
   }
-
-  // private purchasedator(rule, value, callback) {
-  //   console.log(value)
-  //   if (value == "") {
-  //     callback()
-  //   }
-  // }
-  // private warrantydator(rule, value, callback) {
-  //   console.log(value)
-  //   if (value == "") {
-  //     callback()
-  //   }
-  // }
 }
 </script>
 

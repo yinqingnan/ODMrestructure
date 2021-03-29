@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-26 10:25:19
- * @LastEditTime: 2021-03-16 18:12:49
+ * @LastEditTime: 2021-03-29 10:30:19
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\router\concatrouter.ts
@@ -26,6 +26,7 @@
         permission: item.permissions,
         key: item.id,
       }, //源信息
+      id:item.id,
       key: item.id, //key值
       hidden: item.hidden, // 是否隐藏 true隐藏
       // redirect:item.redirect
