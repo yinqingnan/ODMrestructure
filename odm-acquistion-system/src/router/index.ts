@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-22 11:10:28
+ * @LastEditTime: 2021-03-29 17:31:56
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\router\index.ts
@@ -23,10 +23,10 @@ const routes: Array<RouteConfig> = [
     },
     component: () => import("@/views/Login.vue"),
   },
-  {
-    path: "/audio",
-    component: () => import("@/views/Testviews/Testviews.vue"),
-  },
+  // {
+  //   path: "/audio",
+  //   component: () => import("@/views/Testviews/Testviews.vue"),
+  // },
 ];
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location: RawLocation) {

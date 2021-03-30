@@ -692,11 +692,9 @@ export default class Matche extends Vue {
       })
     })
   }
-
   private tableRowClassName(record: any, index: number) {
-    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+    return record.rowIndex % 2 === 1 ? "bgF5" : ""
   }
-
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
@@ -818,7 +816,7 @@ export default class Matche extends Vue {
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     let obj = {
-      code: this.Sval.code,
+      code_like: this.Sval.code,
       model: this.Sval.model,
       user: this.Sval.user,
       brand: this.Sval.brand,

@@ -663,8 +663,8 @@ export default class AvData extends Vue {
   }
 
   private tableRowClassName(record: any, index: number) {
-    record.rowIndex = index
-    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+    // record.rowIndex = index
+    return record.rowIndex % 2 === 1 ? "bgF5" : ""
   }
 
   private arrSelect(arr, val) {

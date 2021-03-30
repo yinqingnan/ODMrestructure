@@ -44,9 +44,6 @@ export default class RightContent extends Vue {
       return
     }
     this.tagList.forEach((e2, i) => {
-      console.log(e);
-      console.log(e2);
-      
       if (e2.id == e) {
         flag = i
       }

@@ -670,9 +670,6 @@ export default class RightContent extends Vue {
 #Announcement .ant-table-thead .pd10 {
   padding: 8px 16px;
 }
-.bgF5 {
-  background: #f5f5f5;
-}
 .linkBox {
   display: flex;
 }

@@ -79,29 +79,30 @@
             <h2>字典项</h2>
             <a-button type="primary" @click="addtable">添加</a-button>
           </div>
-          <div style="width：100%">
+          <div>
             <vxe-table
               border
-              width="100%"
               show-overflow
               keep-source
               height="270"
+              class="mytable-scrollbar"
               ref="editTable"
               :data="edittableData"
-              :edit-config="{trigger: 'manual', mode: 'row'}"
+              :edit-config="{trigger: 'manual', mode: 'row',showStatus: true}"
+              :edit-rules="validRules"
             >
               <vxe-table-column
                 field="dictKey"
                 title="字典项值"
                 show-overflow
-                width="25%"
+                width="155"
                 align="center"
                 :edit-render="{name: 'input', attrs: {type: 'text'}}"
               />
               <vxe-table-column
                 field="value"
                 title="字典名称"
-                width="25%"
+                width="155"
                 show-overflow
                 align="center"
                 :edit-render="{name: 'input', attrs: {type: 'text'}}"
@@ -111,17 +112,27 @@
                 title="序号"
                 show-overflow
                 align="center"
-                width="20%"
+                width="93"
                 :edit-render="{name: 'input', attrs: {type: 'text'}}"
               />
-              <vxe-table-column title="操作" align="center" width="30%">
+              <vxe-table-column title="操作" align="center" width="185">
                 <template v-slot="{row}">
                   <template v-if="row.isedit">
-                    <span class="btnspan" @click="saveRowEvent(row)" v-isshow="'base:dict:save'" style="margin-right:10px">保存</span>
+                    <span
+                      class="btnspan"
+                      @click="saveRowEvent(row)"
+                      v-isshow="'base:dict:save'"
+                      style="margin-right:10px"
+                    >保存</span>
                     <span class="btnspan" @click="cancelRowEvent(row)">取消</span>
                   </template>
                   <template v-else>
-                    <span class="btnspan" @click="editRowEvent(row)" v-isshow="'base:dict:save'" style="margin-right:10px">编辑</span>
+                    <span
+                      class="btnspan"
+                      @click="editRowEvent(row)"
+                      v-isshow="'base:dict:save'"
+                      style="margin-right:10px"
+                    >编辑</span>
                     <span class="btnspan" @click="dltRowEvent(row)" v-isshow="'base:dict:delete'">删除</span>
                   </template>
                 </template>
@@ -224,32 +235,36 @@ export default class RightContent extends Vue {
     const edittable = this.$refs.editTable as any
     edittable.setActiveRow(row)
   }
-  private saveRowEvent(row) {
+
+  private async saveRowEvent(row) {
     const edittable = this.$refs.editTable as any
-    edittable.clearActived()
-    row.isedit = false
-    console.log(this.edittableData)
-    let obj = this.edittableData.filter((item) => item.id === row.id)
-    delete obj[0]["isedit"]
-    delete obj[0]["dictItems"]
-    this.getData.saveedittable(...obj).then((res) => {
-      if (res.code == 0) {
-        this.$message.success(res.msg)
-        this.getData.getdetails(this.dictKey).then((res) => {
-          this.edittableData = res.data
-          this.addstate = true
+    console.log();
+    edittable.validate(row).then(err=>{
+      if(!err){
+        edittable.clearActived()
+        row.isedit = false
+        let obj = this.edittableData.filter((item) => item.id === row.id)
+        delete obj[0]["isedit"]
+        delete obj[0]["dictItems"]
+        this.getData.saveedittable(...obj).then((res) => {
+          if (res.code == 0) {
+            this.$message.success(res.msg)
+            this.getData.getdetails(this.dictKey).then((res) => {
+              this.edittableData = res.data
+              this.addstate = true
+            })
+          } else {
+            this.$message.error(res.msg)
+            this.editRowEvent(row)
+          }
         })
-      } else {
-        this.$message.error(res.msg)
-        this.editRowEvent(row)
       }
     })
   }
   private cancelRowEvent(row) {
-    console.log(row)
     if (row.id == "") {
       console.log(row)
-      this.edittableData.pop()
+      this.edittableData.shift()
     }
     row.isedit = false
     const edittable = this.$refs.editTable as any
@@ -275,7 +290,6 @@ export default class RightContent extends Vue {
     })
   }
   private edit(val: any): void {
-    console.log(val)
     this.dictKey = val.dictKey
     this.value = val.value
     this.visible = true
@@ -300,12 +314,51 @@ export default class RightContent extends Vue {
     }
     if (this.addstate) {
       this.editRowEvent(obj)
-      this.edittableData.push(obj)
+      this.edittableData.unshift(obj)
       this.addstate = false
     } else {
       this.cancelRowEvent(obj)
       this.$message.warning("仅支持单次添加")
     }
+  }
+
+  private validRules = {
+    dictKey: [
+      { required: true, message: "必填项不能为空" },
+      { validator: this.dictKeyValid }
+    ],
+    value: [
+      { required: true, message: "必填项不能为空" },
+      { validator: this.dictKeyValid }
+    ],
+    sort: [{ validator: this.sortValid }]
+  }
+  private dictKeyValid({ cellValue }) {
+    return new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+        if (cellValue && (cellValue.length > 30)) {
+          reject(new Error("长度在30个字符之内"))
+        } else {
+          resolve()
+        }
+      }, 100)
+    })
+  }
+  private sortValid({ cellValue }) {
+    return new Promise<void>((resolve, reject) => {
+      const reg = /^\d+$|^\d+[.]?\d+$/
+      setTimeout(() => {
+        if (cellValue && (cellValue.length > 3)) {
+          reject(new Error("长度在3字符之内"))
+        }else if(cellValue.length === 0){
+          resolve()
+        }else if(!reg.test(cellValue)){
+          reject(new Error("只能输入正整数"))
+        } else {
+          resolve()
+        }
+      }, 100)
+    })
   }
 }
 </script>
@@ -376,9 +429,7 @@ export default class RightContent extends Vue {
 #Dictionary .ant-table-thead .pd10 {
   padding: 8px 16px;
 }
-.bgF5 {
-  background: #f5f5f5;
-}
+
 .linkBox {
   display: flex;
 }
@@ -440,9 +491,9 @@ export default class RightContent extends Vue {
     margin-left: 5px;
   }
 }
-.btnspan{
+.btnspan {
   color: #4d96ca;
   cursor: pointer;
-  display:inline-block;
+  display: inline-block;
 }
 </style>

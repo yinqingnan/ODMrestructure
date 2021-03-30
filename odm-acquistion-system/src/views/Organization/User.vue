@@ -411,7 +411,7 @@ export default class User extends Vue {
   }
   // todo事件
   private tableRowClassName(record) {
-    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+    // return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private gettabledata(obj) {
     this.OrganizationM.getusertable(obj).then((res) => {

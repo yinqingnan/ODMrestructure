@@ -79,6 +79,18 @@
               </template>
             </vxe-table-column>
           </vxe-table>
+            <p>
+            <vxe-pager
+              align="right"
+              size="mini"
+              :layouts="layouts"
+              :page-sizes="[15, 50, 100, 200]"
+              :current-page.sync="page.currentPage"
+              :page-size.sync="page.pageSize"
+              :total="page.totalResult"
+              @page-change="pagerchange"
+            />
+          </p>
         </div>
       </div>
       <a-modal v-model="visible" :title="str" @ok="handleOk" :keyboard="false">
@@ -238,15 +250,15 @@ export default class Role extends Vue {
     })
     let obj = {
       page: 1,
-      size: 10,
+      size: 15,
       sidx: "sort",
       order: "asc"
     }
     this.gettabledata(obj)
   }
   // todo事件
-  private tableRowClassName(record: any) {
-    return record.rowIndex % 2 === 0 ? "bgF5" : ""
+  private tableRowClassName(record: any, index: number) {
+    // return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private add() {
     this.str = "添加角色"
@@ -257,9 +269,8 @@ export default class Role extends Vue {
   private gettabledata(obj?) {
     this.OrganizationM.getroletable(obj).then((res) => {
       console.log(res)
-
       this.tableData = res.data
-      this.page.totalResult = res.count
+      this.page.totalResult = Number(res.count)
     })
   }
   private configure(row) {
@@ -316,7 +327,7 @@ export default class Role extends Vue {
 
               _that.gettabledata({
                 page: 1,
-                size: 10,
+                size: 15,
                 sidx: "sort",
                 order: "asc"
               })
@@ -341,7 +352,7 @@ export default class Role extends Vue {
         this.OrganizationM.roleupdate(obj).then((res) => {
           if (res.code == 0) {
             this.$message.success(res.msg)
-            this.gettabledata({ page: 1, size: 10, sidx: "sort", order: "asc" })
+            this.gettabledata({ page: 1, size: 15, sidx: "sort", order: "asc" })
             this.visible = false
             this.form.resetFields()
           } else {
@@ -365,7 +376,7 @@ export default class Role extends Vue {
           if (res.code == 0) {
             this.configshow = false
             this.$message.success(res.msg)
-            this.gettabledata({ page: 1, size: 10, sidx: "sort", order: "asc" })
+            this.gettabledata({ page: 1, size: 15, sidx: "sort", order: "asc" })
           } else {
             this.$message.error(res.msg)
           }
@@ -377,9 +388,21 @@ export default class Role extends Vue {
     this.tableData = []
     let obj = {
       page: 1,
-      size: 10,
+      size: 15,
       sidx: property,
       order: order
+    }
+    this.gettabledata(obj)
+  }
+
+  private pagerchange({ currentPage, pageSize }) {
+    this.page.currentPage = currentPage
+    this.page.pageSize = pageSize
+    let obj = {
+      page: currentPage,
+      size: pageSize,
+      sidx: "sort",
+      order: "asc"
     }
     this.gettabledata(obj)
   }

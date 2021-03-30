@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-29 15:02:44
+ * @LastEditTime: 2021-03-29 17:24:22
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\store\modules\tabs.ts
@@ -31,7 +31,6 @@ const mutations = {
     localStorage.setItem("Tabslist", JSON.stringify([val]));
   },
   [MENUADD](state: any, val: any): void {
-    // if (state.tagList.length != 0) {
     state.result = state.tagList.some(function (item: any) {
       if (item.id == val.id) {
         return true;
@@ -53,20 +52,29 @@ const mutations = {
         // router.push({ name: val.pathAlias });
       }
     }
-    // }
   },
 
   [DLTTBS](state: any, val: any): void {
     if (val.flag == 0) {
       state.activeKey = state.tagList[val.flag + 1].id; //向后加一
-      router.push({ path: "/index" + state.tagList[val.flag + 1].path });
+      console.log(state.tagList[val.flag + 1].path);
+
+      if (state.tagList[val.flag + 1].path === "/index/home") {
+        router.push({ path: state.tagList[val.flag + 1].path });
+      } else {
+        router.push({ path: "/index" + state.tagList[val.flag + 1].path });
+      }
       localStorage.setItem(
         "activeKey",
         JSON.stringify(state.tagList[val.flag].id)
       ); //保存当前高亮的key
     } else {
       state.activeKey = state.tagList[val.flag - 1].id;
-      router.push({ path: "/index" + state.tagList[val.flag - 1].path });
+      if (state.tagList[val.flag - 1].path === "/index/home") {
+        router.push({ path: state.tagList[val.flag - 1].path });
+      } else {
+        router.push({ path: "/index" + state.tagList[val.flag - 1].path });
+      }
       localStorage.setItem(
         "activeKey",
         JSON.stringify(state.tagList[val.flag - 1].id)

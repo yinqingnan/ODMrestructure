@@ -142,7 +142,7 @@ export class Dictionary {
     const url = `/dict/delete/${id}`;
     return new Promise((resolve, reject) => {
       this.axios
-        .get(url)
+        .post(url)
         .then((res: any) => {
           this.Res.resultHandle(res, resolve);
         })
