@@ -6,40 +6,27 @@
         <h2>{{Title}}</h2>
       </div>
       <div class="header_rigth hidden-sm-and-down">
-        <!-- <div class="logo">
-          <div id="components-badge-demo-title" @click="getNotice">
-            <a-badge :dot="isshow" title="Custom hover text" >
-              <a-icon type="alert" style="color:#fff;font-size:22px" />
-            </a-badge>
-          </div>
-        </div> -->
-   
         <div class="Menuss">
-          <h2>
-              {{ username }}
-          </h2>
+          <h2>{{ username }}</h2>
           <div class="division"></div>
           <div>
-              <span class="iconmima iconfont" @click="modify"></span>
+            <span class="iconmima iconfont" @click="modify"></span>
           </div>
           <div>
-              <span class="icontuichu iconfont" @click="outuser"></span>
+            <span class="icontuichu iconfont" @click="outuser"></span>
           </div>
-          <!-- <a-dropdown :trigger="['click']">
-           
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a href="javascript:;" @click="modify">修改密码</a>
-              </a-menu-item>
-              <a-menu-item>
-                <a href="javascript:;" @click="outuser">安全退出</a>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown> -->
         </div>
       </div>
     </div>
-    <a-modal v-model="visible" title="修改密码" ok-text="确认" cancel-text="取消" @ok="hideModal" :keyboard='false'>
+    <a-modal
+      v-model="visible"
+      title="修改密码"
+      ok-text="确认"
+      cancel-text="取消"
+       @cancel='psdcancel'
+      @ok="hideModal"
+      :keyboard="false"
+    >
       <a-form
         :form="form"
         :label-col="{ span: 5 }"
@@ -84,7 +71,7 @@
         </a-form-item>
       </a-form>
     </a-modal>
-    <a-modal v-model="Noticeshow" title="公告" :footer="null" :keyboard='false'>
+    <a-modal v-model="Noticeshow" title="公告" :footer="null" :keyboard="false">
       <div style="text-align: center;height:130px;line-height:130px" v-if="!blank">公告示例</div>
       <a-empty v-else />
     </a-modal>
@@ -119,10 +106,10 @@ export default class Header extends Vue {
   }
   private modify() {
     this.visible = true
-    let name = JSON.parse(localStorage.getItem('user'))
+    let name = JSON.parse(localStorage.getItem("user"))
     this.$nextTick(() => {
       this.form.setFieldsValue({
-        username: name.name,
+        username: name.name
       })
     })
   }
@@ -134,17 +121,21 @@ export default class Header extends Vue {
       okText: "确认",
       cancelText: "取消",
       onOk() {
-        localStorage.clear()
         that.$router.push({ name: "Login" })
         that.cleartablist([])
-        that.Login.outuser({})
-      },
+        that.Login.outuser({}).then((res=>{
+          localStorage.clear()
+        }))
+      }
     })
   }
   private gettitle() {
     this.Login.gettitle({}, false).then((res: any) => {
       this.Title = res.data
     })
+  }
+  private psdcancel () {
+    this.form.resetFields()
   }
   private handleSubmit() {
     // e.preventDefault();
@@ -189,8 +180,8 @@ export default class Header extends Vue {
     // this.visible = false;
   }
   private getusermsg() {
-    let user = JSON.parse(localStorage.getItem("user")); 
-    this.username= user.name;
+    let user = JSON.parse(localStorage.getItem("user"))
+    this.username = user.name
   }
   private getNotice() {
     this.Noticeshow = true
@@ -205,13 +196,13 @@ export default class Header extends Vue {
   }
   private codevalidator(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,30}$/
-    if(value.length < 6){
-      callback('密码长度为6至30位')
-    }else{
-      if(reg.test(value)){
+    if (value.length < 6) {
+      callback("密码长度为6至30位")
+    } else {
+      if (reg.test(value)) {
         callback()
-      }else{
-        callback('密码格式不正确，必须是数字或字母')
+      } else {
+        callback("密码格式不正确，必须是数字或字母")
       }
     }
   }
@@ -226,21 +217,20 @@ export default class Header extends Vue {
   display: flex;
   justify-content: space-between;
 }
-.header_left{
+.header_left {
   display: flex;
-  h2{
+  h2 {
     font-size: 24px;
     font-weight: 600;
-    line-height:74px;
+    line-height: 74px;
     color: #fff;
   }
-  img{
+  img {
     width: 50px;
     height: 50px;
-    margin:13px 10px 0 10px
+    margin: 13px 10px 0 10px;
   }
 }
-
 
 .head-example {
   width: 42px;
@@ -276,31 +266,29 @@ export default class Header extends Vue {
   display: flex;
   margin-left: 16px;
   margin-right: 11px;
-  h2{
+  h2 {
     font-size: 16px;
     color: #fff;
     font-weight: 500;
   }
-  div{
+  div {
     width: 35px;
     height: 35px;
     text-align: center;
     margin-top: 15px;
     line-height: 1;
     span {
-      
       color: #fff;
       cursor: pointer;
       font-size: 20px;
+    }
   }
-  }
-  
 }
-.iconmima:hover{
-  color:#7eb5e8 ;
+.iconmima:hover {
+  color: #7eb5e8;
 }
-.icontuichu:hover{
-  color:#7eb5e8 ;
+.icontuichu:hover {
+  color: #7eb5e8;
 }
 .ant-dropdown-menu-item {
   width: 134px;
@@ -315,12 +303,12 @@ export default class Header extends Vue {
 .ant-form-item {
   margin-bottom: 12px;
 }
-.division{
+.division {
   height: 35px;
   margin-left: 19px;
   margin-top: 10px !important ;
   width: 2px !important;
-  border-left:1px solid #384c6c ;
-  border-right:1px solid #1e3153 ;
+  border-left: 1px solid #384c6c;
+  border-right: 1px solid #1e3153;
 }
 </style>

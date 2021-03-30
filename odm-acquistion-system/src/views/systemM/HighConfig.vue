@@ -68,7 +68,7 @@
         title="编辑"
         @ok="handleOk"
         width="635px"
-        wrapClassName="myAM"
+        wrapClassName="myAMxxxx"
         cancelText="取消"
         okText="提交"
         :keyboard='false'
@@ -179,7 +179,6 @@ export default class RightContent extends Vue {
   }
   private getList(val: any): void {
     this.getData.getList(val, true).then((res) => {
-      console.log(res)
       this.tabData = res.data
       this.page.totalResult = res.data.length
     })
@@ -335,14 +334,14 @@ export default class RightContent extends Vue {
 .linkBox {
   display: flex;
 }
-.myAM .ant-form-inline.ant-form-item {
+.myAMxxxx .ant-form-inline.ant-form-item {
   display: flex;
 }
-.myAM .ant-form-inline .ant-form-item {
+.myAMxxxx .ant-form-inline .ant-form-item {
   margin-bottom: 0;
   height: 60px;
 }
-.myAM .ant-modal-body {
+.myAMxxxx .ant-modal-body {
   margin-bottom: 24px;
 }
 .mr10 {

@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-25 13:51:04
- * @LastEditTime: 2021-02-26 16:13:28
+ * @LastEditTime: 2021-03-30 15:32:46
  * @FilePath: \src\views\Device\Systemupgrade.vue
  * @LastEditors: yqn
 -->
@@ -25,7 +25,7 @@
           <a-upload
             :file-list="pc_fileList"
             :before-upload="pc_beforeUpload"
-            accept=".zip, .rar"
+            accept=".zip"
             class="pcupload"
             :remove="pc_handleRemove"
           >
@@ -39,7 +39,7 @@
           <a-upload
             :file-list="web_fileList"
             :before-upload="web_beforeUpload"
-            accept=".zip, .rar"
+            accept=".zip"
             class="pcupload"
             :remove="web_handleRemove"
           >
@@ -73,19 +73,16 @@ export default class Systemupgrade extends Vue {
   public pc_iserror = false
   private web_fileList = []
   private web_iserror = false
-
   private mounted() {
     this.getversion()
   }
   private getversion() {
     this.DeviceM.getversion().then((res) => {
-      console.log(res)
       this.pc_version = res.data.pc_ver
       this.web_version = res.data.web_ver
     })
   }
   private pc_beforeUpload(file) {
-    console.log(file)
     if (file.type != "application/x-zip-compressed") {
       this.$message.error("文件类型错误，仅支持.zip 类型的压缩包文件")
       this.pc_filename = ""
@@ -212,8 +209,6 @@ export default class Systemupgrade extends Vue {
   }
   private btnsubmit() {
     this.pcupload()
-    // this.pc_iserror && this.pcupload()
-    // this.web_iserror && this.webupload()
   }
 }
 </script>

@@ -32,7 +32,7 @@
                     <a-form-item label="厂商">
                       <a-select
                         v-decorator="[
-                        'brand',
+                        'brandName',
                         {
                           initialValue: undefined,
                           rules: []
@@ -268,8 +268,15 @@
             <a-col :span="24">
               <a-form-item label="产品序号" class="serialnum">
                 <a-input
+                @focus="clearvalidator"
                   :disabled="Disabled"
-                  v-decorator="['code', { initialValue: '',  rules: [{ required: true, message: '必填项不能为空' }, { validator: codevalidator}],validateTrigger: 'blur'  }]"
+                  v-decorator="['code', { initialValue: '',  
+                  rules: [
+                      { required: true, message: '必填项不能为空' }, 
+                      { validator: codevalidator}
+                      ],
+                      validateTrigger: 'blur'  
+                      }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入产品序号"
                 >/></a-input>
@@ -545,7 +552,8 @@ export default class Matche extends Vue {
 
   private reset() {
     this.form.resetFields()
-    this.form2.resetFields()
+    this.handle()
+    this.searchForm = false
   }
 
   private Sval = {
@@ -556,8 +564,8 @@ export default class Matche extends Vue {
     user: "",
     brand: ""
   }
-  private handle(e) {
-    e.preventDefault()
+  private handle(e?) {
+    e?.preventDefault()
     this.searchForm = false
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
@@ -780,7 +788,6 @@ export default class Matche extends Vue {
       this.$message.error("未选择文件")
     }
   }
-
   private imports() {
     this.importshow = true
   }
@@ -891,12 +898,10 @@ export default class Matche extends Vue {
       }
     })
   }
-
   private handleCancel(e) {
-    this.reset()
+    this.form2.resetFields()
     this.visible = false
   }
-
   private codevalidator(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,30}$/
     if (reg.test(value)) {
@@ -928,6 +933,9 @@ export default class Matche extends Vue {
     })
     this.order = order
     this.sidx = property
+  }
+  public clearvalidator () {
+    this.form2.setFields({ code: { value: '', errors: false } })
   }
 }
 </script>

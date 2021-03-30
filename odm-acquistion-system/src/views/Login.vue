@@ -3,7 +3,7 @@
     <div class="bg">
       <div class="loginbox">
         <div class="loginbox_header">
-          <img src="../assets/image/logon_logo.png" alt />
+          <img src="../assets/image/logo.png" alt />
           <h2>{{ Title }}</h2>
         </div>
         <div class="loginbox_body">
@@ -17,8 +17,11 @@
                     initialValue: username,
                     rules: [{ required: true, message: '请输入账号' },
                     {
-                      validator: checkData, 
-                    }]
+                      validator:namecheck
+                    }
+                   
+                    ],
+                      validateTrigger:'blur'
                   }
                 ]"
                 placeholder="请输入账号信息"
@@ -42,9 +45,10 @@
                         message: '请输入密码'
                       },
                       {
-                         validator: checkData, 
+                        validator: psdcheck
                       }
-                    ]
+                    ],
+                    validateTrigger:'blur'
                   }
                 ]"
                 placeholder="请输入密码"
@@ -184,15 +188,23 @@ export default class Login extends Vue {
   private clearCookie = () => {
     this.setCookie("", "", -1) // 修改2值都为空，天数为负1天就好了
   }
-  private checkData(rule, value, callback) {
-    if (value) {
-      if (/[\u4E00-\u9FA5]/g.test(value)) {
-        callback(new Error("帐号格式错误，请重新输入"))
-      } else {
-        callback()
-      }
+  private namecheck (rule, value, callback){
+    let reg = /^[A-Za-z0-9]{5,30}$/
+    if(value.length>= 30){
+      callback(new Error("帐号格式错误，请重新输入"))
+    }else if(!reg.test(value)){
+      callback(new Error("帐号格式错误，请重新输入"))
+    }else{
+      callback()
     }
-    callback()
+  }
+  private psdcheck (rule, value, callback){
+    let reg = /^[A-Za-z0-9]{6,12}$/
+    if(!reg.test(value)){
+      callback(new Error("密码格式错误，请重新输入"))
+    }else{
+      callback()
+    }
   }
 }
 </script>

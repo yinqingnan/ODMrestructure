@@ -94,7 +94,7 @@
             :row-class-name="tableRowClassName"
             :data="tableData"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
-            :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'desc'}, orders: ['desc', 'asc']}"
+            :sort-config="{trigger: 'cell', defaultSort: {field: 'code', order: 'desc'}, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
             <vxe-table-column type="checkbox" width="60" align="center" fixed="left" />
@@ -391,7 +391,7 @@ export default class User extends Vue {
     size: this.page.pageSize,
     name: "",
     role: "",
-    sidx: "name",
+    sidx: "code",
     order: "desc"
   }
   // todo 事件和生命周期
@@ -415,7 +415,6 @@ export default class User extends Vue {
   }
   private gettabledata(obj) {
     this.OrganizationM.getusertable(obj).then((res) => {
-      console.log(res)
       this.tableData = res.data
       this.page.totalResult = parseInt(res.count)
     })
@@ -451,8 +450,8 @@ export default class User extends Vue {
           size: this.page.pageSize,
           user: val.username,
           roleId: val.role,
-          sidx: "code",
-          order: "desc"
+          sidx: this.property,
+          order: this.order
         }
         this.searchForm = false
         this.gettabledata(obj)
@@ -514,8 +513,10 @@ export default class User extends Vue {
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     let obj = {
-      name: this.name,
-      roleId: this.role
+      user: this.name,
+      roleId: this.role,
+      sidx: this.property,
+      order:this.order
     }
     axios
       .get(`${url}user/export`, {
@@ -566,8 +567,8 @@ export default class User extends Vue {
                     size: _that.page.pageSize,
                     name: _that.name,
                     role: _that.role,
-                    sidx: "code",
-                    order: "desc"
+                    sidx:  this.property,
+                    order: this.order
                   })
                 } else {
                   _that.$message.error(res.msg)
@@ -592,8 +593,8 @@ export default class User extends Vue {
                     size: _that.page.pageSize,
                     name: _that.name,
                     role: _that.role,
-                    sidx: "code",
-                    order: "desc"
+                    sidx:  this.property,
+                    order: this.order
                   })
                 } else {
                   _that.$message.error(res.msg)
@@ -632,8 +633,8 @@ export default class User extends Vue {
               size: this.page.pageSize,
               name: this.name,
               role: this.role,
-              sidx: "id",
-              order: "desc"
+              sidx:  this.property,
+              order: this.order
             })
           } else {
             this.$message.error(res.msg)
@@ -658,7 +659,9 @@ export default class User extends Vue {
         rolename: row.roleIds,
         remarks: row.remark,
         name: row.name,
-        code: row.code
+        code: row.code,
+        sidx: this.property,
+        order: this.order
       })
     })
   }
@@ -719,8 +722,8 @@ export default class User extends Vue {
               size: this.page.pageSize,
               name: this.name,
               role: this.role,
-              sidx: "id",
-              order: "disc"
+              sidx: this.property,
+              order: this.order
             })
           } else {
             this.iserror = true
@@ -768,6 +771,8 @@ export default class User extends Vue {
       callback()
     }
   }
+  public property = 'code'
+  public order = 'desc'
   private sortChangeEvent({ column, property, order }) {
     this.tableData = []
     let obj = {
@@ -778,6 +783,8 @@ export default class User extends Vue {
       sidx: property,
       order: order
     }
+    this.property = property
+    this.order = order
     this.gettabledata(obj)
   }
 }

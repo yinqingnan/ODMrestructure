@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-29 17:24:22
+ * @LastEditTime: 2021-03-30 14:18:19
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\store\modules\tabs.ts
@@ -57,8 +57,6 @@ const mutations = {
   [DLTTBS](state: any, val: any): void {
     if (val.flag == 0) {
       state.activeKey = state.tagList[val.flag + 1].id; //向后加一
-      console.log(state.tagList[val.flag + 1].path);
-
       if (state.tagList[val.flag + 1].path === "/index/home") {
         router.push({ path: state.tagList[val.flag + 1].path });
       } else {

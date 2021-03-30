@@ -66,7 +66,8 @@
         cancelText="取消"
         okText="提交"
         :keyboard="false"
-      >
+        @cancel="cancelevent"
+>
         <div class="editmodal_header">
           <h2>基础信息</h2>
           <div>
@@ -216,7 +217,6 @@ export default class RightContent extends Vue {
     const val = {
       page: currentPage,
       size: pageSize,
-      parentKey_equal: "position"
     }
     this.getList(val)
   }
@@ -359,6 +359,14 @@ export default class RightContent extends Vue {
         }
       }, 100)
     })
+  }
+  public cancelevent () {
+    const val = {
+      page: 1,
+      size: 15,
+    }
+    this.getList(val)
+    
   }
 }
 </script>

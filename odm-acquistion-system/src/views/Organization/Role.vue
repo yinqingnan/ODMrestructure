@@ -35,8 +35,8 @@
               sortable
             />
             <vxe-table-column
-              field="remark"
-              title="角色描述"
+              field="sort"
+              title="排序"
               show-overflow
               align="center"
               minWidth="140"
@@ -54,6 +54,13 @@
               show-overflow
               align="center"
               minWidth="280"
+            />
+            <vxe-table-column
+              field="remark"
+              title="角色描述"
+              show-overflow
+              align="center"
+              minWidth="140"
             />
             <vxe-table-column title="操作" show-overflow align="center" fixed="right" minWidth="180">
               <template v-slot="{ row }">
@@ -79,7 +86,7 @@
               </template>
             </vxe-table-column>
           </vxe-table>
-            <p>
+          <p>
             <vxe-pager
               align="right"
               size="mini"
@@ -268,7 +275,8 @@ export default class Role extends Vue {
   }
   private gettabledata(obj?) {
     this.OrganizationM.getroletable(obj).then((res) => {
-      console.log(res)
+      console.log(res.data)
+
       this.tableData = res.data
       this.page.totalResult = Number(res.count)
     })
@@ -394,7 +402,6 @@ export default class Role extends Vue {
     }
     this.gettabledata(obj)
   }
-
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
@@ -408,7 +415,6 @@ export default class Role extends Vue {
   }
 }
 </script>
-
 <style lang="less" scope>
 .btns {
   line-height: 1;

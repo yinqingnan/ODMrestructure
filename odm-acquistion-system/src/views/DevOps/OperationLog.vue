@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" :visible='searchForm'>
+            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -90,6 +90,13 @@
                       ]"
                         @change="onChange"
                       />
+                    </a-form-item>
+                    <a-form-item label="姓名/警号" v-if="usercode">
+                      <a-input
+                        v-decorator="['user', { initialValue: '', rules: [] }]"
+                        :max-length="LimitInputlength"
+                        placeholder="请输入姓名/警号"
+                      >/></a-input>
                     </a-form-item>
                   </el-scrollbar>
                   <div class="modulebot">
@@ -182,6 +189,7 @@ interface Search {
   createTime_ge?: string
   createTime_le?: string
   is_web_equal: string
+  user?: string
   sidx: string
   order: string
 }
@@ -208,6 +216,7 @@ export default class OperationLog extends Vue {
   private type_equal = "-1" //功能模块
   private module_equal = "-1" //日志类型
   private is_web = "1"
+  private usercode = false
   // todo 事件和生命周期
   private created() {
     this.form = this.$form.createForm(this)
@@ -224,7 +233,7 @@ export default class OperationLog extends Vue {
       size: this.page.pageSize,
       type_equel: "",
       module_equal: "",
-      is_web_equal:'1',
+      is_web_equal: "1",
       createTime_ge: "", //开始日期
       createTime_le: "", //结束日期
       sidx: "id",
@@ -247,20 +256,24 @@ export default class OperationLog extends Vue {
       is_web_equal: this.search.is_web_equal,
       createTime_ge: this.search.createTime_ge,
       createTime_le: this.search.createTime_le,
+      user:this.search.user,
       sidx: "id",
       order: "asc"
     }
     this.gettabledata(obj)
   }
-   private searchForm = false
-   private popup() {
-     this.searchForm = true
-   }
-   private reset() {
-     this.type_equal = "-1"
-     this.module_equal = "-1"
-     this.form.resetFields()
-   }
+  private searchForm = false
+  private popup() {
+    this.searchForm = true
+  }
+  private reset() {
+    this.type_equal = "-1"
+    this.module_equal = "-1"
+    this.form.resetFields()
+    this.searchForm = false
+    this.usercode = false
+    this.handle()
+  }
 
   private search: Search = {
     page: 1,
@@ -270,16 +283,16 @@ export default class OperationLog extends Vue {
     type_equal: "",
     createTime_ge: "",
     createTime_le: "",
+    user:'',
     sidx: "id",
     order: "asc"
   }
-  private handle(e) {
-    e.preventDefault()
+  private handle(e?) {
+    e?.preventDefault()
     this.searchForm = false
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         console.log(val)
-
         this.page.currentPage = 1
         this.type_equal = val.type_equal
         this.module_equal = val.module_equal
@@ -298,6 +311,7 @@ export default class OperationLog extends Vue {
               val.date?.length > 0
                 ? val.date[1].format("YYYY-MM-DD HH:mm:ss")
                 : "",
+            user: val?.user,
             sidx: "id",
             order: "asc"
           }
@@ -312,6 +326,7 @@ export default class OperationLog extends Vue {
             is_web_equal: val.is_web,
             module_equal: val.module_equal === "-1" ? "" : val.module_equal,
             type_equal: val.type_equel === "-1" ? "" : val.type_equel,
+            user: val?.user,
             sidx: "id",
             order: "asc"
           }
@@ -327,6 +342,8 @@ export default class OperationLog extends Vue {
         module_equal: "-1"
       })
     })
+    if (val == 2) this.usercode = true
+    else this.usercode = false
   }
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
