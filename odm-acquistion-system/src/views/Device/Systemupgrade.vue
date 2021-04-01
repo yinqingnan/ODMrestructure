@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-25 13:51:04
- * @LastEditTime: 2021-03-30 15:32:46
+ * @LastEditTime: 2021-04-01 11:49:54
  * @FilePath: \src\views\Device\Systemupgrade.vue
  * @LastEditors: yqn
 -->
@@ -83,18 +83,17 @@ export default class Systemupgrade extends Vue {
     })
   }
   private pc_beforeUpload(file) {
-    if (file.type != "application/x-zip-compressed") {
+    if (file.type !== "application/x-zip-compressed") {
       this.$message.error("文件类型错误，仅支持.zip 类型的压缩包文件")
       this.pc_filename = ""
       this.pc_fileList = []
       this.pc_iserror = false
-    } else if (file.size >= 52428800) {
+    } else if (file.size >= 524288000) {
       this.$message.error("超出文件大小设定值")
       this.pc_filename = ""
       this.pc_fileList = []
       this.pc_iserror = false
     } else {
-      console.log(333)
       this.pc_filename = file.name
       this.pc_fileList = [file]
       this.pc_iserror = true
@@ -102,12 +101,12 @@ export default class Systemupgrade extends Vue {
     return false
   }
   private web_beforeUpload(file) {
-    if (file.type != "application/x-zip-compressed") {
+    if (file.type !== "application/x-zip-compressed") {
       this.$message.error("文件类型错误，仅支持.zip 类型的压缩包文件")
       this.web_filename = ""
       this.web_fileList = []
       this.web_iserror = false
-    } else if (file.size >= 52428800) {
+    } else if (file.size >= 524288000) {
       this.$message.error("超出文件大小设定值")
       this.web_filename = ""
       this.web_fileList = []

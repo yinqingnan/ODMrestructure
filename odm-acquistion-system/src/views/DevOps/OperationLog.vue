@@ -240,17 +240,6 @@ export default class OperationLog extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     this.getdata()
-    // let obj = {
-    //   page: this.page.currentPage,
-    //   size: this.page.pageSize,
-    //   type_equel: "",
-    //   module_equal: "",
-    //   is_web_equal: "1",
-    //   createTime_ge: "", //开始日期
-    //   createTime_le: "", //结束日期
-    //   sidx: "id",
-    //   order: "desc"
-    // }
     this.gettabledata(this.search)
   }
   // todo事件

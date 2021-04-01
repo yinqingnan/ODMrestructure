@@ -268,7 +268,6 @@
               style="margin-left: 92px;"
               @click="signsave"
               v-isshow="'core:file:mark'"
-              :disabled="StandaloneMode"
             >保存</a-button>
           </div>
         </div>
@@ -281,7 +280,6 @@
           type="default"
           @click="moduleDlt"
           v-isshow="'core:file:delete'"
-          :disabled="StandaloneMode"
         >删除</a-button>
       </template>
     </a-modal>
@@ -338,9 +336,6 @@ const Test = namespace("Test")
 })
 export default class AvData extends Vue {
   [x: string]: any
-  // @Test.State((state) => state.StandaloneMode)
-  // StandaloneMode!: boolean
-  public StandaloneMode = false
   public DataM = new this.$api.configInterface.DataM()
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength
@@ -402,7 +397,6 @@ export default class AvData extends Vue {
   }
   private namejurisdiction = false
   private defalutname = ""
-  // private StandaloneMode = false
   private visible = false
   private option = {
     // 显示重置表单按扭
@@ -488,9 +482,7 @@ export default class AvData extends Vue {
         sidx: this.sidx
       })
     }
-    this.StandaloneMode = JSON.parse(localStorage.getItem("user"))!.openCloud
 
-    // console.log(this.StandaloneMode);
   }
   private handleSubmit(e?: any): void {
     this.searchForm = false
@@ -533,7 +525,6 @@ export default class AvData extends Vue {
     this.DataM.gettabledata(obj, true).then((res: any) => {
       this.page.totalResult = parseInt(res.count)
       this.tabledata = res.data
-      // console.log(res.data)
       this.Tablesubscript = []
       // 保存当前表格的所有code
       if (res.data) {
@@ -572,7 +563,7 @@ export default class AvData extends Vue {
           })
         })
       } else {
-        // 弹窗文件信息
+      // 弹窗文件信息
         this.visible = true
         this.fileCode = row.code
         this.fileId = row.id

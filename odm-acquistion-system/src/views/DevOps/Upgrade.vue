@@ -8,7 +8,11 @@
           style="padding:12px 25px 0 25px;display:flex;justify-content: flex-end;"
         >
           <div class="accessbtn">
-            <a-button type="primary" @click="Uploadpackage" v-isshow="'core:upgrade:recorderPackage'">上传升级包</a-button>
+            <a-button
+              type="primary"
+              @click="Uploadpackage"
+              v-isshow="'core:upgrade:recorderPackage'"
+            >上传升级包</a-button>
           </div>
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
@@ -97,7 +101,7 @@
         @cancel="handleCancel"
         okText="提交"
         :width="640"
-        :keyboard='false'
+        :keyboard="false"
       >
         <a-form
           autocomplete="off"
@@ -329,15 +333,18 @@ export default class Upgrade extends Vue {
   }
   private filestatus = false
   private beforeUpload(file) {
-    console.log(file)
     this.fileList = []
     if (
-      file.type == "application/zip" ||
       file.type == "application/x-zip-compressed"
     ) {
       this.fileList = [file]
       this.filename = file.name
       this.filestatus = true
+    } else if (file.size >= 524288000) {
+      this.$message.error("超出文件大小设定值")
+      this.fileList = []
+      this.filename = ""
+      this.filestatus = false
     } else {
       this.$message.error("文件类型错误!")
       this.fileList = []
@@ -363,20 +370,20 @@ export default class Upgrade extends Vue {
           if (this.filestatus) {
             let formData = new FormData() //保存文件后再保存
             formData.append("file", this.fileList[0])
-            formData.append('brand',val.brand)
-            formData.append('content',val.content)
-            formData.append('model',val.model)
-            formData.append('ver',val.ver)
+            formData.append("brand", val.brand)
+            formData.append("content", val.content)
+            formData.append("model", val.model)
+            formData.append("ver", val.ver)
             axios
-              .post(this.http + "upgrade/recorder", formData,{
+              .post(this.http + "upgrade/recorder", formData, {
                 headers: {
                   "Content-Type": "multipart/form-data",
                   Token: localStorage.getItem("token")
                 }
               })
               .then((res) => {
-                console.log(res);
-              
+                console.log(res)
+
                 this.filename = ""
                 this.form.resetFields()
                 this.visible = false
