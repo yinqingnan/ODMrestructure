@@ -22,6 +22,7 @@
             class="mytable-scrollbar"
             :row-class-name="tableRowClassName"
             :data="tableData"
+            :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'desc'}, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >

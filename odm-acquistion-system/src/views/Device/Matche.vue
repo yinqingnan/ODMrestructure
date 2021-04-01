@@ -552,7 +552,7 @@ export default class Matche extends Vue {
 
   private reset() {
     this.form.resetFields()
-    this.handle()
+    this.getdata()
     this.searchForm = false
   }
 
@@ -563,6 +563,16 @@ export default class Matche extends Vue {
     is_binding: "",
     user: "",
     brand: ""
+  }
+  private exportobj =  {
+    page: 1,
+    size: 15,
+    code_like: '',
+    model_equal:'',
+    deviceStatus_equal: '',
+    is_binding_equal: '',
+    user: '',
+    brand_equal: ''
   }
   private handle(e?) {
     e?.preventDefault()
@@ -577,7 +587,7 @@ export default class Matche extends Vue {
           deviceStatus_equal: val.is_enabled,
           is_binding_equal: val.is_binding,
           user: val.user,
-          brand_equal: val.brand
+          brand_equal: val.brandName
         }
         if (val.is_enabled === "all") {
           delete obj["deviceStatus_equal"]
@@ -585,6 +595,7 @@ export default class Matche extends Vue {
         if (val.is_binding === "all") {
           delete obj["is_binding"]
         }
+        this.exportobj = obj
         this.gettable(obj)
       }
     })
@@ -715,8 +726,8 @@ export default class Matche extends Vue {
       is_binding_equal: this.Sval.is_binding,
       user: this.Sval.user,
       brand_equal: this.Sval.brand,
-      order: "desc",
-      sidx: "id"
+      order: this.order,
+      sidx: this.sid
     })
   }
 
@@ -777,7 +788,9 @@ export default class Matche extends Vue {
               is_enabled_equal: this.Sval.is_enabled,
               is_binding_equal: this.Sval.is_binding,
               user: this.Sval.user,
-              brand_equal: this.Sval.brand
+              brand_equal: this.Sval.brand,
+              order: this.order,
+              sidx: this.sidx
             })
           } else {
             this.iserror = true
@@ -823,12 +836,14 @@ export default class Matche extends Vue {
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     let obj = {
-      code_like: this.Sval.code,
-      model: this.Sval.model,
-      user: this.Sval.user,
-      brand: this.Sval.brand,
-      is_enabled: this.Sval.is_enabled,
-      is_binding: this.Sval.is_binding
+      code_like: this.exportobj.code_like,
+      model_equal: this.exportobj.model_equal,
+      user: this.exportobj.user,
+      brand_equal: this.exportobj.brand_equal,
+      deviceStatus_equal: this.exportobj.deviceStatus_equal,
+      is_binding_equal: this.exportobj.is_binding_equal,
+      order: this.order,
+      sidx: this.sidx
     }
     axios
       .get(`${url}recorder/export`, {
@@ -952,9 +967,7 @@ export default class Matche extends Vue {
 
 .btns {
   display: flex;
-
   button {
-    // width: 58px;
     height: 30px;
     line-height: 1;
     color: #fff;

@@ -113,7 +113,6 @@
         </div>
         <div class="Simpleprogrambody" :style="{height:Height}">
           <vxe-table
-            stripe
             border
             resizable
             height="auto"
@@ -217,6 +216,19 @@ export default class OperationLog extends Vue {
   private module_equal = "-1" //日志类型
   private is_web = "1"
   private usercode = false
+  
+  private search: Search = {
+    page: 1,
+    size: 15,
+    is_web_equal: "1",
+    module_equal: "",
+    type_equal: "",
+    createTime_ge: "",
+    createTime_le: "",
+    user:'',
+    sidx: "id",
+    order: "desc"
+  }
   // todo 事件和生命周期
   private created() {
     this.form = this.$form.createForm(this)
@@ -228,18 +240,18 @@ export default class OperationLog extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     this.getdata()
-    let obj = {
-      page: this.page.currentPage,
-      size: this.page.pageSize,
-      type_equel: "",
-      module_equal: "",
-      is_web_equal: "1",
-      createTime_ge: "", //开始日期
-      createTime_le: "", //结束日期
-      sidx: "id",
-      order: "asc"
-    }
-    this.gettabledata(obj)
+    // let obj = {
+    //   page: this.page.currentPage,
+    //   size: this.page.pageSize,
+    //   type_equel: "",
+    //   module_equal: "",
+    //   is_web_equal: "1",
+    //   createTime_ge: "", //开始日期
+    //   createTime_le: "", //结束日期
+    //   sidx: "id",
+    //   order: "desc"
+    // }
+    this.gettabledata(this.search)
   }
   // todo事件
   private tableRowClassName(record: any, index: number) {
@@ -248,6 +260,8 @@ export default class OperationLog extends Vue {
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
+    this.search.page = currentPage
+    this.search.size = pageSize
     let obj = {
       page: currentPage,
       size: pageSize,
@@ -257,8 +271,8 @@ export default class OperationLog extends Vue {
       createTime_ge: this.search.createTime_ge,
       createTime_le: this.search.createTime_le,
       user:this.search.user,
-      sidx: "id",
-      order: "asc"
+      sidx: this.search.sidx,
+      order: this.search.order
     }
     this.gettabledata(obj)
   }
@@ -275,18 +289,6 @@ export default class OperationLog extends Vue {
     this.handle()
   }
 
-  private search: Search = {
-    page: 1,
-    size: 15,
-    is_web_equal: "1",
-    module_equal: "",
-    type_equal: "",
-    createTime_ge: "",
-    createTime_le: "",
-    user:'',
-    sidx: "id",
-    order: "asc"
-  }
   private handle(e?) {
     e?.preventDefault()
     this.searchForm = false
@@ -313,7 +315,7 @@ export default class OperationLog extends Vue {
                 : "",
             user: val?.user,
             sidx: "id",
-            order: "asc"
+            order: "desc"
           }
           this.search = obj
           this.gettabledata(obj)
@@ -328,7 +330,7 @@ export default class OperationLog extends Vue {
             type_equal: val.type_equel === "-1" ? "" : val.type_equel,
             user: val?.user,
             sidx: "id",
-            order: "asc"
+            order: "desc"
           }
           this.search = obj
           this.gettabledata(obj)
@@ -347,16 +349,9 @@ export default class OperationLog extends Vue {
   }
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
-    let obj = {
-      module_equal: this.module_equal ? "" : this.module_equal,
-      type_equal: this.type_equal ? "" : this.type_equal,
-      is_web: this.is_web,
-      createTime_ge: "",
-      createTime_le: ""
-    }
     axios
       .get(`${url}log/export`, {
-        params: obj,
+        params: this.search,
         headers: {
           Token: localStorage.getItem("token")
         },

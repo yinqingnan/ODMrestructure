@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-26 09:51:05
+ * @LastEditTime: 2021-03-31 11:27:03
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -112,11 +112,11 @@ NProgress.configure({
   speed: 100,
   showSpinner: false,
 });
+
 Vue.use(NProgress);
 import VXETablePluginExportXLSX from "vxe-table-plugin-export-xlsx";
 VXETable.use(VXETablePluginExportXLSX);
 Vue.use(VXETable);
-
 Vue.config.productionTip = false;
 Vue.prototype.$api = new HttpService(); // 挂载服务
 Vue.prototype.$confirm = confirm; // 挂载确认弹窗服务
@@ -150,7 +150,7 @@ router.beforeEach((to, from, next) => {
   }
   NProgress.done();
   if (to.path === "/login") {
-    document.title = "登陆";
+    document.title = "登录";
   } else {
     document.title = to.name;
   }

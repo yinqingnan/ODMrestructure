@@ -137,8 +137,8 @@ export default class Header extends Vue {
   private psdcancel () {
     this.form.resetFields()
   }
-  private handleSubmit() {
-    // e.preventDefault();
+  private handleSubmit(e?) {
+    e?.preventDefault();
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
         if (
@@ -195,9 +195,9 @@ export default class Header extends Vue {
     })
   }
   private codevalidator(rule, value, callback) {
-    let reg = /^[A-Za-z0-9]{6,30}$/
+    let reg = /^[A-Za-z0-9]{6,12}$/
     if (value.length < 6) {
-      callback("密码长度为6至30位")
+      callback("密码长度为6至12位")
     } else {
       if (reg.test(value)) {
         callback()

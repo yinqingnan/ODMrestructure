@@ -1,5 +1,5 @@
 <template>
-  <div id="Setting" >
+  <div id="Setting">
     <el-scrollbar :style="{height:Height}">
       <div class="box">
         <a-row>
@@ -246,9 +246,11 @@ export default class RightContent extends Vue {
       this.getSet()
     }
   }
+  public currentState = false
   private getSet() {
     this.getData.getSetting({}, true).then((res) => {
       this.saveID = res.data.id
+      this.currentState = res.data.openCloud
       if (res.data.openCloud) {
         this.openC = true
         this.checkNick = true
@@ -308,8 +310,8 @@ export default class RightContent extends Vue {
             deptCode: val.deptCode,
             id: this.saveID,
             storageCycle: val.storageCycle,
-            uploadStartTime: `2020-01-01 ${this.startTime}:00`,
-            uploadEndTime: `2020-01-01 ${this.endTime}:00`
+            uploadStartTime: this.startTime ? `2020-01-01 ${this.startTime}:00` : "",
+            uploadEndTime: this.endTime ? `2020-01-01 ${this.endTime}:00` : ""
           }
           this.saveD(this.saveData)
         } else {
@@ -335,20 +337,19 @@ export default class RightContent extends Vue {
   private saveD(val: any): void {
     const loading = this.$loading({
       lock: true,
-      text: 'Loading',
-      spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
-    });
+      text: "Loading",
+      spinner: "el-icon-loading",
+      background: "rgba(0, 0, 0, 0.7)"
+    })
     this.getData.upData(val, true).then((res: any) => {
-      loading.close();
+      loading.close()
       if (res.code == 0) {
-        if (this.checkNick) {
+        if (val.openCloud !==this.currentState) {
           this.$router.push({ name: "Login" })
         }
         this.$message.success(res.msg)
       } else {
         this.$message.error(res.msg)
-        
       }
     })
   }

@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-03-01 16:07:48
- * @LastEditTime: 2021-03-04 15:48:15
+ * @LastEditTime: 2021-03-31 18:01:13
  * @FilePath: \src\components\Video\Video.vue
  * @LastEditors: yqn
 -->
@@ -25,10 +25,10 @@ export default class Video extends Vue {
   }
   @Watch("videopath", { immediate: true, deep: true })
   change(val) {
-    console.log(val)
+    // console.log(val)
     // this.switchsrc(val)
     setTimeout(() => {
-      console.log(this.$refs?.videoPlayer as any)
+      // console.log(this.$refs?.videoPlayer as any)
       if (this.$refs?.videoPlayer as any) {
         (this.$refs.videoPlayer as any).player.src = val
       }
@@ -102,6 +102,18 @@ export default class Video extends Vue {
     screenshotbtn.addEventListener("click", this.screenshot)
     kzt!.appendChild(div1)
     kzt!.appendChild(screenshotbtn)
+
+
+
+
+    // 重播
+    const cb  = document.querySelector(
+      ".xgplayer-replay-svg"
+    )
+    cb.addEventListener("click",this.cb)
+  }
+  private cb() {
+    (this.$refs.videoPlayer as any).reload()
   }
   private lastframe() {
     // console.log("上一帧")
@@ -177,7 +189,7 @@ export default class Video extends Vue {
 .screenshotbtn {
   line-height: 40px;
   cursor: pointer;
-  padding-top: 15px;
+  padding-top: 5px;
   margin-left: 11px;
 }
 .xgplayer-progress-played {

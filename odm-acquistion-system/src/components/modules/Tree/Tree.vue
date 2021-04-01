@@ -2,12 +2,12 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-21 10:34:33
- * @LastEditTime: 2021-03-29 14:34:09
+ * @LastEditTime: 2021-03-31 14:47:34
  * @FilePath: \src\components\modules\Tree\Tree.vue
  * @LastEditors: yqn
 -->
 <template>
-  <div>
+  <div @click="btndisappear">
     <a-tree
       class="cScroll"
       :treeData="treedata"
@@ -115,13 +115,18 @@ export default class Tree extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
     document.onclick = function (e) {
+      console.log(e.target);
+      console.log(document.getElementById("perTreeMenu"));
       if (e.target != document.getElementById("perTreeMenu")) {
         _that.tmDisplay = false
       }
     }
-    setTimeout(() => {
-      this.tmDisplay = false
-    }, 3000)
+    if(this.tmDisplay){
+      setTimeout(() => {
+        this.tmDisplay = false
+      }, 4000)
+    }
+    
   }
   private Onselect(selectedKeys, e) {
     console.log(selectedKeys,e);
@@ -130,6 +135,9 @@ export default class Tree extends Vue {
       id: e.node.dataRef.id,
     }
     this.send("LeftClick", obj, type)
+  }
+  private btndisappear(){
+    this.tmDisplay = false
   }
 }
 </script>

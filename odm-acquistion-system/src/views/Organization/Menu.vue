@@ -744,7 +744,7 @@ export default class Menu extends Vue {
         let _that = this
         this.$confirm({
           title: "提示",
-          content: `菜单删除后无法恢复，确定要删除按钮${val.name}吗？`,
+          content: `菜单删除后无法恢复，确定要删除菜单${val.name}吗？`,
           onOk() {
             _that.OrganizationM.menuDlt(val.id).then((res) => {
               if (res.code == 0) {
@@ -820,7 +820,7 @@ export default class Menu extends Vue {
         let _that = this
         this.$confirm({
           title: "提示",
-          content: `菜单删除后无法恢复，确定要删除按钮${val.name}吗？`,
+          content: `菜单删除后无法恢复，确定要删除菜单${val.name}吗？`,
           onOk() {
             _that.OrganizationM.menuDlt(val.id).then((res) => {
               if (res.code == 0) {

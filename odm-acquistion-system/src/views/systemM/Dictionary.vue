@@ -67,7 +67,7 @@
         okText="提交"
         :keyboard="false"
         @cancel="cancelevent"
->
+      >
         <div class="editmodal_header">
           <h2>基础信息</h2>
           <div>
@@ -216,7 +216,7 @@ export default class RightContent extends Vue {
     this.page.pageSize = pageSize
     const val = {
       page: currentPage,
-      size: pageSize,
+      size: pageSize
     }
     this.getList(val)
   }
@@ -238,9 +238,9 @@ export default class RightContent extends Vue {
 
   private async saveRowEvent(row) {
     const edittable = this.$refs.editTable as any
-    console.log();
-    edittable.validate(row).then(err=>{
-      if(!err){
+    console.log()
+    edittable.validate(row).then((err) => {
+      if (!err) {
         edittable.clearActived()
         row.isedit = false
         let obj = this.edittableData.filter((item) => item.id === row.id)
@@ -263,7 +263,6 @@ export default class RightContent extends Vue {
   }
   private cancelRowEvent(row) {
     if (row.id == "") {
-      console.log(row)
       this.edittableData.shift()
     }
     row.isedit = false
@@ -336,7 +335,7 @@ export default class RightContent extends Vue {
   private dictKeyValid({ cellValue }) {
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        if (cellValue && (cellValue.length > 30)) {
+        if (cellValue && cellValue.length > 30) {
           reject(new Error("长度在30个字符之内"))
         } else {
           resolve()
@@ -348,11 +347,11 @@ export default class RightContent extends Vue {
     return new Promise<void>((resolve, reject) => {
       const reg = /^\d+$|^\d+[.]?\d+$/
       setTimeout(() => {
-        if (cellValue && (cellValue.length > 3)) {
+        if (cellValue && cellValue.length > 3) {
           reject(new Error("长度在3字符之内"))
-        }else if(cellValue.length === 0){
+        } else if (cellValue.length === 0) {
           resolve()
-        }else if(!reg.test(cellValue)){
+        } else if (!reg.test(cellValue)) {
           reject(new Error("只能输入正整数"))
         } else {
           resolve()
@@ -360,13 +359,15 @@ export default class RightContent extends Vue {
       }, 100)
     })
   }
-  public cancelevent () {
+  public cancelevent() {
     const val = {
       page: 1,
-      size: 15,
+      size: 15
     }
     this.getList(val)
-    
+    console.log( this.edittableData);
+    this.cancelRowEvent(this.edittableData[0])
+    // this.edittableData.shift()
   }
 }
 </script>

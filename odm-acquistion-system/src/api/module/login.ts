@@ -43,7 +43,7 @@ export class Login {
     });
   }
 
-  //获取登陆界面title
+  //获取登录界面title
   public gettitle(params: object) {
     const url = "/getSystemName";
     return new Promise((resolve, reject) => {

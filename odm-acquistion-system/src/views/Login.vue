@@ -15,7 +15,7 @@
                   'username',
                   {
                     initialValue: username,
-                    rules: [{ required: true, message: '请输入账号' },
+                    rules: [
                     {
                       validator:namecheck
                     }
@@ -41,10 +41,6 @@
                   {initialValue: password,
                     rules: [
                       {
-                        required: true,
-                        message: '请输入密码'
-                      },
-                      {
                         validator: psdcheck
                       }
                     ],
@@ -60,7 +56,7 @@
               <a-checkbox :checked="checkNick" @change="handleChange">记住用户名</a-checkbox>
             </a-form-item>
             <a-form-item>
-              <a-button type="primary" html-type="submit">登录</a-button>
+              <a-button type="primary" html-type="submit" :disabled='loginstate'>登录</a-button>
             </a-form-item>
           </a-form>
         </div>
@@ -76,6 +72,7 @@ import { LimitInputlength } from "../InterfaceVariable/variable"
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
 import router from "@/router"
+import {setCookie} from '@/utils/setCookie'
 // import {claerTime} from '@/utils/isOperate'
 import { namespace } from "vuex-class"
 
@@ -94,6 +91,7 @@ export default class Login extends Vue {
   private Title = ""
   private password = ""
   private username = ""
+  private loginstate = false
   private created() {
     this.form = this.$form.createForm(this)
   }
@@ -110,7 +108,7 @@ export default class Login extends Vue {
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
         if (this.checkNick) {
-          this.setCookie(values.username, values.password, 7)
+          setCookie(values.username, values.password, 7)
           this.login(values)
         } else {
           this.login(values)
@@ -123,9 +121,12 @@ export default class Login extends Vue {
     this.checkNick = e.target.checked
   }
   private login(data: object) {
+    this.loginstate = true
     localStorage.clear()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.Login.login(data, false).then((res) => {
+      console.log(res);
+      this.loginstate = false
       if (res.code == 0) {
         localStorage.setItem("token", res.data.accessToken)
         localStorage.setItem("user", JSON.stringify(res.data.user))
@@ -140,7 +141,6 @@ export default class Login extends Vue {
           console.log(arr[0].children[0].path);
           path = arr[0].children[0].path
         }else{
-          console.log(arr[0].path);
           path = arr[0].path
         }
         this.$router.push({ path: `/index${path}` }) //成功后跳转
@@ -155,16 +155,6 @@ export default class Login extends Vue {
     this.Login.gettitle({}, false).then((res: any) => {
       this.Title = res.data
     })
-  }
-  //设置cookie
-  private setCookie(cName: string, cPwd: string, exdays: number) {
-    const exdate = new Date() //获取时间
-    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays) //保存的天数
-    //字符串拼接cookie
-    window.document.cookie =
-      "userName" + "=" + cName + ";path=/;expires=" + exdate.toUTCString()
-    window.document.cookie =
-      "userPwd" + "=" + cPwd + ";path=/;expires=" + exdate.toUTCString()
   }
   // 获取cookie
   private getCookie() {
@@ -186,21 +176,25 @@ export default class Login extends Vue {
   }
   //清除cookie
   private clearCookie = () => {
-    this.setCookie("", "", -1) // 修改2值都为空，天数为负1天就好了
+    setCookie("", "", -1)
   }
+
   private namecheck (rule, value, callback){
-    let reg = /^[A-Za-z0-9]{5,30}$/
-    if(value.length>= 30){
-      callback(new Error("帐号格式错误，请重新输入"))
+    let reg = /^[A-Za-z0-9]{6,12}$/
+    if(value.length === 0){
+      callback(new Error("请输入账号"))
     }else if(!reg.test(value)){
       callback(new Error("帐号格式错误，请重新输入"))
     }else{
       callback()
     }
   }
+
   private psdcheck (rule, value, callback){
     let reg = /^[A-Za-z0-9]{6,12}$/
-    if(!reg.test(value)){
+    if(value.length === 0){
+      callback(new Error("请输入密码"))
+    }else if(!reg.test(value)){
       callback(new Error("密码格式错误，请重新输入"))
     }else{
       callback()

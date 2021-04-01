@@ -8,12 +8,12 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" :visible='searchForm'>
+            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box" >
+              <a-menu slot="overlay" class="box">
                 <a-form
                   autocomplete="off"
                   :form="form"
@@ -94,7 +94,7 @@
             :row-class-name="tableRowClassName"
             :data="tableData"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
-            :sort-config="{trigger: 'cell', defaultSort: {field: 'code', order: 'desc'}, orders: ['desc', 'asc']}"
+            :sort-config="{trigger: 'cell', defaultSort: {field: '', order: 'desc'}, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
             <vxe-table-column type="checkbox" width="60" align="center" fixed="left" />
@@ -394,6 +394,8 @@ export default class User extends Vue {
     sidx: "code",
     order: "desc"
   }
+  public property = "code"
+  public order = "desc"
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -439,8 +441,8 @@ export default class User extends Vue {
       this.Account = res.data
     })
   }
-  private handle(e) {
-    e.preventDefault()
+  private handle(e?) {
+    e?.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         this.name = val.username
@@ -462,6 +464,8 @@ export default class User extends Vue {
     this.name = ""
     this.role = ""
     this.form.resetFields()
+    this.handle()
+    this.searchForm = false
   }
   // 获取选中
   private getSelectEvent1() {
@@ -516,7 +520,7 @@ export default class User extends Vue {
       user: this.name,
       roleId: this.role,
       sidx: this.property,
-      order:this.order
+      order: this.order
     }
     axios
       .get(`${url}user/export`, {
@@ -567,8 +571,8 @@ export default class User extends Vue {
                     size: _that.page.pageSize,
                     name: _that.name,
                     role: _that.role,
-                    sidx:  this.property,
-                    order: this.order
+                    sidx: _that.property,
+                    order: _that.order
                   })
                 } else {
                   _that.$message.error(res.msg)
@@ -587,14 +591,13 @@ export default class User extends Vue {
               _that.OrganizationM.userdlt(newarr).then((res) => {
                 if (res.code == 0) {
                   _that.$message.success(res.msg)
-
                   _that.gettabledata({
                     page: _that.page.currentPage,
                     size: _that.page.pageSize,
                     name: _that.name,
                     role: _that.role,
-                    sidx:  this.property,
-                    order: this.order
+                    sidx: _that.property,
+                    order: _that.order
                   })
                 } else {
                   _that.$message.error(res.msg)
@@ -633,7 +636,7 @@ export default class User extends Vue {
               size: this.page.pageSize,
               name: this.name,
               role: this.role,
-              sidx:  this.property,
+              sidx: this.property,
               order: this.order
             })
           } else {
@@ -751,9 +754,9 @@ export default class User extends Vue {
   }
   private validatorID(rule, value, callback) {
     let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-    if(value.length == 0){
+    if (value.length == 0) {
       callback()
-    }else{
+    } else {
       if (reg.test(value)) {
         callback()
       } else {
@@ -763,16 +766,15 @@ export default class User extends Vue {
   }
   private codevalidator(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,30}$/
-    if(value.length == 0){
+    if (value.length == 0) {
       callback("请输入警号")
-    }else if(!reg.test(value)){
+    } else if (!reg.test(value)) {
       callback("警号格式不正确")
-    }else{
+    } else {
       callback()
     }
   }
-  public property = 'code'
-  public order = 'desc'
+
   private sortChangeEvent({ column, property, order }) {
     this.tableData = []
     let obj = {
@@ -812,15 +814,15 @@ export default class User extends Vue {
   border: 0;
   margin-left: 10px;
 }
-.userm{
-.ant-form-item-label {
-  width: 74px;
+.userm {
+  .ant-form-item-label {
+    width: 74px;
+  }
 }
-}  
 .userm {
   .ant-form-item-control-wrapper {
-  width: 578px;
-}
+    width: 578px;
+  }
 }
 .col--checkbox {
   margin: 0 atuo;

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2021-03-01 10:45:44
+ * @LastEditTime: 2021-03-31 19:25:13
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\InterfaceVariable\interface.ts
@@ -109,6 +109,8 @@ interface Videoobj {
   upload_date_le?: string;
   record_date_ge?: string;
   record_date_le?: string;
+  order?: string;
+  sidx?: string;
 }
 export {
   disabled,

@@ -4,7 +4,7 @@
       <div class="container">
         <div class="contaninerheader" style="padding:13px 26px 0 26px">
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" :visible='searchForm'>
+            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -131,6 +131,8 @@
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
+            :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'desc'}, orders: ['desc', 'asc']}"
+            @sort-change="sortChangeEvent"
           >
             >
             <vxe-table-column type="checkbox" width="60" align="center" />
@@ -141,6 +143,7 @@
               align="left"
               show-overflow
               width="30%"
+              sortable
             >
               <template v-slot="{ row }">
                 <span
@@ -166,6 +169,7 @@
               show-overflow
               align="center"
               width="10%"
+              sortable
             />
             <vxe-table-column
               field="userName"
@@ -173,6 +177,7 @@
               align="center"
               show-overflow
               width="10%"
+              sortable
             />
             <vxe-table-column
               field="recordDate"
@@ -180,6 +185,7 @@
               show-overflow
               align="center"
               width="10%"
+              sortable
             />
             <vxe-table-column
               field="fileDurationName"
@@ -187,6 +193,7 @@
               show-overflow
               align="center"
               width="10%"
+              sortable
             />
             <vxe-table-column
               field="uploadDate"
@@ -194,6 +201,7 @@
               show-overflow
               align="center"
               width="10%"
+              sortable
             />
             <vxe-table-column
               field="updateStateName"
@@ -201,6 +209,7 @@
               show-overflow
               align="center"
               width="10%"
+              sortable
             />
           </vxe-table>
           <p>
@@ -242,9 +251,7 @@
         <div class="Popup_right">
           <div class="fileclass">
             <p style="font-size:14px;font-weight:bold">{{ filedetails.fileName }}</p>
-            <p
-              style="font-size:14px;font-weight:bold"
-            >{{ filedetails.userName }}</p>
+            <p style="font-size:14px;font-weight:bold">{{ filedetails.userName }}</p>
             <ul>
               <li>摄录时间：{{ filedetails.recordDate }}</li>
               <li>导入时间：{{ filedetails.uploadDate }}</li>
@@ -295,9 +302,10 @@
             <a-select-option
               v-for="(i) in filetypelist"
               :key="i.value"
+              :disabled="i.disabled"
             >{{ i.name}}</a-select-option>
           </a-select>
-          <a-button type="primary" @click="FormatTransformation" :disabled='startswitch'>开始转换</a-button>
+          <a-button type="primary" @click="FormatTransformation" :disabled="startswitch">开始转换</a-button>
         </div>
       </div>
       <div v-else>
@@ -306,7 +314,7 @@
           type="primary"
           style="margin-top: 37px;margin-left: 207px"
           :disabled="progressbtn"
-          @click='confirmfiledown'
+          @click="confirmfiledown"
         >下载</a-button>
       </div>
     </a-modal>
@@ -343,7 +351,7 @@ export default class AvData extends Vue {
     totalResult: 200 //总数
   }
   private previewhttp = http + "file/preview/"
-  private layouts = layouts  
+  private layouts = layouts
   private fileId = ""
   private logshow = false
   private PreviousDisabled = false
@@ -371,7 +379,9 @@ export default class AvData extends Vue {
   private tabledata = []
   private formdata: Videoobj = {
     page: 1,
-    size: 15
+    size: 15,
+    order: "desc",
+    sidx: "id"
   }
   private logmsg = ""
   private fileCode = ""
@@ -449,6 +459,8 @@ export default class AvData extends Vue {
   private filetypelist = []
   public progressVal = 0
   public startswitch = true
+  private order = "desc"
+  private sidx = "id"
   private created() {
     this.form = this.$form.createForm(this)
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -458,18 +470,22 @@ export default class AvData extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     let user = JSON.parse(localStorage.getItem("user"))
-    if (user.right) {
+    if (user?.right) {
       this.namejurisdiction = true
       this.defalutname = user.name
       this.gettabledata({
         page: this.page.currentPage,
         size: this.page.pageSize,
-        keyword: this.defalutname
+        keyword: this.defalutname,
+        order: this.order,
+        sidx: this.sidx
       })
     } else {
       this.gettabledata({
         page: this.page.currentPage,
-        size: this.page.pageSize
+        size: this.page.pageSize,
+        order: this.order,
+        sidx: this.sidx
       })
     }
     this.StandaloneMode = JSON.parse(localStorage.getItem("user"))!.openCloud
@@ -480,13 +496,17 @@ export default class AvData extends Vue {
     this.searchForm = false
     e.preventDefault()
     this.form.validateFields((err, val) => {
+      console.log(val)
+
       if (!err) {
         let obj: Videoobj = {
           page: 1,
           size: 15,
           keyword: val.keyword,
           file_type_equal: val.file_type_equal,
-          file_level_equal: val.file_level_equal
+          file_level_equal: val.file_level_equal,
+          order: this.order,
+          sidx: this.sidx
         }
         if (val.TimeData === "uploadDate") {
           // console.log("导入时间")
@@ -516,11 +536,14 @@ export default class AvData extends Vue {
       // console.log(res.data)
       this.Tablesubscript = []
       // 保存当前表格的所有code
-      res.data.map((item) => {
-        this.Tablesubscript.push(item.id)
-      })
+      if (res.data) {
+        res.data.map((item) => {
+          this.Tablesubscript.push(item.id)
+        })
+      }
     })
   }
+
 
   private reset() {
     this.form.resetFields()
@@ -547,16 +570,6 @@ export default class AvData extends Vue {
             this.logshow = true
             this.logmsg = re
           })
-          // let splits = res.data.split(/\r\n/g)
-          // let dataList = []
-          // for (let i = 0; i < splits.length; i++) {
-          //   dataList.push({
-          //     id: i,
-          //     text: splits[i]
-          //   })
-          // }
-          // this.logshow = true
-          // this.logmsg = dataList
         })
       } else {
         // 弹窗文件信息
@@ -582,6 +595,32 @@ export default class AvData extends Vue {
         level: res.data.fileLevel + "",
         remarks: res.data.remarks
       })
+
+      if (this.filedetails.fileType === "PHOTO") {
+        this.picturelist.map((item) => {
+          item.disabled = false
+          if (item.name === this.filedetails.fileSuffix) {
+            item.disabled = true
+          }
+        })
+        this.filetypelist = this.picturelist
+      } else if (this.filedetails.fileType === "VIDEO") {
+        this.videolist.map((item) => {
+          item.disabled = false
+          if (item.name === this.filedetails.fileSuffix) {
+            item.disabled = true
+          }
+        })
+        this.filetypelist = this.videolist
+      } else if (this.filedetails.fileType === "AUDIO") {
+        this.audiolist.map((item) => {
+          item.disabled = false
+          if (item.name === this.filedetails.fileSuffix) {
+            item.disabled = true
+          }
+        })
+        this.filetypelist = this.audiolist
+      }
     })
   }
   private signsave() {
@@ -666,7 +705,6 @@ export default class AvData extends Vue {
     // record.rowIndex = index
     return record.rowIndex % 2 === 1 ? "bgF5" : ""
   }
-
   private arrSelect(arr, val) {
     for (var i = 0; i < arr.length; i++) {
       if (arr[i] == val + "") return i
@@ -741,33 +779,10 @@ export default class AvData extends Vue {
   // 下载
   private filedownload() {
     console.log(this.fileCode)
-    console.log(this.filedetails.fileSuffix)
-    console.log(this.filedetails.fileSuffix)
+    console.log(this.filedetails)
     this.filedownloadshow = true
     this.startswitch = true
-    if (this.filedetails.fileType === "PHOTO") {
-      this.picturelist.map((item) => {
-        if (item.name === this.filedetails.fileSuffix) {
-          item.disabled = true
-        }
-      })
-      this.filetypelist = this.picturelist
-    } else if (this.filedetails.fileType === "VIDEO") {
-      this.videolist.map((item) => {
-        if (item.name === this.filedetails.fileSuffix) {
-          item.disabled = true
-        }
-      })
-      this.filetypelist = this.videolist
-    } else if (this.filedetails.fileType === "AUDIO") {
-      this.audiolist.map((item) => {
-        if (item.name === this.filedetails.fileSuffix) {
-          item.disabled = true
-        }
-      })
-      this.filetypelist = this.audiolist
-    }
-    // window.open(`${http}/file/download/${this.fileCode}`)
+    this.getfiledetails(this.fileId)
   }
   private OriginalFileDowbload() {
     window.open(`${http}/file/download/${this.fileCode}`)
@@ -813,10 +828,12 @@ export default class AvData extends Vue {
   }
   private time = null
   private progressbtn = true
-  private filepath = ''
+  private filepath = ""
   public getprogressVal(code, type) {
     this.time = setInterval(() => {
       this.DataM.getprogressVal(code, type).then((res) => {
+        console.log(res)
+
         if (Number(res.data.progressVal) === 100) {
           clearInterval(this.time)
           this.progressbtn = false
@@ -830,14 +847,29 @@ export default class AvData extends Vue {
   private fileconversion() {
     this.progress = true
   }
-  private confirmfiledown () {
+  private confirmfiledown() {
     // 下载
     window.open(this.filepath)
-    setTimeout(()=>{
-      this.filedownloadshow = false;
-    },600)
-    this.filepath = ''
+    setTimeout(() => {
+      this.filedownloadshow = false
+    }, 600)
+    this.filepath = ""
     this.progress = true
+  }
+  private sortChangeEvent({ column, property, order }) {
+    this.tableData = []
+    if (property === "fileName") property = "file_name"
+    if (property === "fileSizeName") property = "file_size"
+    if (property === "userName") property = "user_code"
+    if (property === "recordDate") property = "record_date"
+    if (property === "fileDurationName") property = "file_duration"
+    if (property === "uploadDate") property = "upload_date"
+    if (property === "updateStateName") property = "update_state"
+    this.order = order
+    this.sidx = property
+    this.formdata.order = order
+    this.formdata.sidx = property
+    this.gettabledata(this.formdata)
   }
 }
 </script>
