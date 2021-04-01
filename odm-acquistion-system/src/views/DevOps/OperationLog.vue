@@ -8,12 +8,12 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
+            <a-dropdown class="dropdown" >
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box">
+              <a-menu slot="overlay" class="box" v-show="searchForm">
                 <a-form
                   autocomplete="off"
                   :form="form"
@@ -170,12 +170,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator"
-import moment from "moment"
+import { Component, Vue } from "vue-property-decorator"
+// import moment from "moment"
 import {
   layouts,
   LimitInputlength,
-  page,
+  // page,
   textarealength
 } from "@/InterfaceVariable/variable"
 import axios from "axios"
@@ -196,7 +196,9 @@ interface Search {
   components: {}
 })
 export default class OperationLog extends Vue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public form!: any
   public Luckmanagement = new this.$api.configInterface.Luckmanagement()
   private page = {
@@ -232,7 +234,6 @@ export default class OperationLog extends Vue {
   // todo 事件和生命周期
   private created() {
     this.form = this.$form.createForm(this)
-    // this.getdata()
     this.Height = `${document.documentElement.clientHeight - 230}px`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
@@ -243,7 +244,9 @@ export default class OperationLog extends Vue {
     this.gettabledata(this.search)
   }
   // todo事件
-  private tableRowClassName(record: any, index: number) {
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private tableRowClassName(record: any) {
     return record.rowIndex % 2 === 0 ? "bgF5" : ""
   }
   private pagerchange({ currentPage, pageSize }) {
@@ -377,6 +380,7 @@ export default class OperationLog extends Vue {
       this.page.totalResult = parseInt(res.count)
     })
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private onChange(date: any, dateString: any): void {
     this.date = dateString
   }

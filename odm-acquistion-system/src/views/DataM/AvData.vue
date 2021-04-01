@@ -4,12 +4,12 @@
       <div class="container">
         <div class="contaninerheader" style="padding:13px 26px 0 26px">
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
+            <a-dropdown :trigger="['click']" class="dropdown" v-model="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box">
+              <a-menu slot="overlay" class="box" >
                 <a-form
                   autocomplete="off"
                   :form="form"
@@ -81,11 +81,11 @@
                         hideDisabledOptions: true,
                         defaultValue: [],
                       }"
-                        :allowClear="false"
+                        :allowClear="true"
                         v-decorator="[
                         'date',
                         {
-                          initialValue: defaultdate,
+                          initialValue: null||defaultdate ,
                           rules: []
                         }
                       ]"
@@ -131,7 +131,7 @@
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
             @checkbox-change="selectChangeEvent"
-            :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'desc'}, orders: ['desc', 'asc']}"
+            :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'desc'}, remote:true,orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
             >
@@ -139,7 +139,7 @@
             <vxe-table-column
               header-align="center"
               field="fileName"
-              title="文件名称"
+              title="文件名"
               align="left"
               show-overflow
               width="30%"
@@ -164,18 +164,18 @@
               </template>
             </vxe-table-column>
             <vxe-table-column
-              field="fileSizeName"
-              title="文件大小"
-              show-overflow
-              align="center"
-              width="10%"
-              sortable
-            />
-            <vxe-table-column
               field="userName"
               title="姓名/警号"
               align="center"
               show-overflow
+              width="10%"
+              sortable
+            />
+            <vxe-table-column
+              field="fileSizeName"
+              title="文件大小"
+              show-overflow
+              align="center"
               width="10%"
               sortable
             />
@@ -251,7 +251,9 @@
         <div class="Popup_right">
           <div class="fileclass">
             <p style="font-size:14px;font-weight:bold">{{ filedetails.fileName }}</p>
-            <p style="font-size:14px;font-weight:bold">{{ filedetails.userName }}</p>
+            <p
+              style="font-size:14px;font-weight:bold"
+            >{{ filedetails.userName }}({{filedetails.userCode}})</p>
             <ul>
               <li>摄录时间：{{ filedetails.recordDate }}</li>
               <li>导入时间：{{ filedetails.uploadDate }}</li>
@@ -276,11 +278,7 @@
         <a-button type="default" @click="previous" :disabled="PreviousDisabled">上一个</a-button>
         <a-button type="default" @click="next" :disabled="NextDisabled">下一个</a-button>
         <a-button type="default" @click="filedownload" v-isshow="'core:file:download'">下载</a-button>
-        <a-button
-          type="default"
-          @click="moduleDlt"
-          v-isshow="'core:file:delete'"
-        >删除</a-button>
+        <a-button type="default" @click="moduleDlt" v-isshow="'core:file:delete'">删除</a-button>
       </template>
     </a-modal>
     <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear" :keyboard="false">
@@ -330,6 +328,7 @@ import XgVideo from "@/components/Video/Video.vue"
 import CustomAudio from "@/views/Testviews/Audio.vue"
 import { http } from "@/api/interceptors"
 import { namespace } from "vuex-class"
+import moment from "moment"
 const Test = namespace("Test")
 @Component({
   components: { XgVideo, CustomAudio }
@@ -351,7 +350,6 @@ export default class AvData extends Vue {
   private logshow = false
   private PreviousDisabled = false
   private NextDisabled = false
-
   private Timetype: Selecttype[] = [
     { id: 1, value: "uploadDate", title: "导入时间" },
     { id: 2, value: "recordDate", title: "摄录时间" }
@@ -367,7 +365,7 @@ export default class AvData extends Vue {
     { id: 2, value: "2", title: "中" },
     { id: 3, value: "1", title: "低" }
   ]
-  private defaultdate = []
+  private defaultdate: any[] | null = null
   private selectdata = []
   private selectedRowKeys = []
   private Height = ""
@@ -428,7 +426,9 @@ export default class AvData extends Vue {
       wrapperCol: { span: 16 },
       props: {
         type: "textarea",
-        allowClear: true
+        allowClear: true,
+        placeholder: "请填写标记描述（200字符以内）",
+        maxLength: 200
       }
     }
   ]
@@ -464,7 +464,7 @@ export default class AvData extends Vue {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
     let user = JSON.parse(localStorage.getItem("user"))
-    if (user?.right) {
+    if (user.dataPermission) {
       this.namejurisdiction = true
       this.defalutname = user.name
       this.gettabledata({
@@ -475,42 +475,45 @@ export default class AvData extends Vue {
         sidx: this.sidx
       })
     } else {
+      this.defalutname = user.name
       this.gettabledata({
         page: this.page.currentPage,
         size: this.page.pageSize,
+        keyword: this.defalutname,
         order: this.order,
         sidx: this.sidx
       })
     }
 
+    //获取当前自然月和上一个月
+    this.defaultdate = [moment().locale('zh-cn').subtract(1,'months'),moment().locale('zh-cn')]
   }
   private handleSubmit(e?: any): void {
     this.searchForm = false
     e.preventDefault()
     this.form.validateFields((err, val) => {
       console.log(val)
-
       if (!err) {
         let obj: Videoobj = {
           page: 1,
           size: 15,
           keyword: val.keyword,
-          file_type_equal: val.file_type_equal,
-          file_level_equal: val.file_level_equal,
+          file_type_equal: val.file_type_equal ? val.file_type_equal: null,
+          file_level_equal: val.file_level_equal ? val.file_level_equal: null,
           order: this.order,
           sidx: this.sidx
         }
         if (val.TimeData === "uploadDate") {
           // console.log("导入时间")
           if (val.date.length > 0) {
-            obj.upload_date_ge = val.date[0].format("YYYY-MM-DD HH:mm:ss")
-            obj.upload_date_le = val.date[0].format("YYYY-MM-DD HH:mm:ss")
+            obj.upload_date_ge = moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss")
+            obj.upload_date_le = moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss")
           }
         } else if (val.TimeData === "recordDate") {
           // console.log("摄录时间")
           if (val.date) {
-            obj.record_date_le = val.date[0].format("YYYY-MM-DD HH:mm:ss")
-            obj.record_date_ge = val.date[0].format("YYYY-MM-DD HH:mm:ss")
+            obj.record_date_le = moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss")
+            obj.record_date_ge = moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss")
           }
         }
         this.formdata = obj
@@ -526,6 +529,7 @@ export default class AvData extends Vue {
       this.page.totalResult = parseInt(res.count)
       this.tabledata = res.data
       this.Tablesubscript = []
+      this.tableData = []
       // 保存当前表格的所有code
       if (res.data) {
         res.data.map((item) => {
@@ -535,18 +539,20 @@ export default class AvData extends Vue {
     })
   }
 
-
   private reset() {
     this.form.resetFields()
+    this.searchForm = false
   }
 
   private searchForm = false
-  private popup() {
+  private popup(e) {
+    e.preventDefault()
     this.searchForm = true
   }
+
   private onRowClick({ row, rowIndex, column }) {
     // console.log(column)
-    if (column.title === "文件名称") {
+    if (column.title === "文件名") {
       this.tablebtn(row, rowIndex)
     }
   }
@@ -563,7 +569,7 @@ export default class AvData extends Vue {
           })
         })
       } else {
-      // 弹窗文件信息
+        // 弹窗文件信息
         this.visible = true
         this.fileCode = row.code
         this.fileId = row.id
@@ -573,6 +579,8 @@ export default class AvData extends Vue {
   }
   private getfiledetails(id) {
     this.DataM.getfiledetails(id).then((res) => {
+      console.log(res.data)
+
       this.filedetails = res.data
       this.fileCode = res.data.code
       if (res.data.fileType === "VIDEO") {
@@ -584,7 +592,7 @@ export default class AvData extends Vue {
       let form = this.filesign as any
       form.setValue({
         level: res.data.fileLevel + "",
-        remarks: res.data.remarks
+        remarks: res.data.remark
       })
 
       if (this.filedetails.fileType === "PHOTO") {
@@ -682,9 +690,7 @@ export default class AvData extends Vue {
     this.formdata.size = pageSize
     this.gettabledata(this.formdata)
   }
-
   public selectAllEvent({ checked, records }) {
-    // console.log(records)
     this.selectedRowKeys = records
   }
 
@@ -848,7 +854,6 @@ export default class AvData extends Vue {
     this.progress = true
   }
   private sortChangeEvent({ column, property, order }) {
-    this.tableData = []
     if (property === "fileName") property = "file_name"
     if (property === "fileSizeName") property = "file_size"
     if (property === "userName") property = "user_code"
@@ -895,8 +900,10 @@ export default class AvData extends Vue {
 .box {
   width: 347px;
   height: 337px;
-  background: #ffffff;
+  background: #ffffff !important;
   border: 1px solid #f1f1f1;
+  position: absolute;
+  z-index: 100;
 }
 
 .dropdown {

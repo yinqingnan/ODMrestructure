@@ -8,12 +8,12 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" :visible="searchForm">
+            <a-dropdown class="dropdown">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box">
+              <a-menu slot="overlay" class="box" v-show="searchForm">
                 <a-form
                   autocomplete="off"
                   :form="form"

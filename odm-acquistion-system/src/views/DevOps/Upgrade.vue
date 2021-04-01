@@ -334,9 +334,7 @@ export default class Upgrade extends Vue {
   private filestatus = false
   private beforeUpload(file) {
     this.fileList = []
-    if (
-      file.type == "application/x-zip-compressed"
-    ) {
+    if (file.type == "application/x-zip-compressed") {
       this.fileList = [file]
       this.filename = file.name
       this.filestatus = true
@@ -472,9 +470,12 @@ export default class Upgrade extends Vue {
 .rowstyle .ant-form-item-control-wrapper {
   width: 480px;
 }
-.ant-upload-list {
-  display: none !important;
+.layoutcontainer {
+  .ant-upload-list {
+    display: none !important;
+  }
 }
+
 .filr {
   position: relative;
 }
