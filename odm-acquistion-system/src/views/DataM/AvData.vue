@@ -31,7 +31,7 @@
                         v-decorator="[
                         'file_type_equal',
                         {
-                          initialValue: undefined,
+                          initialValue: 'all',
                           rules: []
                         }
                       ]"
@@ -47,7 +47,7 @@
                         v-decorator="[
                         'file_level_equal',
                         {
-                          initialValue: undefined,
+                          initialValue: 'all',
                           rules: []
                         }
                       ]"
@@ -204,7 +204,7 @@
               sortable
             />
             <vxe-table-column
-              field="updateStateName"
+              field="uploadStateName"
               title="上传状态"
               show-overflow
               align="center"
@@ -355,12 +355,14 @@ export default class AvData extends Vue {
     { id: 2, value: "recordDate", title: "摄录时间" }
   ]
   private filetype: Selecttype[] = [
+    { id: 0, value: "all", title: "全部" },
     { id: 1, value: "VIDEO", title: "视频" },
     { id: 2, value: "AUDIO", title: "音频" },
     { id: 3, value: "PHOTO", title: "图片" },
     { id: 4, value: "LOG", title: "日志" }
   ]
   private levelData: Selecttype[] = [
+    { id: 0, value: "all", title: "全部" },
     { id: 1, value: "3", title: "高" },
     { id: 2, value: "2", title: "中" },
     { id: 3, value: "1", title: "低" }
@@ -475,16 +477,13 @@ export default class AvData extends Vue {
         sidx: this.sidx
       })
     } else {
-      this.defalutname = user.name
       this.gettabledata({
         page: this.page.currentPage,
         size: this.page.pageSize,
-        keyword: this.defalutname,
         order: this.order,
         sidx: this.sidx
       })
     }
-
     //获取当前自然月和上一个月
     this.defaultdate = [moment().locale('zh-cn').subtract(1,'months'),moment().locale('zh-cn')]
   }
@@ -492,14 +491,13 @@ export default class AvData extends Vue {
     this.searchForm = false
     e.preventDefault()
     this.form.validateFields((err, val) => {
-      console.log(val)
       if (!err) {
         let obj: Videoobj = {
           page: 1,
           size: 15,
           keyword: val.keyword,
-          file_type_equal: val.file_type_equal ? val.file_type_equal: null,
-          file_level_equal: val.file_level_equal ? val.file_level_equal: null,
+          file_type_equal: val.file_type_equal === 'all' ? null: val.file_type_equal,
+          file_level_equal: val.file_level_equal === 'all' ? null: val.file_level_equal,
           order: this.order,
           sidx: this.sidx
         }
@@ -860,7 +858,7 @@ export default class AvData extends Vue {
     if (property === "recordDate") property = "record_date"
     if (property === "fileDurationName") property = "file_duration"
     if (property === "uploadDate") property = "upload_date"
-    if (property === "updateStateName") property = "update_state"
+    if (property === "uploadStateName") property = "upload_state"
     this.order = order
     this.sidx = property
     this.formdata.order = order

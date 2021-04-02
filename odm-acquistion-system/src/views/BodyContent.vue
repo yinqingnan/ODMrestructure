@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-29 10:28:23
+ * @LastEditTime: 2021-04-02 09:17:12
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\BodyContent.vue
@@ -45,8 +45,6 @@ export default class BodyContent extends Vue {
       // console.log('刷新');
       this.inittabs()
     } else {
-      console.log(concatrouter()[1].children[0].children[0]);
-      
       this.addtbs(concatrouter()[1].children[0].children[0]) //判断为空，即为第一次进入，每次都添加数据的第一条的tabs
     }
   }
