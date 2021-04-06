@@ -125,7 +125,6 @@ export default class Login extends Vue {
     localStorage.clear()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.Login.login(data, false).then((res) => {
-      console.log(res);
       this.loginstate = false
       if (res.code == 0) {
         localStorage.setItem("token", res.data.accessToken)
@@ -138,7 +137,6 @@ export default class Login extends Vue {
         router.addRoutes(concatrouter())
         let path = ''
         if(arr[0].children){
-          console.log(arr[0].children[0].path);
           path = arr[0].children[0].path
         }else{
           path = arr[0].path
@@ -149,6 +147,11 @@ export default class Login extends Vue {
         this.clearCookie()
         this.checkNick = false
       }
+    },(err: Error) =>{
+      console.log(111111111111);
+      
+      this.loginstate = false
+      this.checkNick = false
     })
   }
   private gettitle() {
@@ -178,7 +181,6 @@ export default class Login extends Vue {
   private clearCookie = () => {
     setCookie("", "", -1)
   }
-
   private namecheck (rule, value, callback){
     let reg = /^[A-Za-z0-9]{6,12}$/
     if(value.length === 0){

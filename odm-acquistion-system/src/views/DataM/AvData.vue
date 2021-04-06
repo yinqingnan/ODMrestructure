@@ -128,7 +128,7 @@
             highlight-hover-row
             ref="xTable1"
             row-id="id"
-            :checkbox-config="{trigger: 'cell', reserve: true,checkStrictly: true,showHeader:true}"
+            :checkbox-config="{trigger: 'cell', reserve: true}"
             @cell-click="onRowClick"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
@@ -241,9 +241,9 @@
         <div class="Popup_left">
           <div v-if="filedetails.fileType === 'PHOTO'" class="Popup_left_img">
             <!-- <div class="images" v-viewer="{movable: false}" >
-              <img v-for="src in [previewhttp+ filedetails.code]" :src="src" :key="src" />
+              <img v-for="src in [filedetails.previewUrl]" :src="src" :key="src" />
             </div> -->
-            <img :src="previewhttp+ filedetails.code" alt=""/>
+            <img :src="filedetails.previewUrl" alt=""/>
           </div>
           <div v-else-if="filedetails.fileType === 'VIDEO'" class="Popup_left_video">
             <XgVideo
@@ -267,7 +267,7 @@
               <li>摄录时间：{{ filedetails.recordDate }}</li>
               <li>导入时间：{{ filedetails.uploadDate }}</li>
               <li>文件大小：{{ filedetails.fileSizeName }}</li>
-              <li>上传状态：{{ filedetails.updateStateName }}</li>
+              <li>上传状态：{{ filedetails.uploadStateName }}</li>
               <li>执法仪序号：{{ filedetails.recorderCode }}</li>
             </ul>
           </div>
@@ -299,7 +299,7 @@
         <a-button type="default" @click="lognext" :disabled="logNextDisabled">下一个</a-button>
       </template>
     </a-modal>
-    <a-modal v-model="filedownloadshow" title="下载" :footer="null" @cancel="fileconversion">
+    <a-modal v-model="filedownloadshow" title="格式转换" :footer="null" @cancel="fileconversion">
       <div class="fileconversion" v-if="progress">
         <div>
           <h2>原文件:</h2>
@@ -338,11 +338,10 @@ import {
 import { Component, Vue } from "vue-property-decorator"
 import { Selecttype, Videoobj } from "@/InterfaceVariable/interface"
 import XgVideo from "@/components/Video/Video.vue"
-import CustomAudio from "@/views/Testviews/Audio.vue"
-import { http } from "@/api/interceptors"
-import { namespace } from "vuex-class"
+import CustomAudio from "@/components/Audio/Audio.vue"
+// import { namespace } from "vuex-class"
 import moment from "moment"
-const Test = namespace("Test")
+// const Test = namespace("Test")
 @Component({
   components: { XgVideo, CustomAudio }
 })
@@ -357,7 +356,6 @@ export default class AvData extends Vue {
     pageSize: 15, //每页多少条
     totalResult: 200 //总数
   }
-  private previewhttp = http + "file/preview/"
   private layouts = layouts
   private fileId = ""
   private logshow = false
@@ -405,11 +403,13 @@ export default class AvData extends Vue {
     recordDate: "",
     uploadDate: "",
     fileSizeName: "",
-    updateStateName: "",
+    uploadStateName: "",
     recorderCode: "",
     fileType: "",
     code: "",
-    fileSuffix: ""
+    fileSuffix: "",
+    previewUrl:'',
+    downloadUrl:''
   }
   private namejurisdiction = false
   private defalutname = ""
@@ -453,19 +453,19 @@ export default class AvData extends Vue {
   private videopath = ""
   private filedownloadshow = false
   private audiolist = [
-    { value: "wav", name: "wav", disabled: false },
-    { value: "mp3", name: "mp3", disabled: false },
-    { value: "wma", name: "wma", disabled: false }
+    { value: "WAV", name: "WAV", disabled: false },
+    { value: "MP3", name: "MP3", disabled: false },
+    { value: "WMA", name: "WMA", disabled: false }
   ]
   private picturelist = [
-    { value: "png", name: "png", disabled: false },
-    { value: "jpg", name: "jpg", disabled: false }
+    { value: "PNG", name: "PNG", disabled: false },
+    { value: "JPG", name: "JPG", disabled: false }
   ]
   private videolist = [
-    { value: "avi", name: "avi", disabled: false },
-    { value: "mp4", name: "mp4", disabled: false },
-    { value: "wmv", name: "wmv", disabled: false },
-    { value: "mov", name: "mov", disabled: false }
+    { value: "AVI", name: "AVI", disabled: false },
+    { value: "MP4", name: "MP4", disabled: false },
+    { value: "WMV", name: "WMV", disabled: false },
+    { value: "MOV", name: "MOV", disabled: false }
   ]
   private progress = true
   private filetypelist = []
@@ -582,6 +582,8 @@ export default class AvData extends Vue {
       this.tablebtn(row, rowIndex)
     }
   }
+  private downloadUrl = ''
+  private previewUrl = ''
   private tablebtn(row, rowIndex) {
     if (
       (document.getElementsByClassName("filenames")[rowIndex] as HTMLElement)
@@ -620,7 +622,6 @@ export default class AvData extends Vue {
         })
       })
     }
-    
   }
   private logprve() {
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
@@ -638,21 +639,21 @@ export default class AvData extends Vue {
           this.logNextDisabled = false
         })
       })
-      
     }
   }
   public videoshow = false
   private getfiledetails(id) {
     this.videoshow = false
     this.DataM.getfiledetails(id).then((res) => {
+      this.previewUrl = res.data.previewUrl
+      this.downloadUrl = res.data.downloadUrl
       this.filedetails = res.data
       this.fileCode = res.data.code
       if (res.data.fileType === "VIDEO") {
         if (this.$refs.XgVideo as XgVideo) {
-          // (this.$refs?.XgVideo as any).reload();
           (this.$refs?.XgVideo as any).playframe()
         }
-        this.videopath = this.previewhttp + res.data.code
+        this.videopath = this.previewUrl
         this.videoshow = true
       }
       let form = this.filesign as any
@@ -691,6 +692,7 @@ export default class AvData extends Vue {
   private signsave() {
     const form = this.filesign as any
     form.submit((data) => {
+      console.log(data);
       let obj = {
         id: this.fileId,
         fileLevel: data.level,
@@ -753,7 +755,7 @@ export default class AvData extends Vue {
       this.$message.error("请选择需要删除的文件")
     }
   }
-  
+
   public pagerchange({ currentPage, pageSize }) {
     this.formdata.page = currentPage
     this.formdata.size = pageSize
@@ -853,8 +855,13 @@ export default class AvData extends Vue {
         title: "提示",
         content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿,如果浏览器未出现下载提示,请您在浏览器地址栏右侧,点击“已拦截的弹窗”,选择"始终允许显示本站点的弹出式窗口"。`,
         onOk() {
+          console.log(_that.selectedRowKeys);
+          
           _that.selectedRowKeys.forEach((item) => {
-            window.open(`${http}/file/download/${item.code}`)
+            _that.DataM.getfiledetails(item).then((res) => {
+              window.open(res.data.downloadUrl)
+            })
+
           })
           _that.selectedRowKeys = [];
           (_that.$refs.xTable1 as any).clearCheckboxRow()
@@ -899,7 +906,7 @@ export default class AvData extends Vue {
     this.getfiledetails(this.fileId)
   }
   private OriginalFileDowbload() {
-    window.open(`${http}/file/download/${this.fileCode}`)
+    window.open(this.downloadUrl)
     setTimeout(() => {
       this.filedownloadshow = false
     }, 600)

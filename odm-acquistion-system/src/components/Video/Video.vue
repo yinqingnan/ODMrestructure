@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-03-01 16:07:48
- * @LastEditTime: 2021-04-02 17:51:21
+ * @LastEditTime: 2021-04-06 18:00:54
  * @FilePath: \src\components\Video\Video.vue
  * @LastEditors: yqn
 -->
@@ -25,7 +25,7 @@ export default class Video extends Vue {
   }
   @Watch("videopath", { immediate: true, deep: true })
   change(val) {
-    // console.log(val)
+    console.log(val)
     // this.switchsrc(val)
     setTimeout(() => {
       // console.log(this.$refs?.videoPlayer as any)

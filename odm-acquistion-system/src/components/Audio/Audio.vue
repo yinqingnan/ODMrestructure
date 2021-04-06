@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @Autor: yqn
+ * @Date: 2021-04-06 16:44:12
+ * @LastEditTime: 2021-04-06 16:44:12
+ * @FilePath: \src\components\Audio\Audio.vue
+ * @LastEditors: yqn
+-->
 
 <template>
   <div class="Audiomodel">
@@ -116,7 +124,6 @@ export default class Audio extends Vue {
   private DoubleSpeed(val) {
     this.wavesurfer.setPlaybackRate(val)
   }
-  
   private mounted() {
     this.wavesurfer = WaveSurfer.create({
       container: this.$refs.waveform,
