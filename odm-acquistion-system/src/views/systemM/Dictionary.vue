@@ -384,10 +384,12 @@ export default class RightContent extends Vue {
 #Dictionary .ant-table-tbody > tr > td {
   padding: 8px 16px;
 }
-#Dictionary .box {
+#Dictionary{
+   .box {
   width: calc(100% - 42px);
   height: calc(100% - 32px);
   background: #ffffff;
+}
 }
 #Dictionary .ant-dropdown-link {
   display: block;

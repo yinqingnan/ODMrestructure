@@ -656,10 +656,12 @@ export default class Dept extends Vue {
   justify-content: center;
   align-items: center;
 }
-#Dept .box {
+#Dept {
+  .box {
   width: calc(100% - 42px);
   height: calc(100% - 32px);
   background: #fff;
+}
 }
 #Dept .ant-dropdown-link {
   display: block;

@@ -281,10 +281,12 @@ export default class RightContent extends Vue {
 #HighConfig .ant-table-tbody > tr > td {
   padding: 8px 16px;
 }
-#HighConfig .box {
+#HighConfig {
+  .box {
   width: calc(100% - 42px);
   height: calc(100% - 32px);
   background: #ffffff;
+}
 }
 #HighConfig .ant-dropdown-link {
   display: block;

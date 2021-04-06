@@ -1,7 +1,7 @@
 <template>
   <div id="Setting">
     <el-scrollbar :style="{height:Height}">
-      <div class="box">
+      <div class="Settingbox">
         <a-row>
           <a-col :span="24">
             <h3 class="fwB">配置信息</h3>
@@ -368,10 +368,12 @@ export default class RightContent extends Vue {
 #Setting .ant-table-tbody > tr > td {
   padding: 8px 16px;
 }
-#Setting .box {
+#Setting {
+  .Settingbox {
   width: calc(100% - 42px);
   height: calc(100% - 32px);
   background: #ffffff;
+}
 }
 #Setting .ant-dropdown-link {
   display: block;

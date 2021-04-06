@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-03-01 16:07:48
- * @LastEditTime: 2021-03-31 18:01:13
+ * @LastEditTime: 2021-04-02 17:51:21
  * @FilePath: \src\components\Video\Video.vue
  * @LastEditors: yqn
 -->
@@ -20,7 +20,7 @@ import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator"
 })
 export default class Video extends Vue {
   @Prop() private videopath
-  @Emit("Videochange") send(type: string, time: number) {
+  @Emit("Videochange") send(type: string, time: number | string) {
     //
   }
   @Watch("videopath", { immediate: true, deep: true })
@@ -29,11 +29,12 @@ export default class Video extends Vue {
     // this.switchsrc(val)
     setTimeout(() => {
       // console.log(this.$refs?.videoPlayer as any)
-      if (this.$refs?.videoPlayer as any) {
-        (this.$refs.videoPlayer as any).player.src = val
-      }
+      (this.$refs.videoPlayer as any).player.src = val;
+      (this.$refs.videoPlayer as any).player.pause()
+      this.path = val
     })
   }
+  public path = ""
   private frameLength = 0.02
   private playerOptions = {
     url: "",
@@ -44,7 +45,7 @@ export default class Video extends Vue {
     fluid: true, //流失布局 宽度自适应
     language: "zh-CN",
     preload: "auto", // 建议浏览器在加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频(如果浏览器支持)
-    volume: 0.1, //预设音量0-1之间
+    volume: 0.5, //预设音量0-1之间
     aspectRatio: "16:9", // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字(例如"16:9"或"4:3")
     playbackRate: [0.5, 0.75, 1, 1.5, 2], //倍速播放
     screenShot: false, //截图功能 需要从写
@@ -53,12 +54,17 @@ export default class Video extends Vue {
     // controls: false, //关闭所有原生的控制条
     download: false, //设置download控件显示
     loop: false, //循环播放
+    autoplay: false, //自动播放
+    hasStart: false, //自动播放
     rotate: {
       //视频旋转按钮配置项
       innerRotate: true, //只旋转内部video
       clockwise: false // 旋转方向是否为顺时针
     },
-    videoInit: true //初始化显示视频首帧
+    videoInit: true, //初始化显示视频首帧
+    cssFullscreen: true,//样式全屏功能不会隐藏当前浏览器的标签栏，导航栏，只是在当前页面内部全屏显示。
+    keyShortcut: 'on'//键盘快捷键
+
   }
   private mounted() {
     const kzt: HTMLElement | null = document.querySelector(
@@ -103,17 +109,14 @@ export default class Video extends Vue {
     kzt!.appendChild(div1)
     kzt!.appendChild(screenshotbtn)
 
-
-
-
     // 重播
-    const cb  = document.querySelector(
-      ".xgplayer-replay-svg"
-    )
-    cb.addEventListener("click",this.cb)
+    const cb = document.querySelector(".xgplayer-replay-svg")
+    cb.addEventListener("click", this.cb)
   }
   private cb() {
-    (this.$refs.videoPlayer as any).reload()
+    console.log()
+    this.send("toreplay", this.path)
+    // (this.$refs.videoPlayer as any).player.replay()
   }
   private lastframe() {
     // console.log("上一帧")
@@ -128,7 +131,6 @@ export default class Video extends Vue {
     (this.$refs.videoPlayer as any).player.pause()
   }
   private screenshot() {
-    // console.log("截图")
     this.send("add", (this.$refs.videoPlayer as any).player.currentTime)
   }
   private reload() {

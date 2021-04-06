@@ -9,7 +9,7 @@
                 筛选
                 <a-icon type="down" />
               </a>
-              <a-menu slot="overlay" class="box" >
+              <a-menu slot="overlay" class="box">
                 <a-form
                   autocomplete="off"
                   :form="form"
@@ -127,6 +127,8 @@
             class="mytable-scrollbar"
             highlight-hover-row
             ref="xTable1"
+            row-id="id"
+            :checkbox-config="{trigger: 'cell', reserve: true}"
             @cell-click="onRowClick"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
@@ -242,7 +244,7 @@
             <img :src="previewhttp+ filedetails.code" alt />
           </div>
           <div v-else-if="filedetails.fileType === 'VIDEO'" class="Popup_left_video">
-            <XgVideo :videopath="videopath" @Videochange="Videochange" ref="XgVideo" />
+            <XgVideo v-if="videoshow"  :videopath="videopath" @Videochange="Videochange" ref="XgVideo" />
           </div>
           <div v-else-if="filedetails.fileType === 'AUDIO'" class="Popup_left_audio">
             <CustomAudio :audiocode="filedetails.code" />
@@ -369,7 +371,10 @@ export default class AvData extends Vue {
   ]
   private defaultdate: any[] | null = null
   private selectdata = []
+  /*table选中keys*/
   private selectedRowKeys = []
+  /*table选中records*/
+  private selectionRows = []
   private Height = ""
   private tabledata = []
   private formdata: Videoobj = {
@@ -485,7 +490,10 @@ export default class AvData extends Vue {
       })
     }
     //获取当前自然月和上一个月
-    this.defaultdate = [moment().locale('zh-cn').subtract(1,'months'),moment().locale('zh-cn')]
+    this.defaultdate = [
+      moment().locale("zh-cn").subtract(1, "months"),
+      moment().locale("zh-cn")
+    ]
   }
   private handleSubmit(e?: any): void {
     this.searchForm = false
@@ -496,22 +504,32 @@ export default class AvData extends Vue {
           page: 1,
           size: 15,
           keyword: val.keyword,
-          file_type_equal: val.file_type_equal === 'all' ? null: val.file_type_equal,
-          file_level_equal: val.file_level_equal === 'all' ? null: val.file_level_equal,
+          file_type_equal:
+            val.file_type_equal === "all" ? null : val.file_type_equal,
+          file_level_equal:
+            val.file_level_equal === "all" ? null : val.file_level_equal,
           order: this.order,
           sidx: this.sidx
         }
         if (val.TimeData === "uploadDate") {
           // console.log("导入时间")
           if (val.date.length > 0) {
-            obj.upload_date_ge = moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss")
-            obj.upload_date_le = moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss")
+            obj.upload_date_ge = moment(val.date[0]).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+            obj.upload_date_le = moment(val.date[1]).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
           }
         } else if (val.TimeData === "recordDate") {
           // console.log("摄录时间")
           if (val.date) {
-            obj.record_date_le = moment(val.date[0]).format("YYYY-MM-DD HH:mm:ss")
-            obj.record_date_ge = moment(val.date[1]).format("YYYY-MM-DD HH:mm:ss")
+            obj.record_date_le = moment(val.date[0]).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
+            obj.record_date_ge = moment(val.date[1]).format(
+              "YYYY-MM-DD HH:mm:ss"
+            )
           }
         }
         this.formdata = obj
@@ -528,6 +546,7 @@ export default class AvData extends Vue {
       this.tabledata = res.data
       this.Tablesubscript = []
       this.tableData = []
+      // this.selectedRowKeys = []
       // 保存当前表格的所有code
       if (res.data) {
         res.data.map((item) => {
@@ -549,7 +568,6 @@ export default class AvData extends Vue {
   }
 
   private onRowClick({ row, rowIndex, column }) {
-    // console.log(column)
     if (column.title === "文件名") {
       this.tablebtn(row, rowIndex)
     }
@@ -575,19 +593,22 @@ export default class AvData extends Vue {
       }
     }
   }
+  public videoshow = false
   private getfiledetails(id) {
+    this.videoshow = false
     this.DataM.getfiledetails(id).then((res) => {
-      console.log(res.data)
-
       this.filedetails = res.data
       this.fileCode = res.data.code
       if (res.data.fileType === "VIDEO") {
-        if (this.$refs?.XgVideo) {
-          (this.$refs?.XgVideo as any).reload()
+        if (this.$refs.XgVideo as XgVideo) {
+          // (this.$refs?.XgVideo as any).reload();
+          (this.$refs?.XgVideo as any).playframe()
         }
         this.videopath = this.previewhttp + res.data.code
+        this.videoshow = true
+
       }
-      let form = this.filesign as any
+      let form = (this.filesign as any)
       form.setValue({
         level: res.data.fileLevel + "",
         remarks: res.data.remark
@@ -688,12 +709,61 @@ export default class AvData extends Vue {
     this.formdata.size = pageSize
     this.gettabledata(this.formdata)
   }
-  public selectAllEvent({ checked, records }) {
-    this.selectedRowKeys = records
+  public selectAllEvent({ checked, records, reserves }) {
+    // this.selectedRowKeys = records
+    if (checked) {
+      //第一次选数据，还未进行翻页时
+      if (reserves.length == 0) {
+        this.selectedRowKeys = records.map((v) => v.id)
+        this.selectionRows = records
+      } else {
+        //id集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectedRowKeys = [
+          ...reserves.map((v) => v.id),
+          ...records.map((v) => v.id)
+        ]
+        //数据集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectionRows = [...reserves, ...records]
+      }
+    } else {
+      //取消全选时,直接将翻页数据赋值，当前页数据不用加上
+      this.selectionRows = reserves
+      this.selectedRowKeys = reserves.map((v) => v.id)
+    }
   }
 
-  public selectChangeEvent({ checked, records }) {
-    this.selectedRowKeys = records
+  public selectChangeEvent({ checked, records, reserves, row }) {
+    if (checked) {
+      // this.selectedRowKeys.push(...records)
+      if (reserves.length == 0) {
+        this.selectedRowKeys = records.map((v) => v.id)
+        this.selectionRows = records
+      } else {
+        //id集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectedRowKeys = [
+          ...reserves.map((v) => v.id),
+          ...records.map((v) => v.id)
+        ]
+        //数据集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectionRows = [...reserves, ...records]
+      }
+    } else {
+      //取消选中时
+      let idIndex = this.selectedRowKeys.indexOf(row.id)
+      if (idIndex > -1) {
+        //删除取消选中删除指定元素id
+        this.$delete(this.selectedRowKeys, idIndex)
+      }
+      let dataIndex = null
+      for (let i = 0; i < this.selectionRows.length; i++) {
+        if (this.selectionRows[i].id == row.id) {
+          dataIndex = i
+          break
+        }
+      }
+      //删除取消选中的元素整个对象
+      this.$delete(this.selectionRows, dataIndex)
+    }
   }
 
   private tableRowClassName(record: any, index: number) {
@@ -747,13 +817,11 @@ export default class AvData extends Vue {
     this.NextDisabled = false
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == 0) {
+      this.$message.info("已经是当前页面第一个")
       this.PreviousDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index - 1]
       this.getfiledetails(this.fileId)
-      if (this.$refs?.XgVideo) {
-        (this.$refs?.XgVideo as any).reload()
-      }
     }
   }
   // 下一个
@@ -766,9 +834,6 @@ export default class AvData extends Vue {
     } else {
       this.fileId = this.Tablesubscript[index + 1]
       this.getfiledetails(this.fileId)
-      if (this.$refs?.XgVideo) {
-        (this.$refs?.XgVideo as any).reload()
-      }
     }
   }
   // 下载
@@ -798,10 +863,17 @@ export default class AvData extends Vue {
       }
     })
   }
-  private Videochange(type, val) {
-    this.DataM.videoSnapshot(this.fileCode, val).then((res) => {
-      window.open(res.data)
-    })
+  private Videochange(type , val: any) {
+    if(type === 'add'){
+      this.DataM.videoSnapshot(this.fileCode, val).then((res) => {
+        window.open(res.data)
+      })
+    }else if(type === 'toreplay'){
+      if (this.$refs.XgVideo as XgVideo) {
+        (this.$refs?.XgVideo as any).reload();
+      }
+    }
+   
   }
   private CurrentFileformat = ""
 
@@ -895,13 +967,15 @@ export default class AvData extends Vue {
   }
 }
 
-.box {
-  width: 347px;
-  height: 337px;
-  background: #ffffff !important;
-  border: 1px solid #f1f1f1;
-  position: absolute;
-  z-index: 100;
+#AvData {
+  .box {
+    width: 347px;
+    height: 337px;
+    background: #ffffff !important;
+    border: 1px solid #f1f1f1;
+    position: absolute;
+    z-index: 100;
+  }
 }
 
 .dropdown {

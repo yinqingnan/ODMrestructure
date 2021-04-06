@@ -130,10 +130,12 @@ export default class RightContent extends Vue {
 #Authorization .ant-table-tbody > tr > td {
   padding: 8px 16px;
 }
-#Authorization .box {
+#Authorization {
+  .box {
   width: calc(100% - 42px);
   height: calc(100% - 32px);
   background: #ffffff;
+}
 }
 #Authorization .ant-dropdown-link {
   display: block;

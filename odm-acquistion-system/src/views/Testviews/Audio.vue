@@ -12,8 +12,9 @@
         <span @click="rew" style="cursor: pointer;">
           <img src="../../assets/audio/ht.png" alt />
         </span>
-        <span @click="playMusic" style="cursor: pointer;margin:6px 15px">
-          <img src="../../assets/audio/bf.png" alt />
+        <span @click="playMusic" style="cursor: pointer;margin:2px 15px">
+          <img v-if="iconshow" src="../../assets/audio/bf.png" alt />
+          <img v-else src="../../assets/audio/zt.png" alt />
         </span>
         <span @click="speek" style="cursor: pointer;">
           <img src="../../assets/audio/qj.png" alt />
@@ -28,8 +29,7 @@
             <img src="../../assets/audio/yl.png" alt />
           </span>
         </el-popover>
-
-        <span @click="replay" style="cursor: pointer;margin:6px 15px">
+        <span @click="replay" style="cursor: pointer;margin:0 15px">
           <img src="../../assets/audio/cb.png" alt />
         </span>
         <el-popover placement="top" width="200" trigger="click">
@@ -42,7 +42,7 @@
             :max="2"
             @change="DoubleSpeed"
           />
-          <span slot="reference" style="width:32px">{{ ds +' X' }}</span>
+          <span slot="reference" style="width:32px;cursor: pointer;">{{ ds +' X' }}</span>
         </el-popover>
       </div>
     </div>
@@ -61,13 +61,21 @@ import { http } from "@/api/interceptors"
 })
 export default class Audio extends Vue {
   @Prop() private audiocode
+  @Watch("audiocode", { immediate: true, deep: true })
+  change(val) {
+    setTimeout(() => {
+      this.wavesurfer.load(this.previewhttp + val)
+    })
+  }
   private wavesurfer = null
   private previewhttp = http + "file/preview/"
   private value = 10 //初始音量
   private ds = 1.0 // 播放倍速
+  private iconshow = true
   private playMusic() {
     //"播放/暂停"按钮的单击触发事件，暂停的话单击则播放，正在播放的话单击则暂停播放
     this.wavesurfer.playPause.bind(this.wavesurfer)()
+    this.iconshow = !this.iconshow
   }
   //音量测试
   private setVolume(val) {
@@ -89,9 +97,6 @@ export default class Audio extends Vue {
     this.wavesurfer.setPlaybackRate(val)
   }
   private mounted() {
-    console.log(this.previewhttp + this.audiocode)
-
-    // this.$nextTick(() => {
     this.wavesurfer = WaveSurfer.create({
       container: this.$refs.waveform,
       cursorColor: "#f39800", // 光标的填充颜色，指示播放头的位置。
@@ -135,8 +140,6 @@ export default class Audio extends Vue {
     this.wavesurfer.load(this.previewhttp + this.audiocode)
   }
   private _primaryLabelInterval(pxPerSec) {
-    console.log(pxPerSec)
-
     var retval = 1
     if (pxPerSec >= 100) {
       retval = 2
