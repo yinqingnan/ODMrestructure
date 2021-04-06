@@ -12,7 +12,7 @@
         <span @click="rew" style="cursor: pointer;">
           <img src="../../assets/audio/ht.png" alt />
         </span>
-        <span @click="playMusic" style="cursor: pointer;margin:2px 15px">
+        <span @click="playMusic" style="cursor: pointer;margin-right:15px;margin-left:15px">
           <img v-if="iconshow" src="../../assets/audio/bf.png" alt />
           <img v-else src="../../assets/audio/zt.png" alt />
         </span>
@@ -21,12 +21,12 @@
         </span>
       </div>
       <div style="margin-right:20px">
-        <el-popover placement="top-start" trigger="click">
+        <el-popover placement="top-start" trigger="hover">
           <div class="block" style="width: 42px">
             <el-slider v-model="value" vertical height="100px" @change="setVolume" />
           </div>
-          <span slot="reference" style="cursor: pointer;">
-            <img src="../../assets/audio/yl.png" alt />
+          <span slot="reference" style="cursor: pointer;" @click='Volumeset'>
+            <img :src="ylurl" alt />
           </span>
         </el-popover>
         <span @click="replay" style="cursor: pointer;margin:0 15px">
@@ -72,6 +72,13 @@ export default class Audio extends Vue {
   private value = 10 //初始音量
   private ds = 1.0 // 播放倍速
   private iconshow = true
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  private jy = require("../../assets/audio/sound_no.png")
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  private dyl = require("../../assets/audio/sound_2.png")
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  private xyl = require("../../assets/audio/sound_1.png")
+  private ylurl = ""
   private playMusic() {
     //"播放/暂停"按钮的单击触发事件，暂停的话单击则播放，正在播放的话单击则暂停播放
     this.wavesurfer.playPause.bind(this.wavesurfer)()
@@ -79,7 +86,20 @@ export default class Audio extends Vue {
   }
   //音量测试
   private setVolume(val) {
+    console.log(val / 100);
+    if (val / 100 >= 0.5) {
+      this.ylurl = this.dyl
+    } else if (val / 100 < 0.5 && val / 100 > 0 ) {
+      this.ylurl = this.xyl
+    } else if (val / 100 === 0) {
+      this.ylurl = this.jy
+    }
     this.wavesurfer.setVolume(val / 100)
+  }
+  private Volumeset() {
+    this.wavesurfer.setVolume(0)
+    this.ylurl = this.jy
+    this.value = 0
   }
   // 重放
   private replay() {
@@ -96,6 +116,7 @@ export default class Audio extends Vue {
   private DoubleSpeed(val) {
     this.wavesurfer.setPlaybackRate(val)
   }
+  
   private mounted() {
     this.wavesurfer = WaveSurfer.create({
       container: this.$refs.waveform,
@@ -131,13 +152,15 @@ export default class Audio extends Vue {
         })
       ]
     })
-    this.wavesurfer.on("error", function (e) {
-      console.warn(e)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    this.ylurl = this.xyl
+    this.wavesurfer.setVolume(0.1)
+    this.wavesurfer.on("finish", function (e) {
+      _that.iconshow=true
     })
-    console.log(this.audiocode)
-
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     this.wavesurfer.load(this.previewhttp + this.audiocode)
+   
   }
   private _primaryLabelInterval(pxPerSec) {
     var retval = 1
@@ -195,6 +218,10 @@ export default class Audio extends Vue {
     }
     return secondsStr
   }
+  private resetstate () {
+    this.iconshow=true
+    this.ds = 1
+  }
 }
 </script>
 <style lang="less" scope>
@@ -218,7 +245,6 @@ export default class Audio extends Vue {
     justify-content: space-between;
     height: 35px;
     span {
-      margin-top: 6px;
       height: 35px;
       line-height: 35px;
       color: #fff;

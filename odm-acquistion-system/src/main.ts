@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-31 11:27:03
+ * @LastEditTime: 2021-04-06 11:17:53
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -86,6 +86,10 @@ Vue.use(VideoPlayer);
 import VueXgplayer from "vue-xgplayer";
 Vue.use(VueXgplayer);
 import Echart from "echarts";
+// todo 引入图片预览插件
+import "viewerjs/dist/viewer.css";
+import Viewer from "v-viewer";
+Vue.use(Viewer);
 
 Vue.prototype.$echarts = Echart;
 

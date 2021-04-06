@@ -91,7 +91,7 @@ export class DataM {
     });
   }
   //预览文件
-  public yulanwenjian(id: string) {
+  public LogPreview(id: string) {
     const url = `/file/preview/${id}`;
     return new Promise((resolve, reject) => {
       this.axios

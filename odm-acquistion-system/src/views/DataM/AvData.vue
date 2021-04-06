@@ -31,7 +31,7 @@
                         v-decorator="[
                         'file_type_equal',
                         {
-                          initialValue: 'all',
+                          initialValue: undefined,
                           rules: []
                         }
                       ]"
@@ -47,7 +47,7 @@
                         v-decorator="[
                         'file_level_equal',
                         {
-                          initialValue: 'all',
+                          initialValue: undefined,
                           rules: []
                         }
                       ]"
@@ -128,7 +128,7 @@
             highlight-hover-row
             ref="xTable1"
             row-id="id"
-            :checkbox-config="{trigger: 'cell', reserve: true}"
+            :checkbox-config="{trigger: 'cell', reserve: true,checkStrictly: true,showHeader:true}"
             @cell-click="onRowClick"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             @checkbox-all="selectAllEvent"
@@ -239,15 +239,22 @@
     >
       <div class="videoPopup">
         <div class="Popup_left">
-          <!-- fileType -->
           <div v-if="filedetails.fileType === 'PHOTO'" class="Popup_left_img">
-            <img :src="previewhttp+ filedetails.code" alt />
+            <!-- <div class="images" v-viewer="{movable: false}" >
+              <img v-for="src in [previewhttp+ filedetails.code]" :src="src" :key="src" />
+            </div> -->
+            <img :src="previewhttp+ filedetails.code" alt=""/>
           </div>
           <div v-else-if="filedetails.fileType === 'VIDEO'" class="Popup_left_video">
-            <XgVideo v-if="videoshow"  :videopath="videopath" @Videochange="Videochange" ref="XgVideo" />
+            <XgVideo
+              v-if="videoshow"
+              :videopath="videopath"
+              @Videochange="Videochange"
+              ref="XgVideo"
+            />
           </div>
           <div v-else-if="filedetails.fileType === 'AUDIO'" class="Popup_left_audio">
-            <CustomAudio :audiocode="filedetails.code" />
+            <CustomAudio :audiocode="filedetails.code" ref='CustomAudio'/>
           </div>
         </div>
         <div class="Popup_right">
@@ -283,10 +290,14 @@
         <a-button type="default" @click="moduleDlt" v-isshow="'core:file:delete'">删除</a-button>
       </template>
     </a-modal>
-    <a-modal v-model="logshow" title="日志" :footer="null" @cancel="logclear" :keyboard="false">
+    <a-modal v-model="logshow" title="日志"  @cancel="logclear" :keyboard="false">
       <el-scrollbar style="height: 200px;width: 476px;">
         <p>{{logmsg}}</p>
       </el-scrollbar>
+      <template slot="footer">
+        <a-button type="default" @click="logprve" :disabled="logPreviousDisabled">上一个</a-button>
+        <a-button type="default" @click="lognext" :disabled="logNextDisabled">下一个</a-button>
+      </template>
     </a-modal>
     <a-modal v-model="filedownloadshow" title="下载" :footer="null" @cancel="fileconversion">
       <div class="fileconversion" v-if="progress">
@@ -462,6 +473,8 @@ export default class AvData extends Vue {
   public startswitch = true
   private order = "desc"
   private sidx = "id"
+  private logPreviousDisabled = false
+  private logNextDisabled = false
   private created() {
     this.form = this.$form.createForm(this)
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -512,7 +525,6 @@ export default class AvData extends Vue {
           sidx: this.sidx
         }
         if (val.TimeData === "uploadDate") {
-          // console.log("导入时间")
           if (val.date.length > 0) {
             obj.upload_date_ge = moment(val.date[0]).format(
               "YYYY-MM-DD HH:mm:ss"
@@ -522,7 +534,6 @@ export default class AvData extends Vue {
             )
           }
         } else if (val.TimeData === "recordDate") {
-          // console.log("摄录时间")
           if (val.date) {
             obj.record_date_le = moment(val.date[0]).format(
               "YYYY-MM-DD HH:mm:ss"
@@ -546,7 +557,6 @@ export default class AvData extends Vue {
       this.tabledata = res.data
       this.Tablesubscript = []
       this.tableData = []
-      // this.selectedRowKeys = []
       // 保存当前表格的所有code
       if (res.data) {
         res.data.map((item) => {
@@ -578,11 +588,11 @@ export default class AvData extends Vue {
         .style.cursor !== "not-allowed"
     ) {
       if (row.fileType === "LOG") {
-        this.DataM.getfiledetails(row.id).then((res) => {
-          this.DataM.yulanwenjian(res.data.code).then((re) => {
-            this.logshow = true
-            this.logmsg = re
-          })
+        this.DataM.LogPreview(row.code).then((re) => {
+          this.logshow = true
+          this.logmsg = re
+          this.fileId = row.id
+          this.fileCode = row.code
         })
       } else {
         // 弹窗文件信息
@@ -591,6 +601,44 @@ export default class AvData extends Vue {
         this.fileId = row.id
         this.getfiledetails(row.id)
       }
+    }
+  }
+  private lognext() {
+    let index = this.arrSelect(this.Tablesubscript, this.fileId)
+    if (index == this.Tablesubscript.length - 1) {
+      this.$message.info("已经是当前页面最后一个")
+      this.logNextDisabled = true
+    } else {
+      this.fileId = this.Tablesubscript[index + 1]
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.fileId = res.data.id
+        this.fileCode = res.data.code
+        this.DataM.LogPreview(res.data.code).then((re) => {
+          this.logshow = true
+          this.logmsg = re
+          this.logPreviousDisabled = false
+        })
+      })
+    }
+    
+  }
+  private logprve() {
+    let index = this.arrSelect(this.Tablesubscript, this.fileId)
+    if (index == 0) {
+      this.$message.info("已经是当前页面第一个")
+      this.logPreviousDisabled = true
+    } else {
+      this.fileId = this.Tablesubscript[index - 1]
+      this.DataM.getfiledetails(this.fileId).then((res) => {
+        this.fileId = res.data.id
+        this.fileCode = res.data.code
+        this.DataM.LogPreview(res.data.code).then((re) => {
+          this.logshow = true
+          this.logmsg = re
+          this.logNextDisabled = false
+        })
+      })
+      
     }
   }
   public videoshow = false
@@ -606,9 +654,8 @@ export default class AvData extends Vue {
         }
         this.videopath = this.previewhttp + res.data.code
         this.videoshow = true
-
       }
-      let form = (this.filesign as any)
+      let form = this.filesign as any
       form.setValue({
         level: res.data.fileLevel + "",
         remarks: res.data.remark
@@ -659,6 +706,8 @@ export default class AvData extends Vue {
   private logclear() {
     this.logshow = false
     this.logmsg = ""
+    this.fileId = ""
+    this.fileCode = ""
   }
   private tccancel() {
     this.fileId = ""
@@ -704,13 +753,13 @@ export default class AvData extends Vue {
       this.$message.error("请选择需要删除的文件")
     }
   }
+  
   public pagerchange({ currentPage, pageSize }) {
     this.formdata.page = currentPage
     this.formdata.size = pageSize
     this.gettabledata(this.formdata)
   }
   public selectAllEvent({ checked, records, reserves }) {
-    // this.selectedRowKeys = records
     if (checked) {
       //第一次选数据，还未进行翻页时
       if (reserves.length == 0) {
@@ -724,11 +773,14 @@ export default class AvData extends Vue {
         ]
         //数据集合，翻页存在已选中的数据时,拼接新选中的数据
         this.selectionRows = [...reserves, ...records]
+
       }
+      // setCheckboxRow(this.selectionRows, true)
     } else {
       //取消全选时,直接将翻页数据赋值，当前页数据不用加上
       this.selectionRows = reserves
       this.selectedRowKeys = reserves.map((v) => v.id)
+      // clearCheckboxRow()
     }
   }
 
@@ -804,15 +856,15 @@ export default class AvData extends Vue {
           _that.selectedRowKeys.forEach((item) => {
             window.open(`${http}/file/download/${item.code}`)
           })
-          _that.selectedRowKeys = []
-          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
+          _that.selectedRowKeys = [];
+          (_that.$refs.xTable1 as any).clearCheckboxRow()
         }
       })
     } else {
       this.$message.error("请选择需要下载的文件")
     }
   }
-  // 上一个
+  // 音视频上一个
   private previous() {
     this.NextDisabled = false
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
@@ -822,9 +874,11 @@ export default class AvData extends Vue {
     } else {
       this.fileId = this.Tablesubscript[index - 1]
       this.getfiledetails(this.fileId)
+      let CustomAudio = this.$refs.CustomAudio as any
+      CustomAudio.resetstate();
     }
   }
-  // 下一个
+  //  音视频下一个
   private next() {
     this.PreviousDisabled = false
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
@@ -833,13 +887,13 @@ export default class AvData extends Vue {
       this.NextDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index + 1]
-      this.getfiledetails(this.fileId)
+      this.getfiledetails(this.fileId);
+      let CustomAudio = this.$refs.CustomAudio as any
+      CustomAudio.resetstate();
     }
   }
   // 下载
   private filedownload() {
-    console.log(this.fileCode)
-    console.log(this.filedetails)
     this.filedownloadshow = true
     this.startswitch = true
     this.getfiledetails(this.fileId)
@@ -863,17 +917,16 @@ export default class AvData extends Vue {
       }
     })
   }
-  private Videochange(type , val: any) {
-    if(type === 'add'){
+  private Videochange(type, val: any) {
+    if (type === "add") {
       this.DataM.videoSnapshot(this.fileCode, val).then((res) => {
         window.open(res.data)
       })
-    }else if(type === 'toreplay'){
+    } else if (type === "toreplay") {
       if (this.$refs.XgVideo as XgVideo) {
-        (this.$refs?.XgVideo as any).reload();
+        (this.$refs?.XgVideo as any).reload()
       }
     }
-   
   }
   private CurrentFileformat = ""
 
@@ -885,7 +938,6 @@ export default class AvData extends Vue {
     this.progress = false
     this.DataM.convertFormat(this.fileCode, this.CurrentFileformat).then(
       (res) => {
-        console.log(res)
         if (res.code === 0) {
           this.getprogressVal(this.fileCode, this.CurrentFileformat)
           this.progressbtn = true
@@ -899,8 +951,6 @@ export default class AvData extends Vue {
   public getprogressVal(code, type) {
     this.time = setInterval(() => {
       this.DataM.getprogressVal(code, type).then((res) => {
-        console.log(res)
-
         if (Number(res.data.progressVal) === 100) {
           clearInterval(this.time)
           this.progressbtn = false
@@ -1146,6 +1196,10 @@ export default class AvData extends Vue {
 .Popup_left_img {
   width: 100%;
   height: 100%;
+  .images {
+    width: 100%;
+    height: 100%;
+  }
   img {
     width: 100%;
     height: 100%;
@@ -1177,5 +1231,8 @@ export default class AvData extends Vue {
       margin: 0 18px;
     }
   }
+}
+.viewer-next,.viewer-play,.viewer-prev,.viewer-navbar{
+  display: none
 }
 </style>
