@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-04-06 16:44:12
- * @LastEditTime: 2021-04-07 10:49:50
+ * @LastEditTime: 2021-04-07 11:42:00
  * @FilePath: \src\components\Audio\Audio.vue
  * @LastEditors: yqn
 -->
@@ -94,7 +94,6 @@ export default class Audio extends Vue {
   }
   //音量测试
   private setVolume(val) {
-    console.log(val / 100);
     if (val / 100 >= 0.5) {
       this.ylurl = this.dyl
     } else if (val / 100 < 0.5 && val / 100 > 0 ) {

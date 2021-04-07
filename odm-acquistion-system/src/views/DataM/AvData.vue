@@ -488,6 +488,7 @@ export default class AvData extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
+
     let user = JSON.parse(localStorage.getItem("user"))
     if (user.dataPermission) {
       this.namejurisdiction = true
@@ -690,6 +691,8 @@ export default class AvData extends Vue {
             item.disabled = true
           }
         })
+        let CustomAudio = this.$refs.CustomAudio as any
+        CustomAudio?.resetstate()
         this.filetypelist = this.audiolist
       }
     })
@@ -856,15 +859,15 @@ export default class AvData extends Vue {
         title: "提示",
         content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿,如果浏览器未出现下载提示,请您在浏览器地址栏右侧,点击“已拦截的弹窗”,选择"始终允许显示本站点的弹出式窗口"。`,
         onOk() {
-          console.log(_that.selectedRowKeys)
-
           _that.selectedRowKeys.forEach((item) => {
             _that.DataM.getfiledetails(item).then((res) => {
               window.open(res.data.downloadUrl)
             })
           })
           _that.selectedRowKeys = []
-          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
+
+          const xTable1 = _that.$refs.xTable1 as any
+          xTable1.clearCheckboxRow()
         }
       })
     } else {
@@ -881,8 +884,6 @@ export default class AvData extends Vue {
     } else {
       this.fileId = this.Tablesubscript[index - 1]
       this.getfiledetails(this.fileId)
-      let CustomAudio = this.$refs.CustomAudio as any
-      CustomAudio.resetstate()
     }
   }
   //  音视频下一个
@@ -895,8 +896,6 @@ export default class AvData extends Vue {
     } else {
       this.fileId = this.Tablesubscript[index + 1]
       this.getfiledetails(this.fileId)
-      let CustomAudio = this.$refs.CustomAudio as any
-      CustomAudio.resetstate()
     }
   }
   // 下载
@@ -950,7 +949,7 @@ export default class AvData extends Vue {
     this.CurrentFileformat = val
     this.startswitch = false
   }
-  
+
   private FormatTransformation() {
     this.progress = false
     this.progressVal = 0

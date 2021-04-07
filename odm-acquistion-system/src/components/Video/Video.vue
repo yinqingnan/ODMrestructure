@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-03-01 16:07:48
- * @LastEditTime: 2021-04-07 09:36:08
+ * @LastEditTime: 2021-04-07 11:44:59
  * @FilePath: \src\components\Video\Video.vue
  * @LastEditors: yqn
 -->
@@ -59,7 +59,7 @@ export default class Video extends Vue {
       clockwise: false // 旋转方向是否为顺时针
     },
     videoInit: true, //初始化显示视频首帧
-    cssFullscreen: true,//样式全屏功能不会隐藏当前浏览器的标签栏，导航栏，只是在当前页面内部全屏显示。
+    // cssFullscreen: true,//样式全屏功能不会隐藏当前浏览器的标签栏，导航栏，只是在当前页面内部全屏显示。
     keyShortcut: 'on'//键盘快捷键
 
   }
@@ -111,7 +111,6 @@ export default class Video extends Vue {
     cb.addEventListener("click", this.cb)
   }
   private cb() {
-    console.log()
     this.send("toreplay", this.path)
   }
   private lastframe() {
