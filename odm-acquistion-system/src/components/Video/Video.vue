@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-03-01 16:07:48
- * @LastEditTime: 2021-04-06 18:00:54
+ * @LastEditTime: 2021-04-07 09:36:08
  * @FilePath: \src\components\Video\Video.vue
  * @LastEditors: yqn
 -->
@@ -25,8 +25,6 @@ export default class Video extends Vue {
   }
   @Watch("videopath", { immediate: true, deep: true })
   change(val) {
-    console.log(val)
-    // this.switchsrc(val)
     setTimeout(() => {
       // console.log(this.$refs?.videoPlayer as any)
       (this.$refs.videoPlayer as any).player.src = val;
@@ -38,7 +36,6 @@ export default class Video extends Vue {
   private frameLength = 0.02
   private playerOptions = {
     url: "",
-    // url: 'http://k6.kekenet.com/Sound/2019/08/m200016581_1484302841_1444410KGM.mp3',
     poster: "", //你的封面地址
     // poster:require('../assets/bj.png'), //你的封面地址
     // fitVideoSize: "100%", //自适应宽度
@@ -116,18 +113,14 @@ export default class Video extends Vue {
   private cb() {
     console.log()
     this.send("toreplay", this.path)
-    // (this.$refs.videoPlayer as any).player.replay()
   }
   private lastframe() {
-    // console.log("上一帧")
     (this.$refs.videoPlayer as any).player.currentTime -= this.frameLength
   }
   private nextframe() {
-    // console.log("下一帧")
     (this.$refs.videoPlayer as any).player.currentTime += this.frameLength
   }
   private playframe() {
-    // console.log("暂停")
     (this.$refs.videoPlayer as any).player.pause()
   }
   private screenshot() {

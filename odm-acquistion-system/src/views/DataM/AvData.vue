@@ -242,8 +242,8 @@
           <div v-if="filedetails.fileType === 'PHOTO'" class="Popup_left_img">
             <!-- <div class="images" v-viewer="{movable: false}" >
               <img v-for="src in [filedetails.previewUrl]" :src="src" :key="src" />
-            </div> -->
-            <img :src="filedetails.previewUrl" alt=""/>
+            </div>-->
+            <img :src="filedetails.previewUrl" alt />
           </div>
           <div v-else-if="filedetails.fileType === 'VIDEO'" class="Popup_left_video">
             <XgVideo
@@ -254,7 +254,7 @@
             />
           </div>
           <div v-else-if="filedetails.fileType === 'AUDIO'" class="Popup_left_audio">
-            <CustomAudio :audiocode="filedetails.code" ref='CustomAudio'/>
+            <CustomAudio :audiocode="filedetails.code" ref="CustomAudio" />
           </div>
         </div>
         <div class="Popup_right">
@@ -290,7 +290,7 @@
         <a-button type="default" @click="moduleDlt" v-isshow="'core:file:delete'">删除</a-button>
       </template>
     </a-modal>
-    <a-modal v-model="logshow" title="日志"  @cancel="logclear" :keyboard="false">
+    <a-modal v-model="logshow" title="日志" @cancel="logclear" :keyboard="false">
       <el-scrollbar style="height: 200px;width: 476px;">
         <p>{{logmsg}}</p>
       </el-scrollbar>
@@ -408,8 +408,8 @@ export default class AvData extends Vue {
     fileType: "",
     code: "",
     fileSuffix: "",
-    previewUrl:'',
-    downloadUrl:''
+    previewUrl: "",
+    downloadUrl: ""
   }
   private namejurisdiction = false
   private defalutname = ""
@@ -476,6 +476,11 @@ export default class AvData extends Vue {
   private logPreviousDisabled = false
   private logNextDisabled = false
   private created() {
+    //获取当前自然月和上一个月
+    this.defaultdate = [
+      moment().locale("zh-cn").subtract(1, "months"),
+      moment().locale("zh-cn")
+    ]
     this.form = this.$form.createForm(this)
     this.Height = `${document.documentElement.clientHeight - 230}px`
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -492,21 +497,20 @@ export default class AvData extends Vue {
         size: this.page.pageSize,
         keyword: this.defalutname,
         order: this.order,
-        sidx: this.sidx
+        sidx: this.sidx,
+        upload_date_ge: this.defaultdate[0].format("YYYY-MM-DD") + " 00:00:00",
+        upload_date_le: this.defaultdate[1].format("YYYY-MM-DD") + " 23:59:59"
       })
     } else {
       this.gettabledata({
         page: this.page.currentPage,
         size: this.page.pageSize,
         order: this.order,
-        sidx: this.sidx
+        sidx: this.sidx,
+        upload_date_ge: this.defaultdate[0].format("YYYY-MM-DD") + " 00:00:00",
+        upload_date_le: this.defaultdate[1].format("YYYY-MM-DD") + " 23:59:59"
       })
     }
-    //获取当前自然月和上一个月
-    this.defaultdate = [
-      moment().locale("zh-cn").subtract(1, "months"),
-      moment().locale("zh-cn")
-    ]
   }
   private handleSubmit(e?: any): void {
     this.searchForm = false
@@ -527,22 +531,23 @@ export default class AvData extends Vue {
         if (val.TimeData === "uploadDate") {
           if (val.date.length > 0) {
             obj.upload_date_ge = moment(val.date[0]).format(
-              "YYYY-MM-DD HH:mm:ss"
+              "YYYY-MM-DD" + " 00:00:00"
             )
             obj.upload_date_le = moment(val.date[1]).format(
-              "YYYY-MM-DD HH:mm:ss"
+              "YYYY-MM-DD" + " 23:59:59"
             )
           }
         } else if (val.TimeData === "recordDate") {
           if (val.date) {
             obj.record_date_le = moment(val.date[0]).format(
-              "YYYY-MM-DD HH:mm:ss"
+              "YYYY-MM-DD" + " 00:00:00"
             )
             obj.record_date_ge = moment(val.date[1]).format(
-              "YYYY-MM-DD HH:mm:ss"
+              "YYYY-MM-DD" + " 23:59:59"
             )
           }
         }
+        this.page.currentPage = 1
         this.formdata = obj
         this.gettabledata(obj)
       }
@@ -582,8 +587,8 @@ export default class AvData extends Vue {
       this.tablebtn(row, rowIndex)
     }
   }
-  private downloadUrl = ''
-  private previewUrl = ''
+  private downloadUrl = ""
+  private previewUrl = ""
   private tablebtn(row, rowIndex) {
     if (
       (document.getElementsByClassName("filenames")[rowIndex] as HTMLElement)
@@ -692,7 +697,7 @@ export default class AvData extends Vue {
   private signsave() {
     const form = this.filesign as any
     form.submit((data) => {
-      console.log(data);
+      console.log(data)
       let obj = {
         id: this.fileId,
         fileLevel: data.level,
@@ -729,26 +734,23 @@ export default class AvData extends Vue {
     if (this.selectedRowKeys.length > 0) {
       let arr = []
       this.selectedRowKeys.map((item) => {
-        arr.push(item.id)
+        arr.push(item)
       })
       this.$confirm({
         title: "提示",
-        content: `确认批量删除${this.selectedRowKeys.length}个文件？`,
+        content: `数据删除后无法恢复，确定要删除吗？`,
         onOk() {
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-            _that.DataM.bumendlt(arr)
-              .then((res) => {
-                if (res.code == 0) {
-                  _that.$message.success(res.msg)
-                  _that.gettabledata(_that.formdata)
-                  _that.selectedRowKeys = []
-                } else {
-                  _that.$message.error(res.msg)
-                }
-              })(_that.$refs.xTable1 as any)
-              .clearCheckboxRow()
-          }).catch(() => console.log("操作失败"))
+          _that.DataM.bumendlt(arr).then((res) => {
+            if (res.code == 0) {
+              _that.$message.success(res.msg)
+              _that.gettabledata(_that.formdata)
+              _that.selectedRowKeys = []
+            } else {
+              _that.$message.error(res.msg)
+            }
+          })
+          //
+          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
         }
       })
     } else {
@@ -775,7 +777,6 @@ export default class AvData extends Vue {
         ]
         //数据集合，翻页存在已选中的数据时,拼接新选中的数据
         this.selectionRows = [...reserves, ...records]
-
       }
       // setCheckboxRow(this.selectionRows, true)
     } else {
@@ -855,16 +856,15 @@ export default class AvData extends Vue {
         title: "提示",
         content: `确认批量下载${this.selectedRowKeys.length}个文件？同时下载文件过多可能造成浏览器卡顿,如果浏览器未出现下载提示,请您在浏览器地址栏右侧,点击“已拦截的弹窗”,选择"始终允许显示本站点的弹出式窗口"。`,
         onOk() {
-          console.log(_that.selectedRowKeys);
-          
+          console.log(_that.selectedRowKeys)
+
           _that.selectedRowKeys.forEach((item) => {
             _that.DataM.getfiledetails(item).then((res) => {
               window.open(res.data.downloadUrl)
             })
-
           })
-          _that.selectedRowKeys = [];
-          (_that.$refs.xTable1 as any).clearCheckboxRow()
+          _that.selectedRowKeys = []
+          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
         }
       })
     } else {
@@ -882,7 +882,7 @@ export default class AvData extends Vue {
       this.fileId = this.Tablesubscript[index - 1]
       this.getfiledetails(this.fileId)
       let CustomAudio = this.$refs.CustomAudio as any
-      CustomAudio.resetstate();
+      CustomAudio.resetstate()
     }
   }
   //  音视频下一个
@@ -894,9 +894,9 @@ export default class AvData extends Vue {
       this.NextDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index + 1]
-      this.getfiledetails(this.fileId);
+      this.getfiledetails(this.fileId)
       let CustomAudio = this.$refs.CustomAudio as any
-      CustomAudio.resetstate();
+      CustomAudio.resetstate()
     }
   }
   // 下载
@@ -913,17 +913,26 @@ export default class AvData extends Vue {
   }
   // 删除
   private moduleDlt() {
-    this.DataM.bumendlt([this.fileId]).then((res) => {
-      if (res.code == 0) {
-        this.$message.success(res.msg)
-        this.visible = false
-        this.gettabledata(this.formdata)
-        this.selectedRowKeys = []
-      } else {
-        this.$message.error(res.msg)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _that = this
+    this.$confirm({
+      title: "提示",
+      content: `数据删除后无法恢复，确定要删除吗？`,
+      onOk() {
+        _that.DataM.bumendlt([_that.fileId]).then((res) => {
+          if (res.code == 0) {
+            _that.$message.success(res.msg)
+            _that.visible = false
+            _that.gettabledata(_that.formdata)
+            _that.selectedRowKeys = []
+          } else {
+            _that.$message.error(res.msg)
+          }
+        })
       }
     })
   }
+
   private Videochange(type, val: any) {
     if (type === "add") {
       this.DataM.videoSnapshot(this.fileCode, val).then((res) => {
@@ -941,8 +950,10 @@ export default class AvData extends Vue {
     this.CurrentFileformat = val
     this.startswitch = false
   }
+  
   private FormatTransformation() {
     this.progress = false
+    this.progressVal = 0
     this.DataM.convertFormat(this.fileCode, this.CurrentFileformat).then(
       (res) => {
         if (res.code === 0) {
@@ -970,6 +981,9 @@ export default class AvData extends Vue {
   }
   private fileconversion() {
     this.progress = true
+    clearInterval(this.time)
+    this.progressbtn = false
+    this.progressVal = 0
   }
   private confirmfiledown() {
     // 下载
@@ -980,6 +994,7 @@ export default class AvData extends Vue {
     this.filepath = ""
     this.progress = true
   }
+
   private sortChangeEvent({ column, property, order }) {
     if (property === "fileName") property = "file_name"
     if (property === "fileSizeName") property = "file_size"
@@ -1239,7 +1254,10 @@ export default class AvData extends Vue {
     }
   }
 }
-.viewer-next,.viewer-play,.viewer-prev,.viewer-navbar{
-  display: none
+.viewer-next,
+.viewer-play,
+.viewer-prev,
+.viewer-navbar {
+  display: none;
 }
 </style>

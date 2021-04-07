@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-26 10:25:19
- * @LastEditTime: 2021-03-29 10:30:19
+ * @LastEditTime: 2021-04-07 10:49:29
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\router\concatrouter.ts
@@ -32,8 +32,6 @@
       // redirect:item.redirect
     };
     currentRouter.path = currentRouter.path.replace("//", "/");0
-    // item.redirect && (currentRouter.redirect = item.redirect); // 路由重定向
-    // console.log(currentRouter);
     return currentRouter;
   });
 }
@@ -43,7 +41,7 @@ function concatrouter() {
   const routers = [
     {
       path: "/",
-      redirect: "/index"
+      redirect: "/home"
     },
     {
       path: "/home",

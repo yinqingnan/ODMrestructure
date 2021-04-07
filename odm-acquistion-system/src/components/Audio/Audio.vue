@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-04-06 16:44:12
- * @LastEditTime: 2021-04-06 16:44:12
+ * @LastEditTime: 2021-04-07 10:49:50
  * @FilePath: \src\components\Audio\Audio.vue
  * @LastEditors: yqn
 -->
@@ -272,7 +272,6 @@ export default class Audio extends Vue {
   cursor {
     border-right: 1px solid rgb(243, 152, 0) !important;
   }
-  // background-image: url('../../assets/audio/bj.pbg')
   background-image: url("../../assets/audio/bj.png");
   background-size: 100% 100%;
 }
