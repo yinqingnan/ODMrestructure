@@ -394,7 +394,7 @@ export default class AvData extends Vue {
   private selectionRows = []
   private Height = ""
   private tabledata = []
-  private formdata = {
+  private formdata: Videoobj = {
     page: 1,
     size: 15,
     order: "desc",
@@ -599,8 +599,8 @@ export default class AvData extends Vue {
       this.tablebtn(row, rowIndex)
     }
   }
-  private downloadUrl = ""
-  private previewUrl = ""
+  private downloadUrl = ''
+  private previewUrl = ''
   private policeName = ''
   private logFileName = ''
   private tablebtn(row, rowIndex) {
