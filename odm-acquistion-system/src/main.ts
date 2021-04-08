@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-04-06 11:17:53
+ * @LastEditTime: 2021-04-07 18:40:16
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -75,7 +75,7 @@ Vue.directive("right", {
   },
 });
 
-import "../public/localiconfont/iconfont.css"; // 引入图标
+import "../public/localiconfont/iconfont.css"; // todo 引入自定义图标
 
 import VideoPlayer from "vue-video-player";
 require("video.js/dist/video-js.css");
@@ -130,6 +130,11 @@ import { concatrouter } from "@/router/concatrouter"; //生成路由表方法
 
 //路由拦截
 router.beforeEach((to, from, next) => {
+  if (to.path === "/login") {
+    document.title = "登录";
+  } else {
+    document.title = to.name;
+  }
   NProgress.start();
   if (!localStorage.getItem("token")) {
     if (to.path !== "/login") {
@@ -153,12 +158,7 @@ router.beforeEach((to, from, next) => {
     }
   }
   NProgress.done();
-  if (to.path === "/login") {
-    document.title = "登录";
-  } else {
-    document.title = to.name;
-  }
-
+  
   next();
 });
 

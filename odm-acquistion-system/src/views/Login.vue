@@ -148,14 +148,13 @@ export default class Login extends Vue {
         this.checkNick = false
       }
     },(err: Error) =>{
-      console.log(111111111111);
-      
       this.loginstate = false
       this.checkNick = false
     })
   }
   private gettitle() {
     this.Login.gettitle({}, false).then((res: any) => {
+      localStorage.setItem("routertitle", res.data)
       this.Title = res.data
     })
   }

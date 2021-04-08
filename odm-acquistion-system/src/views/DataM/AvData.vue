@@ -11,6 +11,7 @@
               </a>
               <a-menu slot="overlay" class="box">
                 <a-form
+                  :selfUpdate="true"
                   autocomplete="off"
                   :form="form"
                   :label-col="{ span: 6 }"
@@ -136,7 +137,6 @@
             :sort-config="{trigger: 'cell', defaultSort: {field: 'id', order: 'desc'}, remote:true,orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
-            >
             <vxe-table-column type="checkbox" width="60" align="center" />
             <vxe-table-column
               header-align="center"
@@ -240,10 +240,10 @@
       <div class="videoPopup">
         <div class="Popup_left">
           <div v-if="filedetails.fileType === 'PHOTO'" class="Popup_left_img">
-            <!-- <div class="images" v-viewer="{movable: false}" >
+            <div class="images" v-viewer="{movable: false}">
               <img v-for="src in [filedetails.previewUrl]" :src="src" :key="src" />
-            </div>-->
-            <img :src="filedetails.previewUrl" alt />
+            </div>
+            <!-- <img :src="filedetails.previewUrl" alt /> -->
           </div>
           <div v-else-if="filedetails.fileType === 'VIDEO'" class="Popup_left_video">
             <XgVideo
@@ -259,7 +259,10 @@
         </div>
         <div class="Popup_right">
           <div class="fileclass">
-            <p style="font-size:14px;font-weight:bold">{{ filedetails.fileName }}</p>
+            <a-tooltip>
+              <template slot="title">{{ filedetails.fileName }}</template>
+              <p class="fileName">文件名称：{{ filedetails.fileName }}</p>
+            </a-tooltip>
             <p
               style="font-size:14px;font-weight:bold"
             >{{ filedetails.userName }}({{filedetails.userCode}})</p>
@@ -292,7 +295,12 @@
     </a-modal>
     <a-modal v-model="logshow" title="日志" @cancel="logclear" :keyboard="false">
       <el-scrollbar style="height: 200px;width: 476px;">
-        <p>{{logmsg}}</p>
+         <a-divider orientation="left" style="color:#919AA6;font-size:12px">警员名称</a-divider>
+         <p style="padding-left: 27px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; width: 476px;">{{policeName}}</p>
+          <a-divider orientation="left" style="color:#919AA6;font-size:12px">文件名称</a-divider>
+         <p style="padding-left: 22px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; width: 476px;">{{logFileName}}</p>
+         <a-divider orientation="left" style="color:#919AA6;font-size:12px">日志内容</a-divider>
+        <pre style="padding-left: 27px;">{{logmsg}}</pre>
       </el-scrollbar>
       <template slot="footer">
         <a-button type="default" @click="logprve" :disabled="logPreviousDisabled">上一个</a-button>
@@ -386,11 +394,17 @@ export default class AvData extends Vue {
   private selectionRows = []
   private Height = ""
   private tabledata = []
-  private formdata: Videoobj = {
+  private formdata = {
     page: 1,
     size: 15,
     order: "desc",
-    sidx: "id"
+    sidx: "id",
+    upload_date_ge:
+      moment().locale("zh-cn").subtract(1, "months").format("YYYY-MM-DD") +
+      " 00:00:00",
+    upload_date_le: moment().locale("zh-cn").format("YYYY-MM-DD") + " 23:59:59",
+    record_date_ge: "",
+    record_date_le: ""
   }
   private logmsg = ""
   private fileCode = ""
@@ -488,7 +502,6 @@ export default class AvData extends Vue {
     window.addEventListener("resize", () => {
       _that.Height = `${document.documentElement.clientHeight - 230}px`
     })
-
     let user = JSON.parse(localStorage.getItem("user"))
     if (user.dataPermission) {
       this.namejurisdiction = true
@@ -540,17 +553,17 @@ export default class AvData extends Vue {
           }
         } else if (val.TimeData === "recordDate") {
           if (val.date) {
-            obj.record_date_le = moment(val.date[0]).format(
+            obj.record_date_ge = moment(val.date[0]).format(
               "YYYY-MM-DD" + " 00:00:00"
             )
-            obj.record_date_ge = moment(val.date[1]).format(
+            obj.record_date_le = moment(val.date[1]).format(
               "YYYY-MM-DD" + " 23:59:59"
             )
           }
         }
         this.page.currentPage = 1
         this.formdata = obj
-        this.gettabledata(obj)
+        this.gettabledata(this.formdata)
       }
     })
   }
@@ -571,7 +584,6 @@ export default class AvData extends Vue {
       }
     })
   }
-
   private reset() {
     this.form.resetFields()
     this.searchForm = false
@@ -582,7 +594,6 @@ export default class AvData extends Vue {
     e.preventDefault()
     this.searchForm = true
   }
-
   private onRowClick({ row, rowIndex, column }) {
     if (column.title === "文件名") {
       this.tablebtn(row, rowIndex)
@@ -590,12 +601,16 @@ export default class AvData extends Vue {
   }
   private downloadUrl = ""
   private previewUrl = ""
+  private policeName = ''
+  private logFileName = ''
   private tablebtn(row, rowIndex) {
     if (
       (document.getElementsByClassName("filenames")[rowIndex] as HTMLElement)
         .style.cursor !== "not-allowed"
     ) {
       if (row.fileType === "LOG") {
+        this.logFileName = row.fileName
+        this.policeName = row.userName
         this.DataM.LogPreview(row.code).then((re) => {
           this.logshow = true
           this.logmsg = re
@@ -615,7 +630,7 @@ export default class AvData extends Vue {
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == this.Tablesubscript.length - 1) {
       this.$message.info("已经是当前页面最后一个")
-      this.logNextDisabled = true
+      // this.logNextDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index + 1]
       this.DataM.getfiledetails(this.fileId).then((res) => {
@@ -624,7 +639,7 @@ export default class AvData extends Vue {
         this.DataM.LogPreview(res.data.code).then((re) => {
           this.logshow = true
           this.logmsg = re
-          this.logPreviousDisabled = false
+          // this.logPreviousDisabled = false
         })
       })
     }
@@ -633,7 +648,7 @@ export default class AvData extends Vue {
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == 0) {
       this.$message.info("已经是当前页面第一个")
-      this.logPreviousDisabled = true
+      // this.logPreviousDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index - 1]
       this.DataM.getfiledetails(this.fileId).then((res) => {
@@ -642,7 +657,7 @@ export default class AvData extends Vue {
         this.DataM.LogPreview(res.data.code).then((re) => {
           this.logshow = true
           this.logmsg = re
-          this.logNextDisabled = false
+          // this.logNextDisabled = false
         })
       })
     }
@@ -720,6 +735,8 @@ export default class AvData extends Vue {
     this.fileCode = ""
   }
   private tccancel() {
+    console.log(this.formdata)
+
     this.fileId = ""
     this.fileCode = ""
     this.gettabledata(this.formdata)
@@ -825,7 +842,7 @@ export default class AvData extends Vue {
   }
 
   private tableRowClassName(record: any, index: number) {
-    // record.rowIndex = index
+    record.rowIndex = index
     return record.rowIndex % 2 === 1 ? "bgF5" : ""
   }
   private arrSelect(arr, val) {
@@ -880,7 +897,7 @@ export default class AvData extends Vue {
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == 0) {
       this.$message.info("已经是当前页面第一个")
-      this.PreviousDisabled = true
+      // this.PreviousDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index - 1]
       this.getfiledetails(this.fileId)
@@ -892,7 +909,7 @@ export default class AvData extends Vue {
     let index = this.arrSelect(this.Tablesubscript, this.fileId)
     if (index == this.Tablesubscript.length - 1) {
       this.$message.info("已经是当前页面最后一个")
-      this.NextDisabled = true
+      // this.NextDisabled = true
     } else {
       this.fileId = this.Tablesubscript[index + 1]
       this.getfiledetails(this.fileId)
@@ -1258,5 +1275,13 @@ export default class AvData extends Vue {
 .viewer-prev,
 .viewer-navbar {
   display: none;
+}
+.fileName {
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 340px;
 }
 </style>
