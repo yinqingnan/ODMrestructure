@@ -131,6 +131,7 @@ export default class Header extends Vue {
   }
   private gettitle() {
     this.Login.gettitle({}, false).then((res: any) => {
+      localStorage.setItem("routertitle", res.data)
       this.Title = res.data
     })
   }

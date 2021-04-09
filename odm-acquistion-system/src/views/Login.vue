@@ -122,7 +122,7 @@ export default class Login extends Vue {
   }
   private login(data: object) {
     this.loginstate = true
-    localStorage.clear()
+   
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.Login.login(data, false).then((res) => {
       this.loginstate = false
@@ -147,13 +147,14 @@ export default class Login extends Vue {
         this.clearCookie()
         this.checkNick = false
       }
-    },(err: Error) =>{
+    },(err) =>{
       this.loginstate = false
       this.checkNick = false
     })
   }
   private gettitle() {
-    this.Login.gettitle({}, false).then((res: any) => {
+    this.Login.gettitle({}, false).then((res) => {
+      localStorage.clear()
       localStorage.setItem("routertitle", res.data)
       this.Title = res.data
     })

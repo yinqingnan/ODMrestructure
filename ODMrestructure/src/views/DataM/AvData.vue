@@ -616,7 +616,6 @@ import moment from "moment"
 @Component({})
 export default class AvData extends Vue {
   [x: string]: any
-
   public DataM = new this.$api.configInterface.DataM()
   private LimitInputlength = LimitInputlength
   private textarealength = textarealength

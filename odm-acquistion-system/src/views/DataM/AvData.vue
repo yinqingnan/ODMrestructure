@@ -38,7 +38,7 @@
                       ]"
                         :allow-clear="true"
                         style="width: 100%"
-                        placeholder="请选择..."
+                        placeholder="请选择视频、音频或图片..."
                       >
                         <a-select-option v-for="d in filetype" :key="d.value">{{ d.title }}</a-select-option>
                       </a-select>
@@ -295,11 +295,15 @@
     </a-modal>
     <a-modal v-model="logshow" title="日志" @cancel="logclear" :keyboard="false">
       <el-scrollbar style="height: 200px;width: 476px;">
-         <a-divider orientation="left" style="color:#919AA6;font-size:12px">警员名称</a-divider>
-         <p style="padding-left: 27px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; width: 476px;">{{policeName}}</p>
-          <a-divider orientation="left" style="color:#919AA6;font-size:12px">文件名称</a-divider>
-         <p style="padding-left: 22px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; width: 476px;">{{logFileName}}</p>
-         <a-divider orientation="left" style="color:#919AA6;font-size:12px">日志内容</a-divider>
+        <a-divider orientation="left" style="color:#919AA6;font-size:12px">警员名称</a-divider>
+        <p
+          style="padding-left: 27px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; width: 476px;"
+        >{{policeName}}</p>
+        <a-divider orientation="left" style="color:#919AA6;font-size:12px">文件名称</a-divider>
+        <p
+          style="padding-left: 22px;white-space: nowrap;text-overflow: ellipsis; overflow: hidden; width: 476px;"
+        >{{logFileName}}</p>
+        <a-divider orientation="left" style="color:#919AA6;font-size:12px">日志内容</a-divider>
         <pre style="padding-left: 27px;">{{logmsg}}</pre>
       </el-scrollbar>
       <template slot="footer">
@@ -347,9 +351,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { Selecttype, Videoobj } from "@/InterfaceVariable/interface"
 import XgVideo from "@/components/Video/Video.vue"
 import CustomAudio from "@/components/Audio/Audio.vue"
-// import { namespace } from "vuex-class"
 import moment from "moment"
-// const Test = namespace("Test")
 @Component({
   components: { XgVideo, CustomAudio }
 })
@@ -374,7 +376,6 @@ export default class AvData extends Vue {
     { id: 2, value: "recordDate", title: "摄录时间" }
   ]
   private filetype: Selecttype[] = [
-    { id: 0, value: "all", title: "全部" },
     { id: 1, value: "VIDEO", title: "视频" },
     { id: 2, value: "AUDIO", title: "音频" },
     { id: 3, value: "PHOTO", title: "图片" },
@@ -572,15 +573,21 @@ export default class AvData extends Vue {
   }
   private gettabledata(obj): void {
     this.DataM.gettabledata(obj, true).then((res: any) => {
-      this.page.totalResult = parseInt(res.count)
-      this.tabledata = res.data
-      this.Tablesubscript = []
-      this.tableData = []
-      // 保存当前表格的所有code
-      if (res.data) {
-        res.data.map((item) => {
-          this.Tablesubscript.push(item.id)
-        })
+      if(res.count > 0){
+        this.page.currentPage =Number(res.page) 
+        this.page.pageSize = Number(res.size)
+        this.page.totalResult = parseInt(res.count)
+        this.tabledata = res.data
+        this.Tablesubscript = []
+        this.tableData = []
+        // 保存当前表格的所有code
+        if (res.data) {
+          res.data.map((item) => {
+            this.Tablesubscript.push(item.id)
+          })
+        }
+      }else{
+        this.page.currentPage = 1
       }
     })
   }
@@ -599,10 +606,10 @@ export default class AvData extends Vue {
       this.tablebtn(row, rowIndex)
     }
   }
-  private downloadUrl = ''
-  private previewUrl = ''
-  private policeName = ''
-  private logFileName = ''
+  private downloadUrl = ""
+  private previewUrl = ""
+  private policeName = ""
+  private logFileName = ""
   private tablebtn(row, rowIndex) {
     if (
       (document.getElementsByClassName("filenames")[rowIndex] as HTMLElement)
@@ -760,6 +767,7 @@ export default class AvData extends Vue {
         title: "提示",
         content: `数据删除后无法恢复，确定要删除吗？`,
         onOk() {
+          
           _that.DataM.bumendlt(arr).then((res) => {
             if (res.code == 0) {
               _that.$message.success(res.msg)
@@ -769,8 +777,8 @@ export default class AvData extends Vue {
               _that.$message.error(res.msg)
             }
           })
-          //
-          ;(_that.$refs.xTable1 as any).clearCheckboxRow()
+          let xTable1= (_that.$refs.xTable1 as any)
+          xTable1.clearCheckboxRow()
         }
       })
     } else {
@@ -1273,7 +1281,8 @@ export default class AvData extends Vue {
 .viewer-next,
 .viewer-play,
 .viewer-prev,
-.viewer-navbar {
+.viewer-navbar,
+.viewer-title {
   display: none;
 }
 .fileName {

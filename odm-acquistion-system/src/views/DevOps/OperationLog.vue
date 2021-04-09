@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown class="dropdown" >
+            <a-dropdown :trigger="['click']" class="dropdown" >
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />

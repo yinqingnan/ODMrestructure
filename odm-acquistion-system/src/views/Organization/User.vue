@@ -7,8 +7,9 @@
           class="contaninerheader"
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
+        <div>
           <template>
-            <a-dropdown  class="dropdown" >
+            <a-dropdown  class="dropdown" :trigger="['click']">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -54,6 +55,9 @@
               </a-menu>
             </a-dropdown>
           </template>
+          <p>数据采集设备已介入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
+        </div>
+          
           <div class="btns">
             <a-button
               @click="add"
@@ -150,7 +154,6 @@
                   @click="edit(row)"
                   style="color:#0db8df;cursor: pointer;"
                   v-isshow="'base:user:save'"
-                  :style="{display:StandaloneMode? 'none': 'block'}"
                 >编辑</span>
               </template>
             </vxe-table-column>
@@ -190,6 +193,7 @@
             <a-col :span="12">
               <a-form-item label="姓名">
                 <a-input
+                  :disabled="StandaloneMode"
                   v-decorator="['name', { initialValue: '',  rules: [{ required: true, message: '请输入民警姓名' }] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入民警姓名"
@@ -217,6 +221,7 @@
             <a-col :span="12">
               <a-form-item label="性别">
                 <a-radio-group
+                  :disabled="StandaloneMode"
                   v-decorator="['gender', { initialValue: '男',  rules: [{ required: true, message: '必填项不能为空' ,}] }]"
                   :max-length="LimitInputlength"
                 >
@@ -253,6 +258,7 @@
             <a-col :span="12">
               <a-form-item label="身份证号">
                 <a-input
+                :disabled="StandaloneMode"
                   v-decorator="['identity', { initialValue: '',  rules: [
                     {validator:validatorID}
                   ],validateTrigger: 'blur'  }]"
@@ -264,6 +270,7 @@
             <a-col :span="12">
               <a-form-item label="联系电话">
                 <a-input
+                :disabled="StandaloneMode"
                   v-decorator="['phone', { initialValue: '',  rules: [ {validator: phonevalidator}] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入联系电话"
@@ -274,6 +281,7 @@
           <a-row class="userm">
             <a-form-item label="备注" class="textareatext" :span="4">
               <a-textarea
+                :disabled="StandaloneMode"
                 :maxLength="textarealength"
                 allowClear
                 rows="3"
@@ -338,8 +346,6 @@ import {
 } from "@/InterfaceVariable/variable"
 import axios from "axios"
 import { http } from "../../api/interceptors"
-import { namespace } from "vuex-class"
-const Test = namespace("Test")
 @Component({
   components: {}
 })
@@ -391,10 +397,10 @@ export default class User extends Vue {
     size: this.page.pageSize,
     name: "",
     role: "",
-    sidx: "code",
+    sidx: "id",
     order: "desc"
   }
-  public property = "code"
+  public property = "id"
   public order = "desc"
   // todo 事件和生命周期
   private created() {
@@ -411,6 +417,7 @@ export default class User extends Vue {
     this.gettabledata(this.formdatalist)
     this.StandaloneMode = JSON.parse(localStorage.getItem("user"))!.openCloud
   }
+
   // todo事件
   private tableRowClassName(record) {
     // return record.rowIndex % 2 === 0 ? "bgF5" : ""
@@ -614,8 +621,6 @@ export default class User extends Vue {
   private repairSubmit(e) {
     e.preventDefault()
     this.form1.validateFields((err: any, val: any) => {
-      console.log(val)
-
       if (!err) {
         let obj = {
           id: this.status === "新增" ? "" : this.id,
@@ -647,7 +652,6 @@ export default class User extends Vue {
     })
   }
   private edit(row) {
-    console.log(row)
     this.id = row.id
     this.codedisabled = true
     this.visible = true
@@ -663,8 +667,6 @@ export default class User extends Vue {
         remarks: row.remark,
         name: row.name,
         code: row.code,
-        sidx: this.property,
-        order: this.order
       })
     })
   }

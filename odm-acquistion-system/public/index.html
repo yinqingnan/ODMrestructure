@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:44
- * @LastEditTime: 2021-04-07 18:40:52
+ * @LastEditTime: 2021-04-08 10:39:35
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \public\index.html
@@ -27,6 +27,7 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
+      document.title =  localStorage.getItem('routertitle')
       window.gurl = {
         AXIOS_TIMEOUT: 15000,
         // SERVICE_CONTEXT_PATH:"http://192.168.10.79:8080/"

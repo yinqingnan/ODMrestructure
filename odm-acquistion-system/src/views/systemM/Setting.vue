@@ -146,7 +146,8 @@
                       v-decorator="[
                       'cloudIp',
                       {
-                        rules: [{ required: true, message: '请输入上级平台IP' }]
+                        rules: [ { validator: ipvalidator},{required:true,message: '请输入上级平台IP'}],
+                        validateTrigger:'blur',
                       }
                     ]"
                       placeholder="请输入上级平台IP"
@@ -159,7 +160,7 @@
                       v-decorator="[
                       'cloudPort',
                       {
-                        rules: [{ required: true, message: '请输入上级平台端口号' }]
+                        rules: [{ required: true, message: '请输入上级平台端口号' },{validator:protvalidator}],validateTrigger: 'blur'
                       }
                     ]"
                       placeholder="请输入上级平台端口号"
@@ -213,6 +214,7 @@ import moment from "moment"
 @Component({
   components: {}
 })
+
 export default class RightContent extends Vue {
   [x: string]: any
   public getData = new this.$api.configInterface.Setting()
@@ -351,7 +353,34 @@ export default class RightContent extends Vue {
       } else {
         this.$message.error(res.msg)
       }
+      localStorage.setItem("routertitle", val.name)
+
     })
+  }
+  private ipvalidator(rule, value, callback){
+    let reg = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}/
+    if(value.length=== 0){
+      callback()
+    }else if(!reg.test(value)){
+      callback("上级平台IP格式错误")
+    }else{
+      callback()
+    }
+  }
+  private protvalidator(rule,value,callback){
+    let reg = /^\d+$|^\d+[.]?\d+$/
+    if(value.length === 0){
+      callback()
+    }else{
+      if(!reg.test(value)){
+        callback('上级平台端口号格式错误')
+      }else if(value.length >5){
+        callback('上级平台端口号格式错误')
+      }else{
+        callback()
+      }
+    }
+   
   }
 }
 </script>

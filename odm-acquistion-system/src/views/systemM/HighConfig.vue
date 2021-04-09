@@ -252,7 +252,6 @@ export default class RightContent extends Vue {
     })
   }
   private contnentvalidator(rule , value, callback){
-    console.log(this.contentcode);
     if(this.contentcode === 'station_online_time' || this.contentcode === 'station_Port'|| this.contentcode === 'file_upload_level'){
       let pattern = new RegExp( /^\d+$|^\d+[.]?\d+$/)
       if (!pattern.test(value)){

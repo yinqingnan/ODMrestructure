@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown class="dropdown">
+            <a-dropdown class="dropdown" :trigger="['click']">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -606,7 +606,6 @@ export default class Matche extends Vue {
     e.preventDefault()
     this.form2.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(this.state == "添加" ? "" : this.editId)
         if (val.purchasedate == "" && val.warrantydate == "") {
           this.Policepersonnelsave({
             brand: val.brand,
@@ -871,7 +870,6 @@ export default class Matche extends Vue {
     let selectRecords = (this.$refs.zhifayi as any).getCheckboxRecords()
     return selectRecords
   }
-
   private instrumentdlt(arr) {
     this.DeviceM.instrumentdlt(arr).then((res) => {
       if (res.code == 0) {
