@@ -356,7 +356,6 @@ export default class RightContent extends Vue {
         this.$message.error(res.msg)
       }
       localStorage.setItem("routertitle", val.name)
-
     })
   }
   private ipvalidator(rule, value, callback){

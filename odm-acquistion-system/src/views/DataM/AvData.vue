@@ -240,7 +240,7 @@
       <div class="videoPopup">
         <div class="Popup_left">
           <div v-if="filedetails.fileType === 'PHOTO'" class="Popup_left_img">
-            <div class="images" v-viewer="{movable: false}">
+            <div class="images" v-viewer="{}">
               <img v-for="src in [filedetails.previewUrl]" :src="src" :key="src" />
             </div>
             <!-- <img :src="filedetails.previewUrl" alt /> -->
