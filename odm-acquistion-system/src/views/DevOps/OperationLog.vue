@@ -8,7 +8,7 @@
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
           <template>
-            <a-dropdown :trigger="['click']" class="dropdown" >
+            <a-dropdown :trigger="['click']" class="dropdown" v-model="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -269,7 +269,8 @@ export default class OperationLog extends Vue {
     this.gettabledata(obj)
   }
   private searchForm = false
-  private popup() {
+  private popup(e) {
+    e.preventDefault()
     this.searchForm = true
   }
   private reset() {

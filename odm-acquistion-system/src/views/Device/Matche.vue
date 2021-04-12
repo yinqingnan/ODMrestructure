@@ -7,108 +7,115 @@
           class="contaninerheader"
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
-          <template>
-            <a-dropdown class="dropdown" :trigger="['click']">
-              <a class="ant-dropdown-link" @click="popup">
-                筛选
-                <a-icon type="down" />
-              </a>
-              <a-menu slot="overlay" class="box" v-show="searchForm">
-                <a-form
-                  autocomplete="off"
-                  :form="form"
-                  :label-col="{ span: 8 }"
-                  :wrapper-col="{ span: 14 }"
-                  @submit="handle"
-                >
-                  <el-scrollbar class="screen">
-                    <a-form-item label="产品序号">
-                      <a-input
-                        v-decorator="['code_like', { initialValue: '', rules: [] }]"
-                        :max-length="LimitInputlength"
-                        placeholder="请输入产品序号"
-                      >/></a-input>
-                    </a-form-item>
-                    <a-form-item label="厂商">
-                      <a-select
-                        v-decorator="[
+          <div style="display: flex">
+            <template>
+              <a-dropdown class="dropdown" :trigger="['click']" v-model="searchForm">
+                <a class="ant-dropdown-link" @click="popup">
+                  筛选
+                  <a-icon type="down" />
+                </a>
+                <a-menu slot="overlay" class="box" v-show="searchForm">
+                  <a-form
+                    autocomplete="off"
+                    :form="form"
+                    :label-col="{ span: 8 }"
+                    :wrapper-col="{ span: 14 }"
+                    @submit="handle"
+                  >
+                    <el-scrollbar class="screen">
+                      <a-form-item label="产品序号">
+                        <a-input
+                          v-decorator="['code_like', { initialValue: '', rules: [] }]"
+                          :max-length="LimitInputlength"
+                          placeholder="请输入产品序号"
+                        >/></a-input>
+                      </a-form-item>
+                      <a-form-item label="厂商">
+                        <a-select
+                          v-decorator="[
                         'brandName',
                         {
                           initialValue: undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
-                      >
-                        <a-select-option v-for="d in brandstatus" :key="d.value">{{ d.name }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                    <a-form-item label="执法仪型号">
-                      <a-select
-                        v-decorator="[
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                        >
+                          <a-select-option v-for="d in brandstatus" :key="d.value">{{ d.name }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item label="执法仪型号">
+                        <a-select
+                          v-decorator="[
                         'model',
                         {
                           initialValue: undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
-                      >
-                        <a-select-option v-for="d in Equipmentmodel" :key="d.value">{{ d.name }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                    <a-form-item label="设备状态">
-                      <a-select
-                        v-decorator="[
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                        >
+                          <a-select-option v-for="d in Equipmentmodel" :key="d.value">{{ d.name }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item label="设备状态">
+                        <a-select
+                          v-decorator="[
                         'is_enabled',
                         {
                           initialValue: undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
-                      >
-                        <a-select-option v-for="d in equipmentstatus" :key="d.value">{{ d.title }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                    <a-form-item label="绑定状态">
-                      <a-select
-                        v-decorator="[
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                        >
+                          <a-select-option v-for="d in equipmentstatus" :key="d.value">{{ d.title }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item label="绑定状态">
+                        <a-select
+                          v-decorator="[
                         'is_binding',
                         {
                           initialValue:undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
-                      >
-                        <a-select-option v-for="d in is_bindingstatus" :key="d.value">{{ d.title }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                    <a-form-item label="姓名/警号">
-                      <a-input
-                        v-decorator="['user', { initialValue: '', rules: [] }]"
-                        :max-length="LimitInputlength"
-                        placeholder="请输入姓名/警号"
-                      >/></a-input>
-                    </a-form-item>
-                  </el-scrollbar>
-                  <div class="modulebot">
-                    <a-button type="Default" @click="reset">重置</a-button>
-                    <a-button type="primary" @click="handle">查询</a-button>
-                  </div>
-                </a-form>
-              </a-menu>
-            </a-dropdown>
-          </template>
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                        >
+                          <a-select-option
+                            v-for="d in is_bindingstatus"
+                            :key="d.value"
+                          >{{ d.title }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                      <a-form-item label="姓名/警号">
+                        <a-input
+                          v-decorator="['user', { initialValue: '', rules: [] }]"
+                          :max-length="LimitInputlength"
+                          placeholder="请输入姓名/警号"
+                        >/></a-input>
+                      </a-form-item>
+                    </el-scrollbar>
+                    <div class="modulebot">
+                      <a-button type="Default" @click="reset">重置</a-button>
+                      <a-button type="primary" @click="handle">查询</a-button>
+                    </div>
+                  </a-form>
+                </a-menu>
+              </a-dropdown>
+            </template>
+             <p v-if="StandaloneMode" style="line-height:31px;">数据采集设备已接入上级平台，请在平台中管理执法仪列表</p>
+          </div>
+
           <div class="btns">
             <a-button
               @click="add"
@@ -147,7 +154,8 @@
             :sort-config="{trigger: 'cell', defaultSort: {field: '', order: 'desc'}, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
-            <vxe-table-column type="checkbox" width="60" align="center" />
+            <vxe-table-column v-if="!StandaloneMode" type="checkbox" width="60" align="center" />
+            <vxe-table-column v-else type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
               field="code"
               title="产品序号"
@@ -218,13 +226,19 @@
               align="center"
               sortable
             />
-            <vxe-table-column field="actions" title="操作" align="center" flexd="right" width="10%">
+            <vxe-table-column
+              field="actions"
+              title="操作"
+              align="center"
+              flexd="right"
+              width="10%"
+              v-if="!StandaloneMode"
+            >
               <template v-slot="{ row }">
                 <span
                   v-isshow="'core:recorder:save'"
                   @click="edit(row)"
                   style="color:#0db8df;cursor: pointer;margin-right:10px"
-                  :style="{display:StandaloneMode? 'none': 'block'}"
                 >编辑</span>
               </template>
             </vxe-table-column>
@@ -268,7 +282,7 @@
             <a-col :span="24">
               <a-form-item label="产品序号" class="serialnum">
                 <a-input
-                @focus="clearvalidator"
+                  @focus="clearvalidator"
                   :disabled="Disabled"
                   v-decorator="['code', { initialValue: '',  
                   rules: [
@@ -491,6 +505,8 @@ export default class Matche extends Vue {
   private Disabled = false
   private visible = false
   private tableData = []
+  private order = "desc"
+  private sidx = "id"
 
   // todo 事件和生命周期
   private created() {
@@ -546,7 +562,8 @@ export default class Matche extends Vue {
   }
 
   private searchForm = false
-  private popup() {
+  private popup(e) {
+    e.preventDefault()
     this.searchForm = true
   }
 
@@ -564,15 +581,15 @@ export default class Matche extends Vue {
     user: "",
     brand: ""
   }
-  private exportobj =  {
+  private exportobj = {
     page: 1,
     size: 15,
-    code_like: '',
-    model_equal:'',
-    deviceStatus_equal: '',
-    is_binding_equal: '',
-    user: '',
-    brand_equal: ''
+    code_like: "",
+    model_equal: "",
+    deviceStatus_equal: "",
+    is_binding_equal: "",
+    user: "",
+    brand_equal: ""
   }
   private handle(e?) {
     e?.preventDefault()
@@ -587,7 +604,9 @@ export default class Matche extends Vue {
           deviceStatus_equal: val.is_enabled,
           is_binding_equal: val.is_binding,
           user: val.user,
-          brand_equal: val.brandName
+          brand_equal: val.brandName,
+          order: "desc",
+          sidx: "id"
         }
         if (val.is_enabled === "all") {
           delete obj["deviceStatus_equal"]
@@ -726,7 +745,7 @@ export default class Matche extends Vue {
       user: this.Sval.user,
       brand_equal: this.Sval.brand,
       order: this.order,
-      sidx: this.sid
+      sidx: this.sidx
     })
   }
 
@@ -735,6 +754,7 @@ export default class Matche extends Vue {
     this.Disabled = false
     this.state = "添加"
     this.editId = ""
+    this.form2.resetFields()
   }
 
   private dlt() {
@@ -746,7 +766,7 @@ export default class Matche extends Vue {
       arr.map((item) => {
         dltarr.push(item.id)
       })
-      console.log(dltarr)
+      // console.log(dltarr)
       this.$confirm({
         title: "提示",
         content: `确定要删除选中的执法仪吗？`,
@@ -835,6 +855,8 @@ export default class Matche extends Vue {
   private exports() {
     let url = window.gurl.SERVICE_CONTEXT_PATH
     let obj = {
+      page: this.page.currentPage,
+      size: this.page.pageSize,
       code_like: this.exportobj.code_like,
       model_equal: this.exportobj.model_equal,
       user: this.exportobj.user,
@@ -923,9 +945,6 @@ export default class Matche extends Vue {
       callback("格式不正确，必须是数字或字母")
     }
   }
-  private order = "desc"
-  private sidx = "id"
-
   private sortChangeEvent({ column, property, order }) {
     this.tableData = []
     if (property === "modelName") property = "model"
@@ -947,8 +966,8 @@ export default class Matche extends Vue {
     this.order = order
     this.sidx = property
   }
-  public clearvalidator () {
-    this.form2.setFields({ code: { value: '', errors: false } })
+  public clearvalidator() {
+    this.form2.setFields({ code: { value: "", errors: false } })
   }
 }
 </script>

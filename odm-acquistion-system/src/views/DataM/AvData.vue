@@ -573,21 +573,18 @@ export default class AvData extends Vue {
   }
   private gettabledata(obj): void {
     this.DataM.gettabledata(obj, true).then((res: any) => {
+      this.page.currentPage =Number(res.page) 
+      this.page.pageSize = Number(res.size)
+      this.page.totalResult = parseInt(res.count)
       if(res.count > 0){
-        this.page.currentPage =Number(res.page) 
-        this.page.pageSize = Number(res.size)
-        this.page.totalResult = parseInt(res.count)
         this.tabledata = res.data
         this.Tablesubscript = []
-        this.tableData = []
         // 保存当前表格的所有code
-        if (res.data) {
-          res.data.map((item) => {
-            this.Tablesubscript.push(item.id)
-          })
-        }
+        res.data.map((item) => {
+          this.Tablesubscript.push(item.id)
+        })
       }else{
-        this.page.currentPage = 1
+        this.tabledata = []
       }
     })
   }

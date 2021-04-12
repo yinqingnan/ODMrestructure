@@ -7,9 +7,9 @@
           class="contaninerheader"
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
-        <div>
+        <div style="display:flex">
           <template>
-            <a-dropdown  class="dropdown" :trigger="['click']">
+            <a-dropdown  class="dropdown" :trigger="['click']" v-model="searchForm">
               <a class="ant-dropdown-link" @click="popup">
                 筛选
                 <a-icon type="down" />
@@ -55,7 +55,7 @@
               </a-menu>
             </a-dropdown>
           </template>
-          <p>数据采集设备已介入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
+          <p v-if="StandaloneMode" style="line-height:31px;">数据采集设备已接入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
         </div>
           
           <div class="btns">
@@ -101,7 +101,8 @@
             :sort-config="{trigger: 'cell', defaultSort: {field: '', order: 'desc'}, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
-            <vxe-table-column type="checkbox" width="60" align="center" fixed="left" />
+             <vxe-table-column v-if="!StandaloneMode" type="checkbox" width="60" align="center" />
+            <vxe-table-column v-else type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
               field="name"
               title="姓名"
@@ -147,7 +148,7 @@
               align="center"
               minWidth="120"
             />
-            <vxe-table-column title="操作" show-overflow align="center" minWidth="80" fixed="right">
+            <vxe-table-column title="操作" show-overflow align="center" minWidth="80" fixed="right"  v-if="!StandaloneMode">
               <template v-slot="{ row }">
                 <span
                   type="text"
@@ -381,7 +382,8 @@ export default class User extends Vue {
   private postlist = []
   private Height = ""
   private searchForm = false
-  private popup() {
+  private popup(e) {
+    e.preventDefault()
     this.searchForm = true
   }
   private codedisabled = false
@@ -416,6 +418,9 @@ export default class User extends Vue {
     this.getdata()
     this.gettabledata(this.formdatalist)
     this.StandaloneMode = JSON.parse(localStorage.getItem("user"))!.openCloud
+
+    console.log(this.StandaloneMode);
+    
   }
 
   // todo事件
@@ -491,8 +496,6 @@ export default class User extends Vue {
   // 重置密码
   private Resetpwd() {
     let arr = this.getSelectEvent1()
-    console.log(arr.length)
-
     let newarr = []
     if (arr.length) {
       arr.map((el) => {
@@ -538,8 +541,6 @@ export default class User extends Vue {
         responseType: "blob"
       })
       .then((res) => {
-        console.log(res)
-
         const aLink = document.createElement("a")
         let blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
         if (navigator.msSaveBlob) {
@@ -711,7 +712,6 @@ export default class User extends Vue {
           }
         })
         .then((res) => {
-          console.log(res)
           let str,
             str1 = ""
           str = res.data.msg.replace(/%n1/g, "&nbsp;")
@@ -767,7 +767,7 @@ export default class User extends Vue {
     }
   }
   private codevalidator(rule, value, callback) {
-    let reg = /^[A-Za-z0-9]{6,30}$/
+    let reg = /^[A-Za-z0-9]{6,12}$/
     if (value.length == 0) {
       callback("请输入警号")
     } else if (!reg.test(value)) {
@@ -776,13 +776,12 @@ export default class User extends Vue {
       callback()
     }
   }
-
   private sortChangeEvent({ column, property, order }) {
     this.tableData = []
     let obj = {
       page: this.page.currentPage,
       size: this.page.pageSize,
-      user: this.username,
+      user: this.name,
       roleId: this.role,
       sidx: property,
       order: order

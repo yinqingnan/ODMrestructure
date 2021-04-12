@@ -348,6 +348,8 @@ export default class RightContent extends Vue {
       if (res.code == 0) {
         if (val.openCloud !==this.currentState) {
           this.$router.push({ name: "Login" })
+        }else{
+          this.getSet()
         }
         this.$message.success(res.msg)
       } else {
