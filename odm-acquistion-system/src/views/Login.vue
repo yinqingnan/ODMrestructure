@@ -35,6 +35,8 @@
             </a-form-item>
             <a-form-item>
               <a-input-password
+                onpaste="return false"
+                oncontextmenu="return false"
                 class="logininput"
                 v-decorator="[
                   'password',
@@ -56,7 +58,7 @@
               <a-checkbox :checked="checkNick" @change="handleChange">记住用户名</a-checkbox>
             </a-form-item>
             <a-form-item>
-              <a-button type="primary" html-type="submit" :disabled='loginstate'>登录</a-button>
+              <a-button type="primary" html-type="submit" :disabled="loginstate">登录</a-button>
             </a-form-item>
           </a-form>
         </div>
@@ -72,7 +74,7 @@ import { LimitInputlength } from "../InterfaceVariable/variable"
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
 import router from "@/router"
-import {setCookie} from '@/utils/setCookie'
+import { setCookie } from "@/utils/setCookie"
 // import {claerTime} from '@/utils/isOperate'
 import { namespace } from "vuex-class"
 
@@ -122,35 +124,38 @@ export default class Login extends Vue {
   }
   private login(data: object) {
     this.loginstate = true
-   
+
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    this.Login.login(data, false).then((res) => {
-      this.loginstate = false
-      if (res.code == 0) {
-        localStorage.setItem("token", res.data.accessToken)
-        localStorage.setItem("user", JSON.stringify(res.data.user))
-        let arr = res.data.user.menus //菜单数据
-        localStorage.setItem("navlist", JSON.stringify(arr))
-        this.addmenu(concatrouter())
-        resetRouter() //重置路由
-        router.options.routes = concatrouter()
-        router.addRoutes(concatrouter())
-        let path = ''
-        if(arr[0].children){
-          path = arr[0].children[0].path
-        }else{
-          path = arr[0].path
+    this.Login.login(data, false).then(
+      (res) => {
+        this.loginstate = false
+        if (res.code == 0) {
+          localStorage.setItem("token", res.data.accessToken)
+          localStorage.setItem("user", JSON.stringify(res.data.user))
+          let arr = res.data.user.menus //菜单数据
+          localStorage.setItem("navlist", JSON.stringify(arr))
+          this.addmenu(concatrouter())
+          resetRouter() //重置路由
+          router.options.routes = concatrouter()
+          router.addRoutes(concatrouter())
+          let path = ""
+          if (arr[0].children) {
+            path = arr[0].children[0].path
+          } else {
+            path = arr[0].path
+          }
+          this.$router.push({ path: `/index${path}` }) //成功后跳转
+        } else {
+          this.$message.error(res.msg)
+          this.clearCookie()
+          this.checkNick = false
         }
-        this.$router.push({ path: `/index${path}` }) //成功后跳转
-      } else {
-        this.$message.error(res.msg)
-        this.clearCookie()
+      },
+      (err) => {
+        this.loginstate = false
         this.checkNick = false
       }
-    },(err) =>{
-      this.loginstate = false
-      this.checkNick = false
-    })
+    )
   }
   private gettitle() {
     this.Login.gettitle({}, false).then((res) => {
@@ -181,24 +186,24 @@ export default class Login extends Vue {
   private clearCookie = () => {
     setCookie("", "", -1)
   }
-  private namecheck (rule, value, callback){
+  private namecheck(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,12}$/
-    if(value.length === 0){
+    if (value.length === 0) {
       callback(new Error("请输入账号"))
-    }else if(!reg.test(value)){
+    } else if (!reg.test(value)) {
       callback(new Error("帐号格式错误，请重新输入"))
-    }else{
+    } else {
       callback()
     }
   }
 
-  private psdcheck (rule, value, callback){
+  private psdcheck(rule, value, callback) {
     let reg = /^[A-Za-z0-9]{6,12}$/
-    if(value.length === 0){
+    if (value.length === 0) {
       callback(new Error("请输入密码"))
-    }else if(!reg.test(value)){
+    } else if (!reg.test(value)) {
       callback(new Error("密码格式错误，请重新输入"))
-    }else{
+    } else {
       callback()
     }
   }

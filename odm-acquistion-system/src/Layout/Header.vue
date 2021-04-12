@@ -23,7 +23,7 @@
       title="修改密码"
       ok-text="确认"
       cancel-text="取消"
-       @cancel='psdcancel'
+      @cancel="psdcancel"
       @ok="hideModal"
       :keyboard="false"
     >
@@ -39,6 +39,8 @@
         <a-form-item label="原密码">
           <a-input-password
             :maxLength="LimitInputlength"
+            onpaste="return false"
+            oncontextmenu="return false"
             v-decorator="[
               'oldPassword',
               {
@@ -49,6 +51,8 @@
         </a-form-item>
         <a-form-item label="新密码">
           <a-input-password
+            onpaste="return false"
+            oncontextmenu="return false"
             :maxLength="LimitInputlength"
             v-decorator="[
               'newPassword',
@@ -60,6 +64,8 @@
         </a-form-item>
         <a-form-item label="重复新密码">
           <a-input-password
+            onpaste="return false"
+            oncontextmenu="return false"
             :maxLength="LimitInputlength"
             v-decorator="[
               'newRePassword',
@@ -123,9 +129,9 @@ export default class Header extends Vue {
       onOk() {
         that.$router.push({ name: "Login" })
         that.cleartablist([])
-        that.Login.outuser({}).then((res=>{
+        that.Login.outuser({}).then((res) => {
           localStorage.clear()
-        }))
+        })
       }
     })
   }
@@ -135,11 +141,11 @@ export default class Header extends Vue {
       this.Title = res.data
     })
   }
-  private psdcancel () {
+  private psdcancel() {
     this.form.resetFields()
   }
   private handleSubmit(e?) {
-    e?.preventDefault();
+    e?.preventDefault()
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
         if (

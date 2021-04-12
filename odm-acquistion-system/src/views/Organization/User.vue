@@ -55,7 +55,7 @@
               </a-menu>
             </a-dropdown>
           </template>
-          <p v-if="StandaloneMode" style="line-height:31px;">数据采集设备已接入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
+          <p v-if="StandaloneMode" style="line-height:31px;margin-left: 30px;">数据采集设备已接入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
         </div>
           
           <div class="btns">

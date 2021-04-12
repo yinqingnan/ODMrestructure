@@ -250,7 +250,6 @@ export default class Role extends Vue {
     this.Height = `${document.documentElement.clientHeight - 230}px`
     this.form = this.$form.createForm(this)
     this.form1 = this.$form.createForm(this)
-    // this.getdata()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _that = this
     window.addEventListener("resize", () => {
@@ -276,8 +275,7 @@ export default class Role extends Vue {
   }
   private gettabledata(obj?) {
     this.OrganizationM.getroletable(obj).then((res) => {
-      console.log(res.data)
-
+      // console.log(res.data)
       this.tableData = res.data
       this.page.totalResult = Number(res.count)
     })
