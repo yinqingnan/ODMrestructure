@@ -68,16 +68,13 @@
 </template>
 
 <script lang="ts">
-// import { message } from "ant-design-vue"
 import { Component, Vue } from "vue-property-decorator"
 import { LimitInputlength } from "../InterfaceVariable/variable"
 import { resetRouter } from "@/router/index" //重置路由信息
 import { concatrouter } from "@/router/concatrouter" //生成路由表方法
 import router from "@/router"
 import { setCookie } from "@/utils/setCookie"
-// import {claerTime} from '@/utils/isOperate'
 import { namespace } from "vuex-class"
-
 const Menu = namespace("Menu")
 const Tabs = namespace("Tabs")
 @Component

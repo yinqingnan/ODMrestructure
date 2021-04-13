@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2020-12-18 09:39:16
- * @LastEditTime: 2021-02-23 13:54:55
+ * @LastEditTime: 2021-04-12 17:17:49
  * @FilePath: \src\App.vue
 -->
 <template>
@@ -21,7 +21,6 @@ export default class App extends Vue {
   public locale!: any;
   created() {
     this.locale = zhCN;
-    // isOperateFun()
   }
 }
 </script>

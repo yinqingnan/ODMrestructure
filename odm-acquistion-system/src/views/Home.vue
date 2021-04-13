@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-02-23 13:55:37
+ * @LastEditTime: 2021-04-12 17:19:51
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\Home.vue
@@ -17,7 +17,7 @@
 
 <script>
 import Header from "../Layout/Header";
-import { isOperateFun } from '@/utils/isOperate'
+// import { isOperateFun } from '@/utils/isOperate'
 
 export default {
   name: "Home",
@@ -25,7 +25,7 @@ export default {
     Header
   },
   mounted() {
-    isOperateFun()
+    // isOperateFun()
   },
 };
 </script>

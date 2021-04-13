@@ -2,10 +2,10 @@
  * @Descripttion:
  * @Autor: yqn
  * @Date: 2020-12-21 16:23:35
- * @LastEditTime: 2021-03-05 15:50:52
+ * @LastEditTime: 2021-04-12 17:20:09
  * @FilePath: \src\utils\isOperate.ts
  */
-// 用户长时间未操作 退出登录
+// todo 用户长时间未操作 退出登录
 import router from "@/router";
 import { Modal } from "ant-design-vue"; // 弹吐司
 import axios from "axios";

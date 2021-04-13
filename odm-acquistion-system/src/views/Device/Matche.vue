@@ -115,7 +115,6 @@
             </template>
              <p v-if="StandaloneMode" style="line-height:31px;margin-left:30px">数据采集设备已接入上级平台，请在平台中管理执法仪列表</p>
           </div>
-
           <div class="btns">
             <a-button
               @click="add"
@@ -172,7 +171,6 @@
               align="center"
               sortable
             />
-
             <vxe-table-column
               field="modelName"
               title="执法仪型号"
