@@ -10,7 +10,7 @@
           <h2>{{ username }}</h2>
           <div class="division"></div>
           <div>
-            <span class="iconmima iconfont" @click="modify"></span>
+            <span class="iconmima iconfont" @click="modify" ></span>
           </div>
           <div>
             <span class="icontuichu iconfont" @click="outuser"></span>
@@ -103,21 +103,29 @@ export default class Header extends Vue {
   private isshow = false
   private LimitInputlength = LimitInputlength
   private Title = ""
+  private StandaloneMode = false
   private created() {
     this.form = this.$form.createForm(this)
+    this.StandaloneMode = JSON.parse(localStorage.getItem("user")).openCloud
   }
   private mounted() {
     this.getusermsg()
     this.gettitle()
   }
   private modify() {
-    this.visible = true
-    let name = JSON.parse(localStorage.getItem("user"))
-    this.$nextTick(() => {
-      this.form.setFieldsValue({
-        username: name.name
+    console.log(!this.StandaloneMode);
+    if(!this.StandaloneMode){
+      this.visible = true
+      let name = JSON.parse(localStorage.getItem("user"))
+      this.$nextTick(() => {
+        this.form.setFieldsValue({
+          username: name.name
+        })
       })
-    })
+    }else{
+      this.$message.error('已接入上级平台，请在平台上修改密码!')
+    }
+
   }
   private outuser() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias

@@ -113,7 +113,10 @@
                 </a-menu>
               </a-dropdown>
             </template>
-             <p v-if="StandaloneMode" style="line-height:31px;margin-left:30px">数据采集设备已接入上级平台，请在平台中管理执法仪列表</p>
+            <p
+              v-if="StandaloneMode"
+              style="line-height:31px;margin-left:30px"
+            >数据采集设备已接入上级平台，请在平台中管理执法仪列表</p>
           </div>
           <div class="btns">
             <a-button
@@ -594,6 +597,7 @@ export default class Matche extends Vue {
     this.searchForm = false
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
+        console.log(val)
         let obj = {
           page: this.page.currentPage,
           size: this.page.pageSize,
@@ -714,7 +718,6 @@ export default class Matche extends Vue {
     this.state = "编辑"
     this.Disabled = true
     this.editId = row.id
-    console.log(row)
     this.$nextTick(() => {
       this.form2.setFieldsValue({
         code: row.code,
@@ -733,18 +736,31 @@ export default class Matche extends Vue {
   private pagerchange({ currentPage, pageSize }) {
     this.page.currentPage = currentPage
     this.page.pageSize = pageSize
-    this.gettable({
+    // this.gettable({
+    //   page: this.page.currentPage,
+    //   size: this.page.pageSize,
+    //   code_equal: this.Sval.code,
+    //   model_equal: this.Sval.model,
+    //   is_enabled_equal: this.Sval.is_enabled,
+    //   is_binding_equal: this.Sval.is_binding,
+    //   user: this.Sval.user,
+    //   brand_equal: this.Sval.brand,
+    //   order: this.order,
+    //   sidx: this.sidx
+    // })
+    let obj = {
       page: this.page.currentPage,
       size: this.page.pageSize,
-      code_equal: this.Sval.code,
-      model_equal: this.Sval.model,
-      is_enabled_equal: this.Sval.is_enabled,
-      is_binding_equal: this.Sval.is_binding,
-      user: this.Sval.user,
-      brand_equal: this.Sval.brand,
+      code_like: this.exportobj.code_like,
+      model_equal: this.exportobj.model_equal,
+      user: this.exportobj.user,
+      brand_equal: this.exportobj.brand_equal,
+      deviceStatus_equal: this.exportobj.deviceStatus_equal,
+      is_binding_equal: this.exportobj.is_binding_equal,
       order: this.order,
       sidx: this.sidx
-    })
+    }
+    this.gettable(obj)
   }
 
   private add() {
@@ -797,18 +813,31 @@ export default class Matche extends Vue {
             this.fileList = []
             this.filename = ""
             this.$message.success("导入成功")
-            this.gettable({
+            // this.gettable({
+            //   page: this.page.currentPage,
+            //   size: this.page.pageSize,
+            //   code_equal: this.Sval.code,
+            //   model_equal: this.Sval.model,
+            //   is_enabled_equal: this.Sval.is_enabled,
+            //   is_binding_equal: this.Sval.is_binding,
+            //   user: this.Sval.user,
+            //   brand_equal: this.Sval.brand,
+            //   order: this.order,
+            //   sidx: this.sidx
+            // })
+            let obj = {
               page: this.page.currentPage,
               size: this.page.pageSize,
-              code_equal: this.Sval.code,
-              model_equal: this.Sval.model,
-              is_enabled_equal: this.Sval.is_enabled,
-              is_binding_equal: this.Sval.is_binding,
-              user: this.Sval.user,
-              brand_equal: this.Sval.brand,
+              code_like: this.exportobj.code_like,
+              model_equal: this.exportobj.model_equal,
+              user: this.exportobj.user,
+              brand_equal: this.exportobj.brand_equal,
+              deviceStatus_equal: this.exportobj.deviceStatus_equal,
+              is_binding_equal: this.exportobj.is_binding_equal,
               order: this.order,
               sidx: this.sidx
-            })
+            }
+            this.gettable(obj)
           } else {
             this.iserror = true
             this.errormsg = str
@@ -894,16 +923,29 @@ export default class Matche extends Vue {
     this.DeviceM.instrumentdlt(arr).then((res) => {
       if (res.code == 0) {
         this.$message.success(res.msg)
-        this.gettable({
+        // this.gettable({
+        //   page: this.page.currentPage,
+        //   size: this.page.pageSize,
+        //   code: this.Sval.code,
+        //   model: this.Sval.model,
+        //   user: this.Sval.user,
+        //   brand: this.Sval.brand,
+        //   is_enabled: this.Sval.is_enabled,
+        //   is_binding: this.Sval.is_binding
+        // })
+        let obj = {
           page: this.page.currentPage,
           size: this.page.pageSize,
-          code: this.Sval.code,
-          model: this.Sval.model,
-          user: this.Sval.user,
-          brand: this.Sval.brand,
-          is_enabled: this.Sval.is_enabled,
-          is_binding: this.Sval.is_binding
-        })
+          code_like: this.exportobj.code_like,
+          model_equal: this.exportobj.model_equal,
+          user: this.exportobj.user,
+          brand_equal: this.exportobj.brand_equal,
+          deviceStatus_equal: this.exportobj.deviceStatus_equal,
+          is_binding_equal: this.exportobj.is_binding_equal,
+          order: this.order,
+          sidx: this.sidx
+        }
+        this.gettable(obj)
       }
     })
   }
@@ -912,18 +954,31 @@ export default class Matche extends Vue {
     this.DeviceM.Policepersonnelsave(obj).then((res) => {
       if (res.code == 0) {
         this.visible = false
-        this.gettable({
+        // this.gettable({
+        //   page: this.page.currentPage,
+        //   size: this.page.pageSize,
+        //   code: this.Sval.code,
+        //   model: this.Sval.model,
+        //   user: this.Sval.user,
+        //   brand: this.Sval.brand,
+        //   is_enabled: this.Sval.is_enabled,
+        //   is_binding: this.Sval.is_binding,
+        //   order: this.order,
+        //   sidx: this.sidx
+        // })
+        let obj = {
           page: this.page.currentPage,
           size: this.page.pageSize,
-          code: this.Sval.code,
-          model: this.Sval.model,
-          user: this.Sval.user,
-          brand: this.Sval.brand,
-          is_enabled: this.Sval.is_enabled,
-          is_binding: this.Sval.is_binding,
+          code_like: this.exportobj.code_like,
+          model_equal: this.exportobj.model_equal,
+          user: this.exportobj.user,
+          brand_equal: this.exportobj.brand_equal,
+          deviceStatus_equal: this.exportobj.deviceStatus_equal,
+          is_binding_equal: this.exportobj.is_binding_equal,
           order: this.order,
           sidx: this.sidx
-        })
+        }
+        this.gettable(obj)
         this.$message.success(res.msg)
         this.reset()
       } else {
@@ -952,12 +1007,12 @@ export default class Matche extends Vue {
     this.gettable({
       page: this.page.currentPage,
       size: this.page.pageSize,
-      code: this.Sval.code,
-      model: this.Sval.model,
-      user: this.Sval.user,
-      brand: this.Sval.brand,
-      is_enabled: this.Sval.is_enabled,
-      is_binding: this.Sval.is_binding,
+      code_like: this.exportobj.code_like,
+      model_equal: this.exportobj.model_equal,
+      user: this.exportobj.user,
+      brand: this.exportobj.brand_equal,
+      is_enabled: this.exportobj.deviceStatus_equal,
+      is_binding: this.exportobj.is_binding_equal,
       order: order,
       sidx: property
     })

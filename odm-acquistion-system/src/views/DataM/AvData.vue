@@ -576,7 +576,7 @@ export default class AvData extends Vue {
       this.page.currentPage =Number(res.page) 
       this.page.pageSize = Number(res.size)
       this.page.totalResult = parseInt(res.count)
-      if(res.count > 0){
+      if(parseInt(res.count) > 0){
         this.tabledata = res.data
         this.Tablesubscript = []
         // 保存当前表格的所有code
@@ -584,6 +584,7 @@ export default class AvData extends Vue {
           this.Tablesubscript.push(item.id)
         })
       }else{
+        this.page.currentPage = 1
         this.tabledata = []
       }
     })

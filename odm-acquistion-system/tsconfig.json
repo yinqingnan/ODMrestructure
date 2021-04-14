@@ -34,7 +34,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx", "src/api/http.js"
-  ],
+, "src/components/loading/index.js"  ],
   "exclude": [
     "node_modules"
   ]

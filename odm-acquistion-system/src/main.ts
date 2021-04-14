@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-04-07 18:40:16
+ * @LastEditTime: 2021-04-14 11:24:58
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\main.ts
@@ -90,8 +90,11 @@ import Echart from "echarts";
 import "viewerjs/dist/viewer.css";
 import Viewer from "v-viewer";
 Vue.use(Viewer);
-
 Vue.prototype.$echarts = Echart;
+
+// 引入自定义的loading组件
+import LoadingComponent from "./components/loading/index.js";
+Vue.use(LoadingComponent);
 
 import "xe-utils";
 import VXETable from "vxe-table";

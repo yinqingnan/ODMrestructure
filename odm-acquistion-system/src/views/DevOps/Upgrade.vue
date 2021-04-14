@@ -47,13 +47,7 @@
             >
               <!-- <template v-slot="{ row }">{{softwareType(row)}}</template> -->
             </vxe-table-column>
-            <vxe-table-column
-              field="modelName"
-              title="版本号"
-              show-overflow
-              align="center"
-              minWidth="80"
-            />
+            <vxe-table-column field="ver" title="版本号" show-overflow align="center" minWidth="80" />
             <vxe-table-column
               field="content"
               title="更新内容"
@@ -117,7 +111,7 @@
                   v-decorator="[
                         'brand',
                         {
-                          initialValue: '',
+                          initialValue: Acquisitionlist[0].value,
                           rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
@@ -135,7 +129,7 @@
                   v-decorator="[
                         'model',
                         {
-                          initialValue: '',
+                          initialValue: typelist[0].value,
                           rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
@@ -179,15 +173,16 @@
                           rules: [{ required: true, message: '必填项不能为空' }]
                         }
                       ]"
+                  :max-length="textarealength"
                   :allow-clear="true"
-                  placeholder="请输入更新内容"
+                  placeholder="请输入更新内容（200字符以内）"
                 />
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row :gutter="24" class="rowstyle flie">
+          <a-row :gutter="24" class="rowstyle flie upgrade">
             <a-col :span="24">
-              <a-form-item label="选择文件">
+              <a-form-item label="上传文件">
                 <a-upload
                   accept=".zip"
                   @change="handleChange"
@@ -219,7 +214,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { layouts } from "@/InterfaceVariable/variable"
 import axios from "axios"
 import { http } from "../../api/interceptors"
-
+import { textarealength } from "@/InterfaceVariable/variable"
 @Component({
   components: {}
 })
@@ -229,13 +224,14 @@ export default class Upgrade extends Vue {
   public form!: any
   public Luckmanagement = new this.$api.configInterface.Luckmanagement()
   public DeviceM = new this.$api.configInterface.DeviceM()
+  public textarealength = textarealength
   private Height = ""
-  private str = "上传升级包"
+  private str = "上传"
   private http = http
   private path = ""
-  private Acquisitionlist = []
+  private Acquisitionlist = [{ value: "", name: "" }]
   private status = true
-  private typelist = []
+  private typelist = [{ value: "", name: "" }]
   private layouts = layouts
   private visible = false
   private page = {
@@ -282,34 +278,12 @@ export default class Upgrade extends Vue {
     }
     this.gettabledata(obj)
   }
-  // private edit(row) {
-  //   this.visible = true
-  //   this.id = row.id
-  //   this.status = false
-  //   this.path = row.updatePath
-  //   this.filename = row.updateFile
-  //   this.$nextTick(() => {
-  //     this.form.setFieldsValue({
-  //       version: row.version,
-  //       upgradeType: row.upgradeType + "",
-  //       softwareType: row.softwareType + "",
-  //       updateContent: row.updateContent,
-  //       file: [
-  //         {
-  //           uid: "-1",
-  //           name: "xxx.png",
-  //           status: "done"
-  //         }
-  //       ]
-  //     })
-  //   })
-  // }
   private dlt(row) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
     this.$confirm({
       title: "提示",
-      content: "确定要删除该升级包吗？",
+      content: "数据删除后无法恢复，确定要删除吗？",
       okText: "确认",
       cancelText: "取消",
       onOk() {
@@ -359,13 +333,13 @@ export default class Upgrade extends Vue {
     //   })
     // })
   }
-
   private Upgrade(e) {
     e.preventDefault()
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
         if (this.status) {
           if (this.filestatus) {
+            (this.$loading as any).show("正在上传中，请稍后",{},{background:'#fbfbfb'})
             let formData = new FormData() //保存文件后再保存
             formData.append("file", this.fileList[0])
             formData.append("brand", val.brand)
@@ -380,11 +354,11 @@ export default class Upgrade extends Vue {
                 }
               })
               .then((res) => {
-                console.log(res)
-
                 this.filename = ""
                 this.form.resetFields()
                 this.visible = false
+                ;(this.$loading as any).hide()
+                this.$message.success("升级包上传成功")
                 let obj = {
                   page: this.page.currentPage,
                   size: this.page.pageSize
@@ -425,6 +399,7 @@ export default class Upgrade extends Vue {
   private handleCancel() {
     this.form.resetFields()
     this.filename = ""
+    this.fileList = []
   }
   private filebtn() {
     this.status = true
@@ -497,6 +472,11 @@ export default class Upgrade extends Vue {
 .upgrade1 {
   .antd-col-24 {
     height: 56px;
+  }
+}
+.upgrade {
+  .ant-upload-list {
+    display: none !important;
   }
 }
 </style>

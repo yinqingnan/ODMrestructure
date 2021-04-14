@@ -148,7 +148,7 @@
               align="center"
               minWidth="120"
             />
-            <vxe-table-column title="操作" show-overflow align="center" minWidth="80" fixed="right"  v-if="!StandaloneMode">
+            <vxe-table-column title="操作" show-overflow align="center" minWidth="80" fixed="right"  >
               <template v-slot="{ row }">
                 <span
                   type="text"
