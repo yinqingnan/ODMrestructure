@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-04-14 09:36:12
- * @LastEditTime: 2021-04-14 14:28:37
+ * @LastEditTime: 2021-04-14 14:41:18
  * @FilePath: \src\components\loading\loading.vue
  * @LastEditors: yqn
 -->
@@ -17,8 +17,6 @@
     </div>
   </div>
 </template>
-
-
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
 @Component({
@@ -46,10 +44,6 @@ export default class LoadingComponent extends Vue {
   })
   readonly backgroundstyle: {}
   private imgsrc = require("../../assets/image/loading.gif")
-
-  // public mounted(){
-  //   console.log(this.imgsrc);
-  // }
   
 }
 </script>

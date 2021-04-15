@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-03-03 10:36:27
- * @LastEditTime: 2021-03-03 15:23:16
+ * @LastEditTime: 2021-04-15 10:39:05
  * @FilePath: \src\components\Echarts\Bingtu.vue
  * @LastEditors: yqn
 -->
@@ -53,7 +53,7 @@ export default class Piechart extends Vue {
         }
       },
       legend: {
-        show: true,
+        show: false,
         itemGap: 50,
         data: ["使用", "剩余"],
         top: 20

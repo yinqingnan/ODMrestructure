@@ -308,20 +308,31 @@ export default class Upgrade extends Vue {
   private filestatus = false
   private beforeUpload(file) {
     this.fileList = []
-    if (file.type == "application/x-zip-compressed") {
-      this.fileList = [file]
-      this.filename = file.name
-      this.filestatus = true
-    } else if (file.size >= 524288000) {
+    if (file.size >= 524288000) {
       this.$message.error("超出文件大小设定值")
       this.fileList = []
       this.filename = ""
       this.filestatus = false
-    } else {
+      this.$nextTick(()=>{
+        this.form.setFieldsValue({
+          "file": []
+        })
+      })
+    } else if (file.type != "application/x-zip-compressed") {
       this.$message.error("文件类型错误!")
       this.fileList = []
       this.filename = ""
       this.filestatus = false
+      this.$nextTick(()=>{
+        this.form.setFieldsValue({
+          "file": []
+        })
+      })
+    
+    } else {
+      this.fileList = [file]
+      this.filename = file.name
+      this.filestatus = true
     }
     return false
   }
@@ -339,7 +350,11 @@ export default class Upgrade extends Vue {
       if (!err) {
         if (this.status) {
           if (this.filestatus) {
-            (this.$loading as any).show("正在上传中，请稍后",{},{background:'#fbfbfb'})
+            (this.$Loading as any).show(
+              "正在上传中，请稍后",
+              {},
+              { background: "#fbfbfb" }
+            )
             let formData = new FormData() //保存文件后再保存
             formData.append("file", this.fileList[0])
             formData.append("brand", val.brand)
@@ -356,8 +371,8 @@ export default class Upgrade extends Vue {
               .then((res) => {
                 this.filename = ""
                 this.form.resetFields()
-                this.visible = false
-                ;(this.$loading as any).hide()
+                this.visible = false;
+                (this.$Loading as any).hide()
                 this.$message.success("升级包上传成功")
                 let obj = {
                   page: this.page.currentPage,
@@ -366,32 +381,13 @@ export default class Upgrade extends Vue {
                 this.gettabledata(obj)
               })
           } else {
-            this.$message.error("上传文件格式错误！请重新选择！")
+            this.$nextTick(() => {
+              this.form.setFields({
+                'file': { errors: ["必填项不能为空"] }
+              })
+            })
+            // this.$message.error("上传文件格式错误！请重新选择！")
           }
-        } else {
-          // let obj = {
-          //   id: this.id,
-          //   path: this.path,
-          //   softwareType: val.softwareType,
-          //   updateContent: val.updateContent,
-          //   upgradeType: val.upgradeType,
-          //   version: val.version
-          // }
-          // this.Luckmanagement.Uploadsave(obj).then((res) => {
-          //   if (res.code == 0) {
-          //     this.$message.success(res.msg)
-          //     this.filename = ""
-          //     this.form.resetFields()
-          //     this.visible = false
-          //     let obj = {
-          //       page: this.page.currentPage,
-          //       limit: this.page.pageSize
-          //     }
-          //     this.gettabledata(obj)
-          //   } else {
-          //     this.$message.error(res.msg)
-          //   }
-          // })
         }
       }
     })
