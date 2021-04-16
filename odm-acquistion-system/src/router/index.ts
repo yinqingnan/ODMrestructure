@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-04-08 09:50:12
+ * @LastEditTime: 2021-04-16 10:34:17
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\router\index.ts
@@ -24,7 +24,7 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/views/Login.vue"),
   },
   // {
-  //   path: "/audio",
+  //   path: "/Testviews",
   //   component: () => import("@/views/Testviews/Testviews.vue"),
   // },
 ];

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-03-09 16:02:56
+ * @LastEditTime: 2021-04-16 16:02:00
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\Index\Home.vue
@@ -131,11 +131,11 @@ export default class Home extends Vue {
     pc_ver: "",
     web_ver: ""
   }
-  
   private myvideolist = []
   public mounted() {
     this.getdata()
   }
+  private num = 1
   private getdata() {
     this.Login.homePage().then((res) => {
       res.data.diskSpace.ratio = res.data.diskSpace.ratio.toFixed(2)
@@ -166,6 +166,9 @@ export default class Home extends Vue {
           content: this.fileStat.audio
         }
       ]
+      if(res.data.fileStat>0){
+        this.fileStat.uploadRatio = Number(res.data.fileStat.uploadRatio.toFixed(2))
+      }
     })
   }
 }

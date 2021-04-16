@@ -2,8 +2,8 @@
  * @Descripttion:
  * @Autor: yqn
  * @Date: 2021-04-14 09:36:33
- * @LastEditTime: 2021-04-14 14:51:29
- * @FilePath: \src\components\loading\index.ts
+ * @LastEditTime: 2021-04-15 16:29:59
+ * @FilePath: \src\components\loading\index.js
  * @LastEditors: yqn
  */
 import LoadingComponent from "./loading.vue";
@@ -14,7 +14,6 @@ const LoadingConstructor = Vue.extend(LoadingComponent);
 const instance = new LoadingConstructor({
   el: document.createElement("div"),
 });
-
 instance.show = false; // 默认隐藏
 const loading = {
   show(text, style, Background) {
@@ -44,7 +43,6 @@ export default {
     });
   },
 };
-
 // 使用方法 显示于隐藏
 //     (this.$Loading as any).show("正在上传中，请稍后",{},{background:'#fbfbfb'})   //todo( 自定义文字内容，文字样式{字体大小、颜色}， 背景色)
 // (this.$Loading as any).hide()

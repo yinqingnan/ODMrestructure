@@ -2,36 +2,40 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-01 14:29:39
- * @LastEditTime: 2021-03-22 11:13:48
+ * @LastEditTime: 2021-04-16 10:33:42
  * @FilePath: \src\views\Testviews\Testviews.vue
  * @LastEditors: yqn
 -->
 <template>
   <div>
     <a-modal
-        v-model="visible"
-        :title="Title"
-        @ok="submit"
-        @cancel="cancel"
-        :ok-text="confirmbtn "
-        :cancel-text="cancelbtn"
+      v-model="visible"
+      :title="Title"
+      @ok="submit"
+      @cancel="cancel"
+      :ok-text="confirmbtn "
+      :cancel-text="cancelbtn"
     >
-      <form-create v-model="fApi" :rule="Rule" :option="option"/>
+      <form-create v-model="fApi" :rule="Rule" :option="option" />
     </a-modal>
-
     <a-button type="primary" @click="showModal">提交</a-button>
+    <br />
+    <br />
+    <br />
+    <br />
+    <hr />
+    <div :class="{...classnames}">testclass</div>
   </div>
 </template>
 
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator"
+import { Component, Vue } from "vue-property-decorator"
 import moment from "moment"
 @Component({
   components: {}
 })
 export default class Testviews extends Vue {
-
   private visible = false
   private confirmbtn = "提交"
   private cancelbtn = "重置"
@@ -52,11 +56,14 @@ export default class Testviews extends Vue {
       field: "name",
       title: "上级菜单",
       value: "",
-      labelCol: {span: 4},
-      wrapperCol: {span: 20},
-      validate: [{
-        validator:this.validatorID,trigger:'blur'
-      }],
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
+      validate: [
+        {
+          validator: this.validatorID,
+          trigger: "blur"
+        }
+      ],
       props: {
         // disabled:true,        //是否可禁用
         // allowClear:true,    //是否可清除
@@ -153,26 +160,26 @@ export default class Testviews extends Vue {
     //   }),
     // },
     {
-      type: 'a-tree-select',
-      field: 'department',
+      type: "a-tree-select",
+      field: "department",
       title: "部门",
-      value: '123',
-      labelCol: {span: 4},
-      wrapperCol: {span: 20},
+      value: "123",
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
       props: {
-        defaultValue:'123',
-        allowClear:true,
+        defaultValue: "123",
+        allowClear: true,
         treeNodeFilterProp: "title",
         showSearch: true,
         replaceFields: {
-          id: 'code',
-          pId: 'parentCode',
-          value: 'value',
-          title: 'name'
+          id: "code",
+          pId: "parentCode",
+          value: "value",
+          title: "name"
         },
         dropdownStyle: {
-          maxHeight: '400px',
-          overflow: 'auto'
+          maxHeight: "400px",
+          overflow: "auto"
         },
         treeData: [
           {
@@ -182,73 +189,83 @@ export default class Testviews extends Vue {
             children: null,
             selected: false,
             value: "100006"
-          }, {
+          },
+          {
             code: "100010",
             name: "XX交警支队",
             parentCode: "0000-0000-0000-0000",
-            children: [{
-              code: "13",
-              name: "发送到",
-              parentCode: "100010",
-              children: null,
-              selected: false,
-              value: "13"
-            }],
+            children: [
+              {
+                code: "13",
+                name: "发送到",
+                parentCode: "100010",
+                children: null,
+                selected: false,
+                value: "13"
+              }
+            ],
             selected: false,
             value: "100010"
-          }, {
+          },
+          {
             code: "10003",
             name: "测试firefox43",
             parentCode: "0000-0000-0000-0000",
             children: null,
             selected: false,
             value: "10003"
-          }, {
+          },
+          {
             code: "111",
             name: "111",
             parentCode: "0000-0000-0000-0000",
             children: null,
             selected: false,
             value: "111"
-          }, {
+          },
+          {
             code: "111222",
             name: "测试",
             parentCode: "0000-0000-0000-0000",
             children: null,
             selected: false,
             value: "111222"
-          }, {
+          },
+          {
             code: "1112323213",
             name: "360安全1兼",
             parentCode: "0000-0000-0000-0000",
             children: null,
             selected: false,
             value: "1112323213"
-          }, {
+          },
+          {
             code: "123",
             name: "粉粉粉",
             parentCode: "0000-0000-0000-0000",
             children: null,
             selected: false,
             value: "123"
-          }, {
+          },
+          {
             code: "123123123aaaaaaaaaasddadad",
             name: "123123123aaaaaaaaaasddadad",
             parentCode: "0000-0000-0000-0000",
             children: null,
             selected: false,
             value: "123123123aaaaaaaaaasddadad"
-          }],
+          }
+        ]
       },
       on: {
-        change:(val)=>{
-          this.Rule.map(item => {
-            if(item.type === 'a-tree-select'){
+        change: (val) => {
+          this.Rule.map((item) => {
+            if (item.type === "a-tree-select") {
               item.value = val
             }
           })
         }
-      },
+      }
       // validate: [{type: "string", required: true, message: "必填项不能为空"}],
     },
     {
@@ -257,9 +274,9 @@ export default class Testviews extends Vue {
       title: "下拉",
       value: ["106"],
       options: [
-        {"value": "104", "label": "生态蔬菜", "disabled": false},
-        {"value": "106", "label": "肉", "disabled": false},
-        {"value": "105", "label": "新鲜水果", "disabled": false},
+        { value: "104", label: "生态蔬菜", disabled: false },
+        { value: "106", label: "肉", disabled: false },
+        { value: "105", label: "新鲜水果", disabled: false }
       ],
       props: {
         multiple: false,
@@ -267,15 +284,19 @@ export default class Testviews extends Vue {
         showSearch: true,
         autoClearSearchValue: true,
         dropdownMatchSelectWidth: true,
-        notFoundContent: '没有当前数据',
+        notFoundContent: "没有当前数据",
         disabled: false,
         showArrow: true,
-        mode: 'default',
+        mode: "default",
         filterOption(inputValue, option) {
-          return (option.componentOptions.children[0].text.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0);
+          return (
+            option.componentOptions.children[0].text
+              .toLowerCase()
+              .indexOf(inputValue.toLowerCase()) >= 0
+          )
         }
         // optionFilterProp:'label',
-      },
+      }
     },
     {
       type: "DatePicker",
@@ -283,22 +304,22 @@ export default class Testviews extends Vue {
       title: "活动时间",
       value: [moment("2021-02-20"), moment("2021-06-28")],
       props: {
-        type: "range",    //'date', 'month', 'week', 'range'
+        type: "range", //'date', 'month', 'week', 'range'
         placeholder: ["开始时间", "结束时间"],
         format: "YYYY-MM-DD",
         allowClear: true
       },
-      labelCol: {span: 4},
-      wrapperCol: {span: 20},
-      className: "RangePicker123123",
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
+      className: "RangePicker123123"
       // validate: [{ required: true, message:'请选择日期'}]
     },
     {
       type: "TimePicker",
       field: "section_time",
       title: "活动时间",
-      value: '17:24:52',
-      className: "RangePicker123123",
+      value: "17:24:52",
+      className: "RangePicker123123"
     },
     {
       type: "radio",
@@ -306,8 +327,8 @@ export default class Testviews extends Vue {
       field: "is_postage",
       value: 0,
       options: [
-        {value: 0, label: "不包邮", disabled: false},
-        {value: 1, label: "包邮", disabled: false}
+        { value: 0, label: "不包邮", disabled: false },
+        { value: 1, label: "包邮", disabled: false }
       ],
       // 通过value值控制是否显示
       control: [
@@ -352,7 +373,7 @@ export default class Testviews extends Vue {
         max: 100,
         range: true
       }
-    },
+    }
   ]
   //组件参数配置
   private option = {
@@ -376,7 +397,7 @@ export default class Testviews extends Vue {
   }
   private submit() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let form = (this.fApi as any)
+    let form = this.fApi as any
     // console.log(form.formData()) //获取表单的内容
     form.submit((formdata) => {
       // this.Rule[1].vm.value = '123'
@@ -389,10 +410,16 @@ export default class Testviews extends Vue {
   }
 
   private cancel() {
-
-    let form = (this.fApi as any)
+    let form = this.fApi as any
     form.resetFields() //重置表单
     // form.destroy() // 销毁表单
+  }
+  private zs = true
+  private ls = false
+
+  private classnames = {
+    zs: this.zs ? "zs" : '',
+    ls: this.ls ? "ls" : ''
   }
 }
 </script>

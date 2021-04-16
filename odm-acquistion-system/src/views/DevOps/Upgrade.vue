@@ -155,6 +155,7 @@
                 }
                 ]"
                   :allow-clear="true"
+                  :max-length="LimitInputlength"
                   style="width: 100%"
                   placeholder="请输入版本号"
                 />
@@ -214,7 +215,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { layouts } from "@/InterfaceVariable/variable"
 import axios from "axios"
 import { http } from "../../api/interceptors"
-import { textarealength } from "@/InterfaceVariable/variable"
+import { textarealength,LimitInputlength } from "@/InterfaceVariable/variable"
 @Component({
   components: {}
 })
@@ -225,6 +226,7 @@ export default class Upgrade extends Vue {
   public Luckmanagement = new this.$api.configInterface.Luckmanagement()
   public DeviceM = new this.$api.configInterface.DeviceM()
   public textarealength = textarealength
+  public LimitInputlength = LimitInputlength
   private Height = ""
   private str = "上传"
   private http = http
@@ -328,8 +330,7 @@ export default class Upgrade extends Vue {
           "file": []
         })
       })
-    
-    } else {
+    } else { 
       this.fileList = [file]
       this.filename = file.name
       this.filestatus = true

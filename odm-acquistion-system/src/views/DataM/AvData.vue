@@ -756,8 +756,8 @@ export default class AvData extends Vue {
   public dlt() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let _that = this
+    let arr = []
     if (this.selectedRowKeys.length > 0) {
-      let arr = []
       this.selectedRowKeys.map((item) => {
         arr.push(item)
       })

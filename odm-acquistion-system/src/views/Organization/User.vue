@@ -7,57 +7,60 @@
           class="contaninerheader"
           style="padding:12px 25px 0 25px;display:flex;    justify-content: space-between;"
         >
-        <div style="display:flex">
-          <template>
-            <a-dropdown  class="dropdown" :trigger="['click']" v-model="searchForm">
-              <a class="ant-dropdown-link" @click="popup">
-                筛选
-                <a-icon type="down" />
-              </a>
-              <a-menu slot="overlay" class="box" v-show="searchForm">
-                <a-form
-                  autocomplete="off"
-                  :form="form"
-                  :label-col="{ span: 8 }"
-                  :wrapper-col="{ span: 14 }"
-                  @submit="handle"
-                >
-                  <el-scrollbar class="screen">
-                    <a-form-item label="姓名/警号">
-                      <a-input
-                        v-decorator="['username', { initialValue: '', rules: [] }]"
-                        :max-length="LimitInputlength"
-                        placeholder="请输入民警姓名或警号"
-                      >/></a-input>
-                    </a-form-item>
-                    <a-form-item label="角色">
-                      <a-select
-                        v-decorator="[
+          <div style="display:flex">
+            <template>
+              <a-dropdown class="dropdown" :trigger="['click']" v-model="searchForm">
+                <a class="ant-dropdown-link" @click="popup">
+                  筛选
+                  <a-icon type="down" />
+                </a>
+                <a-menu slot="overlay" class="box" v-show="searchForm">
+                  <a-form
+                    autocomplete="off"
+                    :form="form"
+                    :label-col="{ span: 8 }"
+                    :wrapper-col="{ span: 14 }"
+                    @submit="handle"
+                  >
+                    <el-scrollbar class="screen">
+                      <a-form-item label="姓名/警号">
+                        <a-input
+                          v-decorator="['username', { initialValue: '', rules: [] }]"
+                          :max-length="LimitInputlength"
+                          placeholder="请输入民警姓名或警号"
+                        >/></a-input>
+                      </a-form-item>
+                      <a-form-item label="角色">
+                        <a-select
+                          v-decorator="[
                         'role',
                         {
                           initialValue: undefined,
                           rules: []
                         }
                       ]"
-                        :allow-clear="true"
-                        style="width: 100%"
-                        placeholder="请选择..."
-                      >
-                        <a-select-option v-for="d in Account" :key="d.value">{{ d.name }}</a-select-option>
-                      </a-select>
-                    </a-form-item>
-                  </el-scrollbar>
-                  <div class="modulebot">
-                    <a-button type="Default" @click="reset">重置</a-button>
-                    <a-button type="primary" @click="handle">查询</a-button>
-                  </div>
-                </a-form>
-              </a-menu>
-            </a-dropdown>
-          </template>
-          <p v-if="StandaloneMode" style="line-height:31px;margin-left: 30px;">数据采集设备已接入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
-        </div>
-          
+                          :allow-clear="true"
+                          style="width: 100%"
+                          placeholder="请选择..."
+                        >
+                          <a-select-option v-for="d in Account" :key="d.value">{{ d.name }}</a-select-option>
+                        </a-select>
+                      </a-form-item>
+                    </el-scrollbar>
+                    <div class="modulebot">
+                      <a-button type="Default" @click="reset">重置</a-button>
+                      <a-button type="primary" @click="handle">查询</a-button>
+                    </div>
+                  </a-form>
+                </a-menu>
+              </a-dropdown>
+            </template>
+            <p
+              v-if="StandaloneMode"
+              style="line-height:31px;margin-left: 30px;"
+            >数据采集设备已接入上级平台，请在平台中管理用户列表，采集设备上仅可修改用户在采集设备上的权限</p>
+          </div>
+
           <div class="btns">
             <a-button
               @click="add"
@@ -93,15 +96,20 @@
             resizable
             height="auto"
             ref="usertable"
+            show-header-overflow
             highlight-hover-row
             class="mytable-scrollbar"
+            row-id="id"
             :row-class-name="tableRowClassName"
             :data="tableData"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
+            :checkbox-config="{trigger: 'cell', reserve: true}"
+            @checkbox-all="selectAllEvent"
+            @checkbox-change="selectChangeEvent"
             :sort-config="{trigger: 'cell', defaultSort: {field: '', order: 'desc'}, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
-             <vxe-table-column v-if="!StandaloneMode" type="checkbox" width="60" align="center" />
+            <vxe-table-column v-if="!StandaloneMode" type="checkbox" width="60" align="center" />
             <vxe-table-column v-else type="seq" width="60" align="center" title="序号" />
             <vxe-table-column
               field="name"
@@ -148,7 +156,7 @@
               align="center"
               minWidth="120"
             />
-            <vxe-table-column title="操作" show-overflow align="center" minWidth="80" fixed="right"  >
+            <vxe-table-column title="操作" show-overflow align="center" minWidth="80" fixed="right">
               <template v-slot="{ row }">
                 <span
                   type="text"
@@ -259,7 +267,7 @@
             <a-col :span="12">
               <a-form-item label="身份证号">
                 <a-input
-                :disabled="StandaloneMode"
+                  :disabled="StandaloneMode"
                   v-decorator="['identity', { initialValue: '',  rules: [
                     {validator:validatorID}
                   ],validateTrigger: 'blur'  }]"
@@ -271,7 +279,7 @@
             <a-col :span="12">
               <a-form-item label="联系电话">
                 <a-input
-                :disabled="StandaloneMode"
+                  :disabled="StandaloneMode"
                   v-decorator="['phone', { initialValue: '',  rules: [ {validator: phonevalidator}] }]"
                   :max-length="LimitInputlength"
                   placeholder="请输入联系电话"
@@ -404,6 +412,10 @@ export default class User extends Vue {
   }
   public property = "id"
   public order = "desc"
+  /*table选中keys*/
+  private selectedRowKeys = []
+  /*table选中records*/
+  private selectionRows = []
   // todo 事件和生命周期
   private created() {
     this.Height = `${document.documentElement.clientHeight - 230}px`
@@ -418,9 +430,6 @@ export default class User extends Vue {
     this.getdata()
     this.gettabledata(this.formdatalist)
     this.StandaloneMode = JSON.parse(localStorage.getItem("user"))!.openCloud
-
-    console.log(this.StandaloneMode);
-    
   }
 
   // todo事件
@@ -430,7 +439,16 @@ export default class User extends Vue {
   private gettabledata(obj) {
     this.OrganizationM.getusertable(obj).then((res) => {
       this.tableData = res.data
+      this.page.currentPage = Number(res.page)
+      this.page.pageSize = Number(res.size)
       this.page.totalResult = parseInt(res.count)
+
+      if (parseInt(res.count) > 0) {
+        this.tableData = res.data
+      } else {
+        this.page.currentPage = 1
+        this.tabledata = []
+      }
     })
   }
 
@@ -441,12 +459,11 @@ export default class User extends Vue {
       page: currentPage,
       size: pageSize,
       name: this.name,
-      role: this.role
+      role: this.role,
+      sidx: this.property,
+      order: this.order
     }
-    this.OrganizationM.getusertable(obj).then((res) => {
-      this.tableData = res.data
-      this.page.totalResult = parseInt(res.count)
-    })
+    this.gettabledata(obj)
   }
   private getdata() {
     this.OrganizationM.roleselect().then((res) => {
@@ -555,66 +572,35 @@ export default class User extends Vue {
   }
   // 删除
   private dlt() {
-    let arr = this.getSelectEvent1()
-    let newarr = []
-    if (arr.length) {
-      arr.map((el) => {
-        newarr.push(el.id)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    let arr = []
+    if (this.selectedRowKeys.length > 0) {
+      this.selectedRowKeys.map((item) => {
+        arr.push(item)
       })
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      let _that = this
-      if (newarr.length > 1) {
-        this.$confirm({
-          title: "提示",
-          content: "用户删除后无法恢复，您确定要删除用户吗？",
-          onOk() {
-            return new Promise((resolve, reject) => {
-              setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-              _that.OrganizationM.userdlt(newarr).then((res) => {
-                if (res.code == 0) {
-                  _that.$message.success(res.msg)
-
-                  _that.gettabledata({
-                    page: _that.page.currentPage,
-                    size: _that.page.pageSize,
-                    name: _that.name,
-                    role: _that.role,
-                    sidx: _that.property,
-                    order: _that.order
-                  })
-                } else {
-                  _that.$message.error(res.msg)
-                }
+      this.$confirm({
+        title: "提示",
+        content: "用户删除后无法恢复，您确定要删除用户吗？",
+        onOk() {
+          _that.OrganizationM.userdlt(arr).then((res) => {
+            if (res.code == 0) {
+              _that.$message.success(res.msg)
+              _that.selectedRowKeys = []
+              _that.gettabledata({
+                page: _that.page.currentPage,
+                size: _that.page.pageSize,
+                name: _that.name,
+                role: _that.role,
+                sidx: _that.property,
+                order: _that.order
               })
-            }).catch(() => console.log("Oops errors!"))
-          }
-        })
-      } else {
-        this.$confirm({
-          title: "提示",
-          content: `用户删除后无法恢复，确定要删除${arr[0].name}(警号${arr[0].code})的用户吗？`,
-          onOk() {
-            return new Promise((resolve, reject) => {
-              setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-              _that.OrganizationM.userdlt(newarr).then((res) => {
-                if (res.code == 0) {
-                  _that.$message.success(res.msg)
-                  _that.gettabledata({
-                    page: _that.page.currentPage,
-                    size: _that.page.pageSize,
-                    name: _that.name,
-                    role: _that.role,
-                    sidx: _that.property,
-                    order: _that.order
-                  })
-                } else {
-                  _that.$message.error(res.msg)
-                }
-              })
-            }).catch(() => console.log("Oops errors!"))
-          }
-        })
-      }
+            } else {
+              _that.$message.error(res.msg)
+            }
+          })
+        }
+      })
     } else {
       this.$message.error("请选择需要操作的用户")
     }
@@ -652,6 +638,61 @@ export default class User extends Vue {
       }
     })
   }
+  public selectAllEvent({ checked, records, reserves }) {
+    if (checked) {
+      //第一次选数据，还未进行翻页时
+      if (reserves.length == 0) {
+        this.selectedRowKeys = records.map((v) => v.id)
+        this.selectionRows = records
+      } else {
+        //id集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectedRowKeys = [
+          ...reserves.map((v) => v.id),
+          ...records.map((v) => v.id)
+        ]
+        //数据集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectionRows = [...reserves, ...records]
+      }
+      // setCheckboxRow(this.selectionRows, true)
+    } else {
+      //取消全选时,直接将翻页数据赋值，当前页数据不用加上
+      this.selectionRows = reserves
+      this.selectedRowKeys = reserves.map((v) => v.id)
+    }
+  }
+  public selectChangeEvent({ checked, records, reserves, row }) {
+    if (checked) {
+      // this.selectedRowKeys.push(...records)
+      if (reserves.length == 0) {
+        this.selectedRowKeys = records.map((v) => v.id)
+        this.selectionRows = records
+      } else {
+        //id集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectedRowKeys = [
+          ...reserves.map((v) => v.id),
+          ...records.map((v) => v.id)
+        ]
+        //数据集合，翻页存在已选中的数据时,拼接新选中的数据
+        this.selectionRows = [...reserves, ...records]
+      }
+    } else {
+      //取消选中时
+      let idIndex = this.selectedRowKeys.indexOf(row.id)
+      if (idIndex > -1) {
+        //删除取消选中删除指定元素id
+        this.$delete(this.selectedRowKeys, idIndex)
+      }
+      let dataIndex = null
+      for (let i = 0; i < this.selectionRows.length; i++) {
+        if (this.selectionRows[i].id == row.id) {
+          dataIndex = i
+          break
+        }
+      }
+      //删除取消选中的元素整个对象
+      this.$delete(this.selectionRows, dataIndex)
+    }
+  }
   private edit(row) {
     this.id = row.id
     this.codedisabled = true
@@ -667,7 +708,7 @@ export default class User extends Vue {
         rolename: row.roleIds,
         remarks: row.remark,
         name: row.name,
-        code: row.code,
+        code: row.code
       })
     })
   }
