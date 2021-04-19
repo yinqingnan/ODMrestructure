@@ -981,6 +981,9 @@ export default class AvData extends Vue {
         if (res.code === 0) {
           this.getprogressVal(this.fileCode, this.CurrentFileformat)
           this.progressbtn = true
+        }else{
+          this.$message.error(res.msg)
+          clearInterval(this.time)
         }
       }
     )

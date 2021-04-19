@@ -181,7 +181,7 @@
               </a-form-item>
             </a-col>
           </a-row>
-          <a-row :gutter="24" class="rowstyle flie upgrade">
+          <a-row :gutter="24" class="rowstyle flie upgradefile">
             <a-col :span="24">
               <a-form-item label="上传文件">
                 <a-upload
@@ -471,7 +471,7 @@ export default class Upgrade extends Vue {
     height: 56px;
   }
 }
-.upgrade {
+.upgradefile {
   .ant-upload-list {
     display: none !important;
   }

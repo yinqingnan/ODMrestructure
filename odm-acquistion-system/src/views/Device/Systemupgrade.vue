@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-25 13:51:04
- * @LastEditTime: 2021-04-01 16:30:09
+ * @LastEditTime: 2021-04-19 11:53:27
  * @FilePath: \src\views\Device\Systemupgrade.vue
  * @LastEditors: yqn
 -->
@@ -135,20 +135,15 @@ export default class Systemupgrade extends Vue {
   private web_handleRemove(file) {
     this.web_fileList = []
   }
-  // pc上传接口
   private pcupload() {
     let formData = new FormData() //保存文件后再保存
-    console.log(this.pc_fileList);
-    
     if (this.pc_fileList?.length) {
-      console.log(this.pc_fileList[0]);
       formData.append("pcFile", this.pc_fileList[0])
     }
     if (this.web_fileList?.length) {
-      console.log(this.web_fileList[0]);
       formData.append("webFile", this.web_fileList[0])
     }
-    console.log(formData);
+    (this.$Loading as any).show("采集设备即将开始升级，升级将持续一段时间，该时间段内采集设备将无法使用",{},{background:'#fbfbfb'})
     axios
       .post(http + "upgrade/workStation", formData, {
         headers: {
@@ -157,58 +152,19 @@ export default class Systemupgrade extends Vue {
         }
       })
       .then((res: any) => {
-        if (res.code == 0) {
-          this.$message.success("导入成功")
+        console.log(res);
+        
+        if (res.data.code == 0) {
+          this.pc_selectfile()
+          this.web_selectfile()
+          setTimeout(() => {
+            (this.$Loading as any).hide()
+          },6000)
         } else {
+          (this.$Loading as any).hide();
           this.$message.error(res.data.msg)
         }
-        // let str = ""
-        // str = res.data.msg.replace(/%n1/g, "&nbsp;")
-        // if (res.data == "ok") {
-        //   this.importshow = false
-        //   this.iserror = false
-        //   this.fileList = []
-        //   this.filename = ""
-        //   this.$message.success("导入成功")
-        // } else {
-        //   this.iserror = true
-        //   this.errormsg = str
-        // }
       })
-  }
-  // web上传接口
-  private webupload() {
-    console.log("web上传")
-    if (this.web_fileList.length > 0) {
-      let formData = new FormData() //保存文件后再保存
-      formData.append("file", this.web_fileList[0])
-      axios
-        .post(http + "upgrade/workStation", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Token: localStorage.getItem("token")
-          }
-        })
-        .then((res: any) => {
-          if (res.code == 0) {
-            this.$message.success("导入成功")
-          } else {
-            this.$message.error(res.data.msg)
-          }
-          // let str = ""
-          // str = res.data.msg.replace(/%n1/g, "&nbsp;")
-          // if (res.data == "ok") {
-          //   this.importshow = false
-          //   this.iserror = false
-          //   this.fileList = []
-          //   this.filename = ""
-          //   this.$message.success("导入成功")
-          // } else {
-          //   this.iserror = true
-          //   this.errormsg = str
-          // }
-        })
-    }
   }
   private btnsubmit() {
     this.pcupload()
