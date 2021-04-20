@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-11-17 11:08:45
- * @LastEditTime: 2021-04-16 16:02:00
+ * @LastEditTime: 2021-04-20 15:42:36
  * @LastEditors: yqn
  * @Description: In User Settings Edit
  * @FilePath: \src\views\Index\Home.vue
@@ -166,7 +166,7 @@ export default class Home extends Vue {
           content: this.fileStat.audio
         }
       ]
-      if(res.data.fileStat>0){
+      if(res.data.fileStat.uploadRatio>0){
         this.fileStat.uploadRatio = Number(res.data.fileStat.uploadRatio.toFixed(2))
       }
     })

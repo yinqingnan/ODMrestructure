@@ -954,7 +954,6 @@ export default class AvData extends Vue {
       }
     })
   }
-
   private Videochange(type, val: any) {
     if (type === "add") {
       this.DataM.videoSnapshot(this.fileCode, val).then((res) => {
@@ -967,12 +966,10 @@ export default class AvData extends Vue {
     }
   }
   private CurrentFileformat = ""
-
   private fileChange(val) {
     this.CurrentFileformat = val
     this.startswitch = false
   }
-
   private FormatTransformation() {
     this.progress = false
     this.progressVal = 0

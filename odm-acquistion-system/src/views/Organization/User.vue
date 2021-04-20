@@ -458,7 +458,7 @@ export default class User extends Vue {
     let obj = {
       page: currentPage,
       size: pageSize,
-      name: this.name,
+      user: this.name,
       role: this.role,
       sidx: this.property,
       order: this.order

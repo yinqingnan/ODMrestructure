@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-25 13:51:04
- * @LastEditTime: 2021-04-19 11:53:27
+ * @LastEditTime: 2021-04-20 15:49:41
  * @FilePath: \src\views\Device\Systemupgrade.vue
  * @LastEditors: yqn
 -->
@@ -91,6 +91,7 @@ export default class Systemupgrade extends Vue {
     } else if (file.size >= 524288000) {
       this.$message.error("超出文件大小设定值")
       this.pc_filename = ""
+      
       this.pc_fileList = []
       this.pc_iserror = false
     } else {
@@ -100,7 +101,6 @@ export default class Systemupgrade extends Vue {
     }
     return false
   }
-  
   private web_beforeUpload(file) {
     if (file.type !== "application/x-zip-compressed") {
       this.$message.error("文件类型错误，仅支持.zip 类型的压缩包文件")
@@ -152,8 +152,6 @@ export default class Systemupgrade extends Vue {
         }
       })
       .then((res: any) => {
-        console.log(res);
-        
         if (res.data.code == 0) {
           this.pc_selectfile()
           this.web_selectfile()
@@ -163,6 +161,8 @@ export default class Systemupgrade extends Vue {
         } else {
           (this.$Loading as any).hide();
           this.$message.error(res.data.msg)
+          this.pc_selectfile()
+          this.web_selectfile()
         }
       })
   }

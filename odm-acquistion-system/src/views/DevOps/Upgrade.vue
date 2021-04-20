@@ -370,16 +370,21 @@ export default class Upgrade extends Vue {
                 }
               })
               .then((res) => {
-                this.filename = ""
-                this.form.resetFields()
-                this.visible = false;
-                (this.$Loading as any).hide()
-                this.$message.success("升级包上传成功")
-                let obj = {
-                  page: this.page.currentPage,
-                  size: this.page.pageSize
+                if(res.data.code == 0){
+                  this.filename = ""
+                  this.form.resetFields()
+                  this.visible = false;
+                  (this.$Loading as any).hide()
+                  this.$message.success(res.data.msg)
+                  let obj = {
+                    page: this.page.currentPage,
+                    size: this.page.pageSize
+                  }
+                  this.gettabledata(obj)
+                }else{
+                  this.$message.error(res.data.msg);
+                  (this.$Loading as any).hide()
                 }
-                this.gettabledata(obj)
               })
           } else {
             this.$nextTick(() => {
@@ -418,7 +423,6 @@ export default class Upgrade extends Vue {
     })
   }
   // todo 数据请求
-
   private gettabledata(obj) {
     this.Luckmanagement.getUpgradeMtable(obj).then((res) => {
       this.tableData = res.data

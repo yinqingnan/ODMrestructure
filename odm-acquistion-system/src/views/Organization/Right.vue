@@ -210,10 +210,7 @@ export default class Right extends Vue {
       this.dataList.map((item) => {
         arr.push(item.id)
       })
-      console.log(arr)
-      this.OrganizationM.adjustSort(arr).then((res) => {
-        console.log(res)
-      })
+      this.OrganizationM.adjustSort(arr)
     }
   }
   // 拖动事件（主要是为了拖动时鼠标光标不变为禁止）
