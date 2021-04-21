@@ -280,6 +280,8 @@ export default class OperationLog extends Vue {
     this.searchForm = false
     this.usercode = false
     this.handle()
+    this.createTime_ge = ''
+    this.createTime_le = ''
   }
 
   private handle(e?) {
@@ -287,7 +289,6 @@ export default class OperationLog extends Vue {
     this.searchForm = false
     this.form.validateFields((err: any, val: any) => {
       if (!err) {
-        console.log(val)
         this.page.currentPage = 1
         this.type_equal = val.type_equal
         this.module_equal = val.module_equal
@@ -300,11 +301,11 @@ export default class OperationLog extends Vue {
             is_web_equal: val.is_web,
             createTime_ge:
               val.date?.length > 0
-                ? val.date[0].format("YYYY-MM-DD HH:mm:ss")
+                ? val.date[0].format("YYYY-MM-DD 00:00:00")
                 : "",
             createTime_le:
               val.date?.length > 0
-                ? val.date[1].format("YYYY-MM-DD HH:mm:ss")
+                ? val.date[1].format("YYYY-MM-DD 23:59:ss")
                 : "",
             user: val?.user,
             sidx: "id",
@@ -312,8 +313,8 @@ export default class OperationLog extends Vue {
           }
           this.search = obj
           this.gettabledata(obj)
-          this.createTime_ge = val.date[0].format("YYYY-MM-DD HH:mm:ss")
-          this.createTime_le = val.date[1].format("YYYY-MM-DD HH:mm:ss")
+          this.createTime_ge = val.date[0].format("YYYY-MM-DD 00:00:00")
+          this.createTime_le = val.date[1].format("YYYY-MM-DD 23:59:ss")
         } else {
           let obj = {
             page: this.page.currentPage,

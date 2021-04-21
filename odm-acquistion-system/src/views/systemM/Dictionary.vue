@@ -238,7 +238,6 @@ export default class RightContent extends Vue {
 
   private async saveRowEvent(row) {
     const edittable = this.$refs.editTable as any
-    console.log()
     edittable.validate(row).then((err) => {
       if (!err) {
         edittable.clearActived()

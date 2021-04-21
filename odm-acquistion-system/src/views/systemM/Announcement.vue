@@ -394,7 +394,6 @@ export default class RightContent extends Vue {
     e.preventDefault()
     this.form.validateFields((err: any, values: any) => {
       if (!err) {
-        console.log(values)
         this.seachKey = values.select
         const val = {
           page: this.page.currentPage,
@@ -474,7 +473,6 @@ export default class RightContent extends Vue {
   private handleOk(e: any): void {
     e.preventDefault()
     this.form2.validateFields((err: any, values: any) => {
-      console.log(values)
       if (!err) {
         let str = ''
         if(values.type == '通知'){

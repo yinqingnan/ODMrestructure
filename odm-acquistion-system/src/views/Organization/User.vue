@@ -512,26 +512,30 @@ export default class User extends Vue {
 
   // 重置密码
   private Resetpwd() {
-    let arr = this.getSelectEvent1()
-    let newarr = []
-    if (arr.length) {
-      arr.map((el) => {
-        newarr.push(el.id)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let _that = this
+    let arr = []
+    if (this.selectedRowKeys.length > 0) {
+      this.selectedRowKeys.map((item) => {
+        arr.push(item)
       })
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      let _that = this
+      //当前登录用户的ID
+      // let userID = JSON.parse(localStorage.getItem('user')).userId
+      // if(arr.indexOf(userID) === -1){
       this.$confirm({
         title: "提示",
-        content: "你确定将用户密码重置为警号吗？",
+        content: "你确定将用户密码重置为警号吗？重置后将退出登录！",
         onOk() {
           return new Promise((resolve, reject) => {
             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-            _that.OrganizationM.userresetpwd(newarr).then((res) => {
-              _that.$message.info(res.msg)
+            _that.OrganizationM.userresetpwd(arr).then((res) => {
+              _that.$message.success(res.msg)
             })
           }).catch(() => console.log("Oops errors!"))
         }
       })
+      // }
+      
     } else {
       this.$message.error("请选择需要操作的用户")
     }
