@@ -534,10 +534,8 @@ export default class User extends Vue {
           }).catch(() => console.log("Oops errors!"))
         }
       })
-      // }
-      
     } else {
-      this.$message.error("请选择需要操作的用户")
+      this.$message.error("请选择需要操作的用户") 
     }
   }
   // 导入
