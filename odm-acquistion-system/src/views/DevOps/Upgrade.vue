@@ -416,14 +416,18 @@ export default class Upgrade extends Vue {
   }
   getdata() {
     this.DeviceM.deviceBrandSelect().then((res) => {
-      this.Acquisitionlist = res.data
+      if(res.data.length > 0){
+        this.Acquisitionlist = res.data
+      }
     })
     this.DeviceM.Equipmentmodel().then((res) => {
-      this.typelist = res.data
+      if(res.data.length > 0){
+        this.typelist = res.data
+      }
     })
   }
   // todo 数据请求
-  private gettabledata(obj) {
+  private gettabledata(obj) { 
     this.Luckmanagement.getUpgradeMtable(obj).then((res) => {
       this.tableData = res.data
       this.page.totalResult = parseInt(res.count)
