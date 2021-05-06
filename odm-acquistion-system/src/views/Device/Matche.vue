@@ -153,7 +153,7 @@
             :row-class-name="tableRowClassName"
             :seq-config="{startIndex: (page.currentPage - 1) * page.pageSize}"
             class="mytable-scrollbar"
-            :sort-config="{trigger: 'cell', defaultSort: {field: '', order: 'desc'}, orders: ['desc', 'asc']}"
+            :sort-config="{trigger: 'cell', defaultSort: {field: '', order: 'desc'},remote:true, orders: ['desc', 'asc']}"
             @sort-change="sortChangeEvent"
           >
             <vxe-table-column v-if="!StandaloneMode" type="checkbox" width="60" align="center" />

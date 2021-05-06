@@ -2,7 +2,7 @@
  * @Descripttion: 
  * @Autor: yqn
  * @Date: 2021-02-25 13:51:04
- * @LastEditTime: 2021-04-20 15:49:41
+ * @LastEditTime: 2021-05-06 15:00:38
  * @FilePath: \src\views\Device\Systemupgrade.vue
  * @LastEditors: yqn
 -->
@@ -91,7 +91,7 @@ export default class Systemupgrade extends Vue {
     } else if (file.size >= 524288000) {
       this.$message.error("超出文件大小设定值")
       this.pc_filename = ""
-      
+
       this.pc_fileList = []
       this.pc_iserror = false
     } else {
@@ -136,6 +136,13 @@ export default class Systemupgrade extends Vue {
     this.web_fileList = []
   }
   private pcupload() {
+    const loading = this.$loading({
+      lock: true,
+      text: "正在上传中",
+      spinner: "el-icon-loading",
+      background: "rgba(0, 0, 0, 0.5)"
+    })
+
     let formData = new FormData() //保存文件后再保存
     if (this.pc_fileList?.length) {
       formData.append("pcFile", this.pc_fileList[0])
@@ -143,7 +150,7 @@ export default class Systemupgrade extends Vue {
     if (this.web_fileList?.length) {
       formData.append("webFile", this.web_fileList[0])
     }
-    (this.$Loading as any).show("采集设备即将开始升级，升级将持续一段时间，该时间段内采集设备将无法使用",{},{background:'#fbfbfb'})
+
     axios
       .post(http + "upgrade/workStation", formData, {
         headers: {
@@ -153,13 +160,14 @@ export default class Systemupgrade extends Vue {
       })
       .then((res: any) => {
         if (res.data.code == 0) {
-          this.pc_selectfile()
-          this.web_selectfile()
+          loading.close();
+          this.pc_selectfile();
+          this.web_selectfile();
+          (this.$Loading as any).show("采集设备即将开始升级，升级将持续一段时间，该时间段内采集设备将无法使用，为您带来的不变深感抱歉",{},{background:'#fbfbfb'})
           setTimeout(() => {
             (this.$Loading as any).hide()
-          },6000)
+          },300000)
         } else {
-          (this.$Loading as any).hide();
           this.$message.error(res.data.msg)
           this.pc_selectfile()
           this.web_selectfile()
@@ -205,7 +213,14 @@ export default class Systemupgrade extends Vue {
       }
     }
   }
+
 }
+  .el-loading-spinner .el-loading-text {
+    color: #fff !important;
+  }
+  .el-loading-spinner i{
+    font-size:30px
+  }
 .pcupload {
   display: flex;
   line-height: 1;
